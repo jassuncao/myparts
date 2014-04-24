@@ -22,7 +22,11 @@ qrc_*.cpp
 ui_*.h
 Makefile*
 *-build-*
+build-*
 
 # QtCreator
 
 *.autosave
+
+# Misc
+.directory
