@@ -1,0 +1,31 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>images/shape_square_add.png</file>
+        <file>images/plugin_delete.png</file>
+        <file>images/plugin_add.png</file>
+        <file alias="category_add">images/chart_organisation_add.png</file>
+        <file alias="category_delete">images/chart_organisation_delete.png</file>
+        <file alias="folder_closed">images/folder_closed.png</file>
+        <file alias="box">images/box.png</file>
+        <file alias="folder_open">images/folder_open.png</file>
+        <file alias="box_open">images/box_open.png</file>
+        <file alias="box_closed">images/box_closed.png</file>
+        <file alias="folder_add">images/folder_add.png</file>
+        <file alias="folder_delete">images/folder_delete.png</file>
+        <file alias="folder_edit">images/folder_edit.png</file>
+        <file alias="add">images/add.png</file>
+        <file alias="delete">images/delete.png</file>
+        <file alias="tick">images/tick.png</file>
+        <file alias="colapse">images/resultset-vertical-next.png</file>
+        <file alias="expand">images/resultset-vertical-previous.png</file>
+        <file alias="table_select_column">images/table_select_column.png</file>
+        <file alias="find">images/find.png</file>
+        <file alias="edit-clear-location-rtl">images/edit-clear-locationbar-rtl.png</file>
+        <file alias="addStock">images/brick_add.png</file>
+        <file alias="removeStock">images/brick_delete.png</file>
+        <file alias="editPart">images/brick_edit.png</file>
+        <file alias="default">images/star.png</file>
+        <file alias="toggle_collapse">images/toggle.png</file>
+        <file alias="toggle_expand">images/toggle-expand.png</file>
+    </qresource>
+</RCC>

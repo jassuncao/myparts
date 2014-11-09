@@ -1,0 +1,17 @@
+
+* Done: Create date não deve ser copiado quando uma parte é duplicada
+* Doing: Average price
+* Done: Filter by condition
+* Done: filter by date
+* Fixed : When a part is added with stock, sometimes the stock is added to another part -
+* Delete part. Implement delete cascade - Done. Alterei a lib dquest para suportar ON DELETE CASCADE
+* Drag part to category - Falta actualização da tabela depois de um drag - Done
+* A tabela deve apresentar a data no formato local - Done
+* Implementar filtragem por categoria entre outros - Done
+* Ao adicionar uma nova part a sua condição deve ter um valor selecionado por omissão - Done
+* Ao adicionar uma nova part a unidade por default deve ser selecionada por omissão - Done
+* Drag and drop de parts para categorias. Falta actualizar a vista da listagem - Done
+* Utilizei um modelo para o filtro mas não é trivial utilizar comboBoxes. Vou descartar este modelo e fazer tudo manualmente.
+Pensando melhor posso fazer um misto. Utilizo o modelo para as coisas mais simples e o processo manual para as combos
+* Implementei uma filtragem simples num novo modelo baseado no SqlQueryModel
+

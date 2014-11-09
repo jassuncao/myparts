@@ -14,8 +14,17 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-    
+
+protected:
+    void closeEvent(QCloseEvent *event);
+
+private slots:
+    void on_actionEdit_part_units_triggered();
+
 private:
+    void readSettings();
+    void writeSettings();
+
     Ui::MainWindow *ui;
 };
 
