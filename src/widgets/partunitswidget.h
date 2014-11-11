@@ -2,6 +2,7 @@
 #define PARTUNITSWIDGET_H
 
 #include <QWidget>
+#include "optionswidget.h"
 #include <QModelIndex>
 #include <QItemSelection>
 class QPushButton;
@@ -10,18 +11,20 @@ class QDialogButtonBox;
 class QTableView;
 class QSqlRecord;
 
-class PartUnitsWidget : public QWidget
+class PartUnitsWidget : public OptionsWidget
 {
     Q_OBJECT
 public:
     explicit PartUnitsWidget(QWidget *parent = 0);
-    
+
+/*
 signals:
     void dataChanged();
     void dataCommited();
+    */
 public slots:
-    bool submit();
-    void revert();
+    virtual bool submit();
+    virtual void revert();
 private slots:
     void dataChanged(const QModelIndex, const QModelIndex);
     void selectionChanged(const QItemSelection &selected, const QItemSelection);

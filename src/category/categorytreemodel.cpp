@@ -1,4 +1,4 @@
-#include "treeitem.h"
+#include "models/treeitem.h"
 #include "categorytreemodel.h"
 #include "categorytreeitem.h"
 #include "entities/categoriesdao.h"
@@ -7,180 +7,39 @@
 #include "categoymimedata.h"
 #include <limits>
 
-CategoryTreeModel::CategoryTreeModel(QObject *parent) :
-    QAbstractItemModel(parent)
-{
-    _uncommitedItem=0;
-    _uncommitedItemParent=0;
-    QVector<QVariant> headerData(3);
-    headerData.append("Name");
-    headerData.append("Description");
-    headerData.append("ID");
-    _invisibleRootItem = new TreeItem(-1,headerData);
-    Entities::CategoriesDAO::createCategoriesTree(_invisibleRootItem);
-    _folderIcon.addFile(":icons/box_closed", QSize(), QIcon::Normal, QIcon::Off);
-    _folderIcon.addFile(":icons/box_open", QSize(), QIcon::Normal, QIcon::On);
+CategoryTreeModel::CategoryTreeModel(const QVector<QVariant> columns, QObject *parent) :
+    TreeItemModel(new TreeItem(-1, columns), parent)
+{   
 }
 
 CategoryTreeModel::~CategoryTreeModel()
 {
-    delete _invisibleRootItem;
 }
 
-TreeItem * CategoryTreeModel::getItem(const QModelIndex &index) const
+bool CategoryTreeModel::fillTree(TreeItem * rootItem)
 {
-    if (index.isValid()) {
-        TreeItem *item = static_cast<TreeItem*>(index.internalPointer());
-        if (item) return item;
-    }
-    return _invisibleRootItem;
-}
-
-QVariant CategoryTreeModel::data(const QModelIndex &index, int role) const
-{
-    if(!index.isValid()){
-        return QVariant();
-    }
-    TreeItem *item = getItem(index);
-    switch(role){
-    case Qt::DecorationRole:
-            return _folderIcon;
-        break;            
-    case Qt::DisplayRole:
-    case Qt::EditRole:
-            return item->data(index.column());
-        break;
-    case Qt::ToolTipRole:
-            return item->data(Entities::CategoriesDAO::DESCRIPTION_COL);
-        break;
-    default:
-        return QVariant();
-        break;
-    }
-}
-
-bool CategoryTreeModel::setData(const QModelIndex &index, const QVariant &value, int role)
-{
-    if(!index.isValid()){
-        return false;
-    }
-    if(role!=Qt::EditRole){
-        return false;
-    }
-    TreeItem *item = getItem(index);   
-    bool res = item->setData(index.column(), value);
-    if(res){
-        if(!_uncommited.contains(item)){
-            _uncommited.enqueue(item);
-        }
-        emit dataChanged(index,index);
-    }
-    return res;
-    /*
-    QString catName = value.toString();
-    if(!Entities::CategoriesDAO::setCategoryName(item->id(), catName)){
-        return false;
-    }    
-    item->setName(catName);
+    Entities::CategoriesDAO::createCategoriesTree(rootItem);
     return true;
-    */
 }
 
-int CategoryTreeModel::getItemId(const QModelIndex &index) const
+bool CategoryTreeModel::doInsert(TreeItem * item)
 {
-    if(!index.isValid()){
-        return -1;
-    }
-    TreeItem *item = getItem(index);
-    return item->id();
+    return Entities::CategoriesDAO::insertAtEnd(item);
 }
 
-int CategoryTreeModel::rootCategory() const
+bool CategoryTreeModel::doUpdate(TreeItem * item)
 {
-    return _invisibleRootItem->child(0)->id();
+    return Entities::CategoriesDAO::update(item);
 }
 
-Qt::ItemFlags CategoryTreeModel::flags(const QModelIndex &index) const
+bool CategoryTreeModel::doDelete(TreeItem * item)
 {
-    if(!index.isValid()){
-        return Qt::NoItemFlags;
-    }
-    TreeItem *item = static_cast<TreeItem*>(index.internalPointer());
-    Qt::ItemFlags flags = Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsDropEnabled | Qt::ItemIsEditable;
-    if(item->parent()!=_invisibleRootItem){
-        flags = flags |  Qt::ItemIsDragEnabled;
-    }
-    return flags;
+    return Entities::CategoriesDAO::remove(item->id(), item->parent()->id());
 }
 
-QVariant CategoryTreeModel::headerData(int section, Qt::Orientation orientation, int role) const
+bool CategoryTreeModel::doRevert(TreeItem * item)
 {
-    if (orientation == Qt::Horizontal && role == Qt::DisplayRole){
-             return _invisibleRootItem->data(section);
-    }
-    return QVariant();
-}
-
-QModelIndex CategoryTreeModel::index(int row, int column, const QModelIndex &parentIndex) const
-{
-    if (parentIndex.isValid() && parentIndex.column() != 0){
-      return QModelIndex();
-    }
-
-     TreeItem *parentItem = getItem(parentIndex);
-     TreeItem *childItem = parentItem->child(row);
-     if (childItem){
-         return createIndex(row, column, childItem);
-     }
-     else{
-         return QModelIndex();
-     }
-
-     /*
-     if (!hasIndex(row, column, parentIndex)){
-         return QModelIndex();
-     }
-     if (!parent.isValid()){
-         parentItem = _invisibleRootItem;
-     }
-     else{
-         parentItem = static_cast<CategoryTreeItem*>(parent.internalPointer());
-     }
-
-     CategoryTreeItem *childItem = parentItem->child(row);
-     if (childItem){
-         return createIndex(row, column, childItem);
-     }
-     else{
-         return QModelIndex();
-     }
-     */
-}
-
-QModelIndex CategoryTreeModel::parent(const QModelIndex &index) const
-{
-    if (!index.isValid()){
-         return QModelIndex();
-    }
-
-    TreeItem *childItem = getItem(index);
-    TreeItem *parentItem = childItem->parent();
-
-    if (parentItem == _invisibleRootItem){
-        return QModelIndex();
-    }
-    return createIndex(parentItem->childNumber(), 0, parentItem);
-}
-
-int CategoryTreeModel::rowCount(const QModelIndex &parent) const
-{
-    TreeItem *parentItem = getItem(parent);
-    return parentItem->childCount();
-}
-
-int CategoryTreeModel::columnCount(const QModelIndex &parent) const
-{  
-    return 1;
+    return Entities::CategoriesDAO::reload(item);
 }
 
 Qt::DropActions CategoryTreeModel::supportedDropActions() const
@@ -289,135 +148,3 @@ bool CategoryTreeModel::dropMimeData(const QMimeData *data, Qt::DropAction actio
     return false;
 }
 
-/*
-QModelIndex CategoryTreeModel::insertCategory(const QString &name, const QString &description, const QModelIndex &parent)
-{
-    TreeItem * parentNode = getItem(parent);
-    int row = parentNode->childCount();
-    beginInsertRows(parent,row,row);
-    CategoryTreeItem * child = Entities::CategoriesDAO::insertCategoryAtEnd(name, description, parentNode->id());
-    parentNode->appendChild(child);
-    endInsertRows();
-    return createIndex(row,0, child);
-}
-*/
-
-bool CategoryTreeModel::insertCategory(const QModelIndex &parent)
-{
-    TreeItem * parentNode = getItem(parent);
-    int row = parentNode->childCount();
-    beginInsertRows(parent,row,row);
-    bool success = parentNode->insertChildren(row,1, 3);
-    TreeItem * newItem = parentNode->child(row);
-    _uncommitedItem= newItem;
-    _uncommitedItemParent= &parent;
-    //_uncommited.enqueue(parentNode->child(row));
-    endInsertRows();    
-    return success;
-}
-
-bool CategoryTreeModel::submit()
-{    
-    if(_uncommitedItem){
-        if(_uncommitedItem->id()<0){
-            qDebug("Inserting new item");
-             Entities::CategoriesDAO::insertAtEnd(_uncommitedItem);
-        }
-        else{
-            qDebug("Saving changes to item");
-            Entities::CategoriesDAO::update(_uncommitedItem);
-        }
-        _uncommitedItem=0;
-        _uncommitedItemParent=0;
-    }
-    while (!_uncommited.isEmpty()){
-        TreeItem * item = _uncommited.dequeue();
-        if(item->id()<0){
-            qDebug("Inserting new item");
-             Entities::CategoriesDAO::insertAtEnd(item);
-        }
-        else{
-            qDebug("Saving changes to item");
-            Entities::CategoriesDAO::update(item);
-        }
-    }
-    return true;
-}
-
-void CategoryTreeModel::revert()
-{
-    qDebug("revert changes");
-    if(_uncommitedItem){
-        if(_uncommitedItem->id()==-1){//not saved to the database
-            int idx = _uncommitedItem->childNumber();
-            beginRemoveRows(*_uncommitedItemParent,idx,idx);
-            _uncommitedItem->parent()->removeChildren(_uncommitedItem->childNumber(),1);
-            endRemoveRows();
-        }
-        else{
-            Entities::CategoriesDAO::reload(_uncommitedItem);
-        }
-        _uncommitedItem=0;
-        _uncommitedItemParent=0;
-    }
-    if(_uncommited.isEmpty())
-        return;
-
-    while (!_uncommited.isEmpty()){
-        TreeItem * item = _uncommited.dequeue();
-        if(item->id()==-1){//not saved to the database
-            int idx = item->childNumber();
-            item->parent()->removeChildren(item->childNumber(),1);            
-        }
-        else{
-            Entities::CategoriesDAO::reload(item);                                    
-        }
-    }    
-}
-
-
-bool CategoryTreeModel::removeCategory(const QModelIndex &index)
-{
-    QModelIndex parent = index.parent();
-    TreeItem *parentItem = getItem(parent);
-    int position = index.row();
-    bool success = false;
-    if(Entities::CategoriesDAO::remove(parentItem->child(position)->id(), parentItem->id())){
-        beginRemoveRows(parent, position, position);
-        success = parentItem->removeChildren(position, 1);
-        endRemoveRows();
-    }
-    return success;
-}
-
-
-/*
-bool CategoryTreeModel::insertRows(int row, int count, const QModelIndex &parent)
-{
-    qDebug()<<"Insert rows "<<row << " "<<count;
-    if(parent.isValid()){
-         qDebug()<<static_cast<CategoryTreeItem*>(parent.internalPointer())->name();
-    }
-    return QAbstractItemModel::insertRows(row, count, parent);
-}
-
-bool CategoryTreeModel::removeRows(int row, int count, const QModelIndex &parent)
-{
-    qDebug()<<"Remove rows "<<row << " "<<count;
-
-    if(parent.isValid()){
-         qDebug()<<static_cast<CategoryTreeItem*>(parent.internalPointer())->data(0);
-         CategoryTreeItem * parentItem = static_cast<CategoryTreeItem*>(parent.internalPointer());
-         qDebug()<<"Data:"<<parentItem->child(row)->data(0);
-    }    
-    return QAbstractItemModel::removeRows(row, count, parent);
-}
-*/
-
-/*
-bool CategoryTreeModel::beginMoveRows(const QModelIndex &sourceParent, int sourceFirst, int sourceLast, const QModelIndex &destinationParent, int destinationRow)
-{
-    qDebug()<<"beginMoveRows rows "<<sourceFirst << " "<<sourceLast;
- return QAbstractItemModel::beginMoveRows(sourceParent, sourceFirst, sourceLast, destinationParent, destinationRow);
-}
-*/

@@ -124,6 +124,12 @@ TreeItem::TreeItem(const int id, const QVector<QVariant> &data, TreeItem *parent
      childItems.move(from,to);
  }
 
+ void TreeItem::removeAll()
+ {
+     qDeleteAll(childItems);
+     childItems.clear();;
+ }
+
  /*
  void TreeItem::reparent(TreeItem *newParent)
  {

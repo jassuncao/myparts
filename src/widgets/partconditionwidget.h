@@ -4,24 +4,28 @@
 #include <QWidget>
 #include <QModelIndex>
 #include <QItemSelection>
+#include "optionswidget.h"
+
 class QPushButton;
 class QSqlTableModel;
 class QDialogButtonBox;
 class QTableView;
 class QSqlRecord;
 
-class PartConditionWidget : public QWidget
+class PartConditionWidget : public OptionsWidget
 {
     Q_OBJECT
 public:
     explicit PartConditionWidget(QWidget *parent = 0);
     
+/*
 signals:
     void dataChanged();
     void dataCommited();
+*/
 public slots:
-    bool submit();
-    void revert();
+    virtual bool submit();
+    virtual void revert();
 private slots:
     void dataChanged(const QModelIndex, const QModelIndex);
     void selectionChanged(const QItemSelection &selected, const QItemSelection);

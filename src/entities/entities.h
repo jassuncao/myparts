@@ -22,8 +22,8 @@ public:
     DQField<QString> name;
     DQField<QString> description;
     DQField<QString> categoryPath;
-    DQForeignKey<PartCategoryEntity> lft;
-    DQForeignKey<PartCategoryEntity> rgt;    
+    DQField<int> lft;
+    DQField<int> rgt;
     DQSharedList initialData() const;
 };
 

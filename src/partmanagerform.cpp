@@ -36,7 +36,15 @@ PartManagerForm::PartManagerForm(QWidget *parent) :
 
     ui->categoriesTreeView->setDragDropMode(QAbstractItemView::DragDrop);
     ui->categoriesTreeView->setDefaultDropAction(Qt::MoveAction);
-    _categoriesTreeModel = new CategoryTreeModel(this);        
+    QVector<QVariant> headerData(3);
+    headerData.append("Name");
+    headerData.append("Description");
+    headerData.append("ID");
+
+    _categoriesTreeModel = new CategoryTreeModel(headerData, this);
+    _categoriesTreeModel->setToolTipColumn(Entities::CategoriesDAO::DESCRIPTION_COL);
+    _categoriesTreeModel->select();
+
     ui->categoriesTreeView->setModel(_categoriesTreeModel);
     connect(ui->categoriesTreeView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)), this, SLOT(categoriesTreeView_currentChanged(QModelIndex,QModelIndex)));
     connect(ui->filterSplitter,SIGNAL(splitterMoved(int,int)), this, SLOT(filterSplitterMoved(int,int)));        
@@ -131,7 +139,7 @@ void PartManagerForm::partCategoryChanged()
 
 void PartManagerForm::partsTableViewHeaderContextMenu(QPoint point)
 {
-    int column = ui->partsTableView->horizontalHeader()->logicalIndexAt(point);
+    //int column = ui->partsTableView->horizontalHeader()->logicalIndexAt(point);
     _tableHeaderContextMenu->popup(ui->partsTableView->horizontalHeader()->mapToGlobal(point));
 }
 
@@ -287,7 +295,7 @@ void PartManagerForm::updateStockView(const QModelIndex & current)
 void PartManagerForm::on_actionAddCategory_triggered()
 {    
     const QModelIndex & parentIndex = _categoriesCtxMenuIndex;
-    if(!_categoriesTreeModel->insertCategory(parentIndex))
+    if(!_categoriesTreeModel->insertItem(parentIndex))
         return;
     int row = _categoriesTreeModel->rowCount(parentIndex) - 1;
     PartCategoryDialog dlg(_categoriesTreeModel, this);
@@ -310,7 +318,7 @@ void PartManagerForm::on_actionDeleteCategory_triggered()
     QModelIndex currentIdx = ui->categoriesTreeView->selectionModel()->currentIndex();
     if(!currentIdx.isValid())
         return;
-    _categoriesTreeModel->removeCategory(currentIdx);
+    _categoriesTreeModel->removeItem(currentIdx);
 }
 
 void PartManagerForm::on_actionEditCategory_triggered()
@@ -630,7 +638,7 @@ void PartManagerForm::part_primeInsert(int row, QSqlRecord &record)
         categoryId = _categoriesTreeModel->getItemId(currentCategoryIdx);
     }
     else{
-        categoryId = _categoriesTreeModel->rootCategory();
+        categoryId = _categoriesTreeModel->rootItemId();
     }    
     record.setValue(PartsSqlQueryModel2::ColumnCategoryId, categoryId);
     record.setGenerated(PartsSqlQueryModel2::ColumnCategoryId,true);

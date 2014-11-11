@@ -2,11 +2,13 @@
 #include "widgets/partunitswidget.h"
 #include "widgets/partconditionwidget.h"
 #include <QtGui>
+#include "widgets/optionswidget.h"
 
-OptionsDialog::OptionsDialog(QWidget *parent) :
-    QDialog(parent), _dirty(false)
+OptionsDialog::OptionsDialog(OptionsWidget * optionsWidget, QWidget *parent) :
+    QDialog(parent), _dirty(false), _optionsWidget(optionsWidget)
 {
-    _partUnitWidget = new PartUnitsWidget(this);
+
+    //_partUnitWidget = new PartUnitsWidget(this);
     //_partConditionWidget = new PartConditionWidget(this);
 
     _buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Apply | QDialogButtonBox::Cancel );
@@ -18,12 +20,14 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
     connect(_applyButton, SIGNAL(clicked()), this, SLOT(apply()));
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
-    mainLayout->addWidget(_partUnitWidget);
+    mainLayout->addWidget(_optionsWidget);
+    //mainLayout->addWidget(_partUnitWidget);
     //mainLayout->addWidget(_partConditionWidget);
     mainLayout->addWidget(_buttonBox);
     setLayout(mainLayout);
 
-    connect(_partUnitWidget,SIGNAL(dataChanged()), this, SLOT(dataChanged()));
+    connect(_optionsWidget,SIGNAL(dataChanged()), this, SLOT(dataChanged()));
+    //connect(_partUnitWidget,SIGNAL(dataChanged()), this, SLOT(dataChanged()));
     //connect(_partConditionWidget,SIGNAL(dataChanged()), this, SLOT(dataChanged()));
     //connect(_partUnitWidget, SIGNAL(dataCommited()), this, SLOT(setDirty(bool)));
 }
@@ -43,7 +47,7 @@ void OptionsDialog::reject()
 
 void OptionsDialog::apply()
 {
-    if(_partUnitWidget->submit()){
+    if(_optionsWidget->submit()){
         setDirty(false);
     }
     else{

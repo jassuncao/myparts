@@ -27,7 +27,7 @@ SOURCES += main.cpp\
     entities/entities.cpp \
     widgets/customtreeview.cpp \
     partcategorydialog.cpp \
-    category/treeitem.cpp \
+    models/treeitem.cpp \
     category/partunitdialog.cpp \
     widgets/booleanitemdelegate.cpp \
     partunits/partunitssqltablemodel.cpp \
@@ -52,7 +52,9 @@ SOURCES += main.cpp\
     models/partconditionsqltablemodel.cpp \
     widgets/partstoragewidget.cpp \
     quickaddstoragedialog.cpp \
-    widgets/currencydelegate.cpp
+    widgets/currencydelegate.cpp \
+    widgets/optionswidget.cpp \
+    models/treeitemmodel.cpp
 
 HEADERS  += mainwindow.h \
     entities/entities.h \
@@ -64,7 +66,7 @@ HEADERS  += mainwindow.h \
     category/categoymimedata.h \
     widgets/customtreeview.h \
     partcategorydialog.h \
-    category/treeitem.h \
+    models/treeitem.h \
     category/partunitdialog.h \
     widgets/booleanitemdelegate.h \
     partunits/partunitssqltablemodel.h \
@@ -89,14 +91,17 @@ HEADERS  += mainwindow.h \
     models/partconditionsqltablemodel.h \
     widgets/partstoragewidget.h \
     quickaddstoragedialog.h \
-    widgets/currencydelegate.h
+    widgets/currencydelegate.h \
+    widgets/optionswidget.h \
+    models/treeitemmodel.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \
     partmanagerform.ui \
     partunitsdialog.ui \
     addstockdialog.ui \
-    removestockdialog.ui
+    removestockdialog.ui \
+    dialog.ui
 
 RESOURCES += \
     resources.qrc

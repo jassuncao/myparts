@@ -7,12 +7,13 @@ class PartUnitsWidget;
 class PartConditionWidget;
 class QDialogButtonBox;
 class QPushButton;
+class OptionsWidget;
 
 class OptionsDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit OptionsDialog(QWidget *parent = 0);    
+    explicit OptionsDialog(OptionsWidget * optionsWidget, QWidget *parent = 0);
 signals:    
     
 public slots:
@@ -25,7 +26,8 @@ private slots:
     void setDirty(bool dirty);
 private:
     bool _dirty;
-    PartUnitsWidget * _partUnitWidget;
+    OptionsWidget * _optionsWidget;
+    //PartUnitsWidget * _partUnitWidget;
     //PartConditionWidget * _partConditionWidget;
     QPushButton * _applyButton;
     QPushButton * _revertButton;

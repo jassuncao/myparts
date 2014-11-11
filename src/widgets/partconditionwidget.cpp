@@ -7,7 +7,7 @@
 #include "widgets/booleanitemdelegate.h"
 
 PartConditionWidget::PartConditionWidget(QWidget *parent) :
-    QWidget(parent)
+    OptionsWidget(parent)
 {
     _model = new PartConditionSqlTableModel(this);
     _model->setEditStrategy(QSqlTableModel::OnManualSubmit);
@@ -20,12 +20,13 @@ PartConditionWidget::PartConditionWidget(QWidget *parent) :
     _view->setModel(_model);
     _view->setSelectionBehavior(QAbstractItemView::SelectRows);
     _view->setSelectionMode(QAbstractItemView::SingleSelection);
-    _view->setColumnHidden(PartConditionSqlTableModel::ColumnId,true);
+    _view->setColumnHidden(PartConditionSqlTableModel::ColumnId,true);    
     QStyledItemDelegate * colDelegate = new BooleanItemDelegate(QPixmap(":icons/default"),QPixmap());
     _view->setItemDelegateForColumn(PartConditionSqlTableModel::ColumnDefault, colDelegate);
     _view->verticalHeader()->setVisible(false);
     _view->horizontalHeader()->setResizeMode(PartConditionSqlTableModel::ColumnDefault, QHeaderView::Fixed);
     _view->horizontalHeader()->moveSection(PartConditionSqlTableModel::ColumnDefault,0);
+    _view->horizontalHeader()->setStretchLastSection(true);
     _view->resizeColumnsToContents();
 
     _buttonBox = new QDialogButtonBox(Qt::Vertical);
@@ -71,7 +72,7 @@ bool PartConditionWidget::submit()
 void PartConditionWidget::revert()
 {
     _model->revertAll();
-    emit dataCommited();
+    emit OptionsWidget::dataCommited();
 }
 
 void PartConditionWidget::addElement()
@@ -120,7 +121,7 @@ void PartConditionWidget::makeAsDefault()
 
 void PartConditionWidget::dataChanged(const QModelIndex, const QModelIndex)
 {
-    emit dataChanged();
+    emit OptionsWidget::dataChanged();
 }
 
 void PartConditionWidget::selectionChanged(const QItemSelection &selected, const QItemSelection)

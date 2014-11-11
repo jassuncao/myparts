@@ -21,6 +21,8 @@ protected:
 private slots:
     void on_actionEdit_part_units_triggered();
 
+    void on_actionPart_conditions_triggered();
+
 private:
     void readSettings();
     void writeSettings();

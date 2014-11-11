@@ -27,6 +27,7 @@ public:
     void moveChild(int from, int to);
    // void reparent(TreeItem *newParent);
     void appendChild(TreeItem *child);
+    void removeAll();
     /*
     void insertChild(int i, TreeItem *child);
     void removeChild(TreeItem *child);

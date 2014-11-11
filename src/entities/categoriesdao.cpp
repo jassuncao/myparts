@@ -2,7 +2,7 @@
 #include <dquest.h>
 #include "entities.h"
 #include "category/categorytreeitem.h"
-#include "category/treeitem.h"
+#include "models//treeitem.h"
 #include <QStack>
 #include <QDebug>
 #include <QSqlError>
@@ -359,7 +359,6 @@ int CategoriesDAO::insertCategoryAtEnd(const QVector<QVariant> & data, int paren
 bool CategoriesDAO::insertAtEnd(TreeItem * item)
 {
     int newPos;
-
     int parentId = item->parent()->id();
     if(parentId>=0){
         Entities::PartCategoryEntity parentCat;
@@ -367,7 +366,7 @@ bool CategoriesDAO::insertAtEnd(TreeItem * item)
             qWarning("PartCategory with id %d not found",parentId);
             return 0;
         }
-        newPos = parentCat.rgt;
+        newPos = parentCat.rgt;        
     }
     else{
         QSqlQuery auxQuery = DQConnection::defaultConnection().query();
@@ -391,7 +390,7 @@ bool CategoriesDAO::insertAtEnd(TreeItem * item)
     query.exec();
     qDebug("Changed %d rows",query.numRowsAffected());
 
-    Entities::PartCategoryEntity category;
+    Entities::PartCategoryEntity category;    
     category.name.set(item->data(NAME_COL));
     category.description.set(item->data(DESCRIPTION_COL));
     category.lft = newPos;
@@ -401,6 +400,7 @@ bool CategoriesDAO::insertAtEnd(TreeItem * item)
         return true;
     }
     qWarning() << "Failed to save PartCategory "<<category.name.get();
+    qWarning() << "Reason:"<<query.lastError();
     return false;
 }
 

@@ -34,6 +34,12 @@
      <string>Edit</string>
     </property>
     <addaction name="actionEdit_part_units"/>
+    <addaction name="actionPart_conditions"/>
+    <addaction name="actionUnits"/>
+    <addaction name="actionStorage_locations"/>
+    <addaction name="actionFootprints"/>
+    <addaction name="actionManufacturers"/>
+    <addaction name="actionDistributors"/>
    </widget>
    <addaction name="menuEdit"/>
   </widget>
@@ -48,7 +54,37 @@
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionEdit_part_units">
    <property name="text">
-    <string>Edit part units</string>
+    <string>Part measure units</string>
+   </property>
+  </action>
+  <action name="actionUnits">
+   <property name="text">
+    <string>Units</string>
+   </property>
+  </action>
+  <action name="actionStorage_locations">
+   <property name="text">
+    <string>Storage locations</string>
+   </property>
+  </action>
+  <action name="actionFootprints">
+   <property name="text">
+    <string>Footprints</string>
+   </property>
+  </action>
+  <action name="actionManufacturers">
+   <property name="text">
+    <string>Manufacturers</string>
+   </property>
+  </action>
+  <action name="actionDistributors">
+   <property name="text">
+    <string>Distributors</string>
+   </property>
+  </action>
+  <action name="actionPart_conditions">
+   <property name="text">
+    <string>Part conditions</string>
    </property>
   </action>
  </widget>

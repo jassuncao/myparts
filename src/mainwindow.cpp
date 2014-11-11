@@ -3,6 +3,8 @@
 #include "optionsdialog.h"
 #include <QSettings>
 #include <QtGui>
+#include "widgets/partconditionwidget.h"
+#include "widgets/partunitswidget.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -26,7 +28,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::on_actionEdit_part_units_triggered()
 {
-    OptionsDialog dlg(this);
+    OptionsDialog dlg(new PartUnitsWidget(), this);
     dlg.exec();
 }
 
@@ -44,4 +46,10 @@ void MainWindow::writeSettings()
      QSettings settings;
      settings.setValue("pos", pos());
      settings.setValue("size", size());
+}
+
+void MainWindow::on_actionPart_conditions_triggered()
+{
+    OptionsDialog dlg(new PartConditionWidget(), this);
+    dlg.exec();
 }

@@ -7,7 +7,7 @@
 #include "widgets/booleanitemdelegate.h"
 
 PartUnitsWidget::PartUnitsWidget(QWidget *parent) :
-    QWidget(parent)
+    OptionsWidget(parent)
 {
     _model = new PartUnitsSqlTableModel(this);    
     _model->setEditStrategy(QSqlTableModel::OnManualSubmit);
@@ -26,6 +26,7 @@ PartUnitsWidget::PartUnitsWidget(QWidget *parent) :
     _view->verticalHeader()->setVisible(false);
     _view->horizontalHeader()->setResizeMode(PartUnitsSqlTableModel::ColumnDefault, QHeaderView::Fixed);
     _view->horizontalHeader()->moveSection(PartUnitsSqlTableModel::ColumnDefault,0);
+    _view->horizontalHeader()->setStretchLastSection(true);
     _view->resizeColumnsToContents();
 
     _buttonBox = new QDialogButtonBox(Qt::Vertical);
@@ -120,7 +121,8 @@ void PartUnitsWidget::makeDefault()
 
 void PartUnitsWidget::dataChanged(const QModelIndex, const QModelIndex)
 {
-    emit dataChanged();
+    emit OptionsWidget::dataChanged();
+    //emit dataChanged();
 }
 
 void PartUnitsWidget::selectionChanged(const QItemSelection &selected, const QItemSelection)
