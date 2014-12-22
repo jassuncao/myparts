@@ -1,5 +1,6 @@
-* Todo: Na janela principal seria interessante mudar entra a vista de categorias e uma vista de storage
 * Doing: O storage também deve ser mantido numa estrutura hierarquica.
+    - Estou a implementar o DAO
+* Todo: Na janela principal seria interessante mudar entra a vista de categorias e uma vista de storage
 * Done: Create date não deve ser copiado quando uma parte é duplicada
 * Doing: Average price
 * Done: Filter by condition

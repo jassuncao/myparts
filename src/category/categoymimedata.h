@@ -9,7 +9,7 @@ class CategoyMimeData : public QMimeData
     Q_OBJECT
 public:
     explicit CategoyMimeData(const QModelIndexList &indexes);
-    const QModelIndexList & indexes() const {return _indexes;};
+    const QModelIndexList & indexes() const {return _indexes;}
 signals:
     
 public slots:

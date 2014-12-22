@@ -32,6 +32,9 @@ class PartStorageEntity : public DQModel
     DQ_MODEL
 public:
     DQField<QString> name;
+    DQField<QString> path;
+    DQField<int> lft;
+    DQField<int> rgt;
     DQSharedList initialData() const;
 };
 
@@ -114,7 +117,10 @@ DQ_DECLARE_MODEL(Entities::PartCategoryEntity,
 
 DQ_DECLARE_MODEL(Entities::PartStorageEntity,
                  "part_storage", // the table name.
-                 DQ_FIELD(name, DQNotNull)
+                 DQ_FIELD(name, DQNotNull),
+                 DQ_FIELD(path),
+                 DQ_FIELD(lft, DQNotNull),
+                 DQ_FIELD(rgt, DQNotNull)
                  )
 
 DQ_DECLARE_MODEL(Entities::PartFootprintEntity,

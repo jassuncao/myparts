@@ -23,12 +23,36 @@
 #include "widgets/stockactioncolumndelegate.h"
 #include "widgets/datetimedelegate.h"
 #include "widgets/currencydelegate.h"
+#include "models/storagetreemodel.h"
+#include "models/treeitem.h"
 
 PartManagerForm::PartManagerForm(QWidget *parent) :
     QWidget(parent),    
     ui(new Ui::PartManagerForm)
 {
     ui->setupUi(this);
+    QAction * categoriesView = new QAction(QIcon(":/icons/folder_closed"), "Categories", this);
+    QAction * storageView = new QAction(QIcon(":/icons/box_closed"), "Storage", this);
+    QMenu * menu = new QMenu;
+    menu->addAction(categoriesView);
+    menu->addAction(storageView);
+    //ui->toolButton->setPopupMode(QToolButton::InstantPopup);
+    ui->toolButton->setMenu(menu);
+    ui->toolButton->setDefaultAction(categoriesView);
+    connect(ui->toolButton,SIGNAL(triggered(QAction*)),ui->toolButton,SLOT(setDefaultAction(QAction*)));
+
+    QToolBar * toolbar = new QToolBar((QWidget*)ui->toolButton->parent());
+    toolbar->addAction("Test");
+    toolbar->addSeparator();
+    QToolButton * aux = new QToolButton(toolbar);
+    aux->setMenu(menu);
+    aux->setPopupMode(QToolButton::InstantPopup);
+    toolbar->addWidget(aux);
+    aux->setDefaultAction(categoriesView);
+    connect(aux,SIGNAL(triggered(QAction*)),aux,SLOT(setDefaultAction(QAction*)));
+    ui->horizontalLayout_2->addWidget(toolbar);
+
+
     _savedfilterPanelState = ui->filterSplitter->saveState();
     ui->filterHeader_2->setVisible(false);
     ui->filterSplitter->setCollapsible(0,false);
@@ -45,10 +69,15 @@ PartManagerForm::PartManagerForm(QWidget *parent) :
     _categoriesTreeModel->setToolTipColumn(Entities::CategoriesDAO::DESCRIPTION_COL);
     _categoriesTreeModel->select();
 
-    ui->categoriesTreeView->setModel(_categoriesTreeModel);
+    _storageTreeModel = new StorageTreeModel(new TreeItem(-1, headerData));
+    _storageTreeModel->select();
+    connect(_storageTreeModel,SIGNAL(partDropped()), this, SLOT(refreshPartsModel()));
+
+    //ui->categoriesTreeView->setModel(_categoriesTreeModel);
+    ui->categoriesTreeView->setModel(_storageTreeModel);
     connect(ui->categoriesTreeView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)), this, SLOT(categoriesTreeView_currentChanged(QModelIndex,QModelIndex)));
     connect(ui->filterSplitter,SIGNAL(splitterMoved(int,int)), this, SLOT(filterSplitterMoved(int,int)));        
-    connect(_categoriesTreeModel,SIGNAL(partDropped()), this, SLOT(partCategoryChanged()));      
+    connect(_categoriesTreeModel,SIGNAL(partDropped()), this, SLOT(refreshPartsModel()));
 
     _partsModel = new PartsSqlQueryModel2(this);
     _partsModel->setTable("part");    
@@ -132,7 +161,13 @@ PartManagerForm::~PartManagerForm()
     delete ui;
 }
 
-void PartManagerForm::partCategoryChanged()
+void PartManagerForm::navigator_customContextMenuRequested(const QPoint &pos)
+{
+    QMenu menu;
+    //menu.exec(ui->comboBox->mapToGlobal(pos));
+}
+
+void PartManagerForm::refreshPartsModel()
 {
     _partsModel->select();
 }

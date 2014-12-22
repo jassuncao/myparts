@@ -18,6 +18,7 @@ class QMenu;
 class QDataWidgetMapper;
 class QAbstractButton;
 class StockHistoryProxyModel;
+class StorageTreeModel;
 
 class PartManagerForm : public QWidget
 {
@@ -58,7 +59,7 @@ private slots:
 
     void on_addPartButton_clicked();
 
-    void partCategoryChanged();
+    void refreshPartsModel();
 
     void on_pushButton_2_clicked();
 
@@ -74,6 +75,8 @@ private slots:
 
     void dateFilterOperatorCombo_indexChanged(int index);
 
+    void navigator_customContextMenuRequested(const QPoint &pos);
+
 private:
     QAction * createShowColumnAction(QMenu *parentMenu, const int columnNumber);
     void updatePartDetailView(const QModelIndex & current);
@@ -82,6 +85,7 @@ private:
     QByteArray _savedfilterPanelState;
     Ui::PartManagerForm *ui;
     CategoryTreeModel * _categoriesTreeModel;
+    StorageTreeModel * _storageTreeModel;
     QMenu * _categoriesContextMenu;
     //QMenu * _visibleColumnsContextMenu;
     QMenu * _tableHeaderContextMenu;

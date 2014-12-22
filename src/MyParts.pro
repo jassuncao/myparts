@@ -16,6 +16,7 @@ unix:DQUEST_INCLUDE_PATH=$$quote(/home/jassuncao/MyProjects/dquest-0.2/src/dques
 
 include($$DQUEST_INCLUDE_PATH)
 
+
 SOURCES += main.cpp\
         mainwindow.cpp \
     partdialog.cpp \
@@ -54,7 +55,11 @@ SOURCES += main.cpp\
     quickaddstoragedialog.cpp \
     widgets/currencydelegate.cpp \
     widgets/optionswidget.cpp \
-    models/treeitemmodel.cpp
+    models/treeitemmodel.cpp \
+    models/storagetreemodel.cpp \
+    entities/storagedao.cpp \
+    widgets/treeviewcombobox.cpp \
+    models/treemodelmimedata.cpp
 
 HEADERS  += mainwindow.h \
     entities/entities.h \
@@ -93,7 +98,11 @@ HEADERS  += mainwindow.h \
     quickaddstoragedialog.h \
     widgets/currencydelegate.h \
     widgets/optionswidget.h \
-    models/treeitemmodel.h
+    models/treeitemmodel.h \
+    models/storagetreemodel.h \
+    entities/storagedao.h \
+    widgets/treeviewcombobox.h \
+    models/treemodelmimedata.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \
@@ -108,3 +117,6 @@ RESOURCES += \
 
 OTHER_FILES += \
     todo.txt
+
+#unix:!macx: LIBS += -L$$PWD/../../../lixo/qt-manhattan-style/build/ -lqt-manhattan-style
+

@@ -32,11 +32,14 @@
        </property>
        <item>
         <widget class="QWidget" name="widget" native="true">
-         <property name="autoFillBackground">
-          <bool>false</bool>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
          </property>
          <property name="styleSheet">
-          <string notr="true">background-color:qlineargradient(spread:pad, x1:0.5, y1:0.8, x2:0.5, y2:0, stop:0.248619 rgba(67, 67, 67, 255), stop:0.707182 rgba(114, 114, 114, 255));</string>
+          <string notr="true">QWidget#widget {background-color:qlineargradient(spread:pad, x1:0.5, y1:0.8, x2:0.5, y2:0, stop:0.248619 rgba(67, 67, 67, 255), stop:0.707182 rgba(114, 114, 114, 255));}</string>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout">
           <item>
@@ -47,6 +50,9 @@
             <property name="text">
              <string>Categories</string>
             </property>
+            <property name="margin">
+             <number>0</number>
+            </property>
            </widget>
           </item>
           <item>
@@ -56,7 +62,7 @@
             </property>
             <property name="sizeHint" stdset="0">
              <size>
-              <width>134</width>
+              <width>40</width>
               <height>20</height>
              </size>
             </property>
@@ -106,9 +112,9 @@
           </spacer>
          </item>
          <item>
-          <widget class="QToolButton" name="toolButton_4">
-           <property name="text">
-            <string>...</string>
+          <widget class="QToolButton" name="toolButton">
+           <property name="popupMode">
+            <enum>QToolButton::InstantPopup</enum>
            </property>
           </widget>
          </item>
@@ -380,7 +386,7 @@ QToolButton:pressed {
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>761</width>
+                <width>681</width>
                 <height>176</height>
                </rect>
               </property>
@@ -1077,7 +1083,7 @@ QToolButton:pressed {
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>418</x>
+     <x>483</x>
      <y>360</y>
     </hint>
     <hint type="destinationlabel">
@@ -1093,12 +1099,12 @@ QToolButton:pressed {
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>684</x>
-     <y>453</y>
+     <x>765</x>
+     <y>466</y>
     </hint>
     <hint type="destinationlabel">
-     <x>740</x>
-     <y>454</y>
+     <x>847</x>
+     <y>468</y>
     </hint>
    </hints>
   </connection>

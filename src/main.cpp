@@ -5,6 +5,7 @@
 #include <dquest.h>
 #include "entities/entities.h"
 #include "partcategorydialog.h"
+#include <QWindowsXPStyle>
 
 bool createTables(DQConnection & connection)
 {
@@ -56,7 +57,8 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName("joaoassuncao");
     QCoreApplication::setOrganizationDomain("joaoassuncao.com");
     QCoreApplication::setApplicationName("MyParts");
-    MainWindow w;
+    MainWindow w;   
+    //QApplication::setStyle(new ManhattanStyle(QApplication::style()->objectName()));
     w.show();
     int res = a.exec();    
     connection.close();
