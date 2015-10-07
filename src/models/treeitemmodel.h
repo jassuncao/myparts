@@ -5,6 +5,7 @@
 #include <QModelIndex>
 #include <QIcon>
 #include <QQueue>
+#include <QMap>
 
 class TreeItem;
 
@@ -21,6 +22,7 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
     QModelIndex index(int row, int column, const QModelIndex &parentIndex = QModelIndex()) const;
     QModelIndex parent(const QModelIndex &index) const;
+    QModelIndex findIndex(int nodeId) const;
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
     bool insertItem(const QModelIndex &parent);
@@ -38,6 +40,7 @@ protected:
     virtual bool doRevert(TreeItem * item);
 
     TreeItem * getItem(const QModelIndex &index) const;
+    QModelIndex internalFindIndex(int nodeId, const TreeItem *parentNode) const;
 
 signals:
     
@@ -46,13 +49,13 @@ public slots:
     void revert();
 
 private:
-
     TreeItem * _invisibleRootItem;
     QIcon _folderIcon;
     const QModelIndex * _uncommitedItemParent;
     TreeItem * _uncommitedItem;
     QQueue<TreeItem*> _uncommited;
     int _toolTipColumn;
+    QMap<int,QModelIndex> _indexesLookup;
 };
 
 #endif // TREEITEMMODEL_H

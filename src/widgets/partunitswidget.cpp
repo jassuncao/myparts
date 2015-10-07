@@ -1,8 +1,13 @@
 #include "partunitswidget.h"
-#include <QtGui>
 #include <QSqlError>
 #include <QSqlRecord>
 #include <QSqlQuery>
+#include <QTableView>
+#include <QHeaderView>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QHBoxLayout>
+#include <QMessageBox>
 #include "partunits/partunitssqltablemodel.h"
 #include "widgets/booleanitemdelegate.h"
 
@@ -24,7 +29,11 @@ PartUnitsWidget::PartUnitsWidget(QWidget *parent) :
     QStyledItemDelegate * colDelegate = new BooleanItemDelegate(QPixmap(":icons/default"),QPixmap());
     _view->setItemDelegateForColumn(PartUnitsSqlTableModel::ColumnDefault, colDelegate);
     _view->verticalHeader()->setVisible(false);
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
+    _view->horizontalHeader()->setSectionResizeMode(PartUnitsSqlTableModel::ColumnDefault, QHeaderView::Fixed);
+#else
     _view->horizontalHeader()->setResizeMode(PartUnitsSqlTableModel::ColumnDefault, QHeaderView::Fixed);
+#endif
     _view->horizontalHeader()->moveSection(PartUnitsSqlTableModel::ColumnDefault,0);
     _view->horizontalHeader()->setStretchLastSection(true);
     _view->resizeColumnsToContents();
@@ -114,7 +123,7 @@ void PartUnitsWidget::makeDefault()
     query.prepare("UPDATE part_unit SET defaultUnit = 0 WHERE id <> ? AND defaultUnit=1");
     query.bindValue(0,id);
     query.exec();
-     _model->database().commit();
+    _model->database().commit();
     _model->select();
     emit dataCommited();
 }

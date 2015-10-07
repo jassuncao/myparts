@@ -1,7 +1,14 @@
 #include "partunitdialog.h"
-#include <QtGui>
 #include <QDebug>
+#include <QLineEdit>
+#include <QDialogButtonBox>
+#include <QCheckBox>
+#include <QVBoxLayout>
+#include <QFormLayout>
 #include <QDataWidgetMapper>
+#include <QPushButton>
+#include <QMessageBox>
+
 
 PartUnitDialog::PartUnitDialog(QAbstractItemModel *model, QWidget *parent) :
     QDialog(parent)

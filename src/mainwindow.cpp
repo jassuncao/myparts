@@ -5,14 +5,35 @@
 #include <QtGui>
 #include "widgets/partconditionwidget.h"
 #include "widgets/partunitswidget.h"
+#include "models/storagetreemodel.h"
+#include "footprintmanagerwidget.h"
+#include "unitmanagerwidget.h"
+#include "parts/partparameterdialog.h"
+#include "distributormanagerwidget.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
     readSettings();
+    QVector<QVariant> headerData(3);
+    headerData.append("Name");
+    headerData.append("Description");
+    headerData.append("ID");
+
+    StorageTreeModel * storageTreeModel = new StorageTreeModel(headerData, this);
+    storageTreeModel->select();
+    ui->storageManagerWidget->setModel(storageTreeModel);
+
+    FootprintManagerWidget* footprintManager = new FootprintManagerWidget(this);
+    ui->tabWidget->addTab(footprintManager, tr("Footprints"));
+
+    UnitManagerWidget* unitManager = new UnitManagerWidget(this);
+    ui->tabWidget->addTab(unitManager, tr("Units"));
+
+    DistributorManagerWidget* distributorManager = new DistributorManagerWidget(this);
+    ui->tabWidget->addTab(distributorManager, QIcon(":/icons/distributor"), tr("Distributors"));
 }
 
 MainWindow::~MainWindow()
@@ -52,4 +73,11 @@ void MainWindow::on_actionPart_conditions_triggered()
 {
     OptionsDialog dlg(new PartConditionWidget(), this);
     dlg.exec();
+}
+
+void MainWindow::on_actionActionPartParameters_triggered()
+{
+        PartParameterDialog dlg(this);
+        dlg.exec();
+
 }

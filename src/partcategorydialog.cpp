@@ -1,5 +1,11 @@
 #include "partcategorydialog.h"
 #include <QtGui>
+#include <QLineEdit>
+#include <QPlainTextEdit>
+#include <QFormLayout>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QMessageBox>
 #include <QDebug>
 #include <QDataWidgetMapper>
 #include "entities/categoriesdao.h"

@@ -6,6 +6,7 @@
 #include <QStandardItemModel>
 #include <QDebug>
 #include <QMenu>
+#include <QToolBar>
 #include "partcategorydialog.h"
 #include "qsortfiltersqlquerymodel.h"
 #include <QSignalMapper>
@@ -25,31 +26,23 @@
 #include "widgets/currencydelegate.h"
 #include "models/storagetreemodel.h"
 #include "models/treeitem.h"
+#include "entities/storagedao.h"
 
 PartManagerForm::PartManagerForm(QWidget *parent) :
     QWidget(parent),    
     ui(new Ui::PartManagerForm)
 {
-    ui->setupUi(this);
-    QAction * categoriesView = new QAction(QIcon(":/icons/folder_closed"), "Categories", this);
-    QAction * storageView = new QAction(QIcon(":/icons/box_closed"), "Storage", this);
-    QMenu * menu = new QMenu;
-    menu->addAction(categoriesView);
-    menu->addAction(storageView);
-    //ui->toolButton->setPopupMode(QToolButton::InstantPopup);
-    ui->toolButton->setMenu(menu);
-    ui->toolButton->setDefaultAction(categoriesView);
-    connect(ui->toolButton,SIGNAL(triggered(QAction*)),ui->toolButton,SLOT(setDefaultAction(QAction*)));
+    ui->setupUi(this);   
 
-    QToolBar * toolbar = new QToolBar((QWidget*)ui->toolButton->parent());
-    toolbar->addAction("Test");
-    toolbar->addSeparator();
-    QToolButton * aux = new QToolButton(toolbar);
-    aux->setMenu(menu);
-    aux->setPopupMode(QToolButton::InstantPopup);
-    toolbar->addWidget(aux);
-    aux->setDefaultAction(categoriesView);
-    connect(aux,SIGNAL(triggered(QAction*)),aux,SLOT(setDefaultAction(QAction*)));
+    QToolBar * toolbar = new QToolBar();
+    toolbar->setIconSize(QSize(16,16));
+    ui->horizontalLayout_2->addWidget(toolbar);
+    toolbar->addAction(QIcon(":/icons/toggle_expand"), "Expand", this, SLOT(on_expandTreeButton_clicked()));
+    toolbar->addAction(QIcon(":/icons/toggle_collapse"), "Collapse", this, SLOT(on_collapseTreeButton_clicked()));
+
+    QWidget* empty = new QWidget();
+    empty->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Preferred);
+    toolbar->addWidget(empty);    
     ui->horizontalLayout_2->addWidget(toolbar);
 
 
@@ -58,8 +51,8 @@ PartManagerForm::PartManagerForm(QWidget *parent) :
     ui->filterSplitter->setCollapsible(0,false);
     ui->splitter_2->setChildrenCollapsible(false);
 
-    ui->categoriesTreeView->setDragDropMode(QAbstractItemView::DragDrop);
-    ui->categoriesTreeView->setDefaultDropAction(Qt::MoveAction);
+    ui->mainTreeView->setDragDropMode(QAbstractItemView::DragDrop);
+    ui->mainTreeView->setDefaultDropAction(Qt::MoveAction);
     QVector<QVariant> headerData(3);
     headerData.append("Name");
     headerData.append("Description");
@@ -68,21 +61,24 @@ PartManagerForm::PartManagerForm(QWidget *parent) :
     _categoriesTreeModel = new CategoryTreeModel(headerData, this);
     _categoriesTreeModel->setToolTipColumn(Entities::CategoriesDAO::DESCRIPTION_COL);
     _categoriesTreeModel->select();
+    ui->mainTreeView->setModel(_categoriesTreeModel);
 
-    _storageTreeModel = new StorageTreeModel(new TreeItem(-1, headerData));
-    _storageTreeModel->select();
-    connect(_storageTreeModel,SIGNAL(partDropped()), this, SLOT(refreshPartsModel()));
-
-    //ui->categoriesTreeView->setModel(_categoriesTreeModel);
-    ui->categoriesTreeView->setModel(_storageTreeModel);
-    connect(ui->categoriesTreeView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)), this, SLOT(categoriesTreeView_currentChanged(QModelIndex,QModelIndex)));
+    connect(_categoriesTreeModel,SIGNAL(partDropped()), this, SLOT(refreshPartsModel()));
+    connect(ui->mainTreeView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)), this, SLOT(mainTreeView_currentChanged(QModelIndex,QModelIndex)));
     connect(ui->filterSplitter,SIGNAL(splitterMoved(int,int)), this, SLOT(filterSplitterMoved(int,int)));        
     connect(_categoriesTreeModel,SIGNAL(partDropped()), this, SLOT(refreshPartsModel()));
+
+    _storageTreeModel = new StorageTreeModel(headerData, this);
+    _storageTreeModel->select();
 
     _partsModel = new PartsSqlQueryModel2(this);
     _partsModel->setTable("part");    
     _partsModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
-    connect(_partsModel,SIGNAL(primeInsert(int,QSqlRecord&)), this, SLOT(part_primeInsert(int,QSqlRecord&)));    
+    connect(_partsModel,SIGNAL(primeInsert(int,QSqlRecord&)), this, SLOT(slotPartsModelPrimeInsert(int,QSqlRecord&)));
+
+    ui->partDetailsView->setPartsModel(_partsModel);
+    ui->filterForm->setFilterBuilder(&_filterBuilder);
+    ui->filterForm->setStorageModel(_storageTreeModel);
 
     ui->partsTableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     //To enable in the future to allow editing stocks in place
@@ -100,7 +96,8 @@ PartManagerForm::PartManagerForm(QWidget *parent) :
     _partsModel->setHeaderData(PartsSqlQueryModel2::ColumnCreateDate, Qt::Horizontal, tr("Create Date"));
     _partsModel->setHeaderData(PartsSqlQueryModel2::ColumnCategoryName, Qt::Horizontal, tr("Category"));
     _partsModel->setHeaderData(PartsSqlQueryModel2::ColumnStorage, Qt::Horizontal, tr("Storage Location"));
-    _partsModel->setHeaderData(PartsSqlQueryModel2::ColumnCondition, Qt::Horizontal, tr("Condition"));    
+    _partsModel->setHeaderData(PartsSqlQueryModel2::ColumnCondition, Qt::Horizontal, tr("Condition"));
+    _partsModel->setHeaderData(PartsSqlQueryModel2::ColumnFootprintName, Qt::Horizontal, tr("Footprint"));
 
     ui->partsTableView->setDragEnabled(true);
     ui->partsTableView->setDragDropMode(QAbstractItemView::DragOnly);
@@ -115,9 +112,10 @@ PartManagerForm::PartManagerForm(QWidget *parent) :
     ui->partsTableView->setColumnHidden(PartsSqlQueryModel2::ColumnConditionId, true);
     ui->partsTableView->setColumnHidden(PartsSqlQueryModel2::ColumnCategoryId, true);
     ui->partsTableView->setColumnHidden(PartsSqlQueryModel2::ColumnStorageId, true);
+    ui->partsTableView->setColumnHidden(PartsSqlQueryModel2::ColumnFootprintId, true);
 
-    ui->partsTableView->setItemDelegateForColumn(PartsSqlQueryModel2::ColumnCreateDate, new DateDelegate());
-    ui->partsTableView->setItemDelegateForColumn(PartsSqlQueryModel2::ColumnAvgPrice, new CurrencyDelegate());
+    ui->partsTableView->setItemDelegateForColumn(PartsSqlQueryModel2::ColumnCreateDate, new DateDelegate(this));
+    ui->partsTableView->setItemDelegateForColumn(PartsSqlQueryModel2::ColumnAvgPrice, new CurrencyDelegate(this));
 
     ui->partsTableView->verticalHeader()->setVisible(false);
     ui->partsTableView->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -126,34 +124,23 @@ PartManagerForm::PartManagerForm(QWidget *parent) :
     connect(ui->partsTableView->horizontalHeader(), SIGNAL(customContextMenuRequested(QPoint)),
             this, SLOT(partsTableViewHeaderContextMenu(QPoint)));   
 
-
-    QSqlQueryModel * storageLocationsModel = new QSqlQueryModel(this);
-    storageLocationsModel->setQuery("SELECT id, name FROM part_storage");
-    ui->filterByStorageCombo->setModel(storageLocationsModel);
-    ui->filterByStorageCombo->setModelColumn(1);
-    ui->filterByStorageCombo->setCurrentIndex(-1);  
-
-    QSqlQueryModel * conditionModel = new QSqlQueryModel(this);
-    conditionModel->setQuery("SELECT id, value FROM part_condition");
-    ui->filterByCondtitionCombo->setModel(conditionModel);
-    ui->filterByCondtitionCombo->setModelColumn(1);
-    ui->filterByCondtitionCombo->setCurrentIndex(-1);
-
     connect(ui->partsTableView->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
             this, SLOT(partsTableView_currentRowChanged(QModelIndex,QModelIndex)));
 
-    QPushButton * addStockButton = new QPushButton(QIcon(QString::fromUtf8(":/icons/addStock")), tr("Add Stock"),ui->partActionsButtonBox);
-    QPushButton * removeStockButton = new QPushButton(QIcon(QString::fromUtf8(":/icons/removeStock")), tr("Remove Stock"),ui->partActionsButtonBox);
-    QPushButton * editPartButton = new QPushButton(QIcon(QString::fromUtf8(":/icons/editPart")), tr("Edit Part"),ui->partActionsButtonBox);
-    ui->partActionsButtonBox->addButton(addStockButton, QDialogButtonBox::ActionRole);
-    ui->partActionsButtonBox->addButton(removeStockButton, QDialogButtonBox::ActionRole);
-    ui->partActionsButtonBox->addButton(editPartButton, QDialogButtonBox::ActionRole);
-    connect(addStockButton, SIGNAL(clicked()), this, SLOT(onAddStock()));
-    connect(removeStockButton, SIGNAL(clicked()), this, SLOT(onRemoveStock()));
-    connect(editPartButton, SIGNAL(clicked()), this, SLOT(onEditPart()));
-    connect(ui->dateFilterOperatorCombo,SIGNAL(currentIndexChanged(int)),this,SLOT(dateFilterOperatorCombo_indexChanged(int)));
+    connect(ui->partsTableView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(slotEditPart()));
+
+    connect(ui->filterForm, SIGNAL(filterChanged()), this, SLOT(slotFilterChanged()));
+    connect(ui->partDetailsView, SIGNAL(addStockSelected()), this, SLOT(slotAddStock()));
+    connect(ui->partDetailsView, SIGNAL(removeStockSelected()), this, SLOT(slotRemoveStock()));
+    connect(ui->partDetailsView, SIGNAL(editPartSelected()), this, SLOT(slotEditPart()));
+    ui->addPartToolButton->setDefaultAction(ui->actionAddPart);
+    ui->deletePartToolButton->setDefaultAction(ui->actionDeletePart);
+    ui->duplicatePartButton->setDefaultAction(ui->actionDuplicatePart);
+    connect(ui->actionAddPart, SIGNAL(triggered()), this, SLOT(slotAddPart()));
+    connect(ui->actionDeletePart, SIGNAL(triggered()), this, SLOT(slotDeletePart()));
+    connect(ui->actionDuplicatePart, SIGNAL(triggered()), this, SLOT(slotDuplicatePart()));
     createMenus();
-    resetFilter();
+    ui->filterForm->resetFilter();
 }
 
 PartManagerForm::~PartManagerForm()
@@ -161,7 +148,7 @@ PartManagerForm::~PartManagerForm()
     delete ui;
 }
 
-void PartManagerForm::navigator_customContextMenuRequested(const QPoint &pos)
+void PartManagerForm::navigator_customContextMenuRequested(const QPoint &)
 {
     QMenu menu;
     //menu.exec(ui->comboBox->mapToGlobal(pos));
@@ -178,6 +165,13 @@ void PartManagerForm::partsTableViewHeaderContextMenu(QPoint point)
     _tableHeaderContextMenu->popup(ui->partsTableView->horizontalHeader()->mapToGlobal(point));
 }
 
+void PartManagerForm::slotFilterChanged()
+{
+    _partsModel->setFilter(_filterBuilder.build());
+    if(!_partsModel->query().isActive())
+        _partsModel->select();
+}
+
 void PartManagerForm::filterSplitterMoved(int, int index)
 {
     if(index==1){
@@ -190,30 +184,27 @@ void PartManagerForm::filterSplitterMoved(int, int index)
     }
 }
 
-void PartManagerForm::categoriesTreeView_currentChanged(const QModelIndex &current, const QModelIndex&)
+void PartManagerForm::mainTreeView_currentChanged(const QModelIndex &current, const QModelIndex&)
 {    
-    if(current.isValid()){
+    if(!current.isValid()) return;
 
-        FilterBuilder::CategoryFilteringMode catMode = _filterBuilder.categoryFilteringMode();
-        qDebug("Catt:%d",catMode);
-        if(catMode == FilterBuilder::AllCategories)
-            return;
-
-        int nodeId = _categoriesTreeModel->getItemId(current);
-        qDebug()<<"current category changed "<< nodeId;
-        if(catMode == FilterBuilder::SubCategories){
-            _filterBuilder.setSelectedCategories(Entities::CategoriesDAO::listChildCategories(nodeId));
-        }
-        else if(catMode == FilterBuilder::SelectedCategory){
-            _filterBuilder.setSelectedCategories(QVector<QVariant>(1,nodeId));
-        }
-        _partsModel->setFilter(_filterBuilder.build());
+    FilterBuilder::CategoryFilterMode catMode = _filterBuilder.categoryFilterMode();
+    if(catMode == FilterBuilder::AllCategories)
+        return;
+    int nodeId = _categoriesTreeModel->getItemId(current);
+    qDebug()<<"current category changed "<< nodeId;
+    if(catMode == FilterBuilder::SubCategories){
+        _filterBuilder.setSelectedCategories(Entities::CategoriesDAO::listChildCategories(nodeId));
     }
+    else if(catMode == FilterBuilder::SelectedCategory){
+        _filterBuilder.setSelectedCategories(QVector<QVariant>(1,nodeId));
+    }
+    slotFilterChanged();
 }
 
-void PartManagerForm::on_categoriesTreeView_customContextMenuRequested(const QPoint &pos)
+void PartManagerForm::on_mainTreeView_customContextMenuRequested(const QPoint &pos)
 {
-    _categoriesCtxMenuIndex = ui->categoriesTreeView->indexAt(pos);
+    _categoriesCtxMenuIndex = ui->mainTreeView->indexAt(pos);
     bool indexValid = _categoriesCtxMenuIndex.isValid();
     bool canDelete = false;
     if(indexValid){
@@ -221,7 +212,7 @@ void PartManagerForm::on_categoriesTreeView_customContextMenuRequested(const QPo
     }
     ui->actionEditCategory->setEnabled(indexValid);
     ui->actionDeleteCategory->setEnabled(canDelete);
-    _categoriesContextMenu->exec(ui->categoriesTreeView->mapToGlobal(pos));
+    _categoriesContextMenu->exec(ui->mainTreeView->mapToGlobal(pos));
 }
 
 void PartManagerForm::createMenus()
@@ -265,66 +256,7 @@ void PartManagerForm::onToggleTableColumn(bool checked)
 }
 
 void PartManagerForm::partsTableView_currentRowChanged(const QModelIndex &current, const QModelIndex&)
-{   
-    ui->partActionsButtonBox->setEnabled(current.isValid());
-    updatePartDetailView(current);
-    updateStockView(current);
-}
-
-QString columnDisplayData(QAbstractItemModel * model, const QModelIndex & current, int column){
-    if(!current.isValid())
-        return QString();
-    QModelIndex colIndex = model->index(current.row(), column);
-    return colIndex.isValid()? colIndex.data().toString() : QString();
-}
-
-QString columnDisplayDate(QAbstractItemModel * model, const QModelIndex & current, int column){
-    if(!current.isValid())
-        return QString();
-    QModelIndex colIndex = model->index(current.row(), column);
-    if(!colIndex.isValid())
-        return QString();
-    return QDateTime::fromTime_t(colIndex.data(Qt::EditRole).toUInt()).toString(Qt::DefaultLocaleShortDate);
-}
-
-void PartManagerForm::updatePartDetailView(const QModelIndex & current)
-{
-    ui->partNameLabel->setText(columnDisplayData(_partsModel, current, PartsSqlQueryModel2::ColumnName));
-    ui->partDescriptionLabel->setText(columnDisplayData(_partsModel, current, PartsSqlQueryModel2::ColumnDescription));
-    ui->partCategoryLabel->setText(columnDisplayData(_partsModel, current, PartsSqlQueryModel2::ColumnCategoryName));
-    ui->partStockLevelLabel->setText(columnDisplayData(_partsModel, current, PartsSqlQueryModel2::ColumnActualStock));
-    ui->partMinStockLabel->setText(columnDisplayData(_partsModel, current, PartsSqlQueryModel2::ColumnMinStock));
-    ui->partCustomNumberLabel->setText(columnDisplayData(_partsModel, current, PartsSqlQueryModel2::ColumnCustomPartNumber));
-    ui->partCommentLabel->setText(columnDisplayData(_partsModel, current, PartsSqlQueryModel2::ColumnComment));
-    ui->partCreateDateLabel->setText(columnDisplayDate(_partsModel, current, PartsSqlQueryModel2::ColumnCreateDate));
-    ui->partStorageLocationLabel->setText(columnDisplayData(_partsModel, current, PartsSqlQueryModel2::ColumnStorage));
-    ui->partConditionLabel->setText(columnDisplayData(_partsModel, current, PartsSqlQueryModel2::ColumnCondition));
-    ui->partStockLevelUnitLabel->setText(columnDisplayData(_partsModel, current, PartsSqlQueryModel2::ColumnPartUnit));
-    ui->partMinStockUnitLabel->setText(columnDisplayData(_partsModel, current, PartsSqlQueryModel2::ColumnPartUnit));
-}
-
-void PartManagerForm::updateStockView(const QModelIndex & current)
-{
-    if(!current.isValid()){
-        ui->partStockHistoryTable->setModel(0);
-        return;
-    }
-
-    QModelIndex primaryKeyIndex = _partsModel->index(current.row(), PartsSqlQueryModel2::ColumnId);
-    QVariant keyValue = primaryKeyIndex.data(Qt::EditRole);
-    qDebug()<<"Changing part to "<<keyValue;
-
-    StockHistoryModel * model= new StockHistoryModel();
-    model->setSelectedPart(keyValue);
-    model->setHeaderData(0, Qt::Horizontal, QString());
-    model->setHeaderData(1, Qt::Horizontal, tr("Date"));
-    model->setHeaderData(2, Qt::Horizontal, tr("Amount"));
-    model->setHeaderData(3, Qt::Horizontal, tr("Price"));
-    model->setHeaderData(4, Qt::Horizontal, tr("Comment"));
-    ui->partStockHistoryTable->setItemDelegateForColumn(StockHistoryModel::ColumnAction, new StockActionColumnDelegate());
-    ui->partStockHistoryTable->setModel(model);
-    ui->partStockHistoryTable->resizeColumnsToContents();
-    ui->partStockHistoryTable->horizontalHeader()->setResizeMode(StockHistoryModel::ColumnAction, QHeaderView::Fixed);   
+{   ui->partDetailsView->setCurrentIndex(current);
 }
 
 void PartManagerForm::on_actionAddCategory_triggered()
@@ -338,9 +270,9 @@ void PartManagerForm::on_actionAddCategory_triggered()
     dlg.setRootIndex(parentIndex);
     dlg.setCurrentIndex(row);
     if(dlg.exec()==QDialog::Accepted){
-        ui->categoriesTreeView->expand(parentIndex);
+        ui->mainTreeView->expand(parentIndex);
         QModelIndex childIndex = _categoriesTreeModel->index(row, 0, parentIndex);
-        ui->categoriesTreeView->selectionModel()->select(childIndex, QItemSelectionModel::ClearAndSelect);
+        ui->mainTreeView->selectionModel()->select(childIndex, QItemSelectionModel::ClearAndSelect);
     }
     else{
         _categoriesTreeModel->revert();
@@ -350,7 +282,7 @@ void PartManagerForm::on_actionAddCategory_triggered()
 
 void PartManagerForm::on_actionDeleteCategory_triggered()
 {
-    QModelIndex currentIdx = ui->categoriesTreeView->selectionModel()->currentIndex();
+    QModelIndex currentIdx = ui->mainTreeView->selectionModel()->currentIndex();
     if(!currentIdx.isValid())
         return;
     _categoriesTreeModel->removeItem(currentIdx);
@@ -358,7 +290,7 @@ void PartManagerForm::on_actionDeleteCategory_triggered()
 
 void PartManagerForm::on_actionEditCategory_triggered()
 {
-    QModelIndex currentIdx = ui->categoriesTreeView->selectionModel()->currentIndex();
+    QModelIndex currentIdx = ui->mainTreeView->selectionModel()->currentIndex();
     if(!currentIdx.isValid())
         return;
 
@@ -389,142 +321,6 @@ void PartManagerForm::on_expandFilterPanelButton_clicked()
     ui->filterHeader_2->setVisible(false);
 }
 
-void PartManagerForm::appyFilter()
-{
-    //Filter by storage stuff starts
-    bool filterByStorage = ui->filterByStorageCheck->isChecked();
-    _filterBuilder.setFilterByStorage(filterByStorage);
-    if(filterByStorage){
-        int storageIdx = ui->filterByStorageCombo->currentIndex();
-        QAbstractItemModel * model = ui->filterByStorageCombo->model();
-        QVariant key = model->data(model->index(storageIdx,0));
-        _filterBuilder.setSelectedStorage(key);
-    }
-
-    //Filter by category stuff starts
-    QModelIndex currentCategory = ui->categoriesTreeView->currentIndex();
-
-    if(ui->selectedCategoryScopeRadio->isChecked()){
-        _filterBuilder.setCategoryFilteringMode(FilterBuilder::SelectedCategory);
-        if(currentCategory.isValid()){
-            int nodeId = _categoriesTreeModel->getItemId(currentCategory);
-            _filterBuilder.setSelectedCategories(QVector<QVariant>(1,nodeId));
-        }
-        else{
-            _filterBuilder.setSelectedCategories(QVector<QVariant>(0));
-        }
-    }
-    else if(ui->allSubCategoriesScopeRadio->isChecked()){
-        _filterBuilder.setCategoryFilteringMode(FilterBuilder::SubCategories);
-        if(currentCategory.isValid()){
-            int nodeId = _categoriesTreeModel->getItemId(currentCategory);
-            _filterBuilder.setSelectedCategories( Entities::CategoriesDAO::listChildCategories(nodeId));
-        }
-        else{
-            QVector<QVariant> empty = QVector<QVariant>(0);
-            _filterBuilder.setSelectedCategories(empty);
-        }
-    }
-    else{
-        _filterBuilder.setCategoryFilteringMode(FilterBuilder::AllCategories);
-    }
-
-    //Filter by stock stuff starts
-    if(ui->stockZeroRadio->isChecked()){
-        _filterBuilder.setStockFilteringMode(FilterBuilder::StockLevelZero);
-    }
-    else if(ui->stockGreateZeroRadio->isChecked()){
-        _filterBuilder.setStockFilteringMode(FilterBuilder::StockLevelGreaterZero);
-    }
-    else if(ui->stockBelowMinRadio->isChecked()){
-        _filterBuilder.setStockFilteringMode(FilterBuilder::StockLevelBelowMin);
-    }
-    else{
-        _filterBuilder.setStockFilteringMode(FilterBuilder::AnyStockLevel);
-    }
-    _filterBuilder.setTextFilter(ui->textSearchLineEdit->text());
-
-    //Filter by date stuff starts
-    int dateFilterComboIdx = ui->dateFilterOperatorCombo->currentIndex();
-    FilterBuilder::DateFilteringMode dateFilterMode;
-    switch(dateFilterComboIdx){
-        case 1:
-            dateFilterMode = FilterBuilder::DateFilterBefore;
-            break;
-        case 2:
-            dateFilterMode = FilterBuilder::DateFilterOn;
-            break;
-        case 3:
-            dateFilterMode = FilterBuilder::DateFilterAfter;
-            break;
-    default:
-        dateFilterMode = FilterBuilder::DateFilterNone;
-    }
-    _filterBuilder.setDateFilterMode(dateFilterMode);
-    _filterBuilder.setSelectedDate(ui->dateFilterEdit->date());
-
-    //Filter by condition stuff
-    bool filterByCondition = ui->filterByConditionCheckbox->isChecked();
-    _filterBuilder.setFilterByCondition(filterByCondition);
-    if(filterByCondition){
-        int conditionIdx = ui->filterByCondtitionCombo->currentIndex();
-        QAbstractItemModel * model = ui->filterByCondtitionCombo->model();
-        QVariant key = model->data(model->index(conditionIdx,0));
-        _filterBuilder.setSelectedCondition(key);
-    }
-
-    //Create filter expression and apply it to the model
-    _partsModel->setFilter(_filterBuilder.build());
-
-    //Need to reselect if a cursor for a previous is open
-    if(!_partsModel->query().isActive())
-        _partsModel->select();
-    //qDebug()<<"Query is "<<_partsModel->selectStatement();
-}
-
-void PartManagerForm::resetFilter()
-{    
-    ui->textSearchLineEdit->clear();
-    ui->filterByStorageCheck->setChecked(false);
-    ui->allSubCategoriesScopeRadio->setChecked(true);
-    ui->stockAnyRadio->setChecked(true);
-    ui->dateFilterOperatorCombo->setCurrentIndex(0);
-    ui->dateFilterEdit->setDate(QDate::currentDate());
-    ui->dateFilterEdit->setEnabled(false);
-    ui->filterByConditionCheckbox->setChecked(false);
-    appyFilter();
-}
-
-void PartManagerForm::on_filterButtonBox_clicked(QAbstractButton *button)
-{
-    QDialogButtonBox::StandardButton standardButton = ui->filterButtonBox->standardButton(button);
-    switch(standardButton) {
-        case QDialogButtonBox::Apply:
-            appyFilter();     
-        break;
-    case QDialogButtonBox::Reset:
-            resetFilter();
-        break;
-    default:
-        break;
-    }
-}
-
-void PartManagerForm::on_filterByStorageCombo_currentIndexChanged(int index)
-{
-}
-
-void PartManagerForm::on_filterByStorageCheck_toggled(bool checked)
-{
-}
-
-void PartManagerForm::on_filterByStorageCheck_stateChanged(int state)
-{
-    if(state==Qt::Unchecked){
-        ui->filterByStorageCombo->setCurrentIndex(-1);
-    }
-}
-
 void PartManagerForm::on_lineEdit_returnPressed()
 {
 }
@@ -532,12 +328,10 @@ void PartManagerForm::on_lineEdit_returnPressed()
 void PartManagerForm::on_textSearchLineEdit_returnPressed()
 {
     _filterBuilder.setTextFilter(ui->textSearchLineEdit->text());
-    _partsModel->setFilter(_filterBuilder.build());
-    if(!_partsModel->query().isActive())
-        _partsModel->select();
+    slotFilterChanged();
 }
 
-void PartManagerForm::onAddStock()
+void PartManagerForm::slotAddStock()
 {
     QModelIndex index = ui->partsTableView->currentIndex();
     if(!index.isValid())
@@ -576,7 +370,7 @@ void PartManagerForm::onAddStock()
     }
 }
 
-void PartManagerForm::onRemoveStock()
+void PartManagerForm::slotRemoveStock()
 {
     QModelIndex index = ui->partsTableView->currentIndex();
     if(!index.isValid())
@@ -607,40 +401,42 @@ void PartManagerForm::onRemoveStock()
 
 }
 
-void PartManagerForm::onEditPart()
-{    
+void PartManagerForm::slotAddPart()
+{
+    PartDialog dlg(_partsModel, _storageTreeModel, this);
+    dlg.addNewPart();
+}
+
+void PartManagerForm::slotEditPart()
+{
     QModelIndex index = ui->partsTableView->currentIndex();
     if(!index.isValid())
         return;
-    PartDialog dlg(_partsModel, false, this);
-    dlg.setWindowTitle(tr("Edit Part"));
-    dlg.setCurrentModelIndex(index);
-    dlg.exec();
+    PartDialog dlg(_partsModel, _storageTreeModel, this);
+    dlg.editPart(index);
 }
 
-void PartManagerForm::on_addPartButton_clicked()
-{    
-    int row = _partsModel->rowCount();
+void PartManagerForm::slotDeletePart()
+{
+    qDebug("Deleting part");
+    if(!ui->partsTableView->selectionModel()->hasSelection())
+        return;
+    QModelIndexList selectedIndexes = ui->partsTableView->selectionModel()->selectedIndexes();
     _partsModel->database().transaction();
-    if(_partsModel->insertRow(row)){
-        QModelIndex rootIndex = _partsModel->index(row, PartsSqlQueryModel2::ColumnId);
-        PartDialog dlg(_partsModel, true, this);
-        dlg.setWindowTitle(tr("Add Part"));
-        dlg.setCurrentModelIndex(rootIndex);
-        if(dlg.exec()==QDialog::Accepted){
-            _partsModel->submitAll();
-            QVariant partId = _partsModel->lastInsertedId();
-            qDebug()<<"Part id is "<<partId;
-            if(dlg.initialStock()>0 && partId.isValid()){
-                PartsDAO::addStock(partId, dlg.initialStock(), dlg.partPrice(), QString());
-            }            
-            _partsModel->database().commit();            
-        }
-        else{
-            _partsModel->revertAll();
-            _partsModel->database().rollback();
-        }
+    for(int i=0; i< selectedIndexes.size(); ++i){
+        _partsModel->removeRow(selectedIndexes[i].row());
     }
+    _partsModel->submitAll();
+    _partsModel->database().commit();
+}
+
+void PartManagerForm::slotDuplicatePart()
+{
+    QModelIndex index = ui->partsTableView->currentIndex();
+    if(!index.isValid())
+        return;
+    PartDialog dlg(_partsModel, _storageTreeModel, this);
+    dlg.duplicatePart(index);
 }
 
 void PartManagerForm::on_pushButton_2_clicked()
@@ -648,16 +444,10 @@ void PartManagerForm::on_pushButton_2_clicked()
 }
 
 void PartManagerForm::on_deletePartButton_clicked()
-{
-    if(!ui->partsTableView->selectionModel()->hasSelection())
-        return;
-    QModelIndexList selectedIndexes = ui->partsTableView->selectionModel()->selectedIndexes();
-    for(int i=0; i< selectedIndexes.size(); ++i){
-        _partsModel->removeRow(selectedIndexes[i].row());
-    }
+{    
 }
 
-void PartManagerForm::part_primeInsert(int row, QSqlRecord &record)
+void PartManagerForm::slotPartsModelPrimeInsert(int, QSqlRecord &record)
 {
     //Set the createDate field
     QDateTime now = QDateTime::currentDateTimeUtc();
@@ -667,7 +457,7 @@ void PartManagerForm::part_primeInsert(int row, QSqlRecord &record)
     record.setGenerated(PartsSqlQueryModel2::ColumnCreateDate,true);
 
     //Set the category field using the category selected in the tree view
-    QModelIndex currentCategoryIdx = ui->categoriesTreeView->selectionModel()->currentIndex();
+    QModelIndex currentCategoryIdx = ui->mainTreeView->selectionModel()->currentIndex();
     int categoryId;
     if(currentCategoryIdx.isValid()){
         categoryId = _categoriesTreeModel->getItemId(currentCategoryIdx);
@@ -691,55 +481,14 @@ void PartManagerForm::part_primeInsert(int row, QSqlRecord &record)
     }
 }
 
-void PartManagerForm::on_duplicateParteButton_clicked()
-{
-    QModelIndex index = ui->partsTableView->currentIndex();
-    if(!index.isValid())
-        return;
-    QSqlRecord copy = _partsModel->record(index.row());
-    copy.setNull(PartsSqlQueryModel2::ColumnId);
-    copy.setNull(PartsSqlQueryModel2::ColumnActualStock);
-
-    //Set the createDate field
-    QDateTime now = QDateTime::currentDateTimeUtc();
-    QVariant t = QVariant(now.toTime_t());
-    copy.setValue(PartsSqlQueryModel2::ColumnCreateDate, t);
-
-    _partsModel->database().transaction();
-    int newRow = _partsModel->rowCount();
-    if(_partsModel->insertRecord(newRow,copy)){
-        QModelIndex rootIndex = _partsModel->index(newRow, PartsSqlQueryModel2::ColumnId);
-        PartDialog dlg(_partsModel, true, this);
-        dlg.setWindowTitle(tr("Add Part"));
-        dlg.setCurrentModelIndex(rootIndex);
-        if(dlg.exec()==QDialog::Accepted){
-            _partsModel->submitAll();
-            QVariant partId = _partsModel->lastInsertedId();
-            qDebug()<<"Part id is "<<partId;
-            if(dlg.initialStock()>0 && partId.isValid()){
-                PartsDAO::addStock(partId, dlg.initialStock(), dlg.partPrice(), QString());
-            }
-            _partsModel->database().commit();
-        }
-        else{
-            _partsModel->revertAll();
-            _partsModel->database().rollback();
-        }
-    }
-}
 
 void PartManagerForm::on_expandTreeButton_clicked()
 {
-    ui->categoriesTreeView->expandAll();
+    ui->mainTreeView->expandAll();
 }
 
 void PartManagerForm::on_collapseTreeButton_clicked()
 {
-    ui->categoriesTreeView->expandToDepth(0);
-}
-
-void PartManagerForm::dateFilterOperatorCombo_indexChanged(int index)
-{
-    ui->dateFilterEdit->setEnabled(index>0);
+    ui->mainTreeView->expandToDepth(0);
 }
 

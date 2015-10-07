@@ -148,6 +148,7 @@ bool TreeViewComboBox::eventFilter(QObject *object, QEvent *event)
 
 void TreeViewComboBox::showPopup()
 {
+    m_view->expandToDepth(4);
     m_view->adjustWidth(topLevelWidget()->geometry().width());
     QComboBox::showPopup();
 }

@@ -13,7 +13,7 @@ TreeItem::TreeItem(const int id, const QVector<QVariant> &data, TreeItem *parent
      qDeleteAll(childItems);
  }
 
- TreeItem *TreeItem::child(int number)
+ TreeItem *TreeItem::child(int number) const
  {
      return childItems.value(number);
  }

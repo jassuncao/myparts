@@ -2,10 +2,15 @@
 #include <QApplication>
 #include <QtSql>
 #include <QtGui>
+#include <QDir>
+#include <QMessageBox>
 #include <dquest.h>
 #include "entities/entities.h"
 #include "partcategorydialog.h"
-#include <QWindowsXPStyle>
+//#include <QWindowsXPStyle>
+#include <QStyleFactory>
+#include <QStyle>
+#include <QDebug>
 
 bool createTables(DQConnection & connection)
 {
@@ -26,9 +31,20 @@ bool createTables(DQConnection & connection)
     connection.addModel<Entities::PartStorageEntity>();
     connection.addModel<Entities::PartCategoryEntity>();
     connection.addModel<Entities::PartConditionEntity>();
-    connection.addModel<Entities::PartFootprintEntity>();
+    connection.addModel<Entities::FootprintEntity>();
     connection.addModel<Entities::PartEntity>();
     connection.addModel<Entities::StockChangeEntity>();
+    connection.addModel<Entities::SiPrefix>();
+    connection.addModel<Entities::Unit>();
+    connection.addModel<Entities::UnitPrefix>();
+    connection.addModel<Entities::PartParameterEntity>();
+    connection.addModel<Entities::DistributorEntity>();
+    connection.addModel<Entities::PackagingEntity>();
+    connection.addModel<Entities::PartDistributorEntity>();
+    connection.addModel<Entities::ManufacturerEntity>();
+    connection.addModel<Entities::PartManufacturerEntity>();
+    connection.addModel<Entities::PartAttachmentEntity>();
+    connection.addModel<Entities::FootprintAttachmentEntity>();
     if(connection.createTables()){
         DQIndex<Entities::PartCategoryEntity> lft_idx("lft_idx");
         DQIndex<Entities::PartCategoryEntity> rgt_idx("rgt_idx");
@@ -45,6 +61,11 @@ bool createTables(DQConnection & connection)
 int main(int argc, char *argv[])
 {
 
+    QStringList keys = QStyleFactory::keys();
+    for(int i=0; i<keys.size(); ++i){
+        qDebug()<<"Style: "<< keys.at(i);
+    }
+
     QApplication a(argc, argv);
     DQConnection connection;
     if(createTables(connection)){
@@ -57,6 +78,10 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName("joaoassuncao");
     QCoreApplication::setOrganizationDomain("joaoassuncao.com");
     QCoreApplication::setApplicationName("MyParts");
+    //TODO: Fetch values from settings
+    QDir::addSearchPath("footprints", "/home/jassuncao/MyProjects/myparts/images/footprints");
+    QDir::addSearchPath("attachments", "/home/jassuncao/MyProjects/myparts/attachments");
+    QDir::addSearchPath("tmp","/home/jassuncao/MyProjects/myparts/images/tmp");
     MainWindow w;   
     //QApplication::setStyle(new ManhattanStyle(QApplication::style()->objectName()));
     w.show();

@@ -13,7 +13,6 @@ class PartManagerForm;
 class CategoryTreeModel;
 class QStandardItemModel;
 class QStandardItem;
-class QModelIndex;
 class QMenu;
 class QDataWidgetMapper;
 class QAbstractButton;
@@ -29,8 +28,8 @@ public:
     ~PartManagerForm();
 
 private slots:
-    void on_categoriesTreeView_customContextMenuRequested(const QPoint &pos);    
-    void categoriesTreeView_currentChanged(const QModelIndex &current, const QModelIndex &);
+    void on_mainTreeView_customContextMenuRequested(const QPoint &pos);
+    void mainTreeView_currentChanged(const QModelIndex &current, const QModelIndex &);
     void on_actionAddCategory_triggered();
     void on_actionDeleteCategory_triggered();
     void on_actionEditCategory_triggered();
@@ -39,25 +38,21 @@ private slots:
     void on_expandFilterPanelButton_clicked();
     void partsTableViewHeaderContextMenu(QPoint point);
     void onToggleTableColumn(bool checked);
-    void onAddStock();
-    void onRemoveStock();
-    void onEditPart();
+
+    void slotAddStock();
+    void slotRemoveStock();
+    void slotAddPart();
+    void slotEditPart();
+    void slotDeletePart();
+    void slotDuplicatePart();
+    void slotFilterChanged();
+    void slotPartsModelPrimeInsert(int, QSqlRecord &record);
 
     void partsTableView_currentRowChanged(const QModelIndex &current, const QModelIndex&);
-
-    void on_filterButtonBox_clicked(QAbstractButton *button);
-
-    void on_filterByStorageCombo_currentIndexChanged(int index);
-
-    void on_filterByStorageCheck_toggled(bool checked);
-
-    void on_filterByStorageCheck_stateChanged(int arg1);
 
     void on_lineEdit_returnPressed();
 
     void on_textSearchLineEdit_returnPressed();
-
-    void on_addPartButton_clicked();
 
     void refreshPartsModel();
 
@@ -65,17 +60,15 @@ private slots:
 
     void on_deletePartButton_clicked();
 
-    void part_primeInsert(int row, QSqlRecord &record);
 
-    void on_duplicateParteButton_clicked();
+
+    //void on_duplicateParteButton_clicked();
 
     void on_expandTreeButton_clicked();
 
-    void on_collapseTreeButton_clicked();
+    void on_collapseTreeButton_clicked();    
 
-    void dateFilterOperatorCombo_indexChanged(int index);
-
-    void navigator_customContextMenuRequested(const QPoint &pos);
+    void navigator_customContextMenuRequested(const QPoint &);
 
 private:
     QAction * createShowColumnAction(QMenu *parentMenu, const int columnNumber);
@@ -84,14 +77,12 @@ private:
 
     QByteArray _savedfilterPanelState;
     Ui::PartManagerForm *ui;
-    CategoryTreeModel * _categoriesTreeModel;
+    CategoryTreeModel * _categoriesTreeModel;    
     StorageTreeModel * _storageTreeModel;
+    PartsSqlQueryModel2 * _partsModel;
     QMenu * _categoriesContextMenu;
-    //QMenu * _visibleColumnsContextMenu;
     QMenu * _tableHeaderContextMenu;
-    QModelIndex _categoriesCtxMenuIndex; //Keeps the index of the item (if any) where the user right clicked
-    //QPartsFilterModel * _filterModel;
-    PartsSqlQueryModel2 * _partsModel;        
+    QModelIndex _categoriesCtxMenuIndex; //Keeps the index of the item (if any) where the user right clicked       
     FilterBuilder _filterBuilder;
     void createMenus();
     void appyFilter();

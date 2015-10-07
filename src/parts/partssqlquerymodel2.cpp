@@ -19,11 +19,14 @@ PartsSqlQueryModel2::PartsSqlQueryModel2(QObject *parent) :
 QString PartsSqlQueryModel2::selectStatement() const
 {
     QString query("SELECT part.id, part.name, part.description, part.actualStock, part.minimumStock, part.averagePrice, part.comment, part.customPartNumber, "
-                  "part.createDate, part.partUnit, part.category, part.storage, part.condition, u.name AS unitName, c.name AS categoryName, s.name AS storageName, cond.value AS conditionValue "
+                  "part.createDate, part.partUnit, part.category, part.storage, part.condition, "
+                  "part.footprint, u.name AS unitName, c.name AS categoryName, s.name AS storageName, cond.value AS conditionValue, "
+                  "footprint.name as footprintName "
                   "FROM part LEFT JOIN part_category c ON part.category=c.id "
                   "LEFT JOIN part_unit u ON part.partUnit=u.id "
                   "LEFT JOIN part_storage s ON part.storage=s.id "
-                  "LEFT JOIN part_condition cond ON part.condition=cond.id ");    
+                  "LEFT JOIN part_condition cond ON part.condition=cond.id "
+                  "LEFT JOIN part_footprint footprint ON part.footprint=footprint.id ");
 
     if(!filter().isEmpty()){
         query.append(QLatin1String(" WHERE ")).append(filter());
@@ -129,15 +132,16 @@ bool PartsSqlQueryModel2::deleteRowFromTable(int row)
 
 
 FilterBuilder::FilterBuilder():
-    _categoryFilteringMode(SubCategories),
-    _stockFilteringMode(AnyStockLevel),
+    _categoryFilterMode(SubCategories),
+    _storageLocationFilterMode(StorageLocationFilterAll),
+    _stockFilterMode(AnyStockLevel),
     _dateFilterMode(DateFilterNone)
 {
 }
 
-void FilterBuilder::setCategoryFilteringMode(CategoryFilteringMode mode)
+void FilterBuilder::setCategoryFilterMode(CategoryFilterMode mode)
 {
-    _categoryFilteringMode = mode;
+    _categoryFilterMode = mode;
 }
 
 void FilterBuilder::setSelectedCategories(const QVector<QVariant> & selectedCategories)
@@ -145,19 +149,19 @@ void FilterBuilder::setSelectedCategories(const QVector<QVariant> & selectedCate
     _selectedCategories = selectedCategories;
 }
 
-void FilterBuilder::setFilterByStorage(bool value)
+void FilterBuilder::setStorageLocationFilterMode(StorageLocationFilterMode mode)
 {
-    _filterByStorage = value;
+    _storageLocationFilterMode = mode;
 }
 
-void FilterBuilder::setSelectedStorage(QVariant storageId)
+void FilterBuilder::setSelectedStorageLocations(const QVector<QVariant> & selectedStorageLocations)
 {
-    _selectedStorageId = storageId;
+    _selectedStorageLocations = selectedStorageLocations;
 }
 
-void FilterBuilder::setStockFilteringMode(StockFilteringMode mode)
+void FilterBuilder::setStockFilterMode(StockFilterMode mode)
 {
-    _stockFilteringMode = mode;
+    _stockFilterMode = mode;
 }
 
 void FilterBuilder::setTextFilter(const QString &textFilter)
@@ -165,12 +169,17 @@ void FilterBuilder::setTextFilter(const QString &textFilter)
     _textFilter = textFilter;
 }
 
-FilterBuilder::CategoryFilteringMode FilterBuilder::categoryFilteringMode() const
+FilterBuilder::CategoryFilterMode FilterBuilder::categoryFilterMode() const
 {
-    return _categoryFilteringMode;
+    return _categoryFilterMode;
 }
 
-void FilterBuilder::setDateFilterMode(DateFilteringMode dateFilterMode)
+FilterBuilder::StorageLocationFilterMode FilterBuilder::storageLocationFilterMode() const
+{
+    return _storageLocationFilterMode;
+}
+
+void FilterBuilder::setDateFilterMode(DateFilterMode dateFilterMode)
 {
     _dateFilterMode = dateFilterMode;
 }
@@ -181,7 +190,7 @@ void FilterBuilder::setSelectedDate(const QDate & date)
     _selectedDateUtc = t.toUTC();
 }
 
-void FilterBuilder::setFilterByCondition(bool value)
+void FilterBuilder::setFilterByConditionEnabled(bool value)
 {
     _filterByCondition = value;
 }
@@ -202,8 +211,8 @@ QString FilterBuilder::build() const {
 
     //Category filter section
 
-    qDebug("Category mode is %d",_categoryFilteringMode);
-    switch(_categoryFilteringMode){
+    qDebug("Category mode is %d",_categoryFilterMode);
+    switch(_categoryFilterMode){
     case AllCategories:
         break;
     case SubCategories:
@@ -226,13 +235,37 @@ QString FilterBuilder::build() const {
         break;
     }
 
+    qDebug("Storage location filter mode is %d",_storageLocationFilterMode);
+    switch(_storageLocationFilterMode){
+    case StorageLocationFilterAll:
+        break;
+    case StorageLocationFilterSub:
+        if(_selectedStorageLocations.size()>0){
+            QString inStatement("s.id IN (");
+            inStatement+=_selectedStorageLocations.at(0).toString();
+
+            for(int i=1; i<_selectedStorageLocations.size();++i){
+                inStatement+=QLatin1String(",");
+                inStatement+=_selectedStorageLocations.at(i).toString();
+            }
+            inStatement+=QLatin1Char(')');
+            criterium.append(inStatement);
+        }
+        break;
+    case StorageLocationFilterSelected:
+        if(_selectedStorageLocations.size()>0){
+            criterium.append(QString("s.id = %1").arg(_selectedStorageLocations.at(0).toString()));
+        }
+        break;
+    }
+/*
     if(_filterByStorage && _selectedStorageId.isValid()){
         criterium.append(QString("part.storage = %1").arg(_selectedStorageId.toInt()));
     }
-
+*/
     //Stock filter section
 
-    switch(_stockFilteringMode){
+    switch(_stockFilterMode){
     case AnyStockLevel:
         break;
     case StockLevelZero:
@@ -291,6 +324,7 @@ QString FilterBuilder::build() const {
     qDebug()<<"Filter clause is: "<<whereClause;
     return whereClause;
 }
+
 
 
 

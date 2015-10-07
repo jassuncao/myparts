@@ -1,6 +1,13 @@
 #include "quickaddstoragedialog.h"
-#include <QtGui>
-#include <QtSql>
+#include <QSqlError>
+#include <QSqlRecord>
+#include <QSqlQuery>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QMessageBox>
+#include <QFormLayout>
+#include <QVBoxLayout>
+#include <QLineEdit>
 
 QuickAddStorageDialog::QuickAddStorageDialog(QWidget *parent) :
     QDialog(parent)

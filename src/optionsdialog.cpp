@@ -1,7 +1,9 @@
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QVBoxLayout>
 #include "optionsdialog.h"
 #include "widgets/partunitswidget.h"
 #include "widgets/partconditionwidget.h"
-#include <QtGui>
 #include "widgets/optionswidget.h"
 
 OptionsDialog::OptionsDialog(OptionsWidget * optionsWidget, QWidget *parent) :

@@ -1,20 +1,24 @@
 #include "qsearchlineedit.h"
-#include <QtGui>
+#include <QLabel>
+#include <QIcon>
+#include <QToolButton>
+#include <QStyle>
 
 QSearchLineEdit::QSearchLineEdit(QWidget *parent) :
     QLineEdit(parent)
 {
-    QIcon searchIcon(":/icons/find");
+    _searchPixmap.load(QString(":/icons/find"));
     imageLabel = new QLabel(this);
-    imageLabel->setPixmap(searchIcon.pixmap(16,16));
+    imageLabel->setPixmap(_searchPixmap);
+
     clearButton = new QToolButton(this);
     QIcon icon(":/icons/edit-clear-location-rtl");
     clearButton->setIcon(icon);
-    //clearButton->setIconSize(icon.);
     clearButton->setCursor(Qt::ArrowCursor);
     clearButton->setStyleSheet("QToolButton { border: none; padding: 0px; }");
     clearButton->hide();
-    connect(clearButton, SIGNAL(clicked()), this, SLOT(clear()));
+
+    connect(clearButton, SIGNAL(clicked()), this, SLOT(slotClearText()));
     connect(this, SIGNAL(textChanged(const QString&)), this, SLOT(updateClearButton(const QString&)));
     int frameWidth = style()->pixelMetric(QStyle::PM_DefaultFrameWidth);
     //Rounded corners:
@@ -43,5 +47,11 @@ void QSearchLineEdit::resizeEvent(QResizeEvent *)
 void QSearchLineEdit::updateClearButton(const QString& text)
 {
     clearButton->setVisible(!text.isEmpty());
+}
+
+void QSearchLineEdit::slotClearText()
+{
+    clear();
+    emit textClear();
 }
 

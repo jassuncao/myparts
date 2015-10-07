@@ -9,12 +9,12 @@ QPartsFilterModel::QPartsFilterModel(QObject *parent) :
 }
 
 
-int QPartsFilterModel::rowCount(const QModelIndex &parent) const
+int QPartsFilterModel::rowCount(const QModelIndex &) const
 {
     return 1;
 }
 
-int QPartsFilterModel::columnCount(const QModelIndex &parent) const
+int QPartsFilterModel::columnCount(const QModelIndex &) const
 {
     return _items.size();
 }

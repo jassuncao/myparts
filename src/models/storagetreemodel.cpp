@@ -6,8 +6,8 @@
 
 const char * MIME_TYPE= "myparts/storage";
 
-StorageTreeModel::StorageTreeModel(TreeItem * invisibleRootItem, QObject *parent) :
-    TreeItemModel(invisibleRootItem, parent)
+StorageTreeModel::StorageTreeModel(const QVector<QVariant> columns, QObject *parent) :
+    TreeItemModel(new TreeItem(-1, columns), parent)
 {
     _dao = new StorageDAO();
 }

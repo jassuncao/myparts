@@ -1,8 +1,13 @@
 #include "partconditionwidget.h"
-#include <QtGui>
 #include <QSqlError>
 #include <QSqlRecord>
 #include <QSqlQuery>
+#include <QTableView>
+#include <QHeaderView>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QHBoxLayout>
+#include <QMessageBox>
 #include "models/partconditionsqltablemodel.h"
 #include "widgets/booleanitemdelegate.h"
 
@@ -24,7 +29,11 @@ PartConditionWidget::PartConditionWidget(QWidget *parent) :
     QStyledItemDelegate * colDelegate = new BooleanItemDelegate(QPixmap(":icons/default"),QPixmap());
     _view->setItemDelegateForColumn(PartConditionSqlTableModel::ColumnDefault, colDelegate);
     _view->verticalHeader()->setVisible(false);
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
+    _view->horizontalHeader()->setSectionResizeMode(PartConditionSqlTableModel::ColumnDefault, QHeaderView::Fixed);
+#else
     _view->horizontalHeader()->setResizeMode(PartConditionSqlTableModel::ColumnDefault, QHeaderView::Fixed);
+#endif
     _view->horizontalHeader()->moveSection(PartConditionSqlTableModel::ColumnDefault,0);
     _view->horizontalHeader()->setStretchLastSection(true);
     _view->resizeColumnsToContents();

@@ -24,10 +24,12 @@ public:
         ColumnCategoryId,
         ColumnStorageId,
         ColumnConditionId,
+        ColumnFootprintId,
         ColumnPartUnit,
         ColumnCategoryName,
         ColumnStorage,
-        ColumnCondition
+        ColumnCondition,
+        ColumnFootprintName
     };
 
     static const int FAKE_COLUMNS_INDEX = ColumnPartUnit;    
@@ -54,20 +56,27 @@ private:
 class FilterBuilder {
 
 public:
-    enum CategoryFilteringMode {
+    enum CategoryFilterMode {
         AllCategories=1,
         SubCategories=2,
         SelectedCategory=3
     };
 
-    enum StockFilteringMode {
+    enum StorageLocationFilterMode {
+        StorageLocationFilterAll=1,
+        StorageLocationFilterSub=2,
+        StorageLocationFilterSelected=3
+    };
+
+
+    enum StockFilterMode {
         AnyStockLevel,
         StockLevelZero,
         StockLevelGreaterZero,
         StockLevelBelowMin
     };
 
-    enum DateFilteringMode {
+    enum DateFilterMode {
         DateFilterNone,
         DateFilterBefore,
         DateFilterOn,
@@ -77,29 +86,31 @@ public:
     explicit FilterBuilder();
 
     QString build() const;
-    void setCategoryFilteringMode(CategoryFilteringMode mode);
-    CategoryFilteringMode categoryFilteringMode() const;
-    void setSelectedCategories(const QVector<QVariant> & selectedCategories);
-    void setFilterByStorage(bool value);
-    void setSelectedStorage(QVariant storageId);
-    void setStockFilteringMode(StockFilteringMode mode);
+    void setCategoryFilterMode(CategoryFilterMode mode);
+    void setStorageLocationFilterMode(StorageLocationFilterMode mode);
+    CategoryFilterMode categoryFilterMode() const;
+    StorageLocationFilterMode storageLocationFilterMode() const;
+    void setSelectedCategories(const QVector<QVariant> & selectedCategories);    
+    void setSelectedStorageLocations(const QVector<QVariant> & selectedStorageLocations);
+    void setStockFilterMode(StockFilterMode mode);
     void setTextFilter(const QString & textFilter);
-    void setDateFilterMode(DateFilteringMode dateFilterMode);
+    void setDateFilterMode(DateFilterMode dateFilterMode);
     void setSelectedDate(const QDate & date);
-    void setFilterByCondition(bool value);
+    void setFilterByConditionEnabled(bool value);
     void setSelectedCondition(QVariant conditionId);
 
 private:
     QString _textFilter;
-    CategoryFilteringMode _categoryFilteringMode;
+    CategoryFilterMode _categoryFilterMode;
     QVector<QVariant> _selectedCategories;
-    bool _filterByStorage;
-    QVariant _selectedStorageId;
-    StockFilteringMode _stockFilteringMode;
-    DateFilteringMode _dateFilterMode;
+    StorageLocationFilterMode _storageLocationFilterMode;
+    QVector<QVariant> _selectedStorageLocations;
+    StockFilterMode _stockFilterMode;
+    DateFilterMode _dateFilterMode;
     QDateTime _selectedDateUtc;
     bool _filterByCondition;
     QVariant _selectedConditionId;
 };
+
 
 #endif // PARTSSQLQUERYMODEL2_H

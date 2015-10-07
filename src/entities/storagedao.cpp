@@ -360,7 +360,9 @@ bool StorageDAO::insertAtEnd(TreeItem * item)
     query.bindValue(1,newPos);
     query.bindValue(2,newPos+1);
     if(query.exec()){
-        return query.lastInsertId().toInt();
+        int id = query.lastInsertId().toInt();
+        item->setId(id);
+        return true;
     }
     qWarning() << "Failed to save Node. Reason: "<<query.lastError();
     return -1;
@@ -370,7 +372,7 @@ bool StorageDAO::reload(TreeItem * item)
 {
     Node node;
     if(!loadNode(item->id(), &node)){
-        qWarning("PartCategory with id %d not found",item->id());
+        qWarning("Entity with id %d not found",item->id());
         return false;
     }
     item->setData(NAME_COL, node.name);
@@ -380,20 +382,20 @@ bool StorageDAO::reload(TreeItem * item)
 bool StorageDAO::update(TreeItem * item)
 {
     int id = item->id();
-    Entities::PartCategoryEntity cat;
-    if(!cat.load(DQWhere("id")==id)){
-        qWarning("PartCategory with id %d not found", id);
+    Entities::PartStorageEntity entity;
+    if(!entity.load(DQWhere("id")==id)){
+        qWarning("Entity with id %d not found", id);
         return false;
     }
-    cat.name.set(item->data(NAME_COL));
-    return cat.save();
+    entity.name.set(item->data(NAME_COL));
+    return entity.save();
 }
 
 bool StorageDAO::remove(int nodeId, int newParent)
 {
     Node node;
     if(!loadNode(nodeId,&node)) {
-        qWarning("PartCategory with id %d not found", nodeId);
+        qWarning("Entity with id %d not found", nodeId);
         return false;
     }
 
@@ -455,7 +457,7 @@ QVector<QVariant> StorageDAO::listChildStorage(int nodeId)
     QVector<QVariant> list;
     Node node;
     if(!loadNode(nodeId, &node)){
-        qWarning("PartCategory with id %d not found", nodeId);
+        qWarning("Entity with id %d not found", nodeId);
         return list;
     }
     DQConnection conn;

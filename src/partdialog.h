@@ -10,28 +10,87 @@ class PartDialog;
 
 class QSqlRelationalTableModel;
 class QSqlTableModel;
+class QSqlQueryModel;
 class QModelIndex;
 class QDataWidgetMapper;
+class TreeItemModel;
+class PartsSqlQueryModel2;
+class QCheckBox;
+class QAbstractButton;
+class PartParameterTableModel;
+class PartDistributorTableModel;
+class PartManufacturerTableModel;
+class AttachmentTableModel;
+class AttachmentTableModel3;
+class PartParameterTableModel2;
+class PartManufacturerTableModel2;
+class PartDistributorTableModel2;
+class PartParametersTableModel3;
 
 class PartDialog : public QDialog
 {
     Q_OBJECT
     
 public:
-    explicit PartDialog(QSqlTableModel *model, bool addMode, QWidget *parent = 0);
-    ~PartDialog();
-    void setCurrentModelIndex(const QModelIndex &index);
+    explicit PartDialog(PartsSqlQueryModel2 *model, TreeItemModel* storageModel,/* bool addMode,*/ QWidget *parent = 0);
+    ~PartDialog();    
     int initialStock() const;
     double partPrice() const;
+public slots:
+    int addNewPart();
+    int editPart(const QModelIndex &index);
+    int duplicatePart(const QModelIndex &index);
+    void reject();
+    void accept();
 private slots:
-    void on_buttonBox_accepted();
-
+    int exec();
     void on_quickStorageButton_clicked();
+    void slotFootprintChanged(int index);
+    void slotDeselectFootprint();
+    void slotUseFootprint();
+    void slotAddParameter();
+    void slotDeleteParameter();
+    void slotAddDistributor();
+    void slotDeleteDistributor();
+    void slotAddManufacturer();
+    void slotDeleteManufacturer();
+    void slotAddAttachment();
+    void slotDeleteAttachment();
+    void slotCurrentPartParameterRowChanged(const QModelIndex &current, const QModelIndex &);    
+    void slotCurrentPartDistributorRowChanged(const QModelIndex &current, const QModelIndex &);
+    void slotCurrentPartManufacturerRowChanged(const QModelIndex &current, const QModelIndex &);
+    void slotCurrentPartAttachmentRowChanged(const QModelIndex &current, const QModelIndex &);
+    void slotPartStorageChanged(int);
+    void slotAttachmentDoubleClicked(const QModelIndex &index);
 
 private:
+    void reset();
+    void initCombos();
+    void commitChanges();
+    void discardChanges();
+    void internalAddPart(const QModelIndex &index);
+    void setCurrentModelIndex(const QModelIndex &index);
+
+    QCheckBox * _nextActionCheckbox;
     Ui::PartDialog *ui;
+    PartsSqlQueryModel2 * _partsModel;
+    //PartParameterTableModel2 * _partParamsModel;
+    PartParametersTableModel3 * _partParamsModel;
+    //PartParameterTableModel * _partParamsModel;
+    PartDistributorTableModel2 * _partDistributorModel;
+    PartManufacturerTableModel2 * _partManufacturerModel;
+    //PartManufacturerTableModel * _partManufacturerModel;
+    AttachmentTableModel3 * _partAttachmentModel;
+    TreeItemModel * _storageModel;
+    QSqlQueryModel * _partConditionModel;
+    QSqlQueryModel * _partUnitsModel;
+    QSqlQueryModel * _footprintsModel;
     QDataWidgetMapper * _mapper;
     QModelIndex _currentModelIndex;
+    int _lastSelectedFootprint;
+    bool _addMode;
+    QVariant _currentPartId;
+
 };
 
 #endif // PARTDIALOG_H

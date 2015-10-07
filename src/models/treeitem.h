@@ -13,7 +13,7 @@ public:
 
     int id() const { return _id;}
     void setId(int id) { _id=id;}
-    TreeItem *child(int number);
+    TreeItem *child(int number) const;
     int childCount() const;
     int columnCount() const;
     QVariant data(int column) const;

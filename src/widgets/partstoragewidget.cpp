@@ -2,6 +2,12 @@
 #include <QtGui>
 #include <QSqlTableModel>
 #include <QSqlError>
+#include <QTableView>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QHeaderView>
+#include <QHBoxLayout>
+#include <QMessageBox>
 
 PartStorageWidget::PartStorageWidget(QWidget *parent) :
     QWidget(parent)
