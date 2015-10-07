@@ -8,7 +8,6 @@
 #include "models/storagetreemodel.h"
 #include "footprintmanagerwidget.h"
 #include "unitmanagerwidget.h"
-#include "parts/partparameterdialog.h"
 #include "distributormanagerwidget.h"
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -76,8 +75,6 @@ void MainWindow::on_actionPart_conditions_triggered()
 }
 
 void MainWindow::on_actionActionPartParameters_triggered()
-{
-        PartParameterDialog dlg(this);
-        dlg.exec();
+{        
 
 }

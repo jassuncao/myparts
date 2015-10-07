@@ -15,19 +15,13 @@
 #include <QIdentityProxyModel>
 #include <QSqlRecord>
 #include "quickaddstoragedialog.h"
-#include "models/partparametertablemodel.h"
-#include "models/partdistributortablemodel.h"
-#include "models/partmanufacturertablemodel.h"
-#include "models/partattachmenttablemodel.h"
+
 #include "widgets/parametervaluedelegate.h"
-#include "models/attachmenttablemodel2.h"
 #include "parts/partsdao.h"
 #include "widgets/currencydelegate.h"
 #include "attachmentselectiondialog.h"
 #include <QDialogButtonBox>
 #include <QDesktopServices>
-#include "models/partparametertablemodel2.h"
-#include "widgets/parameterunitdelegate.h"
 #include "models/customtablemodel.h"
 
 inline static QVariant getColumnValue(QAbstractItemModel * model, int row, int column){
@@ -67,7 +61,7 @@ PartDialog::PartDialog(PartsSqlQueryModel2 *model, TreeItemModel *storageModel, 
 
     ui->partParametersTableView->setModel(_partParamsModel);
     ui->partParametersTableView->setItemDelegate(new CustomTableRelationDelegate(ui->partParametersTableView));
-    ui->partParametersTableView->setItemDelegateForColumn(PartParameterTableModel2::ColumnValue, new ParameterValueDelegate());    
+    ui->partParametersTableView->setItemDelegateForColumn(PartParametersTableModel3::ColumnValue, new ParameterValueDelegate());
 
     ui->partDistributorsTableView->setModel(_partDistributorModel);
     ui->partDistributorsTableView->setItemDelegateForColumn(PartDistributorTableModel2::ColumnUnitPrice, new CurrencyDelegate(this));
@@ -546,7 +540,7 @@ void PartDialog::slotAttachmentDoubleClicked(const QModelIndex &index)
         return;
     }
     if(index.column()==0){
-        const QModelIndex & urlColIndex = _partAttachmentModel->index(index.row(), AttachmentTableModel2::ColumnURL);
+        const QModelIndex & urlColIndex = _partAttachmentModel->index(index.row(), AttachmentTableModel3::ColumnURL);
         QString url = urlColIndex.data(Qt::EditRole).toString();
         QDesktopServices::openUrl(QUrl::fromUserInput(url));
     }

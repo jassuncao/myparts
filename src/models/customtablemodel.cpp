@@ -428,6 +428,15 @@ AttachmentTableModel3::AttachmentTableModel3(const QString &tableName, const QSt
 {
 }
 
+Qt::ItemFlags AttachmentTableModel3::flags(const QModelIndex &index) const
+{
+    Qt::ItemFlags theFlags = SimpleSqlTableModel::flags(index);
+    if(index.column()==ColumnURL){
+        theFlags = theFlags & (~Qt::ItemIsEditable);
+    }
+    return theFlags;
+}
+
 bool AttachmentTableModel3::appendRow(const QString & url, const QString & description)
 {
     TableItem * item = createBlankItem();

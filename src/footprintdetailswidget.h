@@ -15,7 +15,6 @@ class QAbstractItemModel;
 class QModelIndex;
 class QDataWidgetMapper;
 class QToolButton;
-//class AttachmentTableModel2;
 class AttachmentTableModel3;
 
 class FootprintDetailsWidget : public QWidget
@@ -58,7 +57,6 @@ private:
     QPushButton * _removeImageButton;
     QPushButton * _removeAttachmentButton;
     QAbstractItemModel * _model;
-    //AttachmentTableModel2 * _attachmentModel;
     AttachmentTableModel3 * _attachmentModel;
     QDataWidgetMapper * _mapper;
     QModelIndex _currentIndex;
@@ -68,8 +66,8 @@ private:
     QAction * _actionRemoveImage;   
 
     bool setFootprintImage(const QString & fileName);
-    QString copyFileToDir(const QString &file, const QDir & dir);
-    bool doAddAttachment(QString filePath);    
+    //QString copyFileToDir(const QString &file, const QDir & dir);
+    //bool doAddAttachment(QString filePath);
 };
 
 class FootprintDetailsDelegate : public QStyledItemDelegate {
@@ -78,9 +76,6 @@ public:
      FootprintDetailsDelegate(QObject * parent = 0);
      virtual void setEditorData(QWidget *editor, const QModelIndex &index) const;
      virtual void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
-private:
-    void setFilenameEditorData(QWidget *editor, const QModelIndex &index) const;
-    void setFilenameModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;    
 };
 
 

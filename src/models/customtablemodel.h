@@ -170,6 +170,7 @@ public:
         ColumnDescription
     };
 
+    Qt::ItemFlags flags(const QModelIndex &index) const;
     bool appendRow(const QString &url, const QString & description);
 
     static AttachmentTableModel3 * createNewFootprintAttachmentModel(QObject *parent);

@@ -40,7 +40,6 @@ private:
     QListView * _footprintsListView;
     QSearchLineEdit *_searchLineEdit;
     QSqlTableModel * _footprintsTableModel;
-    //FootprintAttachmentTableModel * _footprintAttachmentTableModel;
     FootprintDetailsWidget * _detailsWidget;
 };
 

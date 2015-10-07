@@ -1,8 +1,7 @@
 #include "footprintmanagerwidget.h"
 #include "widgets/qsearchlineedit.h"
 #include "footprintdetailswidget.h"
-#include "models/footprinttablemodel2.h"
-#include "models/footprintattachmenttablemodel.h"
+#include "models/footprinttablemodel.h"
 #include <QVBoxLayout>
 #include <QLineEdit>
 #include <QToolBar>
@@ -45,12 +44,13 @@ FootprintManagerWidget::FootprintManagerWidget(QWidget *parent) : QWidget(parent
     layout->addWidget(hSplitter);
     setLayout(layout);    
 
-    _footprintsTableModel = new FootprintTableModel2();
-    _footprintsTableModel->setSort(PartFootprintColumn::ColumnName, Qt::AscendingOrder);
-    _footprintsTableModel->setEditStrategy(QSqlTableModel::OnRowChange);
+    _footprintsTableModel = new FootprintTableModel(this);
+    _footprintsTableModel->setSort(FootprintTableModel::ColumnName, Qt::AscendingOrder);
+    _footprintsTableModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
     _footprintsTableModel->select();
+
     _footprintsListView->setModel(_footprintsTableModel);
-    _footprintsListView->setModelColumn(PartFootprintColumn::ColumnName);   
+    _footprintsListView->setModelColumn(FootprintTableModel::ColumnName);
 
     _detailsWidget->setModel(_footprintsTableModel);
     _detailsWidget->setCurrentModelIndex(QModelIndex());
@@ -69,7 +69,7 @@ void FootprintManagerWidget::slotCurrentRowChanged(const QModelIndex &current, c
     if(!current.isValid()){
         return;
     }
-    QModelIndex footprintIdIndex =_footprintsTableModel->index(current.row(), FootprintTableModel2::ColumnId);
+    QModelIndex footprintIdIndex =_footprintsTableModel->index(current.row(), FootprintTableModel::ColumnId);
     _detailsWidget->setCurrentModelIndex(footprintIdIndex);
 }
 
@@ -80,7 +80,7 @@ void FootprintManagerWidget::slotAddFootprint()
     }
     int row = _footprintsTableModel->rowCount();    
     if(_footprintsTableModel->insertRow(row)){
-        QModelIndex rootIndex = _footprintsTableModel->index(row, PartFootprintColumn::ColumnId);
+        QModelIndex rootIndex = _footprintsTableModel->index(row, FootprintTableModel::ColumnId);
         _detailsWidget->setCurrentModelIndex(rootIndex, true);
     }
 }
@@ -94,7 +94,7 @@ void FootprintManagerWidget::slotDeleteFootprint()
             _detailsWidget->setCurrentModelIndex(QModelIndex());
         }
     }
-}
+}\
 
 void FootprintManagerWidget::slotFilterChanged()
 {

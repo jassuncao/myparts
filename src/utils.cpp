@@ -4,7 +4,7 @@
 
 QString copyFileToDir(const QString &srcPath, const QDir & targetDir)
 {
-    qDebug()<<"Copying file "<<srcPath<<" to footprints dir "<<targetDir.absolutePath();
+    qDebug()<<"Copying file "<<srcPath<<" to dir "<<targetDir.absolutePath();
 
     int i =0;
 

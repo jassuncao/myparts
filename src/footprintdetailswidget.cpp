@@ -1,8 +1,7 @@
 #include "footprintdetailswidget.h"
-#include "models/footprinttablemodel2.h"
 #include "attachmentselectiondialog.h"
-//#include "models/attachmenttablemodel2.h"
 #include "models/customtablemodel.h"
+#include "models/footprinttablemodel.h"
 #include <QDebug>
 #include <QToolButton>
 #include <QLineEdit>
@@ -23,7 +22,6 @@
 #include <QSqlQuery>
 #include <QDesktopServices>
 
-
 FootprintDetailsDelegate::FootprintDetailsDelegate(QObject * parent)
     : QStyledItemDelegate(parent)
 {
@@ -31,35 +29,21 @@ FootprintDetailsDelegate::FootprintDetailsDelegate(QObject * parent)
 
 void FootprintDetailsDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
 {
-    int section = index.column();
-    switch (section) {
-    case PartFootprintColumn::ColumnFilename:
-        setFilenameEditorData(editor, index);
-        break;   
-    default:
-        QStyledItemDelegate::setEditorData(editor, index);
-        break;
-    }
-}
-
-void FootprintDetailsDelegate::setFilenameEditorData(QWidget *editor, const QModelIndex &index) const
-{
     QToolButton* view = dynamic_cast<QToolButton*>(editor);
-    if(view){
+    if(index.column() == FootprintTableModel::ColumnFilename && view) {
         QString filename;
         QVariant data = index.data(Qt::EditRole);
         if(data.isValid() && data.canConvert(QVariant::String)){
             filename = data.toString();
         }
         view->setText(filename);
-
         if(filename.isEmpty())
         {
             filename = QLatin1String(":/icons/images/footprintplaceholder.png");
         }
-         QImage img;
-         qDebug()<<"Loading footprint image "<< filename;
-         if(img.load(filename)){
+        QImage img;
+        qDebug()<<"Loading footprint image "<< filename;
+        if(img.load(filename)){
              //Perform rescaling if necessary
              if(img.width()> view->width() || img.height()> view->height()){
                   img = img.scaled( view->width(), view->height(), Qt::KeepAspectRatio, Qt::SmoothTransformation );
@@ -72,32 +56,18 @@ void FootprintDetailsDelegate::setFilenameEditorData(QWidget *editor, const QMod
         view->setIcon(QIcon(QPixmap::fromImage(img)));
         return;
     }
+    QStyledItemDelegate::setEditorData(editor, index);
 }
-
 void FootprintDetailsDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
 {
-    int section = index.column();
-    switch (section) {
-    case PartFootprintColumn::ColumnFilename:
-        setFilenameModelData(editor, model, index);
-        break;
-    case PartFootprintColumn::ColumnId:
-        //setAttachmentsModelData(editor, index);
-        break;
-    default:
-        QStyledItemDelegate::setModelData(editor, model, index);
-        break;
-    }
-}
-
-void FootprintDetailsDelegate::setFilenameModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
-{
     QToolButton* view = dynamic_cast<QToolButton*>(editor);
-    if(view){
+    if(index.column() == FootprintTableModel::ColumnFilename && view){
         model->setData(index, view->text());
         return;
     }
+    return QStyledItemDelegate::setModelData(editor, model, index);
 }
+
 
 FootprintDetailsWidget::FootprintDetailsWidget(QWidget *parent)
     : QWidget(parent),
@@ -139,7 +109,6 @@ FootprintDetailsWidget::FootprintDetailsWidget(QWidget *parent)
     //Image groupbox END
 
     //Attachments groupbox START    
-    //_attachmentModel = new AttachmentTableModel2("footprint_attachment", "footprint", this);
     _attachmentModel = AttachmentTableModel3::createNewFootprintAttachmentModel(this);
 
     _attachmentsTable = new QTableView;
@@ -210,7 +179,6 @@ void FootprintDetailsWidget::setCurrentModelIndex(const QModelIndex & modelIndex
     qDebug()<<"footprintId is "<< footprintId;
     _attachmentModel->setCurrentForeignKey(footprintId);
     _attachmentModel->select();
-    //_attachmentModel->load(footprintId);
     if(newRecord){
         _nameLineEdit->setFocus();        
         slotSetDirty();
@@ -247,9 +215,9 @@ void FootprintDetailsWidget::setModel(QAbstractItemModel * model)
     _model = model;
     _mapper->setModel(_model);
     _mapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
-    _mapper->addMapping(_nameLineEdit, PartFootprintColumn::ColumnName);
-    _mapper->addMapping(_descriptionLineEdit, PartFootprintColumn::ColumnDescription);
-    _mapper->addMapping(_imageButton, PartFootprintColumn::ColumnFilename); 
+    _mapper->addMapping(_nameLineEdit, FootprintTableModel::ColumnName);
+    _mapper->addMapping(_descriptionLineEdit, FootprintTableModel::ColumnDescription);
+    _mapper->addMapping(_imageButton, FootprintTableModel::ColumnFilename);
 }
 
 void FootprintDetailsWidget::slotSetDirty()

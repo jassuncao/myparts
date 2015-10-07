@@ -9,37 +9,11 @@ FootprintTableModel::FootprintTableModel(QObject *parent, QSqlDatabase db) :
                                          QSqlTableModel(parent, db)
 {
     setTable("part_footprint");
+    _targetDir = QDir(QDir::searchPaths("footprints").first());
 }
 
 FootprintTableModel::~FootprintTableModel()
 {
-}
-
-/*
-QString FootprintTableModel::selectStatement() const
-{
-    QString query = QLatin1String("SELECT id, name, description, imageFilename, imageFilename AS imageFilenameOriginal FROM part_footprint ");
-    if (!filter().isEmpty())
-        query.append(QLatin1String(" WHERE ")).append(filter());
-    QString orderBy(orderByClause());
-    if (!orderBy.isEmpty())
-        query.append(QLatin1Char(' ')).append(orderBy);
-    return query;
-}
-*/
-/*
-bool FootprintTableModel::setData(const QModelIndex &index, const QVariant &value, int role)
-{
-    if(role==Qt::EditRole && index.column()==ColumnFilename){
-
-    }
-}
-*/
-
-QString copyFileToFootprintsDir(const QString & srcPath)
-{
-    QDir targetDir = QDir(QDir::searchPaths("footprints").first());
-    return copyFileToDir(srcPath, targetDir);
 }
 
 bool FootprintTableModel::insertRowIntoTable(const QSqlRecord &values)
@@ -62,7 +36,7 @@ bool FootprintTableModel::insertRowIntoTable(const QSqlRecord &values)
             //nothing to do
         }
         else{
-            QString finalFilename = copyFileToFootprintsDir(fName);
+            QString finalFilename = copyFileToDir(fName, _targetDir);
             finalFilename = QString("footprints:%1").arg(finalFilename);
             qDebug()<<"Final filename is "<<finalFilename;
             //We need to create a copy due to const
@@ -77,27 +51,6 @@ bool FootprintTableModel::insertRowIntoTable(const QSqlRecord &values)
     }
     return QSqlTableModel::insertRowIntoTable(values);
 }
-
-/*
-void FootprintTableModel::handleFilenameChanges(QSqlRecord &rec)
-{
-    QString fileName = rec.value(ColumnFilename).toString();
-    if(fileName.startsWith("footprints:") || fileName.startsWith(":")){
-        //nothing to do
-    }
-    else {
-        QString targetDir = QDir::searchPaths("footprints").first();
-        qDebug()<<"Copying file "<<fileName<<" to footprints dir "<<targetDir;
-        //If the file is in temporary directory we move it
-        bool moveFile = fileName.startsWith("tmp:");
-        QFile srcFile(fileName);
-        QString finalFilename = copyFileToDir(srcFile, targetDir, moveFile);
-        finalFilename = QString("footprints:%1").arg(finalFilename);
-        qDebug()<<"Final filename is "<<finalFilename;
-        rec.setValue(ColumnFilename, QVariant(finalFilename));
-    }
-}
-*/
 
 bool FootprintTableModel::updateRowInTable(int row, const QSqlRecord &values)
 {
@@ -136,7 +89,7 @@ bool FootprintTableModel::updateRowInTable(int row, const QSqlRecord &values)
                 //nothing to do
             }
             else{
-                QString finalFilename = copyFileToFootprintsDir(fName);
+                QString finalFilename = copyFileToDir(fName, _targetDir);
                 finalFilename = QString("footprints:%1").arg(finalFilename);
                 qDebug()<<"Final filename is "<<finalFilename;
                 //We need to create a copy due to const
@@ -144,7 +97,7 @@ bool FootprintTableModel::updateRowInTable(int row, const QSqlRecord &values)
                 rec.setValue(ColumnFilename, QVariant(finalFilename));
                 bool res = QSqlTableModel::updateRowInTable(row, rec);
                 if(!res){
-                    qWarning()<<"Update Error in row "<<row<<" "<<lastError().text();
+                    qWarning("Failed to update record. Reason %s",qPrintable(lastError().text()));
                 }
                 else{
                     qDebug()<<"Update SUCCESS ";
@@ -169,7 +122,7 @@ bool FootprintTableModel::deleteRowFromTable(int row)
                 QFile file(fName);
                 qDebug("Removing file");
                 if(!file.remove()){
-                    qWarning()<<"Failed to remove file "<<fName<<" error "<< file.errorString();
+                    qWarning("Failed to remove file %s. Reason %s",qPrintable(fName), qPrintable(file.errorString()));
                 }
             }
         }
