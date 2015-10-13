@@ -1,69 +1,46 @@
-#include <QDialogButtonBox>
-#include <QPushButton>
-#include <QVBoxLayout>
 #include "optionsdialog.h"
-#include "widgets/partunitswidget.h"
-#include "widgets/partconditionwidget.h"
-#include "widgets/optionswidget.h"
+#include "ui_optionsdialog.h"
+#include <QSqlTableModel>
 
-OptionsDialog::OptionsDialog(OptionsWidget * optionsWidget, QWidget *parent) :
-    QDialog(parent), _dirty(false), _optionsWidget(optionsWidget)
+
+OptionsDialog::OptionsDialog(QWidget *parent) :
+    QDialog(parent),
+    ui(new Ui::OptionsDialog)
 {
+    ui->setupUi(this);
+    ui->pageSelectionWidget->setCurrentRow(0);
+    setupModels();
+    setupConnections();
 
-    //_partUnitWidget = new PartUnitsWidget(this);
-    //_partConditionWidget = new PartConditionWidget(this);
-
-    _buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Apply | QDialogButtonBox::Cancel );
-
-    _applyButton = _buttonBox->button(QDialogButtonBox::Apply);
-    _applyButton->setEnabled(false);
-    connect(_buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(_buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
-    connect(_applyButton, SIGNAL(clicked()), this, SLOT(apply()));
-
-    QVBoxLayout *mainLayout = new QVBoxLayout;
-    mainLayout->addWidget(_optionsWidget);
-    //mainLayout->addWidget(_partUnitWidget);
-    //mainLayout->addWidget(_partConditionWidget);
-    mainLayout->addWidget(_buttonBox);
-    setLayout(mainLayout);
-
-    connect(_optionsWidget,SIGNAL(dataChanged()), this, SLOT(dataChanged()));
-    //connect(_partUnitWidget,SIGNAL(dataChanged()), this, SLOT(dataChanged()));
-    //connect(_partConditionWidget,SIGNAL(dataChanged()), this, SLOT(dataChanged()));
-    //connect(_partUnitWidget, SIGNAL(dataCommited()), this, SLOT(setDirty(bool)));
 }
 
-
-void OptionsDialog::accept()
+OptionsDialog::~OptionsDialog()
 {
-    apply();
-    QDialog::accept();    
+    delete ui;
 }
 
-void OptionsDialog::reject()
+void OptionsDialog::setupModels()
 {
-    setDirty(false);
-    QDialog::reject();
+    _partUnits = new QSqlTableModel(this);
+    _partUnits->setTable("part_unit");
+    _partUnits->setEditStrategy(QSqlTableModel::OnRowChange);
+    _partUnits->setHeaderData(1, Qt::Horizontal, tr("Name"));
+    _partUnits->setHeaderData(2, Qt::Horizontal, tr("Abbreviation"));
+    _partUnits->setHeaderData(3, Qt::Horizontal, tr("Default"));
+    ui->unitsTableView->setModel(_partUnits);
+    ui->unitsTableView->setColumnHidden(0, true);
+    ui->unitsTableView->horizontalHeader()->moveSection(3,0);
+
+    _partUnits->select();
 }
 
-void OptionsDialog::apply()
+void OptionsDialog::setupConnections()
 {
-    if(_optionsWidget->submit()){
-        setDirty(false);
-    }
-    else{
-        qDebug("Failed to sub");
-    }
+    connect(ui->pageSelectionWidget, SIGNAL(currentRowChanged(int)), this, SLOT(slotCurrentPageChanged(int)));
 }
 
-void OptionsDialog::dataChanged()
+void OptionsDialog::slotCurrentPageChanged(int currentRow)
 {
-    setDirty(true);
-}
-
-void OptionsDialog::setDirty(bool dirty)
-{
-    _dirty = dirty;
-    _applyButton->setEnabled(_dirty);
+    QString text = ui->pageSelectionWidget->item(currentRow)->text();
+    ui->pageTitleLabel->setText(text);
 }

@@ -3,36 +3,27 @@
 
 #include <QDialog>
 
-class PartUnitsWidget;
-class PartConditionWidget;
-class QDialogButtonBox;
-class QPushButton;
-class OptionsWidget;
+namespace Ui {
+class OptionsDialog;
+}
+
+class QSqlTableModel;
 
 class OptionsDialog : public QDialog
 {
     Q_OBJECT
+
 public:
-    explicit OptionsDialog(OptionsWidget * optionsWidget, QWidget *parent = 0);
-signals:    
-    
-public slots:
+    explicit OptionsDialog(QWidget *parent = 0);
+    ~OptionsDialog();
 
 private slots:
-    void accept();
-    void reject();
-    void apply();
-    void dataChanged();
-    void setDirty(bool dirty);
+    void slotCurrentPageChanged(int currentRow);
 private:
-    bool _dirty;
-    OptionsWidget * _optionsWidget;
-    //PartUnitsWidget * _partUnitWidget;
-    //PartConditionWidget * _partConditionWidget;
-    QPushButton * _applyButton;
-    QPushButton * _revertButton;
-    QPushButton * _quitButton;
-    QDialogButtonBox * _buttonBox;
+    void setupModels();
+    void setupConnections();
+    Ui::OptionsDialog *ui;
+    QSqlTableModel * _partUnits;
 };
 
 #endif // OPTIONSDIALOG_H

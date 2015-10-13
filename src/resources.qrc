@@ -50,4 +50,12 @@
         <file alias="link_delete">images/link_delete.png</file>
         <file alias="link_go">images/link_go.png</file>
     </qresource>
+    <qresource prefix="/largeIcons">
+        <file alias="options_general">images/cog_32x32.png</file>
+        <file alias="options_units">images/measure_32x32.png</file>
+        <file alias="options_param_units">images/temperature_32x32.png</file>
+        <file alias="options_manufacturers">images/building_32x32.png</file>
+        <file alias="options_distributors">images/lorry_32x32.png</file>
+        <file alias="options_condition">images/new_32x32.png</file>
+    </qresource>
 </RCC>

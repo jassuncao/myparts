@@ -84,7 +84,6 @@ SOURCES += main.cpp\
     utils.cpp \
     attachmentselectiondialog.cpp \
     valuewithunit.cpp \
-    models/comboboxlookupmodel.cpp \
     parametervalue.cpp \
     models/customtablemodel.cpp
 
@@ -153,7 +152,6 @@ HEADERS  += mainwindow.h \
     utils.h \
     attachmentselectiondialog.h \
     valuewithunit.h \
-    models/comboboxlookupmodel.h \
     parametervalue.h \
     models/customtablemodel.h
 
@@ -168,7 +166,9 @@ FORMS    += mainwindow.ui \
     partdetailsview.ui \
     storagemanagerform.ui \
     testform1.ui \
-    attachmentselectiondialog.ui
+    attachmentselectiondialog.ui \
+    testform2.ui \
+    optionsdialog.ui
 
 RESOURCES += \
     resources.qrc

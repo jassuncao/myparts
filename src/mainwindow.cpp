@@ -48,7 +48,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::on_actionEdit_part_units_triggered()
 {
-    OptionsDialog dlg(new PartUnitsWidget(), this);
+    OptionsDialog dlg(this);
     dlg.exec();
 }
 
@@ -69,8 +69,9 @@ void MainWindow::writeSettings()
 }
 
 void MainWindow::on_actionPart_conditions_triggered()
-{
-    OptionsDialog dlg(new PartConditionWidget(), this);
+{    
+    OptionsDialog dlg(this);
+    //OptionsDialog dlg(new PartUnitsWidget(), this);
     dlg.exec();
 }
 
