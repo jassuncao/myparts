@@ -2,12 +2,13 @@
 #define OPTIONSDIALOG_H
 
 #include <QDialog>
+#include <QItemSelection>
 
 namespace Ui {
 class OptionsDialog;
 }
 
-class QSqlTableModel;
+class SimpleSqlTableModel;
 
 class OptionsDialog : public QDialog
 {
@@ -19,11 +20,27 @@ public:
 
 private slots:
     void slotCurrentPageChanged(int currentRow);
+    void slotMakeCurrentUnitDefault();
+    void slotUnitSelectionChanged(const QItemSelection &selected, const QItemSelection);
+    void slotUnitDoubleClick(const QModelIndex &index);
+    void slotParamUnitRowChanged(const QModelIndex &current, const QModelIndex &);
+    void slotDataChanged();
+    void slotApplyChanges();
+    void slotAddUnit();
+    void slotDeleteUnit();
+    void slotAddParamUnit();
+    void slotDeleteParamUnit();
+    void accept();
+    void reject();
+
 private:
     void setupModels();
+    void setupPartUnitsModel();
+    void setupParamsUnitsModel();
     void setupConnections();
     Ui::OptionsDialog *ui;
-    QSqlTableModel * _partUnits;
+    SimpleSqlTableModel * _partUnitsModel;
+    SimpleSqlTableModel * _parameterUnitsModel;
 };
 
 #endif // OPTIONSDIALOG_H

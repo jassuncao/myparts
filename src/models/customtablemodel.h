@@ -13,7 +13,7 @@
 
 class TableItem {
 public:
-    explicit TableItem(QVector<QVariant> data);
+    explicit TableItem(QVector<QVariant> data, const QVariant & id = QVariant(), bool dirty=true);
     void setData(int column, const QVariant & value);
     QVariant data(int column) const;
 
@@ -90,7 +90,7 @@ class SimpleSqlTableModel : public CustomTableModel
     Q_OBJECT
 public:
     explicit SimpleSqlTableModel(const QString &tableName, const QStringList & fieldNames,
-                                 const QStringList & columnNames, const QString & foreignKeyField, QObject *parent = 0);
+                                 const QStringList & columnNames, const QString & foreignKeyField = QString(), QObject *parent = 0);
     void setCurrentForeignKey(const QVariant & foreignKey);
 protected:
     virtual bool deleteItem(QVariant id);

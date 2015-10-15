@@ -9,8 +9,8 @@ AbstractTableItem::AbstractTableItem(const QVariant & id, const bool dirty) : _i
 {}
 */
 
- TableItem::TableItem(QVector<QVariant> data) :
-     _data(data), _id(QVariant()), _dirty(true)
+ TableItem::TableItem(QVector<QVariant> data, const QVariant & id, bool dirty) :
+     _data(data), _id(id), _dirty(dirty)
  {
  }
 
@@ -317,13 +317,19 @@ SimpleSqlTableModel::SimpleSqlTableModel(const QString &tableName, const QString
         updatePlaceholders.append(field % "=?");
         placeholders.append("?");
     }
-    placeholders.append("?");//foreign id
+    QString selectStmt;
+    QString insertStmt;
+    if(!_foreignKeyField.isEmpty()){
+        placeholders.append("?");//foreign id
 
-    QString selectStmt("SELECT %2, id FROM %1 WHERE %3 = ?");
-    selectStmt = selectStmt.arg(_tableName, fieldList, _foreignKeyField);
+        selectStmt = QString("SELECT %2, id FROM %1 WHERE %3 = ?").arg(_tableName, fieldList, _foreignKeyField);
+        insertStmt = QString("INSERT INTO %1 (%2, %3) VALUES (%4)").arg(_tableName, fieldList, _foreignKeyField, placeholders.join(", "));
+    }
+    else{
+        selectStmt = QString("SELECT %2, id FROM %1").arg(_tableName, fieldList);
+        insertStmt = QString("INSERT INTO %1 (%2) VALUES (%4)").arg(_tableName, fieldList, placeholders.join(", "));
 
-    QString insertStmt("INSERT INTO %1 (%2, %3) VALUES (%4)");
-    insertStmt = insertStmt.arg(_tableName, fieldList, _foreignKeyField, placeholders.join(", "));
+    }
 
     QString updateStmt("UPDATE %1 SET %2 WHERE id = ?");
     updateStmt = updateStmt.arg(_tableName, updatePlaceholders.join(", "));
@@ -386,7 +392,9 @@ bool SimpleSqlTableModel::saveItem(TableItem* item)
         for(; i<_maxColumns;++i){
             _insertQuery.bindValue(i, item->data(i));
         }
-        _insertQuery.bindValue(i, _foreignKey);
+        if(!_foreignKeyField.isEmpty()){
+            _insertQuery.bindValue(i, _foreignKey);
+        }
         if(_insertQuery.exec()){
             item->setId(_insertQuery.lastInsertId());
             item->resetDirty();
@@ -399,10 +407,13 @@ bool SimpleSqlTableModel::saveItem(TableItem* item)
 
 bool SimpleSqlTableModel::loadItems(QList<TableItem*> & dest)
 {
-    if(!_foreignKey.isValid())
-        return false;
-    qDebug()<<"loading items for "<<_foreignKey;
-    _selectQuery.bindValue(0, _foreignKey);
+    if(!_foreignKeyField.isEmpty()){
+        if(!_foreignKey.isValid())
+            return false;
+        qDebug()<<"loading items for "<<_foreignKey;
+        _selectQuery.bindValue(0, _foreignKey);
+    }
+
     if(_selectQuery.exec()){
         while(_selectQuery.next())
         {
@@ -411,8 +422,7 @@ bool SimpleSqlTableModel::loadItems(QList<TableItem*> & dest)
                 rowData[i] = _selectQuery.value(i);
             }
             QVariant id = _selectQuery.value(_maxColumns);
-            TableItem * item = new TableItem(rowData);
-            item->setId(id);
+            TableItem * item = new TableItem(rowData, id, false);
             dest.append(item);
         }
         return true;

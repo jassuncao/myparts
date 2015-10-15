@@ -85,7 +85,8 @@ SOURCES += main.cpp\
     attachmentselectiondialog.cpp \
     valuewithunit.cpp \
     parametervalue.cpp \
-    models/customtablemodel.cpp
+    models/customtablemodel.cpp \
+    widgets/validatingitemdelegate.cpp
 
 HEADERS  += mainwindow.h \
     entities/entities.h \
@@ -153,7 +154,8 @@ HEADERS  += mainwindow.h \
     attachmentselectiondialog.h \
     valuewithunit.h \
     parametervalue.h \
-    models/customtablemodel.h
+    models/customtablemodel.h \
+    widgets/validatingitemdelegate.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \
