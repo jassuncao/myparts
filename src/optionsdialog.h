@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QItemSelection>
+#include <QAbstractItemDelegate>
 
 namespace Ui {
 class OptionsDialog;
@@ -32,7 +33,7 @@ private slots:
     void slotDeleteParamUnit();
     void accept();
     void reject();
-
+    void slotCloseEditor(QWidget *, QAbstractItemDelegate::EndEditHint hint = QAbstractItemDelegate::NoHint);
 private:
     void setupModels();
     void setupPartUnitsModel();

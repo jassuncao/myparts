@@ -3,6 +3,7 @@
 #include "widgets/booleanitemdelegate.h"
 #include "models/customtablemodel.h"
 #include "widgets/validatingitemdelegate.h"
+#include <QDebug>
 
 const int COLUMN_UNIT_DEFAULT = 0;
 
@@ -39,13 +40,13 @@ void OptionsDialog::setupPartUnitsModel()
     QStringList columnNames;
     columnNames<<QString()<<tr("Name")<<tr("Abbreviation");
     _partUnitsModel = new SimpleSqlTableModel("part_unit", fieldNames, columnNames, QString(), this);
-    ui->unitsTableView->setModel(_partUnitsModel);
-    ui->unitsTableView->setItemDelegateForColumn(COLUMN_UNIT_DEFAULT, defaultValueDelegate);
-    ui->unitsTableView->setColumnWidth(COLUMN_UNIT_DEFAULT, defaultValueDelegate->widthHint());
+    ui->partUnitsTableView->setModel(_partUnitsModel);
+    ui->partUnitsTableView->setItemDelegateForColumn(COLUMN_UNIT_DEFAULT, defaultValueDelegate);
+    ui->partUnitsTableView->setColumnWidth(COLUMN_UNIT_DEFAULT, defaultValueDelegate->widthHint());
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
-    ui->unitsTableView->horizontalHeader()->setSectionResizeMode(COLUMN_UNIT_DEFAULT, QHeaderView::Fixed);
+    ui->partUnitsTableView->horizontalHeader()->setSectionResizeMode(COLUMN_UNIT_DEFAULT, QHeaderView::Fixed);
 #else
-    ui->unitsTableView->horizontalHeader()->setResizeMode(COLUMN_UNIT_DEFAULT, QHeaderView::Fixed);
+    ui->partUnitsTableView->horizontalHeader()->setResizeMode(COLUMN_UNIT_DEFAULT, QHeaderView::Fixed);
 #endif
     _partUnitsModel->select();
 }
@@ -71,9 +72,10 @@ void OptionsDialog::setupConnections()
     connect(ui->buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 
     connect(ui->makeUnitDefaultButton, SIGNAL(clicked()), this, SLOT(slotMakeCurrentUnitDefault()));
-    connect(ui->unitsTableView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),this, SLOT(slotUnitSelectionChanged(QItemSelection,QItemSelection)));
-    connect(ui->unitsTableView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(slotUnitDoubleClick(QModelIndex)));
-    connect(_partUnitsModel,SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(slotDataChanged()));
+    connect(ui->partUnitsTableView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),this, SLOT(slotUnitSelectionChanged(QItemSelection,QItemSelection)));
+    connect(ui->partUnitsTableView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(slotUnitDoubleClick(QModelIndex)));
+    connect(_partUnitsModel,SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(slotDataChanged()));    
+    connect(ui->partUnitsTableView->itemDelegate(), SIGNAL(closeEditor(QWidget*,QAbstractItemDelegate::EndEditHint)), this,SLOT(slotCloseEditor(QWidget*,QAbstractItemDelegate::EndEditHint)));
 
     connect(ui->addUnitButton, SIGNAL(clicked()), this, SLOT(slotAddUnit()));
     connect(ui->deleteUnitButton, SIGNAL(clicked()), this, SLOT(slotDeleteUnit()));
@@ -82,7 +84,21 @@ void OptionsDialog::setupConnections()
     connect(_parameterUnitsModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(slotDataChanged()));
     connect(ui->addParamUnitButton, SIGNAL(clicked()), this, SLOT(slotAddParamUnit()));
     connect(ui->deleteParamUnitButton, SIGNAL(clicked()), this, SLOT(slotDeleteParamUnit()));
+
 }
+
+void OptionsDialog::slotCloseEditor(QWidget *, QAbstractItemDelegate::EndEditHint hint)
+{
+    if(hint==QAbstractItemDelegate::EditNextItem){
+        QModelIndex index = ui->partUnitsTableView->currentIndex();
+        if(index.isValid() && index.column()==0){
+            QModelIndex idx = _partUnitsModel->index(index.row(), 1);
+            ui->partUnitsTableView->setCurrentIndex(idx);
+            ui->partUnitsTableView->edit(idx);
+        }
+    }
+}
+
 
 void OptionsDialog::accept()
 {
@@ -117,7 +133,7 @@ static void makeSelectedItemDefault(QAbstractItemModel * model, const int select
 
 void OptionsDialog::slotMakeCurrentUnitDefault()
 {
-    QModelIndex currentIndex = ui->unitsTableView->currentIndex();
+    QModelIndex currentIndex = ui->partUnitsTableView->currentIndex();
     if(!currentIndex.isValid())
         return;
 
@@ -162,13 +178,13 @@ void OptionsDialog::slotAddUnit()
     int newRow = _partUnitsModel->rowCount();
     _partUnitsModel->insertRow(newRow);
     QModelIndex idx = _partUnitsModel->index(newRow,1);
-    ui->unitsTableView->setCurrentIndex(idx);
-    ui->unitsTableView->edit(idx);
+    ui->partUnitsTableView->setCurrentIndex(idx);
+    ui->partUnitsTableView->edit(idx);
 }
 
 void OptionsDialog::slotDeleteUnit()
 {
-    QModelIndex currentIdx = ui->unitsTableView->currentIndex();
+    QModelIndex currentIdx = ui->partUnitsTableView->currentIndex();
     if(!currentIdx.isValid())
         return;
     if(_partUnitsModel->removeRow(currentIdx.row())){

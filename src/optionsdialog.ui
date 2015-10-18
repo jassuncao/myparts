@@ -245,7 +245,7 @@
             <number>0</number>
            </property>
            <item>
-            <widget class="QTableView" name="unitsTableView">
+            <widget class="QTableView" name="partUnitsTableView">
              <property name="selectionMode">
               <enum>QAbstractItemView::SingleSelection</enum>
              </property>

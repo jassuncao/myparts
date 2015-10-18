@@ -191,9 +191,9 @@ bool CustomTableModel::removeRows(int row, int count, const QModelIndex&)
     for (int i = 0; i < count; ++i) {
         const TableItem * item = _items.at(row);
         if(item->id().isValid()){
-            _deletedItems.append(item->id());
-            delete _items.takeAt(row);
+            _deletedItems.append(item->id());            
         }
+        delete _items.takeAt(row);
     }
     endRemoveRows();
     return true;
