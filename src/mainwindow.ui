@@ -34,7 +34,7 @@
       </property>
       <widget class="QWidget" name="partsTab">
        <attribute name="icon">
-        <iconset>
+        <iconset resource="resources.qrc">
          <normaloff>:/icons/editPart</normaloff>:/icons/editPart</iconset>
        </attribute>
        <attribute name="title">
@@ -63,7 +63,7 @@
       </widget>
       <widget class="QWidget" name="storageTab">
        <attribute name="icon">
-        <iconset>
+        <iconset resource="resources.qrc">
          <normaloff>:/icons/box_closed</normaloff>:/icons/box_closed</iconset>
        </attribute>
        <attribute name="title">
@@ -104,30 +104,28 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="actionEdit_part_units"/>
-   <addaction name="actionUnits"/>
-   <addaction name="actionActionPartParameters"/>
   </widget>
-  <action name="actionEdit_part_units">
-   <property name="text">
-    <string>Part measure units</string>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>988</width>
+     <height>22</height>
+    </rect>
    </property>
-  </action>
-  <action name="actionUnits">
-   <property name="text">
-    <string>Units</string>
-   </property>
-  </action>
-  <action name="actionStorage_locations">
-   <property name="text">
-    <string>Storage locations</string>
-   </property>
-  </action>
-  <action name="actionFootprints">
-   <property name="text">
-    <string>Footprints</string>
-   </property>
-  </action>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>Edit</string>
+    </property>
+    <addaction name="actionManufacturers"/>
+    <addaction name="actionDistributors"/>
+    <addaction name="actionFootprints"/>
+    <addaction name="separator"/>
+    <addaction name="actionPreferences"/>
+   </widget>
+   <addaction name="menuEdit"/>
+  </widget>
   <action name="actionManufacturers">
    <property name="text">
     <string>Manufacturers</string>
@@ -138,14 +136,14 @@
     <string>Distributors</string>
    </property>
   </action>
-  <action name="actionPart_conditions">
+  <action name="actionPreferences">
    <property name="text">
-    <string>Part conditions</string>
+    <string>Preferences</string>
    </property>
   </action>
-  <action name="actionActionPartParameters">
+  <action name="actionFootprints">
    <property name="text">
-    <string>actionPartParameters</string>
+    <string>Footprints</string>
    </property>
   </action>
  </widget>
@@ -164,6 +162,8 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

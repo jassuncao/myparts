@@ -155,7 +155,8 @@ HEADERS  += mainwindow.h \
     valuewithunit.h \
     parametervalue.h \
     models/customtablemodel.h \
-    widgets/validatingitemdelegate.h
+    widgets/validatingitemdelegate.h \
+    constants.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \

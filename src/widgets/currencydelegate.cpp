@@ -1,4 +1,5 @@
 #include "currencydelegate.h"
+#include "constants.h"
 #include <QSettings>
 
 CurrencyDelegate::CurrencyDelegate(QObject *parent) :
@@ -6,8 +7,8 @@ CurrencyDelegate::CurrencyDelegate(QObject *parent) :
 {
     QString defaultCurrency(QChar(8364));
     QSettings settings;
-    QString currency = settings.value("currency/symbol", defaultCurrency).toString();
-    bool currencyAfter = settings.value("currency/after",true).toBool();
+    QString currency = settings.value(CURRENCY_SYMBOL_KEY, defaultCurrency).toString();
+    bool currencyAfter = settings.value(CURRENCY_POSITION_KEY,true).toBool();
     if(currencyAfter){
         _currencyFormat = QString("%L2%1").arg(currency);
     }

@@ -24,6 +24,7 @@ private slots:
     void on_actionPart_conditions_triggered();
 
     void on_actionActionPartParameters_triggered();
+    void slotEditPreferences();
 
 private:
     void readSettings();

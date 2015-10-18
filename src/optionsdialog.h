@@ -24,24 +24,33 @@ private slots:
     void slotMakeCurrentUnitDefault();
     void slotUnitSelectionChanged(const QItemSelection &selected, const QItemSelection);
     void slotUnitDoubleClick(const QModelIndex &index);
-    void slotParamUnitRowChanged(const QModelIndex &current, const QModelIndex &);
+    void slotParamUnitRowChanged(const QModelIndex &current, const QModelIndex &);    
     void slotDataChanged();
     void slotApplyChanges();
     void slotAddUnit();
     void slotDeleteUnit();
-    void slotAddParamUnit();
+    void slotAddParamUnit();    
     void slotDeleteParamUnit();
+    void slotAddPartCondition();
+    void slotPartConditionRowChanged(const QModelIndex &current, const QModelIndex &);
+    void slotDeletePartCondition();
+    void slotMakeCurrentConditionDefault();
+    void slotConditionDoubleClick(const QModelIndex &index);
     void accept();
     void reject();
-    void slotCloseEditor(QWidget *, QAbstractItemDelegate::EndEditHint hint = QAbstractItemDelegate::NoHint);
+    void slotClosePartUnitEditor(QWidget *, QAbstractItemDelegate::EndEditHint hint = QAbstractItemDelegate::NoHint);
+    void slotClosePartConditionEditor(QWidget *, QAbstractItemDelegate::EndEditHint hint = QAbstractItemDelegate::NoHint);
 private:
     void setupModels();
     void setupPartUnitsModel();
     void setupParamsUnitsModel();
+    void setupPartConditionModel();
     void setupConnections();
+    void setupGeneralSettings();
     Ui::OptionsDialog *ui;
     SimpleSqlTableModel * _partUnitsModel;
     SimpleSqlTableModel * _parameterUnitsModel;
+    SimpleSqlTableModel * _partConditionModel;
 };
 
 #endif // OPTIONSDIALOG_H

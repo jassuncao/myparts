@@ -33,6 +33,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     DistributorManagerWidget* distributorManager = new DistributorManagerWidget(this);
     ui->tabWidget->addTab(distributorManager, QIcon(":/icons/distributor"), tr("Distributors"));
+
+    connect(ui->actionPreferences, SIGNAL(triggered()), this, SLOT(slotEditPreferences()));
 }
 
 MainWindow::~MainWindow()
@@ -78,4 +80,10 @@ void MainWindow::on_actionPart_conditions_triggered()
 void MainWindow::on_actionActionPartParameters_triggered()
 {        
 
+}
+
+void MainWindow::slotEditPreferences()
+{
+    OptionsDialog dlg(this);
+    dlg.exec();
 }

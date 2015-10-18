@@ -3,9 +3,12 @@
 #include "widgets/booleanitemdelegate.h"
 #include "models/customtablemodel.h"
 #include "widgets/validatingitemdelegate.h"
+#include "constants.h"
 #include <QDebug>
+#include <QSettings>
 
 const int COLUMN_UNIT_DEFAULT = 0;
+const int COLUMN_CONDITION_DEFAULT = 0;
 
 OptionsDialog::OptionsDialog(QWidget *parent) :
     QDialog(parent),
@@ -16,7 +19,7 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
 
     setupModels();
     setupConnections();
-
+    setupGeneralSettings();
     ui->pageSelectionWidget->setCurrentRow(0);
 }
 
@@ -29,6 +32,7 @@ void OptionsDialog::setupModels()
 {
     setupPartUnitsModel();
     setupParamsUnitsModel();
+    setupPartConditionModel();
 }
 
 void OptionsDialog::setupPartUnitsModel()
@@ -62,6 +66,26 @@ void OptionsDialog::setupParamsUnitsModel()
     _parameterUnitsModel->select();
 }
 
+void OptionsDialog::setupPartConditionModel()
+{
+    BooleanItemDelegate * defaultValueDelegate = new BooleanItemDelegate(QPixmap(":icons/default"),QPixmap(), this);
+
+    QStringList fieldNames;
+    fieldNames<<QLatin1String("defaultCondition")<<QLatin1String("value")<<QLatin1String("Description");
+    QStringList columnNames;
+    columnNames<<QString()<<tr("Name")<<tr("Description");
+    _partConditionModel = new SimpleSqlTableModel("part_condition", fieldNames, columnNames, QString(), this);
+    ui->partConditionTableView->setModel(_partConditionModel);
+    ui->partConditionTableView->setItemDelegateForColumn(COLUMN_CONDITION_DEFAULT, defaultValueDelegate);
+    ui->partConditionTableView->setColumnWidth(COLUMN_CONDITION_DEFAULT, defaultValueDelegate->widthHint());
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
+    ui->partConditionTableView->horizontalHeader()->setSectionResizeMode(COLUMN_CONDITION_DEFAULT, QHeaderView::Fixed);
+#else
+    ui->partConditionTableView->horizontalHeader()->setResizeMode(COLUMN_CONDITION_DEFAULT, QHeaderView::Fixed);
+#endif
+    _partConditionModel->select();
+}
+
 void OptionsDialog::setupConnections()
 {
     connect(ui->pageSelectionWidget, SIGNAL(currentRowChanged(int)), this, SLOT(slotCurrentPageChanged(int)));
@@ -75,7 +99,7 @@ void OptionsDialog::setupConnections()
     connect(ui->partUnitsTableView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),this, SLOT(slotUnitSelectionChanged(QItemSelection,QItemSelection)));
     connect(ui->partUnitsTableView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(slotUnitDoubleClick(QModelIndex)));
     connect(_partUnitsModel,SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(slotDataChanged()));    
-    connect(ui->partUnitsTableView->itemDelegate(), SIGNAL(closeEditor(QWidget*,QAbstractItemDelegate::EndEditHint)), this,SLOT(slotCloseEditor(QWidget*,QAbstractItemDelegate::EndEditHint)));
+    connect(ui->partUnitsTableView->itemDelegate(), SIGNAL(closeEditor(QWidget*,QAbstractItemDelegate::EndEditHint)), this,SLOT(slotClosePartUnitEditor(QWidget*,QAbstractItemDelegate::EndEditHint)));
 
     connect(ui->addUnitButton, SIGNAL(clicked()), this, SLOT(slotAddUnit()));
     connect(ui->deleteUnitButton, SIGNAL(clicked()), this, SLOT(slotDeleteUnit()));
@@ -85,9 +109,30 @@ void OptionsDialog::setupConnections()
     connect(ui->addParamUnitButton, SIGNAL(clicked()), this, SLOT(slotAddParamUnit()));
     connect(ui->deleteParamUnitButton, SIGNAL(clicked()), this, SLOT(slotDeleteParamUnit()));
 
+    connect(ui->partConditionTableView->selectionModel(), SIGNAL(currentColumnChanged(QModelIndex,QModelIndex)), this, SLOT(slotPartConditionRowChanged(QModelIndex,QModelIndex)));
+    connect(_partConditionModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(slotDataChanged()));
+    connect(ui->addConditionButton, SIGNAL(clicked()), this, SLOT(slotAddPartCondition()));
+    connect(ui->deleteConditionButton, SIGNAL(clicked()), this, SLOT(slotDeletePartCondition()));
+    connect(ui->makeConditionDefaultButton, SIGNAL(clicked()), this, SLOT(slotMakeCurrentConditionDefault()));
+    connect(ui->partConditionTableView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(slotConditionDoubleClick(QModelIndex)));
+    connect(ui->partConditionTableView->itemDelegate(), SIGNAL(closeEditor(QWidget*,QAbstractItemDelegate::EndEditHint)), this,SLOT(slotClosePartConditionEditor(QWidget*,QAbstractItemDelegate::EndEditHint)));
 }
 
-void OptionsDialog::slotCloseEditor(QWidget *, QAbstractItemDelegate::EndEditHint hint)
+void OptionsDialog::setupGeneralSettings()
+{
+    QSettings settings;
+    QString currency = settings.value(CURRENCY_SYMBOL_KEY).toString();
+    bool currencyAfter = settings.value(CURRENCY_POSITION_KEY).toBool();
+    ui->currencySymbolLineEdit->setText(currency);
+    if(currencyAfter){
+        ui->currencySymbAfterRadio->setChecked(true);
+    }
+    else{
+     ui->currencySymbBeforeRadio->setChecked(true);
+    }
+}
+
+void OptionsDialog::slotClosePartUnitEditor(QWidget *, QAbstractItemDelegate::EndEditHint hint)
 {
     if(hint==QAbstractItemDelegate::EditNextItem){
         QModelIndex index = ui->partUnitsTableView->currentIndex();
@@ -95,6 +140,18 @@ void OptionsDialog::slotCloseEditor(QWidget *, QAbstractItemDelegate::EndEditHin
             QModelIndex idx = _partUnitsModel->index(index.row(), 1);
             ui->partUnitsTableView->setCurrentIndex(idx);
             ui->partUnitsTableView->edit(idx);
+        }
+    }
+}
+
+void OptionsDialog::slotClosePartConditionEditor(QWidget *, QAbstractItemDelegate::EndEditHint hint)
+{
+    if(hint==QAbstractItemDelegate::EditNextItem){
+        QModelIndex index = ui->partConditionTableView->currentIndex();
+        if(index.isValid() && index.column()==0){
+            QModelIndex idx = _partConditionModel->index(index.row(), 1);
+            ui->partConditionTableView->setCurrentIndex(idx);
+            ui->partConditionTableView->edit(idx);
         }
     }
 }
@@ -165,8 +222,14 @@ void OptionsDialog::slotDataChanged()
 
 void OptionsDialog::slotApplyChanges()
 {
+    QSettings settings;
+    settings.setValue(CURRENCY_SYMBOL_KEY, ui->currencySymbolLineEdit->text());
+    bool currencyAfter = ui->currencySymbAfterRadio->isChecked();
+    settings.setValue(CURRENCY_POSITION_KEY, currencyAfter);
+
     bool res = _partUnitsModel->submitAll();
     res = res && _parameterUnitsModel->submitAll();
+    res = res && _partConditionModel->submitAll();
     if(res){
         ui->buttonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
     }
@@ -208,6 +271,48 @@ void OptionsDialog::slotDeleteParamUnit()
         return;
     if(_parameterUnitsModel->removeRow(currentIdx.row())){
         slotDataChanged();
+    }
+}
+
+void OptionsDialog::slotPartConditionRowChanged(const QModelIndex &current, const QModelIndex &)
+{
+    ui->deleteConditionButton->setEnabled(current.isValid());
+    ui->makeConditionDefaultButton->setEnabled(current.isValid());
+}
+
+void OptionsDialog::slotAddPartCondition()
+{
+    int newRow = _partConditionModel->rowCount();
+    _partConditionModel->insertRow(newRow);
+    QModelIndex idx = _partConditionModel->index(newRow, 0);
+    ui->partConditionTableView->setCurrentIndex(idx);
+    ui->partConditionTableView->edit(idx);
+}
+
+
+void OptionsDialog::slotDeletePartCondition()
+{
+    QModelIndex currentIdx = ui->partConditionTableView->currentIndex();
+    if(!currentIdx.isValid())
+        return;
+    if(_partConditionModel->removeRow(currentIdx.row())){
+        slotDataChanged();
+    }
+}
+
+void OptionsDialog::slotMakeCurrentConditionDefault()
+{
+    QModelIndex currentIndex = ui->partConditionTableView->currentIndex();
+    if(!currentIndex.isValid())
+        return;
+
+    makeSelectedItemDefault(_partConditionModel, currentIndex.row(), COLUMN_CONDITION_DEFAULT);
+}
+
+void OptionsDialog::slotConditionDoubleClick(const QModelIndex &index)
+{
+    if(index.isValid() && index.column() == COLUMN_CONDITION_DEFAULT){
+        makeSelectedItemDefault(_partConditionModel, index.row(), COLUMN_CONDITION_DEFAULT);
     }
 }
 
