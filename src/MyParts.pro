@@ -86,7 +86,8 @@ SOURCES += main.cpp\
     valuewithunit.cpp \
     parametervalue.cpp \
     models/customtablemodel.cpp \
-    widgets/validatingitemdelegate.cpp
+    widgets/validatingitemdelegate.cpp \
+    dialogs/manufacturersdialog.cpp
 
 HEADERS  += mainwindow.h \
     entities/entities.h \
@@ -156,7 +157,8 @@ HEADERS  += mainwindow.h \
     parametervalue.h \
     models/customtablemodel.h \
     widgets/validatingitemdelegate.h \
-    constants.h
+    constants.h \
+    dialogs/manufacturersdialog.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \
@@ -171,7 +173,8 @@ FORMS    += mainwindow.ui \
     testform1.ui \
     attachmentselectiondialog.ui \
     testform2.ui \
-    optionsdialog.ui
+    optionsdialog.ui \
+    dialogs/manufacturersdialog.ui
 
 RESOURCES += \
     resources.qrc

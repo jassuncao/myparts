@@ -9,6 +9,7 @@
 #include "footprintmanagerwidget.h"
 #include "unitmanagerwidget.h"
 #include "distributormanagerwidget.h"
+#include "dialogs/manufacturersdialog.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -35,6 +36,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->tabWidget->addTab(distributorManager, QIcon(":/icons/distributor"), tr("Distributors"));
 
     connect(ui->actionPreferences, SIGNAL(triggered()), this, SLOT(slotEditPreferences()));
+    connect(ui->actionManufacturers, SIGNAL(triggered()), this, SLOT(slotEditManufacturers()));
 }
 
 MainWindow::~MainWindow()
@@ -85,5 +87,11 @@ void MainWindow::on_actionActionPartParameters_triggered()
 void MainWindow::slotEditPreferences()
 {
     OptionsDialog dlg(this);
+    dlg.exec();
+}
+
+void MainWindow::slotEditManufacturers()
+{
+    ManufacturersDialog dlg(this);
     dlg.exec();
 }
