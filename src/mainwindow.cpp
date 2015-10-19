@@ -10,6 +10,7 @@
 #include "unitmanagerwidget.h"
 #include "distributormanagerwidget.h"
 #include "dialogs/manufacturersdialog.h"
+#include "partmanagerform.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -22,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent) :
     headerData.append("Description");
     headerData.append("ID");
 
+    ui->stackedWidget->addWidget(new PartManagerForm(this));
     /*
     StorageTreeModel * storageTreeModel = new StorageTreeModel(headerData, this);
     storageTreeModel->select();

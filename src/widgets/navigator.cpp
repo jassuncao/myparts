@@ -34,6 +34,7 @@
 #include <QStyledItemDelegate>
 #include <QTimer>
 #include <QLayout>
+#include <QStandardItemModel>
 
 class SelectionModel : public QItemSelectionModel
 {
@@ -188,7 +189,7 @@ protected:
 class Delegate : public QStyledItemDelegate
 {
 public:
-    explicit Delegate(Navigator *parentNavigator = Q_NULLPTR)
+    explicit Delegate(Navigator *parentNavigator = 0)
         : QStyledItemDelegate(parentNavigator), mNavigator(parentNavigator)
     {
     }
@@ -214,8 +215,7 @@ public:
 
         QStyleOptionViewItemV4 optionCopy(*static_cast<const QStyleOptionViewItemV4 *>(&option));
         optionCopy.decorationPosition = QStyleOptionViewItem::Top;
-        optionCopy.decorationSize =
-            mNavigator->showIcons() ? QSize(mNavigator->iconSize(), mNavigator->iconSize()) : QSize();
+        optionCopy.decorationSize = mNavigator->showIcons() ? QSize(mNavigator->iconSize(), mNavigator->iconSize()) : QSize();
         optionCopy.textElideMode = Qt::ElideNone;
         return QStyledItemDelegate::sizeHint(optionCopy, index);
     }
@@ -225,18 +225,23 @@ private:
 };
 
 
-Navigator::Navigator(SidePaneBase *parent)
-    : QListView(parent), mSidePane(parent)
+Navigator::Navigator(QWidget *parent)
+    : QListWidget(parent)
 {
-    setViewport(new QWidget(this));
+    //setViewport(new QWidget(this));
 
     setVerticalScrollMode(ScrollPerPixel);
     setHorizontalScrollMode(ScrollPerPixel);
 
+    mIconSize = 32+6;
+    mShowIcons = true;
+    mShowText = true;
+    /*
     mIconSize = Prefs::self()->sidePaneIconSize();
     mShowIcons = Prefs::self()->sidePaneShowIcons();
     mShowText = Prefs::self()->sidePaneShowText();
-
+    */
+    /*
     QActionGroup *viewMode = new QActionGroup(this);
 
     mShowIconsAction = new QAction(i18nc("@action:inmenu", "Show Icons Only"), this);
@@ -321,61 +326,29 @@ Navigator::Navigator(SidePaneBase *parent)
                << mBigIconsAction << mNormalIconsAction << mSmallIconsAction;
 
     insertActions(Q_NULLPTR, actionList);
-
+    */
     setContextMenuPolicy(Qt::ActionsContextMenu);
     setViewMode(ListMode);
     setItemDelegate(new Delegate(this));
+    //QStandardItemModel * model = new QStandardItemModel(this);
+    /*
     mModel = new Model(this);
     SortFilterProxyModel *sortFilterProxyModel = new SortFilterProxyModel;
     sortFilterProxyModel->setSourceModel(mModel);
     setModel(sortFilterProxyModel);
-    setSelectionModel(new SelectionModel(sortFilterProxyModel, this));
 
-    setDragDropMode(DropOnly);
-    viewport()->setAcceptDrops(true);
-    setDropIndicatorShown(true);
+    setModel(model);
+    setSelectionModel(new SelectionModel(model, this));
+    */
+    setSelectionModel(new SelectionModel(model(), this));
+
+
+    setDragDropMode(NoDragDrop);
+    viewport()->setAcceptDrops(false);
+    setDropIndicatorShown(false);
 
     connect(selectionModel(), &QItemSelectionModel::currentChanged,
             this, &Navigator::slotCurrentChanged);
-}
-
-void Navigator::updatePlugins(const QList<KontactInterface::Plugin *> &plugins_)
-{
-    QString currentPlugin;
-    if (currentIndex().isValid()) {
-        currentPlugin = currentIndex().model()->data(currentIndex(), Model::PluginName).toString();
-    }
-
-    QList<KontactInterface::Plugin *> pluginsToShow;
-    foreach (KontactInterface::Plugin *plugin, plugins_) {
-        if (plugin->showInSideBar()) {
-            pluginsToShow << plugin;
-        }
-    }
-
-    mModel->setPluginList(pluginsToShow);
-
-    mModel->removeRows(0, mModel->rowCount());
-    mModel->insertRows(0, pluginsToShow.count());
-
-    // Restore the previous selected index, if any
-    if (!currentPlugin.isEmpty()) {
-        setCurrentPlugin(currentPlugin);
-    }
-}
-
-void Navigator::setCurrentPlugin(const QString &plugin)
-{
-    const int numberOfRows(model()->rowCount());
-    for (int i = 0; i < numberOfRows; ++i) {
-        const QModelIndex index = model()->index(i, 0);
-        const QString pluginName = model()->data(index, Model::PluginName).toString();
-
-        if (plugin == pluginName) {
-            selectionModel()->setCurrentIndex(index, QItemSelectionModel::SelectCurrent);
-            break;
-        }
-    }
 }
 
 QSize Navigator::sizeHint() const
@@ -392,11 +365,12 @@ QSize Navigator::sizeHint() const
         maxWidth = qMax(maxWidth, sizeHintForIndex(index).width());
     }
 
-    int viewHeight = QListView::sizeHint().height();
+    int viewHeight = QListWidget::sizeHint().height();
 
     return QSize(maxWidth + rect().width() - contentsRect().width(), viewHeight);
 }
 
+/*
 void Navigator::dragEnterEvent(QDragEnterEvent *event)
 {
     if (event->proposedAction() == Qt::IgnoreAction) {
@@ -477,14 +451,17 @@ void Navigator::slotCurrentChanged(const QModelIndex &current)
         return;
     }
 
+    /*
     QModelIndex source =
         static_cast<const QSortFilterProxyModel *>(current.model())->mapToSource(current);
 
     Q_EMIT pluginActivated(static_cast<KontactInterface::Plugin *>(source.internalPointer()));
+    */
 }
 
 void Navigator::slotActionTriggered(bool checked)
 {
+    /*
     QObject *object = sender();
 
     if (object == mShowIconsAction) {
@@ -511,6 +488,7 @@ void Navigator::slotActionTriggered(bool checked)
     mModel->emitReset();
 
     QTimer::singleShot(0, this, &Navigator::updateNavigatorSize);
+    */
 }
 
 void Navigator::updateNavigatorSize()
@@ -519,6 +497,7 @@ void Navigator::updateNavigatorSize()
     parentWidget()->setMinimumWidth(sizeHint().width());
 }
 
+/*
 IconSidePane::IconSidePane(KontactInterface::Core *core, QWidget *parent)
     : SidePaneBase(core, parent)
 {
@@ -548,3 +527,4 @@ void IconSidePane::resizeEvent(QResizeEvent *event)
     setMaximumWidth(mNavigator->sizeHint().width());
     setMinimumWidth(mNavigator->sizeHint().width());
 }
+*/

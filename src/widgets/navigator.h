@@ -2,8 +2,9 @@
 #define NAVIGATOR_H
 
 #include <QListView>
+#include <QListWidget>
 
-class Navigator : public QListView
+class Navigator : public QListWidget
 {
     Q_OBJECT
 
@@ -29,9 +30,11 @@ public:
 
 
 protected:
+    /*
     void dragEnterEvent(QDragEnterEvent *event) ;
     void dragMoveEvent(QDragMoveEvent *event) ;
     void dropEvent(QDropEvent *event) ;
+    */
     void showEvent(QShowEvent *event) ;
 
 private Q_SLOTS:
