@@ -87,7 +87,8 @@ SOURCES += main.cpp\
     parametervalue.cpp \
     models/customtablemodel.cpp \
     widgets/validatingitemdelegate.cpp \
-    dialogs/manufacturersdialog.cpp
+    dialogs/manufacturersdialog.cpp \
+    widgets/navigator.cpp
 
 HEADERS  += mainwindow.h \
     entities/entities.h \
@@ -158,7 +159,8 @@ HEADERS  += mainwindow.h \
     models/customtablemodel.h \
     widgets/validatingitemdelegate.h \
     constants.h \
-    dialogs/manufacturersdialog.h
+    dialogs/manufacturersdialog.h \
+    widgets/navigator.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \

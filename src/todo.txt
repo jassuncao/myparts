@@ -14,3 +14,8 @@ Ideia:
     - Estou a implementar o DAO
 * Todo: Na janela principal seria interessante mudar entra a vista de categorias e uma vista de storage
 
+
+Icons used:
+
+Fatcow-hosting-icons-2000
+GEDA PCB

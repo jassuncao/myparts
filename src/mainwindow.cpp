@@ -22,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
     headerData.append("Description");
     headerData.append("ID");
 
+    /*
     StorageTreeModel * storageTreeModel = new StorageTreeModel(headerData, this);
     storageTreeModel->select();
     ui->storageManagerWidget->setModel(storageTreeModel);
@@ -34,7 +35,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     DistributorManagerWidget* distributorManager = new DistributorManagerWidget(this);
     ui->tabWidget->addTab(distributorManager, QIcon(":/icons/distributor"), tr("Distributors"));
-
+*/
     connect(ui->actionPreferences, SIGNAL(triggered()), this, SLOT(slotEditPreferences()));
     connect(ui->actionManufacturers, SIGNAL(triggered()), this, SLOT(slotEditManufacturers()));
 }

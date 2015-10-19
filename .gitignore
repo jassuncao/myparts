@@ -30,4 +30,4 @@ build-*
 
 # Misc
 .directory
-images
+/images

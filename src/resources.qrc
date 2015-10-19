@@ -57,5 +57,9 @@
         <file alias="options_manufacturers">images/building_32x32.png</file>
         <file alias="options_distributors">images/lorry_32x32.png</file>
         <file alias="options_condition">images/new_32x32.png</file>
+        <file alias="page_storage">images/box_open_32x32.png</file>
+        <file alias="page_parts">images/brick_32x32.png</file>
+        <file alias="page_footprints">images/footprint_32x32.png</file>
+        <file alias="page_projects">images/table_32x32.png</file>
     </qresource>
 </RCC>
