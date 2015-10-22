@@ -8,6 +8,8 @@
 #include "entities/entities.h"
 #include "partcategorydialog.h"
 //#include <QWindowsXPStyle>
+#include "manhattanstyle.h"
+#include "stylehelper.h"
 #include <QStyleFactory>
 #include <QStyle>
 #include <QDebug>
@@ -82,8 +84,12 @@ int main(int argc, char *argv[])
     QDir::addSearchPath("footprints", "/home/jassuncao/MyProjects/myparts/images/footprints");
     QDir::addSearchPath("attachments", "/home/jassuncao/MyProjects/myparts/attachments");
     QDir::addSearchPath("tmp","/home/jassuncao/MyProjects/myparts/images/tmp");
-    MainWindow w;   
-    //QApplication::setStyle(new ManhattanStyle(QApplication::style()->objectName()));
+    MainWindow w;
+    //QApplication::setStyle(QLatin1String("fusion"));
+    QApplication::setStyle(QLatin1String("Plastique"));
+    ManhattanStyle * style = new ManhattanStyle(QApplication::style()->objectName());
+    Manhattan::Utils::StyleHelper::setBaseColor(QColor(0x66,0x66,0x66));
+    QApplication::setStyle(style);
     w.show();
     int res = a.exec();    
     connection.close();

@@ -88,7 +88,12 @@ SOURCES += main.cpp\
     models/customtablemodel.cpp \
     widgets/validatingitemdelegate.cpp \
     dialogs/manufacturersdialog.cpp \
-    widgets/navigator.cpp
+    widgets/navigator.cpp \
+    widgets/navigationsubwidget.cpp \
+    partsmanagerview.cpp \
+    widgets/navigationtreeview.cpp \
+    distributorsmanagerview.cpp \
+    widgets/itemstreeview.cpp
 
 HEADERS  += mainwindow.h \
     entities/entities.h \
@@ -160,7 +165,12 @@ HEADERS  += mainwindow.h \
     widgets/validatingitemdelegate.h \
     constants.h \
     dialogs/manufacturersdialog.h \
-    widgets/navigator.h
+    widgets/navigator.h \
+    widgets/navigationsubwidget.h \
+    partsmanagerview.h \
+    widgets/navigationtreeview.h \
+    distributorsmanagerview.h \
+    widgets/itemstreeview.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \
@@ -186,3 +196,10 @@ OTHER_FILES += \
 
 #unix:!macx: LIBS += -L$$PWD/../../../lixo/qt-manhattan-style/build/ -lqt-manhattan-style
 
+
+unix:!macx: LIBS += -L$$PWD/../../build-qt-manhattan-style-Desktop-Debug/ -lqt-manhattan-style
+
+INCLUDEPATH += $$PWD/../../qt-manhattan-style
+DEPENDPATH += $$PWD/../../qt-manhattan-style
+
+unix:!macx: PRE_TARGETDEPS += $$PWD/../../build-qt-manhattan-style-Desktop-Debug/libqt-manhattan-style.a

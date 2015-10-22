@@ -11,6 +11,8 @@
 #include "distributormanagerwidget.h"
 #include "dialogs/manufacturersdialog.h"
 #include "partmanagerform.h"
+#include "partsmanagerview.h"
+#include "distributorsmanagerview.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -23,7 +25,16 @@ MainWindow::MainWindow(QWidget *parent) :
     headerData.append("Description");
     headerData.append("ID");
 
-    ui->stackedWidget->addWidget(new PartManagerForm(this));
+    //ui->centralWidget->insertTab(0,new PartManagerForm(this), QIcon(QString::fromUtf8(":/largeIcons/page_parts")), tr("Parts"));
+    ui->centralWidget->insertTab(0,new PartsManagerView(this), QIcon(QString::fromUtf8(":/largeIcons/page_parts")), tr("Parts"));
+    ui->centralWidget->insertTab(1,new DistributorManagerWidget(this), QIcon(QString::fromUtf8(":/largeIcons/options_distributors")), tr("Distributors"));
+    ui->centralWidget->insertTab(2,new PartManagerForm(this), QIcon(QString::fromUtf8(":/largeIcons/page_parts")), tr("Parts"));
+    ui->centralWidget->insertTab(3,new DistributorsManagerView(this), QIcon(QString::fromUtf8(":/largeIcons/options_distributors")), tr("Distributors"));
+    ui->centralWidget->setTabEnabled(0, true);
+    ui->centralWidget->setTabEnabled(1, true);
+    ui->centralWidget->setTabEnabled(2, true);
+    ui->centralWidget->setTabEnabled(3, true);
+    //ui->stackedWidget->addWidget(new PartManagerForm(this));
     /*
     StorageTreeModel * storageTreeModel = new StorageTreeModel(headerData, this);
     storageTreeModel->select();

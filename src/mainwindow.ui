@@ -13,180 +13,26 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="QWidget" name="centralWidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
-    <property name="spacing">
-     <number>6</number>
-    </property>
-    <property name="leftMargin">
-     <number>0</number>
-    </property>
-    <property name="topMargin">
-     <number>0</number>
-    </property>
-    <property name="rightMargin">
-     <number>0</number>
-    </property>
-    <property name="bottomMargin">
-     <number>0</number>
-    </property>
-    <item>
-     <widget class="QSplitter" name="splitter">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <widget class="QWidget" name="widget" native="true">
-       <layout class="QHBoxLayout" name="horizontalLayout">
-        <property name="spacing">
-         <number>0</number>
-        </property>
-        <property name="leftMargin">
-         <number>0</number>
-        </property>
-        <property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="rightMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
-        <item>
-         <widget class="Navigator" name="listWidget">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">QListView::item {
-  margin: 4px;
-}</string>
-          </property>
-          <property name="editTriggers">
-           <set>QAbstractItemView::NoEditTriggers</set>
-          </property>
-          <property name="showDropIndicator" stdset="0">
-           <bool>false</bool>
-          </property>
-          <property name="selectionBehavior">
-           <enum>QAbstractItemView::SelectRows</enum>
-          </property>
-          <property name="iconSize">
-           <size>
-            <width>32</width>
-            <height>32</height>
-           </size>
-          </property>
-          <item>
-           <property name="text">
-            <string>Parts</string>
-           </property>
-           <property name="textAlignment">
-            <set>AlignHCenter|AlignVCenter|AlignCenter</set>
-           </property>
-           <property name="icon">
-            <iconset>
-             <normalon>:/largeIcons/page_parts</normalon>
-            </iconset>
-           </property>
-           <property name="flags">
-            <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Storage</string>
-           </property>
-           <property name="textAlignment">
-            <set>AlignHCenter|AlignVCenter|AlignCenter</set>
-           </property>
-           <property name="icon">
-            <iconset>
-             <normalon>:/largeIcons/page_storage</normalon>
-            </iconset>
-           </property>
-           <property name="flags">
-            <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Projects</string>
-           </property>
-           <property name="textAlignment">
-            <set>AlignHCenter|AlignVCenter|AlignCenter</set>
-           </property>
-           <property name="icon">
-            <iconset>
-             <normalon>:/largeIcons/page_projects</normalon>
-            </iconset>
-           </property>
-           <property name="flags">
-            <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Manufacturers</string>
-           </property>
-           <property name="textAlignment">
-            <set>AlignHCenter|AlignVCenter|AlignCenter</set>
-           </property>
-           <property name="icon">
-            <iconset>
-             <normalon>:/largeIcons/options_manufacturers</normalon>
-            </iconset>
-           </property>
-           <property name="flags">
-            <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Distributors</string>
-           </property>
-           <property name="textAlignment">
-            <set>AlignHCenter|AlignVCenter|AlignCenter</set>
-           </property>
-           <property name="icon">
-            <iconset>
-             <normalon>:/largeIcons/options_distributors</normalon>
-            </iconset>
-           </property>
-           <property name="flags">
-            <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
-           </property>
-          </item>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QStackedWidget" name="stackedWidget"/>
-     </widget>
-    </item>
-   </layout>
-  </widget>
-  <widget class="QToolBar" name="toolBar">
-   <property name="windowTitle">
-    <string>toolBar</string>
-   </property>
-   <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak">
-    <bool>false</bool>
-   </attribute>
-  </widget>
+  <property name="iconSize">
+   <size>
+    <width>32</width>
+    <height>32</height>
+   </size>
+  </property>
+  <property name="toolButtonStyle">
+   <enum>Qt::ToolButtonFollowStyle</enum>
+  </property>
+  <property name="dockOptions">
+   <set>QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks|QMainWindow::VerticalTabs</set>
+  </property>
+  <widget class="Manhattan::FancyTabWidget" name="centralWidget"/>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
      <width>988</width>
-     <height>22</height>
+     <height>19</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuEdit">
@@ -202,11 +48,19 @@
    <addaction name="menuEdit"/>
   </widget>
   <action name="actionManufacturers">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/largeIcons/options_manufacturers</normaloff>:/largeIcons/options_manufacturers</iconset>
+   </property>
    <property name="text">
     <string>Manufacturers</string>
    </property>
   </action>
   <action name="actionDistributors">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/largeIcons/options_distributors</normaloff>:/largeIcons/options_distributors</iconset>
+   </property>
    <property name="text">
     <string>Distributors</string>
    </property>
@@ -217,6 +71,10 @@
    </property>
   </action>
   <action name="actionFootprints">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/largeIcons/page_footprints</normaloff>:/largeIcons/page_footprints</iconset>
+   </property>
    <property name="text">
     <string>Footprints</string>
    </property>
@@ -225,11 +83,14 @@
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>Navigator</class>
-   <extends>QListWidget</extends>
-   <header>widgets/navigator.h</header>
+   <class>Manhattan::FancyTabWidget</class>
+   <extends>QWidget</extends>
+   <header>fancytabwidget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

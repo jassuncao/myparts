@@ -228,7 +228,7 @@ private:
 Navigator::Navigator(QWidget *parent)
     : QListWidget(parent)
 {
-    //setViewport(new QWidget(this));
+    setViewport(new QWidget(this));
 
     setVerticalScrollMode(ScrollPerPixel);
     setHorizontalScrollMode(ScrollPerPixel);
@@ -347,8 +347,7 @@ Navigator::Navigator(QWidget *parent)
     viewport()->setAcceptDrops(false);
     setDropIndicatorShown(false);
 
-    connect(selectionModel(), &QItemSelectionModel::currentChanged,
-            this, &Navigator::slotCurrentChanged);
+    connect(selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)), this, SLOT(slotCurrentChanged(QModelIndex)));
 }
 
 QSize Navigator::sizeHint() const
