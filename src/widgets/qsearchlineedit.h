@@ -17,6 +17,7 @@ signals:
     void textClear();
 protected:
     void resizeEvent(QResizeEvent *);
+    void keyPressEvent(QKeyEvent *event);
 private slots:
     void updateClearButton(const QString &text);
     void slotClearText();

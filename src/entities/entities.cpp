@@ -183,7 +183,9 @@ DQSharedList DistributorEntity::initialData() const
     DQListWriter writer(&initialData);
     writer << "Farnell" << "www.farnell.com" << "A comment"
               << "Digikey" << "www.digikey.com" << "My Favorite";
-
+    for(int i=0; i<500;++i){
+        writer<<(QString("Distributor %1").arg(i))<<"www.distributor.com"<<"Comment";
+    }
     return initialData;
 }
 
@@ -192,7 +194,7 @@ DQSharedList PackagingEntity::initialData() const
     DQList<Entities::PackagingEntity> initialData;
     DQListWriter writer(&initialData);
     writer << "Single" << "Tape & Reel" << "Cut Tape"
-              << "Tube" << "Digi-Reel®";
+              << "Tube" << "Digi-Reel®";    
     return initialData;
 }
 
