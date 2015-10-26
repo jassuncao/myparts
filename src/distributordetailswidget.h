@@ -16,6 +16,7 @@ class QAbstractItemModel;
 class QModelIndex;
 class QDataWidgetMapper;
 class QToolButton;
+class QPushButton;
 
 class DistributorDetailsWidget : public QWidget
 {
@@ -33,19 +34,21 @@ public:
     QModelIndex currentModelIndex() const;
     void setCurrentModelIndex(const QModelIndex & modelIndex, bool newRecord=false);
     void setModel(QAbstractItemModel * model);
-    inline bool isDirty(){ return _dirty;}
     inline bool isNew(){ return _newRecord;}
 signals:
     void accepted();
     void rejected();
+    void deleted(const QModelIndex&);
 public slots:
     void slotAccept();
     void slotReject();
-private slots:
+protected slots:
     void slotSetDirty();
+    /*
     void slotResetDirty();
+    */
+    void slotDelete();
 private:
-    bool _dirty;
     bool _newRecord;
     QLineEdit * _nameLineEdit;
     QLineEdit * _websiteLineEdit;
@@ -54,6 +57,9 @@ private:
     QAbstractItemModel * _model;
     QDataWidgetMapper * _mapper;
     QModelIndex _currentIndex;
+    QPushButton * _saveButton;
+    QPushButton * _deleteButton;
+    QPushButton * _cancelButton;
 };
 
 #endif // DISTRIBUTORDETAILSWIDGET_H

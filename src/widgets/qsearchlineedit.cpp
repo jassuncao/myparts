@@ -3,6 +3,7 @@
 #include <QIcon>
 #include <QToolButton>
 #include <QStyle>
+#include <QKeyEvent>
 
 QSearchLineEdit::QSearchLineEdit(QWidget *parent) :
     QLineEdit(parent)
@@ -29,7 +30,7 @@ QSearchLineEdit::QSearchLineEdit(QWidget *parent) :
     setStyleSheet(style);
     QSize msz = minimumSizeHint();
     setMinimumSize(qMax(msz.width(), clearButton->sizeHint().height() + frameWidth * 2 + 2),
-                       qMax(msz.height(), clearButton->sizeHint().height() + frameWidth * 2 + 2));
+                       qMax(msz.height(), clearButton->sizeHint().height() + frameWidth * 2 + 2));    
 }
 
 void QSearchLineEdit::resizeEvent(QResizeEvent *)
@@ -54,4 +55,14 @@ void QSearchLineEdit::slotClearText()
     clear();
     emit textClear();
 }
+
+void QSearchLineEdit::keyPressEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_Escape)
+    {
+        slotClearText();
+    }
+    QLineEdit::keyPressEvent(event);
+}
+
 

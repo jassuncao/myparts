@@ -93,7 +93,10 @@ SOURCES += main.cpp\
     partsmanagerview.cpp \
     widgets/navigationtreeview.cpp \
     distributorsmanagerview.cpp \
-    widgets/itemstreeview.cpp
+    widgets/itemstreeview.cpp \
+    widgets/listnavigatorwidget.cpp \
+    editors/companyeditorwidget.cpp \
+    companymanagerview.cpp
 
 HEADERS  += mainwindow.h \
     entities/entities.h \
@@ -170,7 +173,10 @@ HEADERS  += mainwindow.h \
     partsmanagerview.h \
     widgets/navigationtreeview.h \
     distributorsmanagerview.h \
-    widgets/itemstreeview.h
+    widgets/itemstreeview.h \
+    widgets/listnavigatorwidget.h \
+    editors/companyeditorwidget.h \
+    companymanagerview.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \
