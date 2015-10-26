@@ -196,10 +196,11 @@ OTHER_FILES += \
 
 #unix:!macx: LIBS += -L$$PWD/../../../lixo/qt-manhattan-style/build/ -lqt-manhattan-style
 
-
-unix:!macx: LIBS += -L$$PWD/../../build-qt-manhattan-style-Desktop-Debug/ -lqt-manhattan-style
-
 INCLUDEPATH += $$PWD/../../qt-manhattan-style
 DEPENDPATH += $$PWD/../../qt-manhattan-style
 
+unix:!macx: LIBS += -L$$PWD/../../build-qt-manhattan-style-Desktop-Debug/ -lqt-manhattan-style
 unix:!macx: PRE_TARGETDEPS += $$PWD/../../build-qt-manhattan-style-Desktop-Debug/libqt-manhattan-style.a
+
+win32: LIBS += -L$$PWD/../../build-qt-manhattan-style-Desktop_Qt_5_2_1_MinGW_32bit-Debug/debug/ -lqt-manhattan-style
+win32-g++: PRE_TARGETDEPS += $$PWD/../../build-qt-manhattan-style-Desktop_Qt_5_2_1_MinGW_32bit-Debug/debug/libqt-manhattan-style.a
