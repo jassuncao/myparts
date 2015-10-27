@@ -8,7 +8,7 @@
 #include <QDebug>
 
 CompanyEditorWidget::CompanyEditorWidget(QWidget *parent) :
-    QWidget(parent)
+    AbstractEditor(parent)
 {
     _nameLineEdit = new QLineEdit;
     _websiteLineEdit = new QLineEdit;
@@ -75,6 +75,7 @@ void CompanyEditorWidget::revert()
     _mapper->revert();
 }
 
+/*
 void CompanyEditorWidget::slotContentChanged(){
     emit contentChanged();
-}
+}*/

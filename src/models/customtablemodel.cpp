@@ -449,9 +449,9 @@ Qt::ItemFlags AttachmentTableModel3::flags(const QModelIndex &index) const
 
 bool AttachmentTableModel3::appendRow(const QString & url, const QString & description)
 {
-    TableItem * item = createBlankItem();
+    TableItem * item = createBlankItem();    
     item->setData(ColumnURL, url);
-    item->setData(ColumnDescription, description);
+    item->setData(ColumnDescription, description);    
     doInsertRow(rowCount(), item);
     return true;
 }

@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QModelIndex>
 #include <QString>
+#include "abstracteditor.h"
 
 class QLineEdit;
 class QTextEdit;
@@ -12,7 +13,7 @@ class QAbstractItemModel;
 class QModelIndex;
 class QDataWidgetMapper;
 
-class CompanyEditorWidget : public QWidget
+class CompanyEditorWidget : public AbstractEditor
 {
     Q_OBJECT
 public:
@@ -29,13 +30,11 @@ public:
     void setCurrentModelIndex(const QModelIndex & modelIndex);
     void setModel(QAbstractItemModel * model);    
     bool validate();
-signals:
-    void contentChanged();
 public slots:
     void submit();
     void revert();
 private slots:
-    void slotContentChanged();
+    //void slotContentChanged();
 private:    
     QLineEdit * _nameLineEdit;
     QLineEdit * _websiteLineEdit;

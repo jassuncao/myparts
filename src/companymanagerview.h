@@ -2,6 +2,7 @@
 #define COMPANYMANAGERVIEW_H
 
 #include "minisplitter.h"
+#include "editors/abstracteditor.h"
 #include <QModelIndex>
 #include <QWidget>
 #include <QLabel>
@@ -26,6 +27,7 @@ public:
     virtual QString deleteButtonText() const = 0;
     virtual QString saveNewButtonText() const = 0;
     virtual QString saveChangesButtonText() const = 0;
+    virtual AbstractEditor* createEditor() const = 0;
     virtual QWidget* createNoDataWidget() const = 0;
     virtual QString tableName() const = 0;
     virtual int itemLabelColumn() const = 0;
@@ -41,6 +43,7 @@ public:
     virtual QString deleteButtonText() const { return tr("Delete distributor"); }
     virtual QString saveNewButtonText() const { return tr("Save distributor"); }
     virtual QString saveChangesButtonText() const { return tr("Save changes"); }
+    virtual AbstractEditor* createEditor() const;
     virtual QWidget* createNoDataWidget() const;
     virtual QString tableName() const { return QLatin1String("distributor"); }
     virtual int itemLabelColumn() const { return 1; }
@@ -55,8 +58,24 @@ public:
     virtual QString deleteButtonText() const { return tr("Delete manufacturer"); }
     virtual QString saveNewButtonText() const { return tr("Save manufacturer"); }
     virtual QString saveChangesButtonText() const { return tr("Save changes"); }
+    virtual AbstractEditor* createEditor() const;
     virtual QWidget* createNoDataWidget() const;
     virtual QString tableName() const { return QLatin1String("manufacturer"); }
+    virtual int itemLabelColumn() const { return 1; }
+    virtual int itemIDColumn() const  { return 0; }
+    virtual QString createFilterExpression(const QString & filterText) const { return QString("name LIKE '\%%1\%'").arg(filterText);}
+};
+
+class FootprintManagerHelper : public CompanyManagerHelper
+{
+public:
+    virtual QString mainTitle() const { return tr("Footprints"); }
+    virtual QString deleteButtonText() const { return tr("Delete footprint"); }
+    virtual QString saveNewButtonText() const { return tr("Save footprint"); }
+    virtual QString saveChangesButtonText() const { return tr("Save changes"); }
+    virtual AbstractEditor* createEditor() const;
+    virtual QWidget* createNoDataWidget() const;
+    virtual QString tableName() const { return QLatin1String("part_footprint"); }
     virtual int itemLabelColumn() const { return 1; }
     virtual int itemIDColumn() const  { return 0; }
     virtual QString createFilterExpression(const QString & filterText) const { return QString("name LIKE '\%%1\%'").arg(filterText);}
@@ -87,7 +106,7 @@ private:
 
     const CompanyManagerHelper * _helper;
     ListNavigatorWidget * _navigatorWidget;
-    CompanyEditorWidget * _editorWidget;
+    AbstractEditor * _editorWidget;
     QSqlTableModel * _model;
     QStackedLayout * _stackedLayout;
     QDialogButtonBox * _buttonBox;

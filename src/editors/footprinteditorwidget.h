@@ -1,7 +1,7 @@
 #ifndef FOOTPRINTEDITORWIDGET_H
 #define FOOTPRINTEDITORWIDGET_H
 
-#include <QWidget>
+#include "abstracteditor.h"
 #include <QWidget>
 #include <QModelIndex>
 #include <QStyledItemDelegate>
@@ -18,7 +18,7 @@ class QDataWidgetMapper;
 class QToolButton;
 class AttachmentTableModel3;
 
-class FootprintEditorWidget : public QWidget
+class FootprintEditorWidget : public AbstractEditor
 {
     Q_OBJECT
 public:
@@ -27,19 +27,25 @@ public:
     void setCurrentModelIndex(const QModelIndex & modelIndex);
     void setModel(QAbstractItemModel * model);
     bool validate();
-signals:
-    void contentChanged();
 public slots:
     void submit();
     void submitChilds(const QVariant & id);
     void revert();
 private slots:
-    void slotContentChanged();
     void slotImageContextMenu(const QPoint &pos);
+    void slotImageShow();
+    void slotAddImage();
+    void slotAddImageRemote();
+    void slotRemoveImage();
+    void slotAddAttachment();
+    void slotRemoveAttachment();
+    void slotCurrentAttachmentRowChanged(const QModelIndex &current, const QModelIndex &);
+    void slotAttachmentDoubleClicked(const QModelIndex &index);
 private:
     //bool setFootprintImage(const QString & fileName);
     void setImageEditorData(int row);
     void setImageModelData(int row);
+    void setFootprintImage(const QString & filePath);
 
     QLineEdit * _nameLineEdit;
     QLineEdit * _descriptionLineEdit;

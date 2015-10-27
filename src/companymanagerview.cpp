@@ -1,5 +1,6 @@
 #include "companymanagerview.h"
 #include "editors/companyeditorwidget.h"
+#include "editors/footprinteditorwidget.h"
 #include "widgets/itemstreeview.h"
 #include "widgets/listnavigatorwidget.h"
 #include "widgets/qsearchlineedit.h"
@@ -28,6 +29,10 @@ QWidget* DistributorManagerHelper::createNoDataWidget() const
     return l;
 }
 
+AbstractEditor* DistributorManagerHelper::createEditor() const {
+    return new CompanyEditorWidget;
+}
+
 QWidget* ManufacturerManagerHelper::createNoDataWidget() const
 {
     QLabel * l = new QLabel(tr("Select a manufacturer"));
@@ -35,11 +40,27 @@ QWidget* ManufacturerManagerHelper::createNoDataWidget() const
     return l;
 }
 
+AbstractEditor* ManufacturerManagerHelper::createEditor() const {
+    return new CompanyEditorWidget;
+}
+
+QWidget* FootprintManagerHelper::createNoDataWidget() const
+{
+    QLabel * l = new QLabel(tr("Select a footprint"));
+    l->setAlignment(Qt::AlignCenter);
+    return l;
+}
+
+AbstractEditor* FootprintManagerHelper::createEditor() const {
+    return new FootprintEditorWidget;
+}
+
+
 CompanyManagerView::CompanyManagerView(const CompanyManagerHelper *helper, QWidget *parent)
     : Manhattan::MiniSplitter(parent), _helper(helper), _dirty(false)
 {
     _navigatorWidget = new ListNavigatorWidget(_helper->mainTitle());
-    _editorWidget = new CompanyEditorWidget;
+    _editorWidget = _helper->createEditor();
 
     _buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     _cancelButton = _buttonBox->button(QDialogButtonBox::Cancel);
@@ -215,8 +236,7 @@ void CompanyManagerView::slotFilterChanged(const QString &filterText)
 }
 
 void CompanyManagerView::slotAccept()
-{
-    _editorWidget->submit();
+{    
     if(_editorWidget->validate()==false){
         return;
     }    
@@ -238,6 +258,7 @@ QVariant CompanyManagerView::commitChanges()
     QVariant id;
     bool success;
 
+    _editorWidget->submit();
     //We assume the editor widget is set with a QModelIndex made of (row,Id Column)
     id = _editorWidget->currentModelIndex().data(Qt::EditRole);
     if(id.isValid()){
@@ -246,8 +267,9 @@ QVariant CompanyManagerView::commitChanges()
     else{
         //If the id is not valid it must be a brand new item. We need to submit to get the generated ID
         success=_model->submitAll();
-        id = _model->query().lastInsertId();
+        id = _model->query().lastInsertId();        
     }
+    _editorWidget->submitChilds(id);
     if(success){
         _dirty = false;
     }
@@ -264,6 +286,8 @@ void CompanyManagerView::slotReject()
     _model->revertRow(row);
     _editorWidget->revert();
     _dirty = false;
+    _cancelButton->setEnabled(false);
+    _saveButton->setEnabled(false);
 }
 
 void CompanyManagerView::slotContentChanged()

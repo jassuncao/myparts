@@ -97,7 +97,8 @@ SOURCES += main.cpp\
     widgets/listnavigatorwidget.cpp \
     editors/companyeditorwidget.cpp \
     companymanagerview.cpp \
-    editors/footprinteditorwidget.cpp
+    editors/footprinteditorwidget.cpp \
+    editors/abstracteditor.cpp
 
 HEADERS  += mainwindow.h \
     entities/entities.h \
@@ -178,7 +179,8 @@ HEADERS  += mainwindow.h \
     widgets/listnavigatorwidget.h \
     editors/companyeditorwidget.h \
     companymanagerview.h \
-    editors/footprinteditorwidget.h
+    editors/footprinteditorwidget.h \
+    editors/abstracteditor.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \
