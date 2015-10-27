@@ -74,8 +74,3 @@ void CompanyEditorWidget::revert()
 {
     _mapper->revert();
 }
-
-/*
-void CompanyEditorWidget::slotContentChanged(){
-    emit contentChanged();
-}*/

@@ -34,7 +34,6 @@ public slots:
     void submit();
     void revert();
 private slots:
-    //void slotContentChanged();
 private:    
     QLineEdit * _nameLineEdit;
     QLineEdit * _websiteLineEdit;

@@ -1,4 +1,4 @@
-#include "companymanagerview.h"
+#include "editormanagerview.h"
 #include "editors/companyeditorwidget.h"
 #include "editors/footprinteditorwidget.h"
 #include "widgets/itemstreeview.h"
@@ -56,7 +56,7 @@ AbstractEditor* FootprintManagerHelper::createEditor() const {
 }
 
 
-CompanyManagerView::CompanyManagerView(const CompanyManagerHelper *helper, QWidget *parent)
+EditorManagerView::EditorManagerView(const EditorManagerHelper *helper, QWidget *parent)
     : Manhattan::MiniSplitter(parent), _helper(helper), _dirty(false)
 {
     _navigatorWidget = new ListNavigatorWidget(_helper->mainTitle());
@@ -117,12 +117,12 @@ CompanyManagerView::CompanyManagerView(const CompanyManagerHelper *helper, QWidg
     connect(_deleteButton, SIGNAL(clicked()), this, SLOT(slotDelete()));  
 }
 
-CompanyManagerView::~CompanyManagerView()
+EditorManagerView::~EditorManagerView()
 {
     delete _helper;
 }
 
-void CompanyManagerView::slotAddItem()
+void EditorManagerView::slotAddItem()
 {
     if(_dirty){
         if(discardChangesConfirmation()){
@@ -141,19 +141,19 @@ void CompanyManagerView::slotAddItem()
     }
 }
 
-void CompanyManagerView::slotPrimeInsert(int, QSqlRecord &record)
+void EditorManagerView::slotPrimeInsert(int, QSqlRecord &record)
 {
     record.setValue(_helper->itemIDColumn(), QVariant());
 }
 
-void CompanyManagerView::restoreCurrentIndex(const QModelIndex & index)
+void EditorManagerView::restoreCurrentIndex(const QModelIndex & index)
 {
     bool oldState =_navigatorWidget->blockSignals(true);
     _navigatorWidget->setCurrentRow(index.row());
     _navigatorWidget->blockSignals(oldState);
 }
 
-bool CompanyManagerView::discardChangesConfirmation()
+bool EditorManagerView::discardChangesConfirmation()
 {
     QMessageBox msgBox;
     msgBox.setText(tr("The current item has unsaved changes."));
@@ -163,7 +163,7 @@ bool CompanyManagerView::discardChangesConfirmation()
     return msgBox.exec()==QMessageBox::Discard;
 }
 
-void CompanyManagerView::slotItemSelected(const QModelIndex &index)
+void EditorManagerView::slotItemSelected(const QModelIndex &index)
 {
     if(_dirty){
         qDebug()<<"Is dirty ";
@@ -202,12 +202,12 @@ void CompanyManagerView::slotItemSelected(const QModelIndex &index)
     }
 }
 
-void CompanyManagerView::slotDelete()
+void EditorManagerView::slotDelete()
 {
     slotDeleteItem(_editorWidget->currentModelIndex());
 }
 
-void CompanyManagerView::slotDeleteItem(const QModelIndex &index)
+void EditorManagerView::slotDeleteItem(const QModelIndex &index)
 {
     _dirty = false;
     qDebug()<<"Deleting item "<<index;
@@ -224,7 +224,7 @@ void CompanyManagerView::slotDeleteItem(const QModelIndex &index)
     }
 }
 
-void CompanyManagerView::slotFilterChanged(const QString &filterText)
+void EditorManagerView::slotFilterChanged(const QString &filterText)
 {
     if(!filterText.isEmpty()){
         _model->setFilter(_helper->createFilterExpression(filterText));
@@ -235,7 +235,7 @@ void CompanyManagerView::slotFilterChanged(const QString &filterText)
     }
 }
 
-void CompanyManagerView::slotAccept()
+void EditorManagerView::slotAccept()
 {    
     if(_editorWidget->validate()==false){
         return;
@@ -252,7 +252,7 @@ void CompanyManagerView::slotAccept()
  * @brief CompanyManagerView::commitChanges
  * @return the ID of the commited element
  */
-QVariant CompanyManagerView::commitChanges()
+QVariant EditorManagerView::commitChanges()
 {
     //We keep the id of element being edited to use later for locating the row associated to the element
     QVariant id;
@@ -280,7 +280,7 @@ QVariant CompanyManagerView::commitChanges()
     return id;
 }
 
-void CompanyManagerView::slotReject()
+void EditorManagerView::slotReject()
 {    
     int row = _editorWidget->currentModelIndex().row();
     _model->revertRow(row);
@@ -290,7 +290,7 @@ void CompanyManagerView::slotReject()
     _saveButton->setEnabled(false);
 }
 
-void CompanyManagerView::slotContentChanged()
+void EditorManagerView::slotContentChanged()
 {
     if(!_dirty){
         _cancelButton->setEnabled(true);
@@ -299,7 +299,7 @@ void CompanyManagerView::slotContentChanged()
     }
 }
 
-int CompanyManagerView::findRowNumber(QVariant idValue)
+int EditorManagerView::findRowNumber(QVariant idValue)
 {
     int row = 0;
     bool dataAvailable = true;

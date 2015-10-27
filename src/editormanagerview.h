@@ -20,7 +20,7 @@ class QStackedLayout;
 class QDialogButtonBox;
 class QPushButton;
 
-class CompanyManagerHelper : public QObject
+class EditorManagerHelper : public QObject
 {
 public:
     virtual QString mainTitle() const = 0;
@@ -36,7 +36,7 @@ public:
 };
 
 
-class DistributorManagerHelper : public CompanyManagerHelper
+class DistributorManagerHelper : public EditorManagerHelper
 {
 public:
     virtual QString mainTitle() const { return tr("Distributors"); }
@@ -51,7 +51,7 @@ public:
     virtual QString createFilterExpression(const QString & filterText) const { return QString("name LIKE '\%%1\%'").arg(filterText);}
 };
 
-class ManufacturerManagerHelper : public CompanyManagerHelper
+class ManufacturerManagerHelper : public EditorManagerHelper
 {
 public:
     virtual QString mainTitle() const { return tr("Manufacturers"); }
@@ -66,7 +66,7 @@ public:
     virtual QString createFilterExpression(const QString & filterText) const { return QString("name LIKE '\%%1\%'").arg(filterText);}
 };
 
-class FootprintManagerHelper : public CompanyManagerHelper
+class FootprintManagerHelper : public EditorManagerHelper
 {
 public:
     virtual QString mainTitle() const { return tr("Footprints"); }
@@ -81,12 +81,12 @@ public:
     virtual QString createFilterExpression(const QString & filterText) const { return QString("name LIKE '\%%1\%'").arg(filterText);}
 };
 
-class CompanyManagerView : public Manhattan::MiniSplitter
+class EditorManagerView : public Manhattan::MiniSplitter
 {
     Q_OBJECT
 public:
-    explicit CompanyManagerView(const CompanyManagerHelper * helper, QWidget *parent = 0);
-    ~CompanyManagerView();
+    explicit EditorManagerView(const EditorManagerHelper * helper, QWidget *parent = 0);
+    ~EditorManagerView();
     void setModel(QAbstractTableModel * model);
 private slots:
     void slotAddItem();
@@ -104,7 +104,7 @@ private:
     QVariant commitChanges();
     bool discardChangesConfirmation();
 
-    const CompanyManagerHelper * _helper;
+    const EditorManagerHelper * _helper;
     ListNavigatorWidget * _navigatorWidget;
     AbstractEditor * _editorWidget;
     QSqlTableModel * _model;

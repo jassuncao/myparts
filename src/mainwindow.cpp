@@ -13,7 +13,7 @@
 #include "partmanagerform.h"
 #include "partsmanagerview.h"
 #include "distributorsmanagerview.h"
-#include "companymanagerview.h"
+#include "editormanagerview.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -27,9 +27,9 @@ MainWindow::MainWindow(QWidget *parent) :
     headerData.append("ID");
 
     //DistributorManagerHelper  distributorHelper;
-    CompanyManagerView * distributorsView = new CompanyManagerView(new DistributorManagerHelper, this);
-    CompanyManagerView * manufacturersView = new CompanyManagerView(new ManufacturerManagerHelper, this);
-    CompanyManagerView * footprintView = new CompanyManagerView(new FootprintManagerHelper, this);
+    EditorManagerView * distributorsView = new EditorManagerView(new DistributorManagerHelper, this);
+    EditorManagerView * manufacturersView = new EditorManagerView(new ManufacturerManagerHelper, this);
+    EditorManagerView * footprintView = new EditorManagerView(new FootprintManagerHelper, this);
     //ui->centralWidget->insertTab(0,new PartManagerForm(this), QIcon(QString::fromUtf8(":/largeIcons/page_parts")), tr("Parts"));
     ui->centralWidget->insertTab(0,new PartsManagerView(this), QIcon(QString::fromUtf8(":/largeIcons/page_parts")), tr("Parts"));
     ui->centralWidget->insertTab(1,new FootprintManagerWidget(this), QIcon(QString::fromUtf8(":/largeIcons/page_footprints")), tr("Footprints"));
