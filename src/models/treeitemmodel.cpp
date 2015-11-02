@@ -5,13 +5,14 @@
 #include <limits>
 
 
-TreeItemModel::TreeItemModel(TreeItem * invisibleRootItem, QObject *parent) :
-    QAbstractItemModel(parent), _invisibleRootItem(invisibleRootItem), _toolTipColumn(-1)
+TreeItemModel::TreeItemModel(int columns, QObject *parent) :
+    QAbstractItemModel(parent), _toolTipColumn(-1)
 {
+    _invisibleRootItem = new TreeItem(-1, QVector<QVariant>(columns));
     _uncommitedItem=0;
     _uncommitedItemParent=0;
-    _folderIcon.addFile(":icons/box_closed", QSize(), QIcon::Normal, QIcon::Off);
-    _folderIcon.addFile(":icons/box_open", QSize(), QIcon::Normal, QIcon::On);
+    _folderIcon.addFile(":icons/folder_closed", QSize(), QIcon::Normal, QIcon::Off);
+    _folderIcon.addFile(":icons/folder_open", QSize(), QIcon::Normal, QIcon::On);
 }
 
 TreeItemModel::~TreeItemModel()

@@ -27,47 +27,21 @@
 ** version 1.1, included in the file LGPL_EXCEPTION.txt in this package.
 **
 ****************************************************************************/
-#ifndef NAVIGATIONSUBWIDGET_H
-#define NAVIGATIONSUBWIDGET_H
 
-#include <QWidget>
-#include <QComboBox>
+#ifndef QACTIONPUSHBUTTON_H
+#define QACTIONPUSHBUTTON_H
 
-#include <QList>
+#include <QToolButton>
 
-QT_BEGIN_NAMESPACE
-class QMenu;
-class QToolButton;
-class QTreeView;
-class QToolButton;
-QT_END_NAMESPACE
-
-namespace Manhattan { class StyledBar; }
-
-class NavigationSubWidget : public QWidget
+// QActionPushButton: A push button tied to an action
+// (similar to a QToolButton)
+class QActionPushButton : public QToolButton
 {
     Q_OBJECT
 public:
-    enum Mode {
-        Category,
-        Storage
-    };
-
-    explicit NavigationSubWidget(QWidget *parent = 0);
-    ~NavigationSubWidget();
-    void setFocusWidget();
-    void setModel(QAbstractItemModel *model);
-signals:
-    void modeChanged(int mode);
+    explicit QActionPushButton(QAction *action, QWidget *parent = 0);
 private slots:
-    void slotComboBoxIndexChanged(int index);
-    void slotColllapseAll();
-    void slotTreeFilterModeToggled(bool checked);
-public slots:
-private:
-    QComboBox * _navigationComboBox;
-    Manhattan::StyledBar * _toolBar;
-    QToolButton * _treeFilterModeBtn;  
-    QTreeView * _treeView;
+    void actionChanged();
 };
-#endif // NAVIGATIONSUBWIDGET_H
+
+#endif // QACTIONPUSHBUTTON_H

@@ -81,7 +81,7 @@ DQSharedList PartStorageEntity::initialData() const
 {
     DQList<Entities::PartStorageEntity> initialLocations;
     DQListWriter writer(&initialLocations);
-    writer << "Storage Root" << "" << 1 << 44
+    writer << "Root Storage" << "" << 1 << 44
             << "Cabinet 1" << "" << 2 << 27
                 << "Drawer 1" << "" << 3 << 14
                     << "Compartment 1" << "" << 4 << 5

@@ -19,6 +19,7 @@ ListNavigatorWidget::ListNavigatorWidget(const QString & title, QWidget *parent)
     titleBarLayout->setSpacing(0);
     titleBarLayout->addWidget(titleLabel);
     titleBar->setLayout(titleBarLayout);
+
     _searchLineEdit = new QSearchLineEdit;
 
     _listView = new QListView;

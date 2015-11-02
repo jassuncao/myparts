@@ -31,7 +31,7 @@ public:
         ColumnCondition,
         ColumnFootprintName
     };
-
+    static const int VISIBILITY_COLUMN_ROLE = Qt::UserRole+1;
     static const int FAKE_COLUMNS_INDEX = ColumnPartUnit;    
 
     explicit PartsSqlQueryModel2(QObject *parent = 0);
@@ -50,6 +50,7 @@ public slots:
 protected:
     //virtual bool deleteRowFromTable(int row);
 private:
+    void setColumnName(int section, const QString & columnName);
     QVariant _lastInsertedId;
 };
 

@@ -187,6 +187,9 @@
            </item>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_5">
+             <property name="leftMargin">
+              <number>6</number>
+             </property>
              <item>
               <widget class="QToolButton" name="addPartToolButton">
                <property name="toolButtonStyle">
@@ -202,18 +205,16 @@
               </widget>
              </item>
              <item>
-              <widget class="QToolButton" name="duplicatePartButton">
-               <property name="popupMode">
-                <enum>QToolButton::DelayedPopup</enum>
+              <widget class="QPushButton" name="moreButton">
+               <property name="styleSheet">
+                <string notr="true">QPushButton::menu-indicator {
+    subcontrol-position: right center;
+    subcontrol-origin: padding;
+    left: -4px;
+}</string>
                </property>
-               <property name="toolButtonStyle">
-                <enum>Qt::ToolButtonFollowStyle</enum>
-               </property>
-               <property name="autoRaise">
-                <bool>false</bool>
-               </property>
-               <property name="arrowType">
-                <enum>Qt::NoArrow</enum>
+               <property name="text">
+                <string>More</string>
                </property>
               </widget>
              </item>
@@ -230,18 +231,187 @@
                </property>
               </spacer>
              </item>
-             <item>
-              <widget class="QSearchLineEdit" name="textSearchLineEdit"/>
-             </item>
             </layout>
            </item>
            <item>
-            <widget class="PartsTableView" name="partsTableView"/>
+            <widget class="Line" name="line">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QWidget" name="widget_6" native="true">
+             <layout class="QHBoxLayout" name="horizontalLayout_10">
+              <property name="spacing">
+               <number>8</number>
+              </property>
+              <property name="leftMargin">
+               <number>6</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>6</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QLabel" name="filterlabel1">
+                <property name="text">
+                 <string>Storage:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="filter1"/>
+              </item>
+              <item>
+               <widget class="QLabel" name="filterlabel2">
+                <property name="text">
+                 <string>Category:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="filter2">
+                <item>
+                 <property name="text">
+                  <string>All Categories</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>All Subcategories</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Selected Category</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="filterlabel3">
+                <property name="text">
+                 <string>Stock:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="filter3">
+                <item>
+                 <property name="text">
+                  <string>Any</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Out of stock</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>In Stock</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Below Minimum</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="filterlabel6">
+                <property name="text">
+                 <string>Condition:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="filter6">
+                <item>
+                 <property name="text">
+                  <string>New</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Used</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Damaged</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSearchLineEdit" name="textSearchLineEdit">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="moreButton_2">
+                <property name="styleSheet">
+                 <string notr="true">QPushButton::menu-indicator {
+    subcontrol-position: right center;
+    subcontrol-origin: padding;
+    left: -4px;
+}</string>
+                </property>
+                <property name="text">
+                 <string>More</string>
+                </property>
+                <property name="flat">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="extraItemsLayout">
+             <property name="spacing">
+              <number>6</number>
+             </property>
+             <property name="leftMargin">
+              <number>6</number>
+             </property>
+             <property name="rightMargin">
+              <number>6</number>
+             </property>
+            </layout>
+           </item>
+           <item>
+            <widget class="PartsTableView" name="partsTableView">
+             <property name="styleSheet">
+              <string notr="true">QPushButton::menu-indicator {    
+    subcontrol-position: left center;
+    subcontrol-origin: padding;
+    left: -2px;
+}</string>
+             </property>
+            </widget>
            </item>
           </layout>
          </widget>
          <widget class="QWidget" name="widget_4" native="true">
           <layout class="QVBoxLayout" name="verticalLayout_4">
+           <property name="spacing">
+            <number>0</number>
+           </property>
            <property name="leftMargin">
             <number>0</number>
            </property>

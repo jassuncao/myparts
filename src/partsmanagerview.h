@@ -1,9 +1,26 @@
 #ifndef PARTSMANAGERVIEW_H
 #define PARTSMANAGERVIEW_H
 
-#include <QWidget>
+#include "minisplitter.h"
+#include <QModelIndex>
+#include <QSqlRecord>
+#include "widgets/navigationsubwidget.h"
 
-class PartsManagerView : public QWidget
+namespace Manhattan {
+    class StyledBar;
+}
+
+class PartsTableView;
+class PartDetailsView;
+class PartsSqlQueryModel2;
+class CategoryTreeModel;
+class StorageTreeModel;
+class NavigationSubWidget;
+class PartsFilterWidget;
+class QActionPushButton;
+class QPushButton;
+
+class PartsManagerView : public Manhattan::MiniSplitter
 {
     Q_OBJECT
 public:
@@ -13,6 +30,26 @@ public:
 signals:
 
 public slots:
+protected slots:
+    void slotPartTableCurrentRowChanged(const QModelIndex &current, const QModelIndex &);
+    void slotPartTableHeaderContextMenu(QPoint point);
+    void slotAddPart();
+    void slotEditPart();
+    void slotDeletePart();
+    void slotDuplicatePart();
+    void slotPartsModelPrimeInsert(int, QSqlRecord &record);
+    void slotNavModeChanged(int mode);
+private:
+    PartsTableView * createPartsTableView(QAbstractTableModel * tableModel);
+    NavigationSubWidget * _navWidget;
+    PartsTableView * _partsTableView;
+    PartDetailsView * _partDetailsView;
+    PartsSqlQueryModel2 * _partsModel;
+    CategoryTreeModel * _categoriesTreeModel;
+    StorageTreeModel * _storageTreeModel;
+    PartsFilterWidget * _partsFilterWidget;
+    QPushButton * _deletePartButton;
+    QActionPushButton * _duplicatePartButton;
 };
 
 #endif // PARTSMANAGERVIEW_H

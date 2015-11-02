@@ -13,7 +13,40 @@
 
 PartsSqlQueryModel2::PartsSqlQueryModel2(QObject *parent) :
     QSqlTableModel(parent)
-{    
+{
+    setTable("part");
+    setColumnName(PartsSqlQueryModel2::ColumnName,tr("Name"));
+    setColumnName(PartsSqlQueryModel2::ColumnDescription,tr("Description"));
+    setColumnName(PartsSqlQueryModel2::ColumnActualStock,tr("Stock"));
+    setColumnName(PartsSqlQueryModel2::ColumnMinStock,tr("Min. Stock"));
+    setColumnName(PartsSqlQueryModel2::ColumnAvgPrice,tr("Avg. Price"));
+    setColumnName(PartsSqlQueryModel2::ColumnCustomPartNumber,tr("Custom Part#"));
+    setColumnName(PartsSqlQueryModel2::ColumnComment,tr("Comment"));
+    setColumnName(PartsSqlQueryModel2::ColumnCreateDate,tr("Create Date"));
+    setColumnName(PartsSqlQueryModel2::ColumnCategoryName,tr("Category"));
+    setColumnName(PartsSqlQueryModel2::ColumnStorage,tr("Storage Location"));
+    setColumnName(PartsSqlQueryModel2::ColumnCondition,tr("Condition"));
+    setColumnName(PartsSqlQueryModel2::ColumnFootprintName,tr("Footprint"));
+    /*
+    setHeaderData(PartsSqlQueryModel2::ColumnName, Qt::Horizontal, tr("Name"));
+    setHeaderData(PartsSqlQueryModel2::ColumnDescription, Qt::Horizontal, tr("Description"));
+    setHeaderData(PartsSqlQueryModel2::ColumnActualStock, Qt::Horizontal, tr("Stock"));
+    setHeaderData(PartsSqlQueryModel2::ColumnMinStock, Qt::Horizontal, tr("Min. Stock"));
+    setHeaderData(PartsSqlQueryModel2::ColumnAvgPrice, Qt::Horizontal, tr("Avg. Price"));
+    setHeaderData(PartsSqlQueryModel2::ColumnCustomPartNumber, Qt::Horizontal, tr("Custom Part#"));
+    setHeaderData(PartsSqlQueryModel2::ColumnComment, Qt::Horizontal, tr("Comment"));
+    setHeaderData(PartsSqlQueryModel2::ColumnCreateDate, Qt::Horizontal, tr("Create Date"));
+    setHeaderData(PartsSqlQueryModel2::ColumnCategoryName, Qt::Horizontal, tr("Category"));
+    setHeaderData(PartsSqlQueryModel2::ColumnStorage, Qt::Horizontal, tr("Storage Location"));
+    setHeaderData(PartsSqlQueryModel2::ColumnCondition, Qt::Horizontal, tr("Condition"));
+    setHeaderData(PartsSqlQueryModel2::ColumnFootprintName, Qt::Horizontal, tr("Footprint"));
+    */
+}
+
+void PartsSqlQueryModel2::setColumnName(int section, const QString & columnName)
+{
+    setHeaderData(section, Qt::Horizontal, columnName, Qt::EditRole);
+    setHeaderData(section, Qt::Horizontal, true, VISIBILITY_COLUMN_ROLE);
 }
 
 QString PartsSqlQueryModel2::selectStatement() const

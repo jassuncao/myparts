@@ -14,7 +14,7 @@ class CategoryTreeModel : public TreeItemModel
 {
     Q_OBJECT
 public:
-    explicit CategoryTreeModel(const QVector<QVariant> columns, QObject *parent = 0);
+    explicit CategoryTreeModel(QObject *parent = 0);
     ~CategoryTreeModel();
 
     virtual bool fillTree(TreeItem * rootItem);

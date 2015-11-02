@@ -18,6 +18,7 @@ class QDataWidgetMapper;
 class QAbstractButton;
 class StockHistoryProxyModel;
 class StorageTreeModel;
+class QLayout;
 
 class PartManagerForm : public QWidget
 {
@@ -74,6 +75,7 @@ private:
     QAction * createShowColumnAction(QMenu *parentMenu, const int columnNumber);
     void updatePartDetailView(const QModelIndex & current);
     void updateStockView(const QModelIndex & current);
+    QWidget * createFilterItem(QWidget * label, QWidget * item);
 
     QByteArray _savedfilterPanelState;
     Ui::PartManagerForm *ui;

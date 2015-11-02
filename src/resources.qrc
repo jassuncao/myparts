@@ -49,6 +49,17 @@
         <file alias="link_add">images/link_add.png</file>
         <file alias="link_delete">images/link_delete.png</file>
         <file alias="link_go">images/link_go.png</file>
+        <file alias="small_delete_disabled">images/bullet_delete_disabled.png</file>
+        <file alias="small_delete">images/bullet_delete.png</file>
+        <file alias="close_hover">images/close_hover.png</file>
+        <file alias="close_pressed">images/close_pressed.png</file>
+        <file alias="close">images/close.png</file>
+        <file alias="collapse_tree">images/collapse_tree.png</file>
+        <file alias="expand_tree">images/expand_tree.png</file>
+        <file alias="collapse_tree2">images/collapse_tree2.png</file>
+        <file alias="expand_tree2">images/expand_tree2.png</file>
+        <file alias="tree_filter_selected">images/tree_filter_selected.png</file>
+        <file alias="tree_filter_childs">images/tree_filter.png</file>
     </qresource>
     <qresource prefix="/largeIcons">
         <file alias="options_general">images/cog_32x32.png</file>

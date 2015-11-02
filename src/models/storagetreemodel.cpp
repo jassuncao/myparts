@@ -6,10 +6,18 @@
 
 const char * MIME_TYPE= "myparts/storage";
 
-StorageTreeModel::StorageTreeModel(const QVector<QVariant> columns, QObject *parent) :
-    TreeItemModel(new TreeItem(-1, columns), parent)
+StorageTreeModel::StorageTreeModel(QObject *parent) :
+    TreeItemModel(3, parent)
 {
+    rootItem()->setData(0,tr("Name"));
+    rootItem()->setData(1,tr("Description"));
+    rootItem()->setData(2,tr("ID"));
+    setToolTipColumn(1);
     _dao = new StorageDAO();
+    QIcon folderIcon;
+    folderIcon.addFile(":icons/box_closed", QSize(), QIcon::Normal, QIcon::Off);
+    folderIcon.addFile(":icons/box_open", QSize(), QIcon::Normal, QIcon::On);
+    setFolderIcon(folderIcon);
 }
 
 StorageTreeModel::~StorageTreeModel()

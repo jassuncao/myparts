@@ -13,7 +13,7 @@ class TreeItemModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:
-    explicit TreeItemModel(TreeItem * invisibleRootItem, QObject *parent = 0);
+    explicit TreeItemModel(int columns, QObject *parent = 0);
     ~TreeItemModel();
 
     QVariant data(const QModelIndex &index, int role) const;
@@ -41,7 +41,8 @@ protected:
 
     TreeItem * getItem(const QModelIndex &index) const;
     QModelIndex internalFindIndex(int nodeId, const TreeItem *parentNode) const;
-
+    TreeItem * rootItem() {return _invisibleRootItem;}
+    void setFolderIcon(const QIcon & icon) {_folderIcon = icon;}
 signals:
     
 public slots:

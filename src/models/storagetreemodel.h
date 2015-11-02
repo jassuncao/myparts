@@ -9,7 +9,7 @@ class StorageTreeModel : public TreeItemModel
 {
     Q_OBJECT
 public:
-    explicit StorageTreeModel(const QVector<QVariant> columns, QObject *parent = 0);
+    explicit StorageTreeModel(QObject *parent = 0);
     ~StorageTreeModel();
     virtual bool fillTree(TreeItem * rootItem);
     virtual bool doInsert(TreeItem * item);

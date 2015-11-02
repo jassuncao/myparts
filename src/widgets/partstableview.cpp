@@ -1,11 +1,79 @@
 #include <QtGui>
 #include "partstableview.h"
 #include "qsortfiltersqlquerymodel.h"
+#include "parts/partssqlquerymodel2.h"
+#include "datetimedelegate.h"
+#include "currencydelegate.h"
 
 PartsTableView::PartsTableView(QWidget *parent) :
-    QTableView(parent)
+    QTableView(parent), _tableHeaderContextMenu(0)
 {
+    setFrameStyle(QFrame::StyledPanel);
+    setSelectionBehavior(QAbstractItemView::SelectRows);
+    setSelectionMode(QAbstractItemView::ExtendedSelection);
+    verticalHeader()->setVisible(false);
+    //horizontalHeader()->setStretchLastSection(true);
+    horizontalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(horizontalHeader(), SIGNAL(customContextMenuRequested(QPoint)),
+            this, SLOT(slotHeaderContextMenu(QPoint)));
 }
+
+void PartsTableView::setModel(QAbstractItemModel * model)
+{
+    QTableView::setModel(model);
+    sortByColumn(PartsSqlQueryModel2::ColumnName,Qt::AscendingOrder);
+    setDragEnabled(true);
+    setDragDropMode(QAbstractItemView::DragOnly);
+    setDefaultDropAction(Qt::LinkAction);
+    setSortingEnabled(true);
+    setItemDelegateForColumn(PartsSqlQueryModel2::ColumnCreateDate, new DateDelegate(this));
+    setItemDelegateForColumn(PartsSqlQueryModel2::ColumnAvgPrice, new CurrencyDelegate(this));
+
+    int colCount = model->columnCount();
+    for(int section = 0; section<colCount; ++section){
+        QVariant aux = model->headerData(section, Qt::Horizontal, PartsSqlQueryModel2::VISIBILITY_COLUMN_ROLE);
+        if(aux.toBool()==false){
+            setColumnHidden(section, true);
+        }
+    }
+    setupHeaderContextMenu();
+}
+
+void PartsTableView::setupHeaderContextMenu(){
+    if(_tableHeaderContextMenu)
+        delete _tableHeaderContextMenu;
+    _tableHeaderContextMenu = new QMenu(this);
+    //QMenu * colsMenu = _tableHeaderContextMenu->addMenu(QIcon(":/icons/table_select_column"),"Columns");
+    _tableHeaderContextMenu->addSeparator();
+    QMenu * colsMenu = _tableHeaderContextMenu;
+    QAbstractItemModel * tModel = model();
+    int colCount = tModel->columnCount();
+    for(int section = 0; section<colCount; ++section){
+        QVariant aux = tModel->headerData(section, Qt::Horizontal, PartsSqlQueryModel2::VISIBILITY_COLUMN_ROLE);
+        if(aux.isValid() || aux.toBool()){
+            QString columnName = tModel->headerData(section,Qt::Horizontal).toString();
+            QAction * action = colsMenu->addAction(columnName);
+            action->setCheckable(true);
+            action->setChecked(!isColumnHidden(section));
+            action->setData(section);
+            connect(action,SIGNAL(toggled(bool)),this, SLOT(slotToggleTableColumn(bool)));
+        }
+    }
+}
+
+void PartsTableView::slotToggleTableColumn(bool checked)
+{
+    QAction * action = (QAction*)sender();
+    int column = action->data().toInt();
+    setColumnHidden(column,!checked);
+}
+
+void PartsTableView::slotHeaderContextMenu(QPoint point)
+{
+    if(_tableHeaderContextMenu)
+        _tableHeaderContextMenu->popup(horizontalHeader()->mapToGlobal(point));
+}
+
 
 void PartsTableView::startDrag(Qt::DropActions supportedActions)
 {

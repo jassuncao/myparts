@@ -44,104 +44,97 @@
 #include "navigationtreeview.h"
 
 NavigationSubWidget::NavigationSubWidget(QWidget *parent) : QWidget(parent)
-{
-   QStringListModel * model = new QStringListModel();
-   QStringList list;
-   list << "a" << "b" << "c"<<"d"<<"e"<<"f";
-   model->setStringList(list);
+{  
+   _navigationComboBox = new QComboBox(this);
+   _navigationComboBox->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+   _navigationComboBox->setFocusPolicy(Qt::TabFocus);
+   _navigationComboBox->setMinimumContentsLength(0);
+   _navigationComboBox->addItem(tr("Categories"), Category);
+   _navigationComboBox->addItem(tr("Storage"), Storage);
 
-   m_navigationComboBox = new QComboBox(this);
-   m_navigationComboBox->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
-   m_navigationComboBox->setFocusPolicy(Qt::TabFocus);
-   m_navigationComboBox->setMinimumContentsLength(0);
-   m_navigationComboBox->setModel(model);
-   m_navigationWidget = 0;
-   //m_navigationWidgetFactory = 0;
-
-   m_toolBar = new Manhattan::StyledBar(this);
-   QHBoxLayout *toolBarLayout = new QHBoxLayout;
+   _toolBar = new Manhattan::StyledBar(this);
+   QHBoxLayout * toolBarLayout = new QHBoxLayout;
    toolBarLayout->setMargin(0);
    toolBarLayout->setSpacing(0);
-   m_toolBar->setLayout(toolBarLayout);
-   toolBarLayout->addWidget(m_navigationComboBox);
+   _toolBar->setLayout(toolBarLayout);
+   toolBarLayout->addWidget(_navigationComboBox);
+
+   QToolButton * expandTreeBtn = new QToolButton(this);
+   expandTreeBtn->setIcon(QIcon(QLatin1String(":/icons/expand_tree")));
+   expandTreeBtn->setToolTip("Expand All");
+
+   QToolButton * collapseTreeBtn = new QToolButton(this);
+   collapseTreeBtn->setIcon(QIcon(QLatin1String(":/icons/collapse_tree")));
+   collapseTreeBtn->setToolTip("Collapse All");
+
+   QIcon filterModeIcon;
+   filterModeIcon.addPixmap(QPixmap(QLatin1String(":/icons/tree_filter_childs")), QIcon::Normal,  QIcon::Off);
+   filterModeIcon.addPixmap(QPixmap(QLatin1String(":/icons/tree_filter_selected")), QIcon::Normal, QIcon::On);
+
+   _treeFilterModeBtn = new QToolButton(this);
+   _treeFilterModeBtn->setIcon(filterModeIcon);
+   _treeFilterModeBtn->setCheckable(true);
+   connect(_treeFilterModeBtn, SIGNAL(toggled(bool)), this, SLOT(slotTreeFilterModeToggled(bool)));
+
+   toolBarLayout->addWidget(expandTreeBtn);
+   toolBarLayout->addWidget(collapseTreeBtn);
+   toolBarLayout->addWidget(new Manhattan::StyledSeparator());
+   toolBarLayout->addWidget(_treeFilterModeBtn);
+
+
+   _treeView = new QTreeView;
+   _treeView->setFrameStyle(QFrame::NoFrame);
+   _treeView->setTextElideMode(Qt::ElideNone);
+   _treeView->setAttribute(Qt::WA_MacShowFocusRect, false);
+   _treeView->setDragDropMode(QAbstractItemView::DragDrop);
+   _treeView->setDefaultDropAction(Qt::MoveAction);
+   _treeView->setHeaderHidden(true);
 
    QVBoxLayout *lay = new QVBoxLayout();
    lay->setMargin(0);
    lay->setSpacing(0);
    setLayout(lay);
-   lay->addWidget(m_toolBar);
-   connect(m_navigationComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(comboBoxIndexChanged(int)));
-   //comboBoxIndexChanged(factoryIndex);
+   lay->addWidget(_toolBar);
+   connect(_navigationComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(slotComboBoxIndexChanged(int)));
+   connect(expandTreeBtn, SIGNAL(clicked()), _treeView, SLOT(expandAll()));
+   connect(collapseTreeBtn, SIGNAL(clicked()), this, SLOT(slotColllapseAll()));
+   lay->addWidget(_treeView);
+   slotTreeFilterModeToggled(false);
 }
 
 NavigationSubWidget::~NavigationSubWidget()
 {
-
 }
 
-void NavigationSubWidget::comboBoxIndexChanged(int factoryIndex)
+void NavigationSubWidget::setModel(QAbstractItemModel *model)
 {
-    //jassuncao saveSettings();
+    _treeView->setModel(model);
+    _treeView->expandToDepth(0);
+}
 
-    // Remove toolbutton
-    foreach (QWidget *w, m_additionalToolBarWidgets)
-        delete w;
-    m_additionalToolBarWidgets.clear();
+void NavigationSubWidget::slotColllapseAll()
+{
+    _treeView->expandToDepth(0);
+}
 
-    // Remove old Widget
-    delete m_navigationWidget;
-    m_navigationWidget = 0;
-    //jassuncao: m_navigationWidgetFactory = 0;
-    if (factoryIndex == -1)
-        return;
-
-    // Get new stuff
-    /*
-    m_navigationWidgetFactory = m_navigationComboBox->itemData(factoryIndex,
-                           NavigationWidget::FactoryObjectRole).value<INavigationWidgetFactory *>();
-    NavigationView n = m_navigationWidgetFactory->createWidget();
-    m_navigationWidget = n.widget;
-    */
-    m_navigationWidget = new NavigationTreeView();
-    layout()->addWidget(m_navigationWidget);
-
-    QList<QToolButton *> list;
-    QToolButton * button1 = new QToolButton();
-    button1->setIcon(QIcon(QLatin1String(":icons/toggle_collapse")));
-    list << button1;
-    // Add Toolbutton
-    m_additionalToolBarWidgets = list;
-    QHBoxLayout *layout = qobject_cast<QHBoxLayout *>(m_toolBar->layout());
-    foreach (QToolButton *w, m_additionalToolBarWidgets) {
-        layout->insertWidget(layout->count()-2, w);
+void NavigationSubWidget::slotTreeFilterModeToggled(bool checked)
+{
+    if(checked){
+        _treeFilterModeBtn->setToolTip(tr("Scope: Selected item"));
     }
+    else{
+        _treeFilterModeBtn->setToolTip(tr("Scope: Include childs"));
+    }
+}
 
-    //restoreSettings();
+void NavigationSubWidget::slotComboBoxIndexChanged(int index)
+{    
+    int mode = _navigationComboBox->itemData(index).toInt();
+    emit modeChanged(mode);
 }
 
 void NavigationSubWidget::setFocusWidget()
 {
-    if (m_navigationWidget)
-        m_navigationWidget->setFocus();
+    _treeView->setFocus();
 }
-
-/*
-CommandComboBox::CommandComboBox(QWidget *parent) : QComboBox(parent)
-{
-}
-
-bool CommandComboBox::event(QEvent *e)
-{
-    if (e->type() == QEvent::ToolTip) {
-        const QString text = currentText();
-        if (const Core::Command *cmd = command(text)) {
-            const QString tooltip = tr("Activate %1 View").arg(text);
-            setToolTip(cmd->stringWithAppendedShortcut(tooltip));
-        } else {
-            setToolTip(text);
-        }
-    }
-    return QComboBox::event(e);
-}
-*/
 

@@ -98,7 +98,12 @@ SOURCES += main.cpp\
     editors/companyeditorwidget.cpp \
     editors/footprinteditorwidget.cpp \
     editors/abstracteditor.cpp \
-    editormanagerview.cpp
+    editormanagerview.cpp \
+    widgets/flowlayout.cpp \
+    widgets/qdualpushbutton.cpp \
+    widgets/filteritemwidget.cpp \
+    widgets/partsfilterwidget.cpp \
+    widgets/qactionpushbutton.cpp
 
 HEADERS  += mainwindow.h \
     entities/entities.h \
@@ -180,7 +185,12 @@ HEADERS  += mainwindow.h \
     editors/companyeditorwidget.h \
     editors/footprinteditorwidget.h \
     editors/abstracteditor.h \
-    editormanagerview.h
+    editormanagerview.h \
+    widgets/flowlayout.h \
+    widgets/qdualpushbutton.h \
+    widgets/filteritemwidget.h \
+    widgets/partsfilterwidget.h \
+    widgets/qactionpushbutton.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \
@@ -214,3 +224,5 @@ unix:!macx: PRE_TARGETDEPS += $$PWD/../../build-qt-manhattan-style-Desktop-Debug
 
 win32: LIBS += -L$$PWD/../../build-qt-manhattan-style-Desktop_Qt_5_2_1_MinGW_32bit-Debug/debug/ -lqt-manhattan-style
 win32-g++: PRE_TARGETDEPS += $$PWD/../../build-qt-manhattan-style-Desktop_Qt_5_2_1_MinGW_32bit-Debug/debug/libqt-manhattan-style.a
+
+unix:!macx: LIBS += -lwwwidgets4

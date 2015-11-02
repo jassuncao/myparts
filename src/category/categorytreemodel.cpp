@@ -7,9 +7,13 @@
 #include "categoymimedata.h"
 #include <limits>
 
-CategoryTreeModel::CategoryTreeModel(const QVector<QVariant> columns, QObject *parent) :
-    TreeItemModel(new TreeItem(-1, columns), parent)
-{   
+CategoryTreeModel::CategoryTreeModel(QObject *parent) :
+    TreeItemModel(3, parent)
+{
+    rootItem()->setData(0,tr("Name"));
+    rootItem()->setData(1,tr("Description"));
+    rootItem()->setData(2,tr("ID"));
+    setToolTipColumn(1);
 }
 
 CategoryTreeModel::~CategoryTreeModel()

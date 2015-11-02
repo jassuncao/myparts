@@ -13,6 +13,7 @@
 #include <QDataWidgetMapper>
 #include <QtGui>
 #include <QtSql>
+#include <QLayout>
 
 #include <QVariant>
 #include "partdialog.h"
@@ -27,7 +28,9 @@
 #include "models/storagetreemodel.h"
 #include "models/treeitem.h"
 #include "entities/storagedao.h"
-
+#include "widgets/flowlayout.h"
+#include "widgets/qdualpushbutton.h"
+#include "widgets/filteritemwidget.h"
 PartManagerForm::PartManagerForm(QWidget *parent) :
     QWidget(parent),    
     ui(new Ui::PartManagerForm)
@@ -52,27 +55,21 @@ PartManagerForm::PartManagerForm(QWidget *parent) :
     ui->splitter_2->setChildrenCollapsible(false);
 
     ui->mainTreeView->setDragDropMode(QAbstractItemView::DragDrop);
-    ui->mainTreeView->setDefaultDropAction(Qt::MoveAction);
-    QVector<QVariant> headerData(3);
-    headerData.append("Name");
-    headerData.append("Description");
-    headerData.append("ID");
+    ui->mainTreeView->setDefaultDropAction(Qt::MoveAction);    
 
-    _categoriesTreeModel = new CategoryTreeModel(headerData, this);
+    _categoriesTreeModel = new CategoryTreeModel(this);
     _categoriesTreeModel->setToolTipColumn(Entities::CategoriesDAO::DESCRIPTION_COL);
     _categoriesTreeModel->select();
     ui->mainTreeView->setModel(_categoriesTreeModel);
 
-    connect(_categoriesTreeModel,SIGNAL(partDropped()), this, SLOT(refreshPartsModel()));
     connect(ui->mainTreeView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)), this, SLOT(mainTreeView_currentChanged(QModelIndex,QModelIndex)));
     connect(ui->filterSplitter,SIGNAL(splitterMoved(int,int)), this, SLOT(filterSplitterMoved(int,int)));        
     connect(_categoriesTreeModel,SIGNAL(partDropped()), this, SLOT(refreshPartsModel()));
 
-    _storageTreeModel = new StorageTreeModel(headerData, this);
+    _storageTreeModel = new StorageTreeModel(this);
     _storageTreeModel->select();
 
-    _partsModel = new PartsSqlQueryModel2(this);
-    _partsModel->setTable("part");    
+    _partsModel = new PartsSqlQueryModel2(this);      
     _partsModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
     connect(_partsModel,SIGNAL(primeInsert(int,QSqlRecord&)), this, SLOT(slotPartsModelPrimeInsert(int,QSqlRecord&)));
 
@@ -135,12 +132,65 @@ PartManagerForm::PartManagerForm(QWidget *parent) :
     connect(ui->partDetailsView, SIGNAL(editPartSelected()), this, SLOT(slotEditPart()));
     ui->addPartToolButton->setDefaultAction(ui->actionAddPart);
     ui->deletePartToolButton->setDefaultAction(ui->actionDeletePart);
-    ui->duplicatePartButton->setDefaultAction(ui->actionDuplicatePart);
+    //ui->duplicatePartButton->setDefaultAction(ui->actionDuplicatePart);
     connect(ui->actionAddPart, SIGNAL(triggered()), this, SLOT(slotAddPart()));
     connect(ui->actionDeletePart, SIGNAL(triggered()), this, SLOT(slotDeletePart()));
     connect(ui->actionDuplicatePart, SIGNAL(triggered()), this, SLOT(slotDuplicatePart()));
     createMenus();
     ui->filterForm->resetFilter();
+    /*
+    FlowLayout * flow = new FlowLayout();
+    flow->addWidget(createFilterItem(ui->filterlabel1, ui->filter1));
+    flow->addWidget(createFilterItem(ui->filterlabel2, ui->filter2));
+    flow->addWidget(createFilterItem(ui->filterlabel3, ui->filter3));
+    flow->addWidget(createFilterItem(ui->filterlabel4, ui->filter4));
+    flow->addWidget(createFilterItem(ui->filterlabel5, ui->filter5));
+    flow->addWidget(createFilterItem(ui->filterlabel6, ui->filter6));
+    /*
+    flow->addWidget(ui->filterlabel1);
+    flow->addWidget(ui->filter1);
+    flow->addWidget(ui->filterlabel2);
+    flow->addWidget(ui->filter2);
+    flow->addWidget(ui->filterlabel3);
+    flow->addWidget(ui->filter3);
+    flow->addWidget(ui->filterlabel4);
+    flow->addWidget(ui->filter4);
+    flow->addWidget(ui->filterlabel5);
+    flow->addWidget(ui->filter5);
+    flow->addWidget(ui->filterlabel6);
+    flow->addWidget(ui->filter6);
+    */
+    //ui->filterFrame->setLayout(flow);
+    QMenu * testMenu =new QMenu(this);
+
+    testMenu->addAction("Action1");
+    testMenu->addAction("Action2");
+    //ui->actionDuplicatePart->setMenu(testMenu);
+    //ui->duplicatePartButton->setMenu(testMenu);
+    ui->moreButton->setMenu(testMenu);
+    /*
+    QDualPushButton * btn = new QDualPushButton;
+    //btn->setText("Test: ASAS");
+    ui->horizontalLayout_10->addWidget(btn);
+*/
+    FilterItemWidget * item1 = new FilterItemWidget(tr("Distributor:"));
+    ui->extraItemsLayout->addWidget(item1);
+    ui->extraItemsLayout->addWidget(new FilterItemWidget(tr("Manufacturer:")));
+    ui->extraItemsLayout->addWidget(new FilterItemWidget(tr("Create before:")));
+    ui->extraItemsLayout->addStretch(1);
+    //ui->horizontalLayout_10->addWidget(item1);
+}
+
+QWidget * PartManagerForm::createFilterItem(QWidget * label, QWidget * item)
+{
+    QHBoxLayout * layout = new QHBoxLayout();
+    layout->setMargin(0);
+    layout->setSpacing(4);
+    layout->addWidget(label);
+    layout->addWidget(item);
+    QWidget * wraper = new QWidget();
+    wraper->setLayout(layout);
+    return wraper;
 }
 
 PartManagerForm::~PartManagerForm()
