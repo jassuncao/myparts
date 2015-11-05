@@ -32,15 +32,21 @@
 
 #include <QWidget>
 #include <QComboBox>
-
 #include <QList>
+#include <QModelIndex>
 
 QT_BEGIN_NAMESPACE
 class QMenu;
 class QToolButton;
 class QTreeView;
 class QToolButton;
+class QAction;
+class QStackedLayout;
+class QSortFilterProxyModel;
 QT_END_NAMESPACE
+
+class QSearchLineEdit;
+class TreeNavigator;
 
 namespace Manhattan { class StyledBar; }
 
@@ -55,19 +61,83 @@ public:
 
     explicit NavigationSubWidget(QWidget *parent = 0);
     ~NavigationSubWidget();
-    void setFocusWidget();
-    void setModel(QAbstractItemModel *model);
-signals:
-    void modeChanged(int mode);
-private slots:
-    void slotComboBoxIndexChanged(int index);
-    void slotColllapseAll();
-    void slotTreeFilterModeToggled(bool checked);
+    void addNavigator(TreeNavigator * navigator);
 public slots:
-private:
+    void setCurrentNavigator(int index);
+private slots:
+    void slotComboBoxIndexChanged(int index);  
+private:    
     QComboBox * _navigationComboBox;
     Manhattan::StyledBar * _toolBar;
-    QToolButton * _treeFilterModeBtn;  
-    QTreeView * _treeView;
+    QStackedLayout * _stack;
+    QList<QToolButton*> _extraToolButtons;
 };
+
+class INavigator {
+public:
+
+};
+
+class TreeNavigator : public QWidget {
+    Q_OBJECT
+public:
+    virtual QString title() const = 0;
+    void setModel(QAbstractItemModel *model);
+    QAbstractItemModel * model() const;
+    QList<QToolButton*> toolButtons();
+protected:
+    explicit TreeNavigator(QWidget *parent = 0);
+    virtual void onContextMenuRequested(const QPoint &globalPos, const QModelIndex & index);
+    virtual void onFilterChanged(const QString & text);
+private slots:
+    void slotCustomContextMenuRequested(const QPoint &pos);
+    void slotTextChanged();
+    void slotCurrentChanged(const QModelIndex &current, const QModelIndex &previous);
+    void slotCollapseAll();
+    void slotTreeFilterModeToggled(bool checked);
+private:
+    QSearchLineEdit * _filterLineEdit;
+    QTreeView * _treeView;
+    bool _filterSelectedItemChecked;
+};
+
+class CategoryNavigator : public TreeNavigator
+{
+    Q_OBJECT
+public:
+    explicit CategoryNavigator(QWidget *parent = 0);
+    virtual QString title() const { return tr("Categories");}
+protected:
+    virtual void onContextMenuRequested(const QPoint &globalPos, const QModelIndex & index);
+    virtual void onFilterChanged(const QString & text);
+private slots:
+    void slotAddCategory();
+    void slotDeleteCategory();
+    void slotEditCategory();
+private:
+    QAction * _actionDeleteCategory;
+    QAction * _actionEditCategory;
+    QMenu * _actionsMenu;
+};
+
+class StorageNavigator : public TreeNavigator
+{
+    Q_OBJECT
+public:
+    explicit StorageNavigator(QWidget *parent = 0);
+    virtual QString title() const { return tr("Storage");}
+protected:
+    virtual void onContextMenuRequested(const QPoint &globalPos, const QModelIndex & index);
+    virtual void onFilterChanged(const QString & text);
+private slots:
+    void slotAddStorage();
+    void slotDeleteStorage();
+    void slotEditStorage();
+private:
+    QAction * _actionDeleteStorage;
+    QAction * _actionEditStorage;
+    QMenu * _actionsMenu;
+};
+
+
 #endif // NAVIGATIONSUBWIDGET_H

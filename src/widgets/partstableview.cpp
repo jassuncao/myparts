@@ -1,4 +1,8 @@
-#include <QtGui>
+#include <QHeaderView>
+#include <QDrag>
+#include <QAction>
+#include <QMenu>
+#include <QTableView>
 #include "partstableview.h"
 #include "qsortfiltersqlquerymodel.h"
 #include "parts/partssqlquerymodel2.h"

@@ -37,11 +37,16 @@
 #include <QToolButton>
 #include <QStandardItemModel>
 #include <QStringListModel>
+#include <QModelIndex>
+#include <QStackedLayout>
+#include <QTreeView>
+#include <QHeaderView>
+#include <QSortFilterProxyModel>
+#include <QDebug>
 
 #include "styledbar.h"
-
-#include <QTreeView>
 #include "navigationtreeview.h"
+#include "qsearchlineedit.h"
 
 NavigationSubWidget::NavigationSubWidget(QWidget *parent) : QWidget(parent)
 {  
@@ -49,8 +54,6 @@ NavigationSubWidget::NavigationSubWidget(QWidget *parent) : QWidget(parent)
    _navigationComboBox->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
    _navigationComboBox->setFocusPolicy(Qt::TabFocus);
    _navigationComboBox->setMinimumContentsLength(0);
-   _navigationComboBox->addItem(tr("Categories"), Category);
-   _navigationComboBox->addItem(tr("Storage"), Storage);
 
    _toolBar = new Manhattan::StyledBar(this);
    QHBoxLayout * toolBarLayout = new QHBoxLayout;
@@ -59,82 +62,276 @@ NavigationSubWidget::NavigationSubWidget(QWidget *parent) : QWidget(parent)
    _toolBar->setLayout(toolBarLayout);
    toolBarLayout->addWidget(_navigationComboBox);
 
-   QToolButton * expandTreeBtn = new QToolButton(this);
-   expandTreeBtn->setIcon(QIcon(QLatin1String(":/icons/expand_tree")));
-   expandTreeBtn->setToolTip("Expand All");
-
-   QToolButton * collapseTreeBtn = new QToolButton(this);
-   collapseTreeBtn->setIcon(QIcon(QLatin1String(":/icons/collapse_tree")));
-   collapseTreeBtn->setToolTip("Collapse All");
-
-   QIcon filterModeIcon;
-   filterModeIcon.addPixmap(QPixmap(QLatin1String(":/icons/tree_filter_childs")), QIcon::Normal,  QIcon::Off);
-   filterModeIcon.addPixmap(QPixmap(QLatin1String(":/icons/tree_filter_selected")), QIcon::Normal, QIcon::On);
-
-   _treeFilterModeBtn = new QToolButton(this);
-   _treeFilterModeBtn->setIcon(filterModeIcon);
-   _treeFilterModeBtn->setCheckable(true);
-   connect(_treeFilterModeBtn, SIGNAL(toggled(bool)), this, SLOT(slotTreeFilterModeToggled(bool)));
-
-   toolBarLayout->addWidget(expandTreeBtn);
-   toolBarLayout->addWidget(collapseTreeBtn);
-   toolBarLayout->addWidget(new Manhattan::StyledSeparator());
-   toolBarLayout->addWidget(_treeFilterModeBtn);
-
-
-   _treeView = new QTreeView;
-   _treeView->setFrameStyle(QFrame::NoFrame);
-   _treeView->setTextElideMode(Qt::ElideNone);
-   _treeView->setAttribute(Qt::WA_MacShowFocusRect, false);
-   _treeView->setDragDropMode(QAbstractItemView::DragDrop);
-   _treeView->setDefaultDropAction(Qt::MoveAction);
-   _treeView->setHeaderHidden(true);
+   _stack = new QStackedLayout();
+   _stack->setMargin(0);
+   _stack->setSpacing(0);
 
    QVBoxLayout *lay = new QVBoxLayout();
    lay->setMargin(0);
    lay->setSpacing(0);
    setLayout(lay);
    lay->addWidget(_toolBar);
+   lay->addLayout(_stack);
    connect(_navigationComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(slotComboBoxIndexChanged(int)));
-   connect(expandTreeBtn, SIGNAL(clicked()), _treeView, SLOT(expandAll()));
-   connect(collapseTreeBtn, SIGNAL(clicked()), this, SLOT(slotColllapseAll()));
-   lay->addWidget(_treeView);
-   slotTreeFilterModeToggled(false);
 }
 
 NavigationSubWidget::~NavigationSubWidget()
 {
 }
 
-void NavigationSubWidget::setModel(QAbstractItemModel *model)
+void NavigationSubWidget::addNavigator(TreeNavigator * navigator)
 {
-    _treeView->setModel(model);
-    _treeView->expandToDepth(0);
+    _navigationComboBox->addItem(navigator->title());
+    int index = _stack->addWidget(navigator);
+    if(_navigationComboBox->currentIndex()!=index)
+        _navigationComboBox->setCurrentIndex(index);
 }
 
-void NavigationSubWidget::slotColllapseAll()
+void NavigationSubWidget::setCurrentNavigator(int index)
 {
-    _treeView->expandToDepth(0);
-}
-
-void NavigationSubWidget::slotTreeFilterModeToggled(bool checked)
-{
-    if(checked){
-        _treeFilterModeBtn->setToolTip(tr("Scope: Selected item"));
-    }
-    else{
-        _treeFilterModeBtn->setToolTip(tr("Scope: Include childs"));
-    }
+    _navigationComboBox->setCurrentIndex(index);
 }
 
 void NavigationSubWidget::slotComboBoxIndexChanged(int index)
-{    
-    int mode = _navigationComboBox->itemData(index).toInt();
-    emit modeChanged(mode);
+{        
+    if(index==_stack->currentIndex())
+        return;
+
+    QLayout * toolbarLayout = _toolBar->layout();
+    while (!_extraToolButtons.isEmpty()){
+        QToolButton * btn = _extraToolButtons.takeFirst();
+        toolbarLayout->removeWidget(btn);
+        delete btn;
+    }
+    _stack->setCurrentIndex(index);
+    QWidget * current = _stack->currentWidget();
+    if(current){
+        setFocusProxy(current);
+        TreeNavigator * navigator = dynamic_cast<TreeNavigator*>(current);
+        if(navigator){
+            QList<QToolButton *> newButtons = navigator->toolButtons();
+            QToolButton * btn;
+            foreach (btn, newButtons) {
+                _extraToolButtons.append(btn);
+                toolbarLayout->addWidget(btn);
+            }
+            foreach (btn, newButtons) {
+                btn->show();
+            }
+        }
+    }
 }
 
-void NavigationSubWidget::setFocusWidget()
+
+TreeNavigator::TreeNavigator(QWidget *parent) : QWidget(parent),
+  _filterSelectedItemChecked(false)
 {
-    _treeView->setFocus();
+    _filterLineEdit = new QSearchLineEdit(this);
+
+    _treeView = new QTreeView;
+    _treeView->setFrameStyle(QFrame::NoFrame);
+    _treeView->setTextElideMode(Qt::ElideNone);
+    _treeView->setAttribute(Qt::WA_MacShowFocusRect, false);
+    //_treeView->setDragDropMode(QAbstractItemView::DragDrop);
+    _treeView->setDragDropMode(QAbstractItemView::InternalMove);
+    _treeView->setDefaultDropAction(Qt::MoveAction);
+    _treeView->setHeaderHidden(true);
+    _treeView->setSelectionMode(QTreeView::SingleSelection);
+    _treeView->setSelectionBehavior(QAbstractItemView::SelectItems);
+    _treeView->setContextMenuPolicy(Qt::CustomContextMenu);
+    _treeView->setDropIndicatorShown(true);
+    _treeView->setDragEnabled(true);
+    _treeView->setAutoExpandDelay(750);
+    _treeView->setAnimated(true);
+    setFocusProxy(_treeView);
+
+    QVBoxLayout * layout = new QVBoxLayout;
+    layout->setMargin(0);
+    layout->setSpacing(0);
+    layout->addWidget(_filterLineEdit);
+    layout->addWidget(_treeView);
+
+    setLayout(layout);
+
+    connect(_filterLineEdit, SIGNAL(textClear()), this, SLOT(slotTextChanged()));
+    connect(_filterLineEdit, SIGNAL(returnPressed()), this, SLOT(slotTextChanged()));
 }
 
+void TreeNavigator::setModel(QAbstractItemModel *model)
+{
+    if(_treeView->selectionModel()){
+        disconnect(_treeView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+                   this, SLOT(slotCurrentChanged(QModelIndex,QModelIndex)));
+    }
+    _treeView->setModel(model);
+    connect(_treeView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+            this, SLOT(slotCurrentChanged(QModelIndex,QModelIndex)));
+}
+
+QAbstractItemModel * TreeNavigator::model() const
+{
+    return _treeView->model();
+}
+
+QList<QToolButton *> TreeNavigator::toolButtons()
+{
+
+    QToolButton * expandTreeBtn = new QToolButton;
+    expandTreeBtn->setIcon(QIcon(QLatin1String(":/icons/expand_tree")));
+    expandTreeBtn->setToolTip("Expand All");
+    expandTreeBtn->hide();
+
+    QToolButton * collapseTreeBtn = new QToolButton;
+    collapseTreeBtn->setIcon(QIcon(QLatin1String(":/icons/collapse_tree")));
+    collapseTreeBtn->setToolTip("Collapse All");
+    collapseTreeBtn->hide();
+
+    QIcon filterModeIcon;
+    filterModeIcon.addPixmap(QPixmap(QLatin1String(":/icons/tree_filter_childs")), QIcon::Normal,  QIcon::Off);
+    filterModeIcon.addPixmap(QPixmap(QLatin1String(":/icons/tree_filter_selected")), QIcon::Normal, QIcon::On);
+
+    QToolButton * treeFilterModeBtn = new QToolButton;
+    treeFilterModeBtn->setIcon(filterModeIcon);
+    treeFilterModeBtn->setCheckable(true);
+    treeFilterModeBtn->hide();
+    treeFilterModeBtn->setChecked(_filterSelectedItemChecked);
+
+    QList<QToolButton*> _toolButtons;
+    _toolButtons.append(expandTreeBtn);
+    _toolButtons.append(collapseTreeBtn);
+    _toolButtons.append(treeFilterModeBtn);
+
+    connect(treeFilterModeBtn, SIGNAL(toggled(bool)), this, SLOT(slotTreeFilterModeToggled(bool)));
+    connect(expandTreeBtn, SIGNAL(clicked()), _treeView, SLOT(expandAll()));
+    connect(collapseTreeBtn, SIGNAL(clicked()), this, SLOT(slotCollapseAll()));
+
+    return _toolButtons;
+}
+
+void TreeNavigator::slotCollapseAll()
+{
+    _treeView->expandToDepth(0);
+}
+
+void TreeNavigator::onContextMenuRequested(const QPoint &, const QModelIndex &)
+{
+}
+
+void TreeNavigator::onFilterChanged(const QString &)
+{
+
+}
+
+void TreeNavigator::slotTreeFilterModeToggled(bool checked)
+{
+    _filterSelectedItemChecked=checked;
+    QString tooltip = checked ? tr("Scope: Selected item") : tr("Scope: Include childs");
+    static_cast<QWidget*>(sender())->setToolTip(tooltip);
+}
+
+
+void TreeNavigator::slotCustomContextMenuRequested(const QPoint &pos)
+{
+    const QModelIndex & index = _treeView->indexAt(pos);
+    const QPoint & globalPos = _treeView->mapToGlobal(pos);
+    onContextMenuRequested(globalPos, index);
+}
+
+void TreeNavigator::slotTextChanged()
+{
+    onFilterChanged(_filterLineEdit->text());
+}
+
+void TreeNavigator::slotCurrentChanged(const QModelIndex &current, const QModelIndex &previous)
+{
+}
+
+
+CategoryNavigator::CategoryNavigator(QWidget *parent)
+    : TreeNavigator(parent)
+{   
+    QIcon addCategoryIcon(QStringLiteral(":/icons/folder_add"));
+    QIcon deleteCategoryIcon(QStringLiteral(":/icons/folder_delete"));
+    QIcon editCategoryIcon(QStringLiteral(":/icons/folder_edit"));
+    _actionsMenu = new QMenu(this);
+    _actionsMenu->addAction(addCategoryIcon, tr("Add Category"), this, SLOT(slotAddCategory()));
+    _actionDeleteCategory = _actionsMenu->addAction(deleteCategoryIcon, tr("Delete Category"), this, SLOT(slotDeleteCategory()));
+    _actionEditCategory = _actionsMenu->addAction(editCategoryIcon, tr("Edit Category"), this, SLOT(slotEditCategory()));
+    _actionDeleteCategory->setEnabled(false);
+    _actionEditCategory->setEnabled(false);  
+}
+
+void CategoryNavigator::onContextMenuRequested(const QPoint & globalPos, const QModelIndex & index)
+{
+    bool indexValid = index.isValid();
+    bool canDelete = false;
+    if(indexValid){
+        canDelete = !index.sibling(0, 0).isValid();
+    }
+    _actionDeleteCategory->setEnabled(indexValid);
+    _actionEditCategory->setEnabled(canDelete);
+    _actionsMenu->exec(globalPos);
+}
+
+void CategoryNavigator::onFilterChanged(const QString & text)
+{
+}
+
+void CategoryNavigator::slotAddCategory()
+{
+
+}
+
+void CategoryNavigator::slotDeleteCategory()
+{
+
+}
+
+void CategoryNavigator::slotEditCategory()
+{
+}
+
+StorageNavigator::StorageNavigator(QWidget *parent)
+    : TreeNavigator(parent)
+{
+    QIcon addStorageIcon(QStringLiteral(":/icons/box_add"));
+    QIcon deleteStorageIcon(QStringLiteral(":/icons/box_delete"));
+    QIcon editStorageIcon(QStringLiteral(":/icons/box_edit"));
+    _actionsMenu = new QMenu(this);
+    _actionsMenu->addAction(addStorageIcon, tr("Add Storage"), this, SLOT(slotAddStorage()));
+    _actionDeleteStorage = _actionsMenu->addAction(deleteStorageIcon, tr("Delete Storage"), this, SLOT(slotDeleteStorage()));
+    _actionEditStorage = _actionsMenu->addAction(editStorageIcon, tr("Edit Storage"), this, SLOT(slotEditStorage()));
+    _actionDeleteStorage->setEnabled(false);
+    _actionEditStorage->setEnabled(false);
+
+}
+
+void StorageNavigator::onContextMenuRequested(const QPoint & globalPos, const QModelIndex & index)
+{
+    bool indexValid = index.isValid();
+    bool canDelete = false;
+    if(indexValid){
+        canDelete = !index.sibling(0, 0).isValid();
+    }
+    _actionDeleteStorage->setEnabled(indexValid);
+    _actionEditStorage->setEnabled(canDelete);
+    _actionsMenu->exec(globalPos);
+}
+
+void StorageNavigator::onFilterChanged(const QString & text)
+{
+}
+
+void StorageNavigator::slotAddStorage()
+{
+
+}
+
+void StorageNavigator::slotDeleteStorage()
+{
+
+}
+
+void StorageNavigator::slotEditStorage()
+{
+}

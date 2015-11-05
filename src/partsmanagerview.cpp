@@ -35,7 +35,19 @@ PartsManagerView::PartsManagerView(QWidget *parent) : MiniSplitter(parent)
     _storageTreeModel->select();
 
     _navWidget = new NavigationSubWidget(this);
-    _navWidget->setModel(_categoriesTreeModel);
+
+    CategoryNavigator * categoryNavigator = new CategoryNavigator(_navWidget);
+    categoryNavigator->setModel(_categoriesTreeModel);
+    _navWidget->addNavigator(categoryNavigator);
+
+    StorageNavigator * storageNavigator = new StorageNavigator(_navWidget);
+    storageNavigator->setModel(_storageTreeModel);
+    _navWidget->addNavigator(storageNavigator);
+
+    _navWidget->setCurrentNavigator(0);
+    //_navWidget->setCategoriesModel(_categoriesTreeModel);
+    //_navWidget->setStorageModel(_storageTreeModel);
+    //_navWidget->setMode(NavigationSubWidget::Category);
 
     Manhattan::StyledBar * centerPaneTitleBar = new Manhattan::StyledBar;
     QLabel * centerPaneTitleLabel = new QLabel(tr("Parts List"), centerPaneTitleBar);
@@ -65,7 +77,7 @@ PartsManagerView::PartsManagerView(QWidget *parent) : MiniSplitter(parent)
 
     QHBoxLayout * partsActionsLayout = new QHBoxLayout;
     partsActionsLayout->setSpacing(6);
-    partsActionsLayout->setMargin(6);
+    partsActionsLayout->setMargin(6);    
     partsActionsLayout->addWidget(addPartButton);
     partsActionsLayout->addWidget(_deletePartButton);
     partsActionsLayout->addWidget(_duplicatePartButton);
@@ -126,10 +138,10 @@ void PartsManagerView::slotNavModeChanged(int mode)
 {
     switch(mode){
         case NavigationSubWidget::Storage:
-        _navWidget->setModel(_storageTreeModel);
+        //_navWidget->setModel(_storageTreeModel);
         break;
     default:
-        _navWidget->setModel(_categoriesTreeModel);
+        //_navWidget->setModel(_categoriesTreeModel);
         break;
     }
 }
