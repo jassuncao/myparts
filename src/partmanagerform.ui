@@ -405,6 +405,9 @@
              </property>
             </widget>
            </item>
+           <item>
+            <widget class="QTableView" name="tableView"/>
+           </item>
           </layout>
          </widget>
          <widget class="QWidget" name="widget_4" native="true">

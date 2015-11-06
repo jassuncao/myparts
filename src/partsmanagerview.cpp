@@ -43,11 +43,7 @@ PartsManagerView::PartsManagerView(QWidget *parent) : MiniSplitter(parent)
     StorageNavigator * storageNavigator = new StorageNavigator(_navWidget);
     storageNavigator->setModel(_storageTreeModel);
     _navWidget->addNavigator(storageNavigator);
-
-    _navWidget->setCurrentNavigator(0);
-    //_navWidget->setCategoriesModel(_categoriesTreeModel);
-    //_navWidget->setStorageModel(_storageTreeModel);
-    //_navWidget->setMode(NavigationSubWidget::Category);
+    _navWidget->setCurrentNavigator(0);    
 
     Manhattan::StyledBar * centerPaneTitleBar = new Manhattan::StyledBar;
     QLabel * centerPaneTitleLabel = new QLabel(tr("Parts List"), centerPaneTitleBar);
@@ -58,22 +54,16 @@ PartsManagerView::PartsManagerView(QWidget *parent) : MiniSplitter(parent)
     centerPaneTitleLayout->addWidget(centerPaneTitleLabel);
     centerPaneTitleBar->setLayout(centerPaneTitleLayout);
 
+    /*
     QMenu * duplicateBtnMenu = new QMenu(this);
     QAction * duplicateAllDataAction = duplicateBtnMenu->addAction(tr("Duplicate with all data"));
     duplicateBtnMenu->addAction(tr("Duplicate basic data only"));
+    QAction * duplicateAction = new QAction(tr("Duplicate"), this);
+    */
 
     QPushButton * addPartButton = new QPushButton(tr("Add part"), this);
-    _deletePartButton = new QPushButton(tr("Delete part"), this);
-    _duplicatePartButton = new QActionPushButton(duplicateAllDataAction, this);
-    _duplicatePartButton->setMenu(duplicateBtnMenu);
-
-    /*
-    QPushButton * duplicatePartButton = new QPushButton(tr("Duplicate"), this);
-    duplicatePartButton->setMenu(duplicateBtnMenu);
-    QToolButton * duplicatePartButton2 = new QToolButton(this);
-    duplicatePartButton2->setText(tr("Duplicate"));
-    duplicatePartButton2->setMenu(duplicateBtnMenu);
-    */
+    _deletePartButton = new QPushButton(tr("Delete part"), this);           
+    _duplicatePartButton = new QPushButton(tr("Duplicate"), this);
 
     QHBoxLayout * partsActionsLayout = new QHBoxLayout;
     partsActionsLayout->setSpacing(6);
@@ -117,6 +107,9 @@ PartsManagerView::PartsManagerView(QWidget *parent) : MiniSplitter(parent)
     addWidget(centerPane);
     addWidget(rightPane);
     connect(_navWidget, SIGNAL(modeChanged(int)), this, SLOT(slotNavModeChanged(int)));
+    connect(addPartButton, SIGNAL(clicked()), this, SLOT(slotAddPart()));
+    connect(_deletePartButton, SIGNAL(clicked()), this, SLOT(slotDeletePart()));
+    connect(_duplicatePartButton, SIGNAL(clicked()), this, SLOT(slotDuplicatePart()));
 }
 
 PartsManagerView::~PartsManagerView()

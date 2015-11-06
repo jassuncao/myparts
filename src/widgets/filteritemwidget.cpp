@@ -4,6 +4,7 @@
 #include <QComboBox>
 #include <QHBoxLayout>
 #include <QKeyEvent>
+#include <QAbstractItemModel>
 
 FilterItemWidget::FilterItemWidget(const QString & labelText, bool removableItem, QWidget *parent)
     : QWidget(parent), _deleteBtn(0)
@@ -51,6 +52,12 @@ FilterItemWidget::FilterItemWidget(const QString & labelText, bool removableItem
 
 FilterItemWidget::~FilterItemWidget()
 {
+}
+
+void FilterItemWidget::setOptionsModel(QAbstractItemModel * model, int visibleColumn)
+{
+    _comboBox->setModel(model);
+    _comboBox->setModelColumn(visibleColumn);
 }
 
 bool FilterItemWidget::eventFilter(QObject *obj, QEvent *event)

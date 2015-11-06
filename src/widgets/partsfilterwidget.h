@@ -24,6 +24,7 @@ private slots:
     void slotAddFilterItem();
     void slotDeleteFilterItem();
 private:
+    void setupModels();
     QHBoxLayout * _fixedItemsLayout;
     FlowLayout * _dynamicItemsLayout;
     FilterItemWidget * _stockFilterItem;
