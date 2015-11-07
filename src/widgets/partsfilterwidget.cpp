@@ -7,6 +7,9 @@
 #include <QPushButton>
 #include <QAction>
 #include <QMenu>
+#include <QStandardItemModel>
+#include <QSqlQueryModel>
+#include <QComboBox>
 
 PartsFilterWidget::PartsFilterWidget(QWidget *parent) : QWidget(parent)
 {
@@ -44,13 +47,28 @@ PartsFilterWidget::PartsFilterWidget(QWidget *parent) : QWidget(parent)
     _fixedItemsLayout->addWidget(_textFilterItem);
     _fixedItemsLayout->addWidget(_moreButton);
 
-    connect(_moreButton, SIGNAL(clicked()), this, SLOT(slotAddFilterItem()));
+    setupModels();
 
+    connect(_moreButton, SIGNAL(clicked()), this, SLOT(slotAddFilterItem()));   
 }
 
 PartsFilterWidget::~PartsFilterWidget()
 {
+}
 
+void PartsFilterWidget::setupModels()
+{
+    QStandardItemModel * stockFilterItemModel = new QStandardItemModel(4,0,this);
+    stockFilterItemModel->setItem(0,new QStandardItem(tr("Any")));
+    stockFilterItemModel->setItem(1,new QStandardItem(tr("Out of stock")));
+    stockFilterItemModel->setItem(2,new QStandardItem(tr("In Stock")));
+    stockFilterItemModel->setItem(3,new QStandardItem(tr("Below Minimum")));
+    _stockFilterItem->setOptionsModel(stockFilterItemModel, 0);
+
+    QSqlQueryModel * conditionModel = new QSqlQueryModel(this);
+    conditionModel->setQuery("SELECT id, value FROM part_condition");
+    _conditionFilterItem->setOptionsModel(conditionModel, 1);
+    _conditionFilterItem->comboBox()->setCurrentIndex(-1);
 }
 
 void PartsFilterWidget::slotAddFilterItem()
