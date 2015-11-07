@@ -2,6 +2,7 @@
 #include "widgets/flowlayout.h"
 #include "widgets/qsearchlineedit.h"
 #include "widgets/filteritemwidget.h"
+#include "models/extrarowproxymodel.h"
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QPushButton>
@@ -64,11 +65,28 @@ void PartsFilterWidget::setupModels()
     stockFilterItemModel->setItem(2,new QStandardItem(tr("In Stock")));
     stockFilterItemModel->setItem(3,new QStandardItem(tr("Below Minimum")));
     _stockFilterItem->setOptionsModel(stockFilterItemModel, 0);
+    _stockFilterItem->comboBox()->insertSeparator(1);
 
     QSqlQueryModel * conditionModel = new QSqlQueryModel(this);
     conditionModel->setQuery("SELECT id, value FROM part_condition");
-    _conditionFilterItem->setOptionsModel(conditionModel, 1);
-    _conditionFilterItem->comboBox()->setCurrentIndex(-1);
+
+    ExtraRowProxyModel * conditionProxyModel = new ExtraRowProxyModel(this);
+    conditionProxyModel->setEmptyDisplayText(tr("Any"));
+    conditionProxyModel->setSourceModel(conditionModel);
+
+    _conditionFilterItem->setOptionsModel(conditionProxyModel, 1);
+    _conditionFilterItem->comboBox()->setCurrentIndex(0);
+
+    QSqlQueryModel * distributorModel = new QSqlQueryModel(this);
+    distributorModel->setQuery("SELECT id, name FROM distributor");
+
+    ExtraRowProxyModel * distributorProxyModel = new ExtraRowProxyModel(this);
+    distributorProxyModel->setEmptyDisplayText(tr("Any"));
+    distributorProxyModel->setSourceModel(distributorModel);
+
+    _distributorFilterItem->setOptionsModel(distributorProxyModel, 1);
+    _distributorFilterItem->comboBox()->setCurrentIndex(0);
+
 }
 
 void PartsFilterWidget::slotAddFilterItem()

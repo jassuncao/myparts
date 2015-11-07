@@ -103,7 +103,8 @@ SOURCES += main.cpp\
     widgets/qdualpushbutton.cpp \
     widgets/filteritemwidget.cpp \
     widgets/partsfilterwidget.cpp \
-    widgets/qactionpushbutton.cpp
+    widgets/qactionpushbutton.cpp \
+    models/extrarowproxymodel.cpp
 
 HEADERS  += mainwindow.h \
     entities/entities.h \
@@ -190,7 +191,8 @@ HEADERS  += mainwindow.h \
     widgets/qdualpushbutton.h \
     widgets/filteritemwidget.h \
     widgets/partsfilterwidget.h \
-    widgets/qactionpushbutton.h
+    widgets/qactionpushbutton.h \
+    models/extrarowproxymodel.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \
