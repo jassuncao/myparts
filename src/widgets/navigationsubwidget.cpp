@@ -155,6 +155,7 @@ TreeNavigator::TreeNavigator(QWidget *parent) : QWidget(parent),
 
     connect(_filterLineEdit, SIGNAL(textClear()), this, SLOT(slotTextChanged()));
     connect(_filterLineEdit, SIGNAL(returnPressed()), this, SLOT(slotTextChanged()));
+    connect(_treeView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slotCustomContextMenuRequested(QPoint)));
 }
 
 void TreeNavigator::setModel(QAbstractItemModel *model)
@@ -250,9 +251,9 @@ void TreeNavigator::slotCurrentChanged(const QModelIndex &current, const QModelI
 CategoryNavigator::CategoryNavigator(QWidget *parent)
     : TreeNavigator(parent)
 {   
-    QIcon addCategoryIcon(QStringLiteral(":/icons/folder_add"));
-    QIcon deleteCategoryIcon(QStringLiteral(":/icons/folder_delete"));
-    QIcon editCategoryIcon(QStringLiteral(":/icons/folder_edit"));
+    QIcon addCategoryIcon(QString::fromLatin1(":/icons/folder_add"));
+    QIcon deleteCategoryIcon(QString::fromLatin1(":/icons/folder_delete"));
+    QIcon editCategoryIcon(QString::fromLatin1(":/icons/folder_edit"));
     _actionsMenu = new QMenu(this);
     _actionsMenu->addAction(addCategoryIcon, tr("Add Category"), this, SLOT(slotAddCategory()));
     _actionDeleteCategory = _actionsMenu->addAction(deleteCategoryIcon, tr("Delete Category"), this, SLOT(slotDeleteCategory()));
@@ -294,9 +295,9 @@ void CategoryNavigator::slotEditCategory()
 StorageNavigator::StorageNavigator(QWidget *parent)
     : TreeNavigator(parent)
 {
-    QIcon addStorageIcon(QStringLiteral(":/icons/box_add"));
-    QIcon deleteStorageIcon(QStringLiteral(":/icons/box_delete"));
-    QIcon editStorageIcon(QStringLiteral(":/icons/box_edit"));
+    QIcon addStorageIcon(QString::fromLatin1(":/icons/box_add"));
+    QIcon deleteStorageIcon(QString::fromLatin1(":/icons/box_delete"));
+    QIcon editStorageIcon(QString::fromLatin1(":/icons/box_edit"));
     _actionsMenu = new QMenu(this);
     _actionsMenu->addAction(addStorageIcon, tr("Add Storage"), this, SLOT(slotAddStorage()));
     _actionDeleteStorage = _actionsMenu->addAction(deleteStorageIcon, tr("Delete Storage"), this, SLOT(slotDeleteStorage()));
