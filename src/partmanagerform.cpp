@@ -173,10 +173,12 @@ PartManagerForm::PartManagerForm(QWidget *parent) :
     //btn->setText("Test: ASAS");
     ui->horizontalLayout_10->addWidget(btn);
 */
+    /*
     FilterItemWidget * item1 = new FilterItemWidget(tr("Distributor:"));
     ui->extraItemsLayout->addWidget(item1);
     ui->extraItemsLayout->addWidget(new FilterItemWidget(tr("Manufacturer:")));
     ui->extraItemsLayout->addWidget(new FilterItemWidget(tr("Create before:")));
+    */
     ui->extraItemsLayout->addStretch(1);
     //ui->horizontalLayout_10->addWidget(item1);
 }

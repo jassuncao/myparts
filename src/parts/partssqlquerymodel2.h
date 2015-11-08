@@ -57,6 +57,15 @@ private:
 class FilterBuilder {
 
 public:
+    enum SuportedFilters {
+        FilterByStock,
+        FilterByCondition,
+        FilterByDistributor,
+        FilterByManufacturer,
+        FilterByFootprint,
+        FilterByText,
+    };
+
     enum CategoryFilterMode {
         AllCategories=1,
         SubCategories=2,

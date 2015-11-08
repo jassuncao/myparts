@@ -65,9 +65,11 @@ QVariant ExtraRowProxyModel::data(const QModelIndex &index, int role) const
       }
       return QVariant();
   }
+  /*
   if(role==Qt::AccessibleDescriptionRole && index.row() == 1 && index.column()==_displayColumn){
       return QVariant(QString::fromLatin1("separator"));
   }
+  */
   return QAbstractProxyModel::data(index, role);
 }
 
