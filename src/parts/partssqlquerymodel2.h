@@ -108,6 +108,9 @@ public:
     void setSelectedDate(const QDate & date);
     void setFilterByConditionEnabled(bool value);
     void setSelectedCondition(QVariant conditionId);
+    void setSelectedFootprint(QVariant footprintId);
+    void setFilterByFootprintEnabled(bool b);
+    void setFilter(SuportedFilters filter, const QVariant & value);
 
 private:
     QString _textFilter;
@@ -119,7 +122,9 @@ private:
     DateFilterMode _dateFilterMode;
     QDateTime _selectedDateUtc;
     bool _filterByCondition;
+    bool _filterByFootprint;
     QVariant _selectedConditionId;
+    QVariant _selectedFootprintId;
 };
 
 

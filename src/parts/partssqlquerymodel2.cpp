@@ -228,9 +228,51 @@ void FilterBuilder::setFilterByConditionEnabled(bool value)
     _filterByCondition = value;
 }
 
+void FilterBuilder::setFilterByFootprintEnabled(bool b)
+{
+    _filterByFootprint = b;
+}
+
 void FilterBuilder::setSelectedCondition(QVariant conditionId)
 {
     _selectedConditionId = conditionId;
+}
+
+void FilterBuilder::setSelectedFootprint(QVariant footprintId)
+{
+    _selectedFootprintId = footprintId;
+}
+
+void FilterBuilder::setFilter(SuportedFilters filter, const QVariant & value)
+{
+    bool valid;
+    switch(filter){
+    case FilterByStock:
+    {
+        int v = value.toInt(&valid);
+        StockFilterMode mode = valid ? (StockFilterMode)v : AnyStockLevel;
+        setStockFilterMode(mode);
+    }
+        break;
+    case FilterByCondition:
+        if(value.isValid()){
+            setSelectedCondition(value);
+        }
+        setFilterByConditionEnabled(value.isValid());
+        break;
+    case FilterByText:
+        setTextFilter(value.toString());
+        break;
+    case FilterByFootprint:
+        if(value.isValid()){
+            setSelectedFootprint(value);
+        }
+        setFilterByFootprintEnabled(value.isValid());
+        break;
+    case FilterByDistributor:
+        break;
+    }
+
 }
 
 
@@ -342,6 +384,12 @@ QString FilterBuilder::build() const {
 
     if(_filterByCondition && _selectedConditionId.isValid()){
         criterium.append(QString("part.condition = %1").arg(_selectedConditionId.toInt()));
+    }
+
+    //Part footprint section
+
+    if(_filterByFootprint && _selectedFootprintId.isValid()){
+        criterium.append(QString("part.footprint = %1").arg(_selectedFootprintId.toInt()));
     }
 
 

@@ -20,6 +20,7 @@ class PartsFilterWidget;
 class QActionPushButton;
 class QPushButton;
 class QToolButton;
+class FilterBuilder;
 
 class PartsManagerView : public Manhattan::MiniSplitter
 {
@@ -46,6 +47,7 @@ private:
     PartsTableView * _partsTableView;
     PartDetailsView * _partDetailsView;
     PartsSqlQueryModel2 * _partsModel;
+    FilterBuilder * _filterBuilder;
     CategoryTreeModel * _categoriesTreeModel;
     StorageTreeModel * _storageTreeModel;
     PartsFilterWidget * _partsFilterWidget;

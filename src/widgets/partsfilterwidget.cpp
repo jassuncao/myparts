@@ -78,6 +78,11 @@ PartsFilterWidget::~PartsFilterWidget()
 {
 }
 
+void PartsFilterWidget::setFilterBuilder(FilterBuilder * filterBuilder)
+{
+    _filterBuilder = filterBuilder;
+}
+
 QMenu * PartsFilterWidget::createFilterMoreMenu()
 {
     QMenu * menu = new QMenu(this);
@@ -242,11 +247,13 @@ void PartsFilterWidget::slotRemoveFilterItem(const int filterTag)
 void PartsFilterWidget::slotFilterItemValueChange(const int filterTag, const QVariant & value)
 {
     qDebug()<<"Filter criterion for "<<filterTag<<" is "<<value;
+    if(_filterBuilder)
+        _filterBuilder->setFilter((FilterBuilder::SuportedFilters)filterTag, value);
 }
 
 void PartsFilterWidget::slotDeleteFilterItem(const int filterTag)
 {    
-    QList<QAction*> actions = _moreMenu->actions();
+    QList<QAction*> actions = _moreButton->menu()->actions();
     QAction* action;
     foreach (action, actions) {
         QFilterItemAction * filterItemAction = dynamic_cast<QFilterItemAction*>(action);

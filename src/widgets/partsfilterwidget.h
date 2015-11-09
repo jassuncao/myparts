@@ -12,6 +12,7 @@ class FilterItemWidget;
 class QSearchLineEdit;
 class QPushButton;
 class QMenu;
+class FilterBuilder;
 
 class QFilterItemAction : public QAction {
     Q_OBJECT
@@ -33,13 +34,12 @@ class PartsFilterWidget : public QWidget
 public:
     explicit PartsFilterWidget(QWidget *parent = 0);
     ~PartsFilterWidget();
-
+    void setFilterBuilder(FilterBuilder * filterBuilder);
 signals:
 
 public slots:
-private slots:    
+private slots:
     void slotDeleteFilterItem(const int filterTag);
-    //void slotFilterItemToggled(bool checked);
     void slotFilterItemValueChange(const int filterTag, const QVariant & value);
     void slotRemoveFilterItem(const int filterTag);
     void slotAddFilterItem(const int filterTag);
@@ -59,8 +59,8 @@ private:
     FlowLayout * _dynamicItemsLayout;   
     QSearchLineEdit * _textFilterItem;
     QPushButton * _moreButton;
-    QMenu * _moreMenu;
     QHash<int, FilterItemWidget*> _activeFilterItems;
+    FilterBuilder * _filterBuilder;
 };
 
 #endif // PARTSFILTERWIDGET_H

@@ -21,7 +21,9 @@
 #include <QMenu>
 #include <QToolButton>
 
-PartsManagerView::PartsManagerView(QWidget *parent) : MiniSplitter(parent)
+PartsManagerView::PartsManagerView(QWidget *parent)
+    : MiniSplitter(parent),
+      _filterBuilder(new FilterBuilder())
 {
 
     _partsModel = new PartsSqlQueryModel2(this);
@@ -78,6 +80,7 @@ PartsManagerView::PartsManagerView(QWidget *parent) : MiniSplitter(parent)
     hLine->setFrameShadow(QFrame::Sunken);
 
     _partsFilterWidget = new PartsFilterWidget(this);
+    _partsFilterWidget->setFilterBuilder(_filterBuilder);
 
     _partsTableView = createPartsTableView(_partsModel);
     QVBoxLayout * centerLayout = new QVBoxLayout;

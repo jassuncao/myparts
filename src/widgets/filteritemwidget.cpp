@@ -55,15 +55,15 @@ MyQComboBox::MyQComboBox(QWidget *parent)
 const QRect MyQComboBox::popupGeometry(int screen) const
 {
 #ifdef Q_WS_WIN
-return QApplication::desktop()->screenGeometry(screen);
+    return QApplication::desktop()->screenGeometry(screen);
 #elif defined Q_WS_X11
-if (X11->desktopEnvironment == DE_KDE)
-return QApplication::desktop()->screenGeometry(screen);
-else
-    return QApplication::desktop()->availableGeometry(screen);
+    if (X11->desktopEnvironment == DE_KDE)
+        return QApplication::desktop()->screenGeometry(screen);
+    else
+        return QApplication::desktop()->availableGeometry(screen);
 #else
     return QApplication::desktop()->availableGeometry(screen);
-    #endif
+#endif
 }
 
 void MyQComboBox::showPopup()
@@ -134,9 +134,7 @@ FilterItemWidget::FilterItemWidget(const QString & labelText, const int filterTa
     layout->setSpacing(0);
     layout->addWidget(label);
     layout->addSpacing(2);
-    layout->addWidget(_comboBox);
-    MyQComboBox * my = new MyQComboBox(this);
-    layout->addWidget(my);
+    layout->addWidget(_comboBox);    
     if(_deleteBtn)
         layout->addWidget(_deleteBtn);
     setLayout(layout);
