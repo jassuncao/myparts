@@ -27,20 +27,6 @@ PartsSqlQueryModel2::PartsSqlQueryModel2(QObject *parent) :
     setColumnName(PartsSqlQueryModel2::ColumnStorage,tr("Storage Location"));
     setColumnName(PartsSqlQueryModel2::ColumnCondition,tr("Condition"));
     setColumnName(PartsSqlQueryModel2::ColumnFootprintName,tr("Footprint"));
-    /*
-    setHeaderData(PartsSqlQueryModel2::ColumnName, Qt::Horizontal, tr("Name"));
-    setHeaderData(PartsSqlQueryModel2::ColumnDescription, Qt::Horizontal, tr("Description"));
-    setHeaderData(PartsSqlQueryModel2::ColumnActualStock, Qt::Horizontal, tr("Stock"));
-    setHeaderData(PartsSqlQueryModel2::ColumnMinStock, Qt::Horizontal, tr("Min. Stock"));
-    setHeaderData(PartsSqlQueryModel2::ColumnAvgPrice, Qt::Horizontal, tr("Avg. Price"));
-    setHeaderData(PartsSqlQueryModel2::ColumnCustomPartNumber, Qt::Horizontal, tr("Custom Part#"));
-    setHeaderData(PartsSqlQueryModel2::ColumnComment, Qt::Horizontal, tr("Comment"));
-    setHeaderData(PartsSqlQueryModel2::ColumnCreateDate, Qt::Horizontal, tr("Create Date"));
-    setHeaderData(PartsSqlQueryModel2::ColumnCategoryName, Qt::Horizontal, tr("Category"));
-    setHeaderData(PartsSqlQueryModel2::ColumnStorage, Qt::Horizontal, tr("Storage Location"));
-    setHeaderData(PartsSqlQueryModel2::ColumnCondition, Qt::Horizontal, tr("Condition"));
-    setHeaderData(PartsSqlQueryModel2::ColumnFootprintName, Qt::Horizontal, tr("Footprint"));
-    */
 }
 
 void PartsSqlQueryModel2::setColumnName(int section, const QString & columnName)
@@ -59,7 +45,8 @@ QString PartsSqlQueryModel2::selectStatement() const
                   "LEFT JOIN part_unit u ON part.partUnit=u.id "
                   "LEFT JOIN part_storage s ON part.storage=s.id "
                   "LEFT JOIN part_condition cond ON part.condition=cond.id "
-                  "LEFT JOIN part_footprint footprint ON part.footprint=footprint.id ");
+                  "LEFT JOIN part_footprint footprint ON part.footprint=footprint.id "
+                  "INNER JOIN part_distributor d ON part.id=d.part ");
 
     if(!filter().isEmpty()){
         query.append(QLatin1String(" WHERE ")).append(filter());
@@ -243,6 +230,11 @@ void FilterBuilder::setSelectedFootprint(QVariant footprintId)
     _selectedFootprintId = footprintId;
 }
 
+void FilterBuilder::setSelectedDistributor(QVariant distributorId)
+{
+    _selectedDistributorId = distributorId;
+}
+
 void FilterBuilder::setFilter(SuportedFilters filter, const QVariant & value)
 {
     bool valid;
@@ -270,7 +262,8 @@ void FilterBuilder::setFilter(SuportedFilters filter, const QVariant & value)
         setFilterByFootprintEnabled(value.isValid());
         break;
     case FilterByDistributor:
-        break;
+        setSelectedDistributor(value);
+        break;        
     }
 
 }
@@ -392,6 +385,10 @@ QString FilterBuilder::build() const {
         criterium.append(QString("part.footprint = %1").arg(_selectedFootprintId.toInt()));
     }
 
+    //Distributor section
+    if(_selectedDistributorId.isValid()) {
+         //criterium.append(" "
+    }
 
     //Join all filter sections
     QString whereClause;

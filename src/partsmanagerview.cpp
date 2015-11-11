@@ -10,6 +10,7 @@
 #include "models/storagetreemodel.h"
 #include "widgets/partsfilterwidget.h"
 #include "widgets/qactionpushbutton.h"
+#include "models/partssqltablemodel.h"
 
 #include <QHBoxLayout>
 #include <QPushButton>
@@ -22,11 +23,12 @@
 #include <QToolButton>
 
 PartsManagerView::PartsManagerView(QWidget *parent)
-    : MiniSplitter(parent),
-      _filterBuilder(new FilterBuilder())
+    : MiniSplitter(parent)
+      //,_filterBuilder(new FilterBuilder())
 {
 
-    _partsModel = new PartsSqlQueryModel2(this);
+    //_partsModel = new PartsSqlQueryModel2(this);
+    _partsModel = new PartsSqlTableModel(this);
     _partsModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
     connect(_partsModel,SIGNAL(primeInsert(int,QSqlRecord&)), this, SLOT(slotPartsModelPrimeInsert(int,QSqlRecord&)));
 
@@ -80,7 +82,8 @@ PartsManagerView::PartsManagerView(QWidget *parent)
     hLine->setFrameShadow(QFrame::Sunken);
 
     _partsFilterWidget = new PartsFilterWidget(this);
-    _partsFilterWidget->setFilterBuilder(_filterBuilder);
+    _partsFilterWidget->setPartsModel(_partsModel);
+    //_partsFilterWidget->setFilterBuilder(_filterBuilder);
 
     _partsTableView = createPartsTableView(_partsModel);
     QVBoxLayout * centerLayout = new QVBoxLayout;
@@ -113,10 +116,12 @@ PartsManagerView::PartsManagerView(QWidget *parent)
     connect(addPartButton, SIGNAL(clicked()), this, SLOT(slotAddPart()));
     connect(_deletePartButton, SIGNAL(clicked()), this, SLOT(slotDeletePart()));
     connect(_duplicatePartButton, SIGNAL(clicked()), this, SLOT(slotDuplicatePart()));
+    connect(_partsFilterWidget, SIGNAL(filterChanged()), this, SLOT(slotFilterChanged()));
 }
 
 PartsManagerView::~PartsManagerView()
 {
+    //delete _filterBuilder;
 }
 
 PartsTableView *PartsManagerView::createPartsTableView(QAbstractTableModel * tableModel){
@@ -140,6 +145,17 @@ void PartsManagerView::slotNavModeChanged(int mode)
         //_navWidget->setModel(_categoriesTreeModel);
         break;
     }
+}
+
+void PartsManagerView::slotFilterChanged()
+{
+
+    _partsModel->select();
+    //_partsModel->setFilter(_filterBuilder->build());
+    /*
+    if(!_partsModel->query().isActive())
+        _partsModel->select();
+        */
 }
 
 void PartsManagerView::slotPartTableCurrentRowChanged(const QModelIndex &current, const QModelIndex &)

@@ -110,6 +110,7 @@ public:
     void setSelectedCondition(QVariant conditionId);
     void setSelectedFootprint(QVariant footprintId);
     void setFilterByFootprintEnabled(bool b);
+    void setSelectedDistributor(QVariant distributorId);
     void setFilter(SuportedFilters filter, const QVariant & value);
 
 private:
@@ -125,6 +126,7 @@ private:
     bool _filterByFootprint;
     QVariant _selectedConditionId;
     QVariant _selectedFootprintId;
+    QVariant _selectedDistributorId;
 };
 
 

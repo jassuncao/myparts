@@ -101,9 +101,7 @@ FilterItemWidget::FilterItemWidget(const QString & labelText, const int filterTa
 {    
     QLabel * label = new QLabel(labelText);
     _comboBox = new QComboBox;    
-    _comboBox->addItem("All");
-    _comboBox->addItem("Item 1");
-    _comboBox->addItem("Item 2");
+    _comboBox->setMaxVisibleItems(20);
     label->setBuddy(_comboBox);
     _comboBox->installEventFilter(this);
 

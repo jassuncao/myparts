@@ -13,6 +13,7 @@ class QSearchLineEdit;
 class QPushButton;
 class QMenu;
 class FilterBuilder;
+class PartsSqlTableModel;
 
 class QFilterItemAction : public QAction {
     Q_OBJECT
@@ -34,9 +35,10 @@ class PartsFilterWidget : public QWidget
 public:
     explicit PartsFilterWidget(QWidget *parent = 0);
     ~PartsFilterWidget();
-    void setFilterBuilder(FilterBuilder * filterBuilder);
+    //void setFilterBuilder(FilterBuilder * filterBuilder);
+    void setPartsModel(PartsSqlTableModel* tableModel);
 signals:
-
+    void filterChanged();
 public slots:
 private slots:
     void slotDeleteFilterItem(const int filterTag);
@@ -60,7 +62,8 @@ private:
     QSearchLineEdit * _textFilterItem;
     QPushButton * _moreButton;
     QHash<int, FilterItemWidget*> _activeFilterItems;
-    FilterBuilder * _filterBuilder;
+    //FilterBuilder * _filterBuilder;
+    PartsSqlTableModel * _tableModel;
 };
 
 #endif // PARTSFILTERWIDGET_H

@@ -21,6 +21,7 @@ class QActionPushButton;
 class QPushButton;
 class QToolButton;
 class FilterBuilder;
+class PartsSqlTableModel;
 
 class PartsManagerView : public Manhattan::MiniSplitter
 {
@@ -41,13 +42,15 @@ protected slots:
     void slotDuplicatePart();
     void slotPartsModelPrimeInsert(int, QSqlRecord &record);
     void slotNavModeChanged(int mode);
+    void slotFilterChanged();
 private:
     PartsTableView * createPartsTableView(QAbstractTableModel * tableModel);
     NavigationSubWidget * _navWidget;
     PartsTableView * _partsTableView;
     PartDetailsView * _partDetailsView;
-    PartsSqlQueryModel2 * _partsModel;
-    FilterBuilder * _filterBuilder;
+    PartsSqlTableModel * _partsModel;
+    //PartsSqlQueryModel2 * _partsModel;
+    //FilterBuilder * _filterBuilder;
     CategoryTreeModel * _categoriesTreeModel;
     StorageTreeModel * _storageTreeModel;
     PartsFilterWidget * _partsFilterWidget;

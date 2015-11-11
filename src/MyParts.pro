@@ -104,7 +104,8 @@ SOURCES += main.cpp\
     widgets/filteritemwidget.cpp \
     widgets/partsfilterwidget.cpp \
     widgets/qactionpushbutton.cpp \
-    models/extrarowproxymodel.cpp
+    models/extrarowproxymodel.cpp \
+    models/partssqltablemodel.cpp
 
 HEADERS  += mainwindow.h \
     entities/entities.h \
@@ -192,7 +193,8 @@ HEADERS  += mainwindow.h \
     widgets/filteritemwidget.h \
     widgets/partsfilterwidget.h \
     widgets/qactionpushbutton.h \
-    models/extrarowproxymodel.h
+    models/extrarowproxymodel.h \
+    models/partssqltablemodel.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \
