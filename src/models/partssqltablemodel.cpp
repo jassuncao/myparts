@@ -33,6 +33,7 @@ PartsSqlTableModel::PartsSqlTableModel(QObject *parent) :
     _dateFilterMode(DateFilterNone)
 {
     setTable("part");
+    qDebug()<<"Column Count "<<columnCount();
     setColumnName(ColumnName,tr("Name"));
     setColumnName(ColumnDescription,tr("Description"));
     setColumnName(ColumnActualStock,tr("Stock"));
@@ -51,6 +52,11 @@ void PartsSqlTableModel::setColumnName(int section, const QString & columnName)
 {
     setHeaderData(section, Qt::Horizontal, columnName, Qt::EditRole);
     setHeaderData(section, Qt::Horizontal, true, VISIBILITY_COLUMN_ROLE);
+}
+
+int PartsSqlTableModel::columnCount(const QModelIndex &index) const
+{
+    return index.isValid() ? 0 : LAST_COLUMN;
 }
 
 QString PartsSqlTableModel::selectStatement() const
@@ -190,7 +196,7 @@ QString PartsSqlTableModel::selectStatement() const
     if (!orderBy.isEmpty())
         clauses.append(orderBy);
 
-    const QString statement = clauses.join(' ');
+    const QString statement = clauses.join(QLatin1String(" "));
 
     qDebug()<<"Select statement is "<<statement;
     return statement;

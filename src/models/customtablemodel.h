@@ -238,5 +238,22 @@ protected:
     explicit PartParametersTableModel3(const QStringList & fieldNames, const QStringList & columnNames, QObject *parent = 0);
 };
 
+class PartStockTableModel : public SimpleSqlTableModel
+{
+    Q_OBJECT
+public:
+    enum ColumnsIndex {
+        ColumnDateTime,
+        ColumnChange,
+        ColumnPrice,
+        ColumnComment
+    };
+
+    inline void setCurrentPartId(const QVariant & partId) { setCurrentForeignKey(partId); }
+    static PartStockTableModel * createNew(QObject *parent);
+protected:
+    explicit PartStockTableModel(const QStringList & fieldNames, const QStringList & columnNames, QObject *parent = 0);
+};
+
 
 #endif // CUSTOMTABLEMODEL_H

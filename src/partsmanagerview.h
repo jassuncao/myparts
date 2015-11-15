@@ -34,8 +34,7 @@ signals:
 
 public slots:
 protected slots:
-    void slotPartTableCurrentRowChanged(const QModelIndex &current, const QModelIndex &);
-    void slotPartTableHeaderContextMenu(QPoint point);
+    void slotPartTableCurrentRowChanged(const QModelIndex &current, const QModelIndex &);    
     void slotAddPart();
     void slotEditPart();
     void slotDeletePart();
@@ -43,14 +42,14 @@ protected slots:
     void slotPartsModelPrimeInsert(int, QSqlRecord &record);
     void slotNavModeChanged(int mode);
     void slotFilterChanged();
+    void slotAddStock();
+    void slotRemoveStock();
 private:
     PartsTableView * createPartsTableView(QAbstractTableModel * tableModel);
     NavigationSubWidget * _navWidget;
     PartsTableView * _partsTableView;
     PartDetailsView * _partDetailsView;
-    PartsSqlTableModel * _partsModel;
-    //PartsSqlQueryModel2 * _partsModel;
-    //FilterBuilder * _filterBuilder;
+    PartsSqlTableModel * _partsModel;  
     CategoryTreeModel * _categoriesTreeModel;
     StorageTreeModel * _storageTreeModel;
     PartsFilterWidget * _partsFilterWidget;

@@ -5,7 +5,7 @@
 #include <QTableView>
 #include "partstableview.h"
 #include "qsortfiltersqlquerymodel.h"
-#include "parts/partssqlquerymodel2.h"
+#include "models/partssqltablemodel.h"
 #include "datetimedelegate.h"
 #include "currencydelegate.h"
 
@@ -15,8 +15,9 @@ PartsTableView::PartsTableView(QWidget *parent) :
     setFrameStyle(QFrame::StyledPanel);
     setSelectionBehavior(QAbstractItemView::SelectRows);
     setSelectionMode(QAbstractItemView::ExtendedSelection);
+    setEditTriggers(QTableView::NoEditTriggers);
     verticalHeader()->setVisible(false);
-    //horizontalHeader()->setStretchLastSection(true);
+    //horizontalHeader()->setStretchLastSection(true);     
     horizontalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(horizontalHeader(), SIGNAL(customContextMenuRequested(QPoint)),
             this, SLOT(slotHeaderContextMenu(QPoint)));
@@ -25,17 +26,17 @@ PartsTableView::PartsTableView(QWidget *parent) :
 void PartsTableView::setModel(QAbstractItemModel * model)
 {
     QTableView::setModel(model);
-    sortByColumn(PartsSqlQueryModel2::ColumnName,Qt::AscendingOrder);
+    sortByColumn(PartsSqlTableModel::ColumnName,Qt::AscendingOrder);
     setDragEnabled(true);
     setDragDropMode(QAbstractItemView::DragOnly);
     setDefaultDropAction(Qt::LinkAction);
     setSortingEnabled(true);
-    setItemDelegateForColumn(PartsSqlQueryModel2::ColumnCreateDate, new DateDelegate(this));
-    setItemDelegateForColumn(PartsSqlQueryModel2::ColumnAvgPrice, new CurrencyDelegate(this));
+    setItemDelegateForColumn(PartsSqlTableModel::ColumnCreateDate, new DateDelegate(this));
+    setItemDelegateForColumn(PartsSqlTableModel::ColumnAvgPrice, new CurrencyDelegate(this));
 
     int colCount = model->columnCount();
     for(int section = 0; section<colCount; ++section){
-        QVariant aux = model->headerData(section, Qt::Horizontal, PartsSqlQueryModel2::VISIBILITY_COLUMN_ROLE);
+        QVariant aux = model->headerData(section, Qt::Horizontal, PartsSqlTableModel::VISIBILITY_COLUMN_ROLE);
         if(aux.toBool()==false){
             setColumnHidden(section, true);
         }
@@ -47,13 +48,12 @@ void PartsTableView::setupHeaderContextMenu(){
     if(_tableHeaderContextMenu)
         delete _tableHeaderContextMenu;
     _tableHeaderContextMenu = new QMenu(this);
-    //QMenu * colsMenu = _tableHeaderContextMenu->addMenu(QIcon(":/icons/table_select_column"),"Columns");
     _tableHeaderContextMenu->addSeparator();
     QMenu * colsMenu = _tableHeaderContextMenu;
     QAbstractItemModel * tModel = model();
     int colCount = tModel->columnCount();
     for(int section = 0; section<colCount; ++section){
-        QVariant aux = tModel->headerData(section, Qt::Horizontal, PartsSqlQueryModel2::VISIBILITY_COLUMN_ROLE);
+        QVariant aux = tModel->headerData(section, Qt::Horizontal, PartsSqlTableModel::VISIBILITY_COLUMN_ROLE);
         if(aux.isValid() || aux.toBool()){
             QString columnName = tModel->headerData(section,Qt::Horizontal).toString();
             QAction * action = colsMenu->addAction(columnName);

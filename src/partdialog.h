@@ -14,7 +14,7 @@ class QSqlQueryModel;
 class QModelIndex;
 class QDataWidgetMapper;
 class TreeItemModel;
-class PartsSqlQueryModel2;
+class PartsSqlTableModel;
 class QCheckBox;
 class QAbstractButton;
 class PartParameterTableModel;
@@ -32,7 +32,7 @@ class PartDialog : public QDialog
     Q_OBJECT
     
 public:
-    explicit PartDialog(PartsSqlQueryModel2 *model, TreeItemModel* storageModel,/* bool addMode,*/ QWidget *parent = 0);
+    explicit PartDialog(PartsSqlTableModel *model, TreeItemModel* storageModel,/* bool addMode,*/ QWidget *parent = 0);
     ~PartDialog();    
     int initialStock() const;
     double partPrice() const;
@@ -73,13 +73,10 @@ private:
 
     QCheckBox * _nextActionCheckbox;
     Ui::PartDialog *ui;
-    PartsSqlQueryModel2 * _partsModel;
-    //PartParameterTableModel2 * _partParamsModel;
+    PartsSqlTableModel * _partsModel;
     PartParametersTableModel3 * _partParamsModel;
-    //PartParameterTableModel * _partParamsModel;
     PartDistributorTableModel2 * _partDistributorModel;
     PartManufacturerTableModel2 * _partManufacturerModel;
-    //PartManufacturerTableModel * _partManufacturerModel;
     AttachmentTableModel3 * _partAttachmentModel;
     TreeItemModel * _storageModel;
     QSqlQueryModel * _partConditionModel;

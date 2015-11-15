@@ -31,6 +31,7 @@
 #include "widgets/flowlayout.h"
 #include "widgets/qdualpushbutton.h"
 #include "widgets/filteritemwidget.h"
+
 PartManagerForm::PartManagerForm(QWidget *parent) :
     QWidget(parent),    
     ui(new Ui::PartManagerForm)
@@ -455,17 +456,19 @@ void PartManagerForm::slotRemoveStock()
 
 void PartManagerForm::slotAddPart()
 {
-    PartDialog dlg(_partsModel, _storageTreeModel, this);
-    dlg.addNewPart();
+    //PartDialog dlg(_partsModel, _storageTreeModel, this);
+    //dlg.addNewPart();
 }
 
 void PartManagerForm::slotEditPart()
 {
+    /*
     QModelIndex index = ui->partsTableView->currentIndex();
     if(!index.isValid())
         return;
     PartDialog dlg(_partsModel, _storageTreeModel, this);
     dlg.editPart(index);
+    */
 }
 
 void PartManagerForm::slotDeletePart()
@@ -487,8 +490,10 @@ void PartManagerForm::slotDuplicatePart()
     QModelIndex index = ui->partsTableView->currentIndex();
     if(!index.isValid())
         return;
+    /*
     PartDialog dlg(_partsModel, _storageTreeModel, this);
     dlg.duplicatePart(index);
+    */
 }
 
 void PartManagerForm::on_pushButton_2_clicked()

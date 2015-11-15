@@ -540,4 +540,18 @@ PartParametersTableModel3 * PartParametersTableModel3::createNew(QObject * paren
 }
 
 
+PartStockTableModel::PartStockTableModel(const QStringList &fieldNames, const QStringList &columnNames, QObject *parent)
+    : SimpleSqlTableModel("stock_change", fieldNames, columnNames, "part", parent)
+{
+}
+
+PartStockTableModel * PartStockTableModel::createNew(QObject * parent)
+{
+    QStringList fieldNames;
+    QStringList columnNames;
+    fieldNames<<"dateTime"<<"change"<<"price"<<"comment";
+    columnNames<<tr("Date")<<tr("Amount")<<tr("Price")<<tr("Comment");
+    return new PartStockTableModel(fieldNames, columnNames, parent);
+}
+
 

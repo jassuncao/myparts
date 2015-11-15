@@ -102,8 +102,9 @@ FilterItemWidget::FilterItemWidget(const QString & labelText, const int filterTa
     QLabel * label = new QLabel(labelText);
     _comboBox = new QComboBox;    
     _comboBox->setMaxVisibleItems(20);
-    label->setBuddy(_comboBox);
+    _comboBox->setStyleSheet("combobox-popup: 0;");
     _comboBox->installEventFilter(this);
+    label->setBuddy(_comboBox);
 
     if(removableItem){
         _deleteBtn = new QToolButton;

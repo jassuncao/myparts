@@ -1,10 +1,37 @@
 #include "partdetailsview.h"
 #include "ui_partdetailsview.h"
-#include "parts/partssqlquerymodel2.h"
-#include <QDebug>
+#include "models/partssqltablemodel.h"
 #include "parts/stockhistorymodel.h"
-#include "widgets/stockactioncolumndelegate.h"
+#include "widgets/currencydelegate.h"
+#include "widgets/datetimedelegate.h"
+#include "models/customtablemodel.h"
+#include <QDebug>
 #include <QPushButton>
+
+class StockChangeDelegate : public QStyledItemDelegate {
+public:
+    explicit StockChangeDelegate(QObject *parent);
+    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+};
+
+
+StockChangeDelegate::StockChangeDelegate(QObject *parent) :
+    QStyledItemDelegate(parent)
+{
+}
+
+void StockChangeDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+    QStyleOptionViewItem optionCopy(option);
+    int change = index.data().toInt();
+    if(change<0){
+        optionCopy.palette.setColor(QPalette::Text, QColor(Qt::red));
+    }
+    else if(change>0) {
+        optionCopy.palette.setColor(QPalette::Text, QColor(Qt::darkGreen));
+    }
+   QStyledItemDelegate::paint(painter, optionCopy, index);
+}
 
 PartDetailsView::PartDetailsView(QWidget *parent) :
     QWidget(parent),
@@ -12,15 +39,26 @@ PartDetailsView::PartDetailsView(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    _partStockModel = PartStockTableModel::createNew(this);
+    ui->partStockHistoryTable->setItemDelegateForColumn(PartStockTableModel::ColumnDateTime, new DateDelegate(this));
+    ui->partStockHistoryTable->setItemDelegateForColumn(PartStockTableModel::ColumnPrice, new CurrencyDelegate(this));
+    ui->partStockHistoryTable->setItemDelegateForColumn(PartStockTableModel::ColumnChange, new StockChangeDelegate(this));
+    ui->partStockHistoryTable->setModel(_partStockModel);
+    ui->partStockHistoryTable->resizeColumnsToContents();
+
     QPushButton * addStockButton = new QPushButton(QIcon(QString::fromUtf8(":/icons/addStock")), tr("Add Stock"),ui->partActionsButtonBox);
     QPushButton * removeStockButton = new QPushButton(QIcon(QString::fromUtf8(":/icons/removeStock")), tr("Remove Stock"),ui->partActionsButtonBox);
-    QPushButton * editPartButton = new QPushButton(QIcon(QString::fromUtf8(":/icons/editPart")), tr("Edit Part"),ui->partActionsButtonBox);
-    ui->partActionsButtonBox->addButton(addStockButton, QDialogButtonBox::ActionRole);
-    ui->partActionsButtonBox->addButton(removeStockButton, QDialogButtonBox::ActionRole);
+    QPushButton * editPartButton = new QPushButton(QIcon(QString::fromUtf8(":/icons/editPart")), tr("Edit Part"),ui->partActionsButtonBox);   
+
     ui->partActionsButtonBox->addButton(editPartButton, QDialogButtonBox::ActionRole);
-    connect(addStockButton, SIGNAL(clicked()), this, SLOT(onAddStock()));
-    connect(removeStockButton, SIGNAL(clicked()), this, SLOT(onRemoveStock()));
-    connect(editPartButton, SIGNAL(clicked()), this, SLOT(onEditPart()));
+    ui->stockActionsButtonBox->addButton(addStockButton, QDialogButtonBox::ActionRole);
+    ui->stockActionsButtonBox->addButton(removeStockButton, QDialogButtonBox::DestructiveRole);
+    connect(addStockButton, SIGNAL(clicked()), this, SIGNAL(addStockSelected()));
+    connect(removeStockButton, SIGNAL(clicked()), this, SIGNAL(removeStockSelected()));
+    connect(editPartButton, SIGNAL(clicked()), this, SIGNAL(editPartSelected()));
+    //connect(addStockButton, SIGNAL(clicked()), this, SLOT(onAddStock()));
+    //connect(removeStockButton, SIGNAL(clicked()), this, SLOT(onRemoveStock()));
+    //connect(editPartButton, SIGNAL(clicked()), this, SLOT(onEditPart()));
 }
 
 PartDetailsView::~PartDetailsView()
@@ -43,56 +81,45 @@ void PartDetailsView::onEditPart()
     emit editPartSelected();
 }
 
+void PartDetailsView::setPartsModel(QAbstractItemModel * model)
+{
+    _partsModel = model;
+    setCurrentIndex(QModelIndex());
+}
+
 void PartDetailsView::setCurrentIndex(const QModelIndex &current)
 {
     if(_partsModel==0) return;
     ui->partActionsButtonBox->setEnabled(current.isValid());
+    ui->stockActionsButtonBox->setEnabled(current.isValid());
+    ui->partStockHistoryTable->setEnabled(current.isValid());
     updatePartDetailView(current);
     updateStockView(current);
 }
 
 void PartDetailsView::updatePartDetailView(const QModelIndex & current)
 {
-    ui->partNameLabel->setText(columnDisplayData(_partsModel, current, PartsSqlQueryModel2::ColumnName));
-    ui->partDescriptionLabel->setText(columnDisplayData(_partsModel, current, PartsSqlQueryModel2::ColumnDescription));
-    ui->partCategoryLabel->setText(columnDisplayData(_partsModel, current, PartsSqlQueryModel2::ColumnCategoryName));
-    ui->partStockLevelLabel->setText(columnDisplayData(_partsModel, current, PartsSqlQueryModel2::ColumnActualStock));
-    ui->partMinStockLabel->setText(columnDisplayData(_partsModel, current, PartsSqlQueryModel2::ColumnMinStock));
-    ui->partCustomNumberLabel->setText(columnDisplayData(_partsModel, current, PartsSqlQueryModel2::ColumnCustomPartNumber));
-    ui->partCommentLabel->setText(columnDisplayData(_partsModel, current, PartsSqlQueryModel2::ColumnComment));
-    ui->partCreateDateLabel->setText(columnDisplayDate(_partsModel, current, PartsSqlQueryModel2::ColumnCreateDate));
-    ui->partStorageLocationLabel->setText(columnDisplayData(_partsModel, current, PartsSqlQueryModel2::ColumnStorage));
-    ui->partConditionLabel->setText(columnDisplayData(_partsModel, current, PartsSqlQueryModel2::ColumnCondition));
-    ui->partStockLevelUnitLabel->setText(columnDisplayData(_partsModel, current, PartsSqlQueryModel2::ColumnPartUnit));
-    ui->partMinStockUnitLabel->setText(columnDisplayData(_partsModel, current, PartsSqlQueryModel2::ColumnPartUnit));
+
+    ui->partNameLabel->setText(columnDisplayData(_partsModel, current, PartsSqlTableModel::ColumnName));
+    ui->partDescriptionLabel->setText(columnDisplayData(_partsModel, current, PartsSqlTableModel::ColumnDescription));
+    ui->partCategoryLabel->setText(columnDisplayData(_partsModel, current, PartsSqlTableModel::ColumnCategoryName));
+    ui->partStockLevelLabel->setText(columnDisplayData(_partsModel, current, PartsSqlTableModel::ColumnActualStock, PartsSqlTableModel::ColumnPartUnit));
+    ui->partMinStockLabel->setText(columnDisplayData(_partsModel, current, PartsSqlTableModel::ColumnMinStock, PartsSqlTableModel::ColumnPartUnit));
+    ui->partCustomNumberLabel->setText(columnDisplayData(_partsModel, current, PartsSqlTableModel::ColumnCustomPartNumber));
+    ui->partCommentLabel->setText(columnDisplayData(_partsModel, current, PartsSqlTableModel::ColumnComment));
+    ui->partCreateDateLabel->setText(columnDisplayDate(_partsModel, current, PartsSqlTableModel::ColumnCreateDate));
+    ui->partStorageLocationLabel->setText(columnDisplayData(_partsModel, current, PartsSqlTableModel::ColumnStorage));
+    ui->partConditionLabel->setText(columnDisplayData(_partsModel, current, PartsSqlTableModel::ColumnCondition));
+    ui->partFootprintLabel->setText(columnDisplayData(_partsModel, current, PartsSqlTableModel::ColumnFootprintName));
 }
 
 void PartDetailsView::updateStockView(const QModelIndex & current)
-{
-    if(!current.isValid()){
-        ui->partStockHistoryTable->setModel(0);
-        return;
-    }
-
-    QModelIndex primaryKeyIndex = _partsModel->index(current.row(), PartsSqlQueryModel2::ColumnId);
+{   
+    QModelIndex primaryKeyIndex = _partsModel->index(current.row(), PartsSqlTableModel::ColumnId);
     QVariant keyValue = primaryKeyIndex.data(Qt::EditRole);
     qDebug()<<"Changing part to "<<keyValue;
-
-    StockHistoryModel * model= new StockHistoryModel();
-    model->setSelectedPart(keyValue);
-    model->setHeaderData(0, Qt::Horizontal, QString());
-    model->setHeaderData(1, Qt::Horizontal, tr("Date"));
-    model->setHeaderData(2, Qt::Horizontal, tr("Amount"));
-    model->setHeaderData(3, Qt::Horizontal, tr("Price"));
-    model->setHeaderData(4, Qt::Horizontal, tr("Comment"));
-    ui->partStockHistoryTable->setItemDelegateForColumn(StockHistoryModel::ColumnAction, new StockActionColumnDelegate());
-    ui->partStockHistoryTable->setModel(model);
-    ui->partStockHistoryTable->resizeColumnsToContents();
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
-    ui->partStockHistoryTable->horizontalHeader()->setSectionResizeMode(StockHistoryModel::ColumnAction, QHeaderView::Fixed);
-#else
-    ui->partStockHistoryTable->horizontalHeader()->setResizeMode(StockHistoryModel::ColumnAction, QHeaderView::Fixed);
-#endif
+    _partStockModel->setCurrentPartId(keyValue);
+    _partStockModel->select();
 }
 
 QString PartDetailsView::columnDisplayData(QAbstractItemModel * model, const QModelIndex & current, int column){
@@ -100,6 +127,19 @@ QString PartDetailsView::columnDisplayData(QAbstractItemModel * model, const QMo
         return QString();
     QModelIndex colIndex = model->index(current.row(), column);
     return colIndex.isValid()? colIndex.data().toString() : QString();
+}
+
+QString PartDetailsView::columnDisplayData(QAbstractItemModel * model, const QModelIndex & current, int column1, int column2){
+    if(!current.isValid())
+        return QString();
+    QModelIndex col1Index = model->index(current.row(), column1);
+    QModelIndex col2Index = model->index(current.row(), column2);
+    if(col1Index.isValid()){
+        QString data = col1Index.data().toString();
+        QString postfix = col2Index.isValid() ? col2Index.data().toString() : QString();
+        return QString("%1 %2").arg(data).arg(postfix);
+    }
+    return QString();
 }
 
 QString PartDetailsView::columnDisplayDate(QAbstractItemModel * model, const QModelIndex & current, int column){

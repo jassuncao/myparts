@@ -18,7 +18,6 @@ public:
 
     explicit StockHistoryModel(QObject *parent = 0);
     void setSelectedPart(const QVariant & partId);
-    QVariant data(const QModelIndex &item, int role) const;
     virtual void setSort (int column, Qt::SortOrder order);
     virtual void sort (int column, Qt::SortOrder order);
 signals:
@@ -28,9 +27,7 @@ public slots:
 private:
     int _sortKeyColumn;
     Qt::SortOrder _sortOrder;
-    QVariant _partId;   
-    QString _currencyFormat;
-    int _numberAlignment;
+    QVariant _partId;
 };
 
 #endif // STOCKHISTORYMODEL_H

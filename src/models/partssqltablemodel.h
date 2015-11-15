@@ -28,7 +28,8 @@ public:
         ColumnCategoryName,
         ColumnStorage,
         ColumnCondition,
-        ColumnFootprintName
+        ColumnFootprintName,
+        LAST_COLUMN
     };
 
     enum SuportedFilters {
@@ -70,6 +71,7 @@ public:
     static const int FAKE_COLUMNS_INDEX = ColumnPartUnit;
 
     explicit PartsSqlTableModel(QObject *parent = 0);
+    int columnCount(const QModelIndex &index = QModelIndex()) const;
     QString selectStatement() const;
     bool insertRowIntoTable(const QSqlRecord &values);
     bool updateRowInTable(int row, const QSqlRecord &values);
@@ -83,6 +85,10 @@ signals:
 
 private:
     void setColumnName(int section, const QString & columnName);
+    const QLatin1String _baseSelectClause;
+    const QLatin1String _distributorJoinClause;
+    const QLatin1String _manufacturerJoinClause;
+
     QVariant _lastInsertedId;
     QVariant _textFilter;
     CategoryFilterMode _categoryFilterMode;
@@ -95,10 +101,7 @@ private:
     QVariant _selectedConditionId;
     QVariant _selectedFootprintId;
     QVariant _selectedDistributorId;
-    QVariant _selectedManufacturerId;
-    const QLatin1String _baseSelectClause;
-    const QLatin1String _distributorJoinClause;
-    const QLatin1String _manufacturerJoinClause;
+    QVariant _selectedManufacturerId;    
     QString _cachedSelectStatement;
 
 };

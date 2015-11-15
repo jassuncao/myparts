@@ -8,6 +8,8 @@ namespace Ui {
 class PartDetailsView;
 }
 
+class PartStockTableModel;
+
 class PartDetailsView : public QWidget
 {
     Q_OBJECT
@@ -15,7 +17,7 @@ class PartDetailsView : public QWidget
 public:
     explicit PartDetailsView(QWidget *parent = 0);
     ~PartDetailsView();
-    inline void setPartsModel(QAbstractItemModel * model){_partsModel = model;}
+    void setPartsModel(QAbstractItemModel * model);
 signals:
     void addStockSelected();
     void removeStockSelected();
@@ -29,9 +31,11 @@ private slots:
 private:
     Ui::PartDetailsView *ui;
     QAbstractItemModel * _partsModel;
+    PartStockTableModel * _partStockModel;
     void updatePartDetailView(const QModelIndex & current);
     void updateStockView(const QModelIndex & current);
     QString columnDisplayData(QAbstractItemModel * model, const QModelIndex & current, int column);
+    QString columnDisplayData(QAbstractItemModel * model, const QModelIndex & current, int column1, int column2);
     QString columnDisplayDate(QAbstractItemModel * model, const QModelIndex & current, int column);
 };
 
