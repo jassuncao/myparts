@@ -233,6 +233,15 @@ bool PartsSqlTableModel::updateRowInTable(int row, const QSqlRecord &values)
     return res;
 }
 
+QVariant PartsSqlTableModel::data(const QModelIndex &idx, int role) const
+{
+    const QVariant & value = QSqlTableModel::data(idx, role);
+    if(idx.column()==ColumnCreateDate && value.isValid() && (role==Qt::EditRole || role==Qt::DisplayRole)){
+        return QDateTime::fromTime_t(value.toUInt());
+    }
+    return value;
+}
+
 Qt::ItemFlags PartsSqlTableModel::flags(const QModelIndex &index) const
 {
     Qt::ItemFlags flags = QSqlTableModel::flags(index);
@@ -296,5 +305,30 @@ void PartsSqlTableModel::setFilter(SuportedFilters filter, const QVariant & valu
         _selectedManufacturerId = value;
         break;
     }
+}
 
+bool PartsSqlTableModel::updatePartAvgPrice(const QModelIndex & currentIndex, double partPrice)
+{
+    int row = currentIndex.row();
+    const QModelIndex & colIndex = index(row, ColumnAvgPrice);
+    QVariant value = data(colIndex, Qt::EditRole);
+    bool ok;
+    double currentAvgPrice = value.toDouble(&ok);
+    if(ok && currentAvgPrice!=0){
+        currentAvgPrice = (currentAvgPrice + partPrice) / 2.0;
+    }
+    else {
+        currentAvgPrice = partPrice;
+    }
+    return setData(colIndex, currentAvgPrice, Qt::EditRole);
+}
+
+bool PartsSqlTableModel::updatePartStock(const QModelIndex & currentIndex, int stockChange)
+{
+    int row = currentIndex.row();
+    const QModelIndex & colIndex = index(row, ColumnActualStock);
+    QVariant value = data(colIndex, Qt::EditRole);
+    int currentStock = value.toInt();
+    currentStock+=stockChange;
+    return setData(colIndex, currentStock, Qt::EditRole);
 }

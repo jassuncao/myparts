@@ -31,7 +31,7 @@ void PartsTableView::setModel(QAbstractItemModel * model)
     setDragDropMode(QAbstractItemView::DragOnly);
     setDefaultDropAction(Qt::LinkAction);
     setSortingEnabled(true);
-    setItemDelegateForColumn(PartsSqlTableModel::ColumnCreateDate, new DateDelegate(this));
+    //setItemDelegateForColumn(PartsSqlTableModel::ColumnCreateDate, new DateDelegate(this));
     setItemDelegateForColumn(PartsSqlTableModel::ColumnAvgPrice, new CurrencyDelegate(this));
 
     int colCount = model->columnCount();

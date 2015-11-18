@@ -75,13 +75,15 @@ public:
     QString selectStatement() const;
     bool insertRowIntoTable(const QSqlRecord &values);
     bool updateRowInTable(int row, const QSqlRecord &values);
+    QVariant data(const QModelIndex &idx, int role = Qt::DisplayRole) const;
     Qt::ItemFlags flags(const QModelIndex &index) const;
     QStringList mimeTypes() const;
     QMimeData *mimeData(const QModelIndexList &indexes) const;
     Qt::DropActions supportedDropActions() const;
     inline QVariant lastInsertedId() const {return _lastInsertedId;}
     void setFilter(SuportedFilters filter, const QVariant & value);
-signals:
+    bool updatePartAvgPrice(const QModelIndex &currentIndex, double partPrice);
+    bool updatePartStock(const QModelIndex & currentIndex, int stockChange);
 
 private:
     void setColumnName(int section, const QString & columnName);

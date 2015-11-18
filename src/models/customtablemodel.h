@@ -64,7 +64,7 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
     bool insertRows(int row, int count, const QModelIndex&);
-    bool removeRows(int row, int count, const QModelIndex&);
+    bool removeRows(int row, int count, const QModelIndex&);    
     void select();
     bool submitAll();
     void createRelation(const int column, const QString & tableName, const QString & indexField, const QString & displayField);
@@ -92,10 +92,12 @@ public:
     explicit SimpleSqlTableModel(const QString &tableName, const QStringList & fieldNames,
                                  const QStringList & columnNames, const QString & foreignKeyField = QString(), QObject *parent = 0);
     void setCurrentForeignKey(const QVariant & foreignKey);
+    void sort(int column, Qt::SortOrder order = Qt::AscendingOrder);
 protected:
     virtual bool deleteItem(QVariant id);
     virtual bool saveItem(TableItem* item) ;
     virtual bool loadItems(QList<TableItem *> &dest);
+    QString generateSelectStatement(const QString & tableName,  const QStringList & fieldNames, const QString & foreignKeyField, int sortColumn, Qt::SortOrder order);
     const QString _tableName;
     const QStringList _fieldNames;    
     const QString _foreignKeyField;
@@ -104,6 +106,8 @@ protected:
     QSqlQuery _insertQuery;
     QSqlQuery _updateQuery;
     QSqlQuery _deleteQuery;
+    int _sortColumn;
+    Qt::SortOrder _order;
 };
 
 class CustomTableRelationDelegate : public QStyledItemDelegate
@@ -251,6 +255,8 @@ public:
 
     inline void setCurrentPartId(const QVariant & partId) { setCurrentForeignKey(partId); }
     static PartStockTableModel * createNew(QObject *parent);
+    bool appendRow(const int quantity, const QVariant & price, const QString & comment);
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 protected:
     explicit PartStockTableModel(const QStringList & fieldNames, const QStringList & columnNames, QObject *parent = 0);
 };

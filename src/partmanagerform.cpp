@@ -74,7 +74,7 @@ PartManagerForm::PartManagerForm(QWidget *parent) :
     _partsModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
     connect(_partsModel,SIGNAL(primeInsert(int,QSqlRecord&)), this, SLOT(slotPartsModelPrimeInsert(int,QSqlRecord&)));
 
-    ui->partDetailsView->setPartsModel(_partsModel);
+    //ui->partDetailsView->setPartsModel(_partsModel);
     ui->filterForm->setFilterBuilder(&_filterBuilder);
     ui->filterForm->setStorageModel(_storageTreeModel);
 

@@ -2,6 +2,7 @@
 #include <QDebug>
 #include <QSqlError>
 #include <QStringBuilder>
+#include <QDateTime>
 #include "parametervalue.h"
 
 /*
@@ -123,13 +124,13 @@ CustomTableModel::~CustomTableModel()
 }
 
 QVariant CustomTableModel::headerData(int section, Qt::Orientation orientation, int role) const
-{
+{    
     if (orientation == Qt::Horizontal) {
         QVariant val = _headers.value(section).value(role);
         if (role == Qt::DisplayRole && !val.isValid())
             val = _headers.value(section).value(Qt::EditRole);
         if (val.isValid())
-            return val;
+            return val;        
     }
     return QAbstractItemModel::headerData(section, orientation, role);
 }
@@ -306,7 +307,7 @@ void CustomTableModel::cloneData()
 
 
 SimpleSqlTableModel::SimpleSqlTableModel(const QString &tableName, const QStringList & fieldNames, const QStringList &columnNames, const QString & foreignKeyField, QObject *parent) :
-    CustomTableModel(fieldNames.size(), parent), _tableName(tableName), _fieldNames(fieldNames), _foreignKeyField(foreignKeyField)
+    CustomTableModel(fieldNames.size(), parent), _tableName(tableName), _fieldNames(fieldNames), _foreignKeyField(foreignKeyField), _sortColumn(-1)
 {
     QString fieldList = fieldNames.join(", ");
 
@@ -321,12 +322,11 @@ SimpleSqlTableModel::SimpleSqlTableModel(const QString &tableName, const QString
     QString insertStmt;
     if(!_foreignKeyField.isEmpty()){
         placeholders.append("?");//foreign id
-
-        selectStmt = QString("SELECT %2, id FROM %1 WHERE %3 = ?").arg(_tableName, fieldList, _foreignKeyField);
+        //selectStmt = QString("SELECT %2, id FROM %1 WHERE %3 = ?").arg(_tableName, fieldList, _foreignKeyField);
         insertStmt = QString("INSERT INTO %1 (%2, %3) VALUES (%4)").arg(_tableName, fieldList, _foreignKeyField, placeholders.join(", "));
     }
     else{
-        selectStmt = QString("SELECT %2, id FROM %1").arg(_tableName, fieldList);
+        //selectStmt = QString("SELECT %2, id FROM %1").arg(_tableName, fieldList);
         insertStmt = QString("INSERT INTO %1 (%2) VALUES (%4)").arg(_tableName, fieldList, placeholders.join(", "));
 
     }
@@ -337,12 +337,13 @@ SimpleSqlTableModel::SimpleSqlTableModel(const QString &tableName, const QString
     QString deleteStmt("DELETE FROM %1 WHERE id = ?");
     deleteStmt = deleteStmt.arg(_tableName);
 
+    selectStmt = generateSelectStatement(_tableName, _fieldNames, _foreignKeyField, -1, Qt::AscendingOrder);
+
     qDebug()<<"Queries for "<<tableName;
     qDebug()<<"Select query: "<<selectStmt;
     qDebug()<<"Insert query: "<<insertStmt;
     qDebug()<<"Update query: "<<updateStmt;
     qDebug()<<"Delete query: "<<deleteStmt;
-
     _selectQuery.prepare(selectStmt);
     _insertQuery.prepare(insertStmt);
     _updateQuery.prepare(updateStmt);
@@ -353,9 +354,34 @@ SimpleSqlTableModel::SimpleSqlTableModel(const QString &tableName, const QString
     }
 }
 
+QString SimpleSqlTableModel::generateSelectStatement(const QString & tableName,  const QStringList & fieldNames, const QString & foreignKeyField, int sortColumn, Qt::SortOrder order)
+{
+    QString selectStmt;
+    QString fieldList = fieldNames.join(", ");
+    if(!foreignKeyField.isEmpty()){
+        selectStmt = QString("SELECT %2, id FROM %1 WHERE %3 = ?").arg(tableName, fieldList, foreignKeyField);
+    }
+    else{
+        selectStmt = QString("SELECT %2, id FROM %1").arg(tableName, fieldList);
+    }
+    if(sortColumn>=0 && sortColumn<fieldNames.size()){
+        QLatin1String orderStatement = order==Qt::AscendingOrder ? QLatin1String(" ASC") : QLatin1String(" DESC");
+        selectStmt.append(" ORDER BY ").append(fieldNames.at(sortColumn)).append(orderStatement);
+    }
+    return selectStmt;
+}
+
 void SimpleSqlTableModel::setCurrentForeignKey(const QVariant & foreignKey)
 {
     _foreignKey = foreignKey;
+}
+
+void SimpleSqlTableModel::sort(int column, Qt::SortOrder order)
+{
+    const QString & selectStmt = generateSelectStatement(_tableName, _fieldNames, _foreignKeyField, column, order);
+    qDebug()<<"Select query: "<<selectStmt;
+    _selectQuery.prepare(selectStmt);
+    select();
 }
 
 bool SimpleSqlTableModel::deleteItem(QVariant id)
@@ -543,6 +569,27 @@ PartParametersTableModel3 * PartParametersTableModel3::createNew(QObject * paren
 PartStockTableModel::PartStockTableModel(const QStringList &fieldNames, const QStringList &columnNames, QObject *parent)
     : SimpleSqlTableModel("stock_change", fieldNames, columnNames, "part", parent)
 {
+}
+
+bool PartStockTableModel::appendRow(const int quantity, const QVariant & price, const QString & comment)
+{
+    QDateTime now = QDateTime::currentDateTimeUtc();
+    TableItem * item = createBlankItem();
+    item->setData(ColumnDateTime, now.toTime_t());
+    item->setData(ColumnChange, quantity);
+    item->setData(ColumnPrice, price);
+    item->setData(ColumnComment, comment);
+    doInsertRow(rowCount(), item);
+    return true;
+}
+
+QVariant PartStockTableModel::data(const QModelIndex &index, int role) const
+{
+    const QVariant & value = SimpleSqlTableModel::data(index, role);
+    if(index.column()==ColumnDateTime && value.isValid() && (role==Qt::EditRole || role==Qt::DisplayRole)){
+        return QDateTime::fromTime_t(value.toUInt());
+    }
+    return value;
 }
 
 PartStockTableModel * PartStockTableModel::createNew(QObject * parent)

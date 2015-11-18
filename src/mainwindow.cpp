@@ -27,22 +27,25 @@ MainWindow::MainWindow(QWidget *parent) :
     headerData.append("ID");
 
     //DistributorManagerHelper  distributorHelper;
+
     EditorManagerView * distributorsView = new EditorManagerView(new DistributorManagerHelper, this);
     EditorManagerView * manufacturersView = new EditorManagerView(new ManufacturerManagerHelper, this);
     EditorManagerView * footprintView = new EditorManagerView(new FootprintManagerHelper, this);
-    //ui->centralWidget->insertTab(0,new PartManagerForm(this), QIcon(QString::fromUtf8(":/largeIcons/page_parts")), tr("Parts"));
+  //  ui->centralWidget->insertTab(0, new QWidget(this), QIcon(QString::fromUtf8(":/largeIcons/page_footprints")), tr("Footprints"));
     ui->centralWidget->insertTab(0,new PartsManagerView(this), QIcon(QString::fromUtf8(":/largeIcons/page_parts")), tr("Parts"));
-    ui->centralWidget->insertTab(1,new FootprintManagerWidget(this), QIcon(QString::fromUtf8(":/largeIcons/page_footprints")), tr("Footprints"));
-    ui->centralWidget->insertTab(2,new PartManagerForm(this), QIcon(QString::fromUtf8(":/largeIcons/page_parts")), tr("Parts"));    
-    ui->centralWidget->insertTab(3, distributorsView, QIcon(QString::fromUtf8(":/largeIcons/options_distributors")), tr("Distributors"));
-    ui->centralWidget->insertTab(4, manufacturersView, QIcon(QString::fromUtf8(":/largeIcons/options_manufacturers")), tr("Manufacturers"));
-    ui->centralWidget->insertTab(5, footprintView, QIcon(QString::fromUtf8(":/largeIcons/page_footprints")), tr("Footprints"));
     ui->centralWidget->setTabEnabled(0, true);
+
+    ui->centralWidget->insertTab(1, distributorsView, QIcon(QString::fromUtf8(":/largeIcons/options_distributors")), tr("Distributors"));
     ui->centralWidget->setTabEnabled(1, true);
+
+    ui->centralWidget->insertTab(2, manufacturersView, QIcon(QString::fromUtf8(":/largeIcons/options_manufacturers")), tr("Manufacturers"));
     ui->centralWidget->setTabEnabled(2, true);
+
+    ui->centralWidget->insertTab(3, footprintView, QIcon(QString::fromUtf8(":/largeIcons/page_footprints")), tr("Footprints"));
     ui->centralWidget->setTabEnabled(3, true);
-    ui->centralWidget->setTabEnabled(4, true);
-    ui->centralWidget->setTabEnabled(5, true);
+
+    //ui->centralWidget->insertTab(2,new PartManagerForm(this), QIcon(QString::fromUtf8(":/largeIcons/page_parts")), tr("Parts"));
+    //ui->centralWidget->insertTab(1,new FootprintManagerWidget(this), QIcon(QString::fromUtf8(":/largeIcons/page_footprints")), tr("Footprints"));
     //ui->stackedWidget->addWidget(new PartManagerForm(this));
     /*
     StorageTreeModel * storageTreeModel = new StorageTreeModel(headerData, this);

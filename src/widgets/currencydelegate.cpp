@@ -3,18 +3,10 @@
 #include <QSettings>
 
 CurrencyDelegate::CurrencyDelegate(QObject *parent) :
-    QStyledItemDelegate(parent)
+    QStyledItemDelegate(parent), _horizontalAlignment(Qt::AlignRight)
 {
-    QString defaultCurrency(QChar(8364));
     QSettings settings;
-    QString currency = settings.value(CURRENCY_SYMBOL_KEY, defaultCurrency).toString();
-    bool currencyAfter = settings.value(CURRENCY_POSITION_KEY,true).toBool();
-    if(currencyAfter){
-        _currencyFormat = QString("%L2%1").arg(currency);
-    }
-    else{
-        _currencyFormat = QString("%1%L2").arg(currency);
-    }
+    _symbol = settings.value(CURRENCY_SYMBOL_KEY).toString();
 }
 
 QString CurrencyDelegate::displayText( const QVariant & value, const QLocale & locale ) const
@@ -22,7 +14,13 @@ QString CurrencyDelegate::displayText( const QVariant & value, const QLocale & l
     if(!value.isValid())
         return QString();
     if(!value.canConvert(QVariant::Double))
-        return QString();
+        return QString();    
     double price = value.toDouble();
-    return _currencyFormat.arg(price ,0,'f',2,' ');
+    return locale.toCurrencyString(price, _symbol);
+}
+
+void CurrencyDelegate::initStyleOption(QStyleOptionViewItem *option, const QModelIndex &index) const
+{
+    QStyledItemDelegate::initStyleOption(option, index);
+    option->displayAlignment = option->displayAlignment | _horizontalAlignment;
 }

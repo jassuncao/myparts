@@ -245,6 +245,7 @@ void TreeNavigator::slotTextChanged()
 
 void TreeNavigator::slotCurrentChanged(const QModelIndex &current, const QModelIndex &previous)
 {
+    qDebug()<<"Changed to "<<current;
 }
 
 

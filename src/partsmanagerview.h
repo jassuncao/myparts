@@ -41,9 +41,7 @@ protected slots:
     void slotDuplicatePart();
     void slotPartsModelPrimeInsert(int, QSqlRecord &record);
     void slotNavModeChanged(int mode);
-    void slotFilterChanged();
-    void slotAddStock();
-    void slotRemoveStock();
+    void slotFilterChanged();    
 private:
     PartsTableView * createPartsTableView(QAbstractTableModel * tableModel);
     NavigationSubWidget * _navWidget;

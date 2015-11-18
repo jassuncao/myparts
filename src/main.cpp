@@ -91,6 +91,8 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationDomain("joaoassuncao.com");
     QCoreApplication::setApplicationName("MyParts");
     //TODO: Fetch values from settings
+    QLocale curLocale(QLocale("pt_PT"));
+    QLocale::setDefault(curLocale);
     QDir::addSearchPath("footprints", "/home/jassuncao/MyProjects/myparts/images/footprints");
     QDir::addSearchPath("attachments", "/home/jassuncao/MyProjects/myparts/attachments");
     QDir::addSearchPath("tmp","/home/jassuncao/MyProjects/myparts/images/tmp");

@@ -9,18 +9,17 @@ class PartDetailsView;
 }
 
 class PartStockTableModel;
+class PartsSqlTableModel;
+class QDataWidgetMapper;
 
 class PartDetailsView : public QWidget
 {
     Q_OBJECT
-
 public:
     explicit PartDetailsView(QWidget *parent = 0);
     ~PartDetailsView();
-    void setPartsModel(QAbstractItemModel * model);
-signals:
-    void addStockSelected();
-    void removeStockSelected();
+    void setPartsModel(PartsSqlTableModel *model);
+signals:    
     void editPartSelected();
 public slots:
     void setCurrentIndex(const QModelIndex &current);
@@ -30,13 +29,11 @@ private slots:
     void onEditPart();
 private:
     Ui::PartDetailsView *ui;
-    QAbstractItemModel * _partsModel;
+    QDataWidgetMapper * _widgetMapper;
+    PartsSqlTableModel * _partsModel;
     PartStockTableModel * _partStockModel;
-    void updatePartDetailView(const QModelIndex & current);
-    void updateStockView(const QModelIndex & current);
-    QString columnDisplayData(QAbstractItemModel * model, const QModelIndex & current, int column);
-    QString columnDisplayData(QAbstractItemModel * model, const QModelIndex & current, int column1, int column2);
-    QString columnDisplayDate(QAbstractItemModel * model, const QModelIndex & current, int column);
+    QModelIndex _currentIndex;
+    void updateStockView(const QModelIndex & current);    
 };
 
 #endif // PARTDETAILSVIEW_H

@@ -6,15 +6,14 @@
 
 class CurrencyDelegate : public QStyledItemDelegate
 {
-    Q_OBJECT
 public:
     explicit CurrencyDelegate(QObject *parent = 0);
     QString displayText ( const QVariant & value, const QLocale & locale ) const;
-signals:
-
-public slots:
+protected:
+    void initStyleOption(QStyleOptionViewItem *option, const QModelIndex &index) const;
 private:
-    QString _currencyFormat;
+    QString _symbol;
+    Qt::Alignment _horizontalAlignment;
 };
 
 #endif // CURRENCYDELEGATE_H

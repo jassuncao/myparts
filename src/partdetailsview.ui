@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>527</width>
-    <height>546</height>
+    <height>561</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -97,7 +97,7 @@
       <number>6</number>
      </property>
      <item>
-      <widget class="QGroupBox" name="groupBox_2">
+      <widget class="QGroupBox" name="detailsGroup">
        <property name="title">
         <string>Details</string>
        </property>
@@ -136,7 +136,7 @@
            <item row="0" column="1">
             <widget class="QLabel" name="partCategoryLabel">
              <property name="text">
-              <string>TextLabel</string>
+              <string/>
              </property>
             </widget>
            </item>
@@ -150,28 +150,28 @@
            <item row="1" column="1">
             <widget class="QLabel" name="partStockLevelLabel">
              <property name="text">
-              <string>TextLabel</string>
+              <string/>
              </property>
             </widget>
            </item>
            <item row="4" column="1">
             <widget class="QLabel" name="partFootprintLabel">
              <property name="text">
-              <string>TextLabel</string>
+              <string/>
              </property>
             </widget>
            </item>
            <item row="5" column="1">
             <widget class="QLabel" name="partStorageLocationLabel">
              <property name="text">
-              <string>TextLabel</string>
+              <string/>
              </property>
             </widget>
            </item>
            <item row="2" column="1">
             <widget class="QLabel" name="partMinStockLabel">
              <property name="text">
-              <string>TextLabel</string>
+              <string/>
              </property>
             </widget>
            </item>
@@ -206,7 +206,7 @@
            <item row="6" column="1">
             <widget class="QLabel" name="partCreateDateLabel">
              <property name="text">
-              <string>TextLabel</string>
+              <string/>
              </property>
             </widget>
            </item>
@@ -220,7 +220,7 @@
            <item row="7" column="1">
             <widget class="QLabel" name="partConditionLabel">
              <property name="text">
-              <string>TextLabel</string>
+              <string/>
              </property>
             </widget>
            </item>
@@ -234,7 +234,7 @@
            <item row="3" column="1">
             <widget class="QLabel" name="partCustomNumberLabel">
              <property name="text">
-              <string>TextLabel</string>
+              <string/>
              </property>
             </widget>
            </item>
@@ -248,7 +248,7 @@
            <item row="8" column="1">
             <widget class="QLabel" name="partCommentLabel">
              <property name="text">
-              <string>TextLabel</string>
+              <string/>
              </property>
             </widget>
            </item>
@@ -259,7 +259,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QGroupBox" name="groupBox">
+      <widget class="QGroupBox" name="stockGroup">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
          <horstretch>0</horstretch>

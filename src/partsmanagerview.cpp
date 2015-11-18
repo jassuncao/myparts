@@ -48,7 +48,7 @@ PartsManagerView::PartsManagerView(QWidget *parent)
     StorageNavigator * storageNavigator = new StorageNavigator(_navWidget);
     storageNavigator->setModel(_storageTreeModel);
     _navWidget->addNavigator(storageNavigator);
-    _navWidget->setCurrentNavigator(0);    
+    _navWidget->setCurrentNavigator(0);
 
     Manhattan::StyledBar * centerPaneTitleBar = new Manhattan::StyledBar;
     QLabel * centerPaneTitleLabel = new QLabel(tr("Parts List"), centerPaneTitleBar);
@@ -113,14 +113,12 @@ PartsManagerView::PartsManagerView(QWidget *parent)
     addWidget(_navWidget);
     addWidget(centerPane);
     addWidget(rightPane);
-    connect(_navWidget, SIGNAL(modeChanged(int)), this, SLOT(slotNavModeChanged(int)));
+    //connect(_navWidget, SIGNAL(modeChanged(int)), this, SLOT(slotNavModeChanged(int)));
     connect(addPartButton, SIGNAL(clicked()), this, SLOT(slotAddPart()));
     connect(_deletePartButton, SIGNAL(clicked()), this, SLOT(slotDeletePart()));
     connect(_duplicatePartButton, SIGNAL(clicked()), this, SLOT(slotDuplicatePart()));
-    connect(_partsFilterWidget, SIGNAL(filterChanged()), this, SLOT(slotFilterChanged()));
-    connect(_partDetailsView, SIGNAL(addStockSelected()), this, SLOT(slotAddStock()));
-    connect(_partDetailsView, SIGNAL(removeStockSelected()), this, SLOT(slotRemoveStock()));
-    connect(_partDetailsView, SIGNAL(editPartSelected()), this, SLOT(slotEditPart()));
+    connect(_partsFilterWidget, SIGNAL(filterChanged()), this, SLOT(slotFilterChanged()));    
+    connect(_partDetailsView, SIGNAL(editPartSelected()), this, SLOT(slotEditPart()));      
 }
 
 PartsManagerView::~PartsManagerView()
@@ -153,12 +151,7 @@ void PartsManagerView::slotNavModeChanged(int mode)
 void PartsManagerView::slotFilterChanged()
 {
 
-    _partsModel->select();
-    //_partsModel->setFilter(_filterBuilder->build());
-    /*
-    if(!_partsModel->query().isActive())
-        _partsModel->select();
-        */
+    _partsModel->select();    
 }
 
 void PartsManagerView::slotPartTableCurrentRowChanged(const QModelIndex &current, const QModelIndex &)
@@ -224,74 +217,4 @@ void PartsManagerView::slotPartsModelPrimeInsert(int, QSqlRecord &record)
         if(q.next())
             record.setValue(PartsSqlTableModel::ColumnConditionId, q.value(0));
     }
-}
-
-void PartsManagerView::slotAddStock()
-{
-    QModelIndex index = _partsTableView->currentIndex();
-    if(!index.isValid())
-        return;
-    QVariant partKey = _partsModel->data(_partsModel->index(index.row(),PartsSqlTableModel::ColumnId));
-    QVariant partUnit = _partsModel->data(_partsModel->index(index.row(),PartsSqlTableModel::ColumnPartUnit));
-    AddStockDialog dlg(this);
-    dlg.setPartUnit(partUnit.toString());
-    if(dlg.exec()!=QDialog::Accepted)
-        return;
-    if(PartsDAO::addStock(partKey, dlg.getStockChange(), dlg.getPartPrice(), dlg.getComment())){
-        QModelIndex stockIdx = _partsModel->index(index.row(), PartsSqlTableModel::ColumnActualStock);
-        QModelIndex priceIdx = _partsModel->index(index.row(), PartsSqlTableModel::ColumnAvgPrice);
-        int currentStock = _partsModel->data(stockIdx,Qt::EditRole).toInt();
-        double currentAvgPrice = _partsModel->data(priceIdx,Qt::EditRole).toDouble();
-        currentStock+=dlg.getStockChange();
-        if(currentAvgPrice==0)
-            currentAvgPrice = dlg.getPartPrice();
-        else
-            currentAvgPrice = (currentAvgPrice + dlg.getPartPrice())/2;
-        if(
-                _partsModel->setData(stockIdx,currentStock) &&
-                _partsModel->setData(priceIdx,currentAvgPrice) &&
-                _partsModel->submitAll())
-        {
-            qWarning()<<"Stock for part "<<partKey<<" changed to "<<currentStock;
-        }
-        else{
-            //TODO: Display some warning
-            qWarning()<<"Failed to update cached stock for part "<<partKey;
-        }
-    }
-    else{
-        //TODO: Display some warning
-        qWarning("Failed to insert stock change (addition) in database");
-    }
-}
-
-void PartsManagerView::slotRemoveStock()
-{
-    QModelIndex index = _partsTableView->currentIndex();
-    if(!index.isValid())
-        return;
-    QVariant partKey = _partsModel->data(_partsModel->index(index.row(),PartsSqlTableModel::ColumnId));
-    QVariant partUnit = _partsModel->data(_partsModel->index(index.row(),PartsSqlTableModel::ColumnPartUnit));
-    QModelIndex actualStockIdx = _partsModel->index(index.row(), PartsSqlTableModel::ColumnActualStock);
-    int availableStock = _partsModel->data(actualStockIdx,Qt::EditRole).toInt();
-    RemoveStockDialog dlg(this);
-    dlg.setPartUnit(partUnit.toString());
-    dlg.setAvailableStock(availableStock);
-    if(dlg.exec()!=QDialog::Accepted)
-        return;
-    if(PartsDAO::removeStock(partKey, dlg.getStockChange(), dlg.getComment())){
-        availableStock+=dlg.getStockChange();
-        if(_partsModel->setData(actualStockIdx,availableStock) && _partsModel->submit()){
-            qWarning()<<"Stock for part "<<partKey<<" changed to "<<availableStock;
-        }
-        else{
-            //TODO: Display some warning
-            qWarning()<<"Failed to update cached stock for part "<<partKey;
-        }
-    }
-    else{
-        //TODO: Display some warning
-        qWarning("Failed to insert stock change (removal) in database");
-    }
-
 }
