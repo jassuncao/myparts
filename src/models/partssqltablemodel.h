@@ -5,6 +5,79 @@
 #include <QVector>
 #include <QDate>
 
+class Criterion
+{
+public:
+    virtual QString clause() const = 0;
+    virtual QString joinClause() const;
+};
+
+class StockCriterion : public Criterion
+{
+public:
+    enum Mode {
+        AnyStockLevel,
+        StockLevelZero,
+        StockLevelGreaterZero,
+        StockLevelBelowMin
+    };
+    explicit StockCriterion(StockCriterion::Mode mode);
+    QString clause() const;
+
+private:
+    const StockCriterion::Mode _mode;
+};
+
+class BasicForeignKeyCriterion : public Criterion
+{
+public:
+    explicit BasicForeignKeyCriterion(const QString & name, const QVariant & value);
+    QString clause() const;
+private:
+    const QString _foreignKeyName;
+    const QVariant _foreignKeyValue;
+};
+
+class DistributorCriterion : public Criterion
+{
+public:
+    explicit DistributorCriterion(QVariant & distributorId);
+    QString clause() const;
+    QString joinClause() const;
+private:
+    const QVariant _distributorId;
+    const QLatin1String _joinClause;
+};
+
+class ManufacturerCriterion : public Criterion
+{
+public:
+    explicit ManufacturerCriterion(QVariant & manufacturerId);
+    QString clause() const;
+    QString joinClause() const;
+private:
+    const QVariant _manufacturerId;
+    const QLatin1String _joinClause;
+};
+
+class CreateDateCriterion : public Criterion
+{
+public:
+    enum Mode {
+        DateFilterNone,
+        DateFilterBefore,
+        DateFilterOn,
+        DateFilterAfter
+    };
+    explicit CreateDateCriterion(CreateDateCriterion::Mode mode, const QDate & dateUtc);
+    QString clause() const;
+private:
+    const CreateDateCriterion::Mode _mode;
+    const QDateTime _dateTimeUtc;
+};
+
+
+
 class PartsSqlTableModel : public QSqlTableModel
 {
     Q_OBJECT
@@ -71,7 +144,9 @@ public:
     static const int FAKE_COLUMNS_INDEX = ColumnPartUnit;
 
     explicit PartsSqlTableModel(QObject *parent = 0);
+    ~PartsSqlTableModel();
     int columnCount(const QModelIndex &index = QModelIndex()) const;
+    QString selectStatement2() const;
     QString selectStatement() const;
     bool insertRowIntoTable(const QSqlRecord &values);
     bool updateRowInTable(int row, const QSqlRecord &values);
@@ -90,7 +165,7 @@ private:
     const QLatin1String _baseSelectClause;
     const QLatin1String _distributorJoinClause;
     const QLatin1String _manufacturerJoinClause;
-
+    QVector<Criterion*> _criterions;
     QVariant _lastInsertedId;
     QVariant _textFilter;
     CategoryFilterMode _categoryFilterMode;

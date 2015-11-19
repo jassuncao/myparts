@@ -43,10 +43,13 @@ PartsManagerView::PartsManagerView(QWidget *parent)
 
     CategoryNavigator * categoryNavigator = new CategoryNavigator(_navWidget);
     categoryNavigator->setModel(_categoriesTreeModel);
+    categoryNavigator->setPartsModel(_partsModel);
     _navWidget->addNavigator(categoryNavigator);
+
 
     StorageNavigator * storageNavigator = new StorageNavigator(_navWidget);
     storageNavigator->setModel(_storageTreeModel);
+    storageNavigator->setPartsModel(_partsModel);
     _navWidget->addNavigator(storageNavigator);
     _navWidget->setCurrentNavigator(0);
 

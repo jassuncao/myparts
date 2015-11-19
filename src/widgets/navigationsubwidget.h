@@ -47,6 +47,7 @@ QT_END_NAMESPACE
 
 class QSearchLineEdit;
 class TreeNavigator;
+class PartsSqlTableModel;
 
 namespace Manhattan { class StyledBar; }
 
@@ -85,6 +86,7 @@ public:
     void setModel(QAbstractItemModel *model);
     QAbstractItemModel * model() const;
     QList<QToolButton*> toolButtons();
+    void setPartsModel(PartsSqlTableModel * partsModel);
 protected:
     explicit TreeNavigator(QWidget *parent = 0);
     virtual void onContextMenuRequested(const QPoint &globalPos, const QModelIndex & index);
@@ -99,6 +101,7 @@ private:
     QSearchLineEdit * _filterLineEdit;
     QTreeView * _treeView;
     bool _filterSelectedItemChecked;
+    PartsSqlTableModel * _partsModel;
 };
 
 class CategoryNavigator : public TreeNavigator

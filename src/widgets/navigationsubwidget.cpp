@@ -47,6 +47,7 @@
 #include "styledbar.h"
 #include "navigationtreeview.h"
 #include "qsearchlineedit.h"
+#include "models/partssqltablemodel.h"
 
 NavigationSubWidget::NavigationSubWidget(QWidget *parent) : QWidget(parent)
 {  
@@ -172,6 +173,11 @@ void TreeNavigator::setModel(QAbstractItemModel *model)
 QAbstractItemModel * TreeNavigator::model() const
 {
     return _treeView->model();
+}
+
+void TreeNavigator::setPartsModel(PartsSqlTableModel * partsModel)
+{
+    _partsModel = partsModel;
 }
 
 QList<QToolButton *> TreeNavigator::toolButtons()
