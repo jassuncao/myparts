@@ -8,6 +8,7 @@
 #include <QMimeData>
 #include <QSqlResult>
 #include <QSqlQuery>
+#include <QHash>
 
 static const char * BASE_CLAUSE = "SELECT part.id, part.name, part.description, part.actualStock, part.minimumStock, part.averagePrice, part.comment, part.customPartNumber, "
 "part.createDate, part.partUnit, part.category, part.storage, part.condition, "
@@ -22,6 +23,7 @@ static const char * BASE_CLAUSE = "SELECT part.id, part.name, part.description, 
 static const char * DISTRIBUTOR_JOIN_CLAUSE = "INNER JOIN part_distributor d ON part.id=d.part ";
 static const char * MANUFACTURER_JOIN_CLAUSE = "INNER JOIN part_manufacturer m ON part.id=m.part ";
 
+/*
 QString Criterion::joinClause() const
 {
     return QString();
@@ -138,17 +140,21 @@ QString CreateDateCriterion::clause() const
 
     return QString();
 }
+*/
 
 
 PartsSqlTableModel::PartsSqlTableModel(QObject *parent) :
     QSqlTableModel(parent),
     _baseSelectClause(BASE_CLAUSE),
+    _selectQueryBuilder(new SelectQueryBuilder(this))
+    /*
     _distributorJoinClause(DISTRIBUTOR_JOIN_CLAUSE),
     _manufacturerJoinClause(MANUFACTURER_JOIN_CLAUSE),
     _categoryFilterMode(SubCategories),
     _storageLocationFilterMode(StorageLocationFilterAll),
     _stockFilterMode(AnyStockLevel),
     _dateFilterMode(DateFilterNone)
+        */
 {
     setTable("part");
     qDebug()<<"Column Count "<<columnCount();
@@ -168,7 +174,8 @@ PartsSqlTableModel::PartsSqlTableModel(QObject *parent) :
 
 PartsSqlTableModel::~PartsSqlTableModel()
 {
-    qDeleteAll(_criterions);
+    delete _selectQueryBuilder;
+    //qDeleteAll(_criterions);
 }
 
 void PartsSqlTableModel::setColumnName(int section, const QString & columnName)
@@ -182,11 +189,21 @@ int PartsSqlTableModel::columnCount(const QModelIndex &index) const
     return index.isValid() ? 0 : LAST_COLUMN;
 }
 
-QString PartsSqlTableModel::selectStatement2() const
+
+void PartsSqlTableModel::setCriterion(SuportedFilters kind, FilterCriterion * criterion)
+{
+}
+
+void PartsSqlTableModel::unsetCriterion(SuportedFilters kind)
+{
+}
+
+QString PartsSqlTableModel::selectStatement() const
 {
 
 }
 
+/*
 QString PartsSqlTableModel::selectStatement() const
 {
     QStringList clauses;
@@ -329,6 +346,7 @@ QString PartsSqlTableModel::selectStatement() const
     qDebug()<<"Select statement is "<<statement;
     return statement;
 }
+*/
 
 bool PartsSqlTableModel::insertRowIntoTable(const QSqlRecord &values)
 {
@@ -407,6 +425,7 @@ QMimeData * PartsSqlTableModel::mimeData(const QModelIndexList &indexes) const
     return mimeData;
 }
 
+/*
 void PartsSqlTableModel::setFilter(SuportedFilters filter, const QVariant & value)
 {
     bool valid;
@@ -434,6 +453,7 @@ void PartsSqlTableModel::setFilter(SuportedFilters filter, const QVariant & valu
         break;
     }
 }
+*/
 
 bool PartsSqlTableModel::updatePartAvgPrice(const QModelIndex & currentIndex, double partPrice)
 {
@@ -460,3 +480,493 @@ bool PartsSqlTableModel::updatePartStock(const QModelIndex & currentIndex, int s
     currentStock+=stockChange;
     return setData(colIndex, currentStock, Qt::EditRole);
 }
+
+class CriterionClause {
+public:
+    explicit CriterionClause(const QString & whereStatement=QString(), const QString & joinStatement=QString());
+    QString whereStatement() const;
+    void setWhereStatement(const QString & statement);
+    QString joinStatement() const;
+    bool isEnabled() const;
+private:
+    QString _whereStatement;
+    const QString _joinStatement;
+};
+
+
+CriterionClause::CriterionClause(const QString & whereStatement, const QString & joinStatement)
+    : _whereStatement(whereStatement), _joinStatement(joinStatement)
+{
+}
+
+QString CriterionClause::whereStatement() const
+{
+    return _whereStatement;
+}
+
+void CriterionClause::setWhereStatement(const QString & statement)
+{
+    _whereStatement = statement;
+}
+
+QString CriterionClause::joinStatement() const
+{
+    return _joinStatement;
+}
+
+bool CriterionClause::isEnabled() const
+{
+    return !_whereStatement.isEmpty();
+}
+
+class SelectQueryBuilder2 : FilterVisitor
+{
+    const QString _baseSelectClause;
+    //QHash<PartsSqlTableModel::SuportedFilters,
+    CriterionClause _stockClause;
+    CriterionClause _distributorClause;
+    CriterionClause _manufacturerClause;
+    CriterionClause _createDateClause;
+    CriterionClause _conditionClause;
+    CriterionClause _footprintClause;
+    CriterionClause _textClause;
+    CriterionClause _categoryClause;
+    CriterionClause _storageClause;
+    QList<CriterionClause*> _criterions;
+public:
+    SelectQueryBuilder2() :
+        _baseSelectClause(BASE_CLAUSE),
+        _distributorClause(CriterionClause(QString(), DISTRIBUTOR_JOIN_CLAUSE)),
+        _manufacturerClause(CriterionClause(QString(), MANUFACTURER_JOIN_CLAUSE))
+    {
+        _criterions.append(&_stockClause);
+        _criterions.append(&_distributorClause);
+        _criterions.append(&_manufacturerClause);
+        _criterions.append(&_createDateClause);
+        _criterions.append(&_conditionClause);
+        _criterions.append(&_footprintClause);
+        _criterions.append(&_textClause);
+        _criterions.append(&_categoryClause);
+        _criterions.append(&_storageClause);
+    }
+
+    void addCriterion(FilterCriterion & criterion)
+    {
+        criterion.accept(this);
+    }
+
+    void visit(StockCriterion * criterion)
+    {
+        switch(criterion->mode)
+        {
+        case StockCriterion::AnyStockLevel:
+            _stockClause.setWhereStatement(QString());
+            break;
+        case StockCriterion::StockLevelZero:
+            _stockClause.setWhereStatement(QLatin1String("part.actualStock=0"));
+            break;
+        case StockCriterion::StockLevelGreaterZero:
+            _stockClause.setWhereStatement(QLatin1String("part.actualStock>0"));
+            break;
+        case StockCriterion::StockLevelBelowMin:
+            _stockClause.setWhereStatement(QLatin1String("part.actualStock<0"));
+            break;
+        }
+    }
+
+    void visit(DistributorCriterion * criterion)
+    {
+        if(criterion->distributorId.isValid() && criterion->distributorId.canConvert(QVariant::Int)){
+            _distributorClause.setWhereStatement(QString("d.distributor = %1").arg(criterion->distributorId.toInt()));
+        }
+        else{
+            _distributorClause.setWhereStatement(QString());
+        }
+    }
+
+    void visit(ManufacturerCriterion * criterion)
+    {
+        if(criterion->manufacturerId.isValid() && criterion->manufacturerId.canConvert(QVariant::Int)){
+            _manufacturerClause.setWhereStatement(QString("m.manufacturer = %1").arg(criterion->manufacturerId.toInt()));
+        }
+        else{
+            _manufacturerClause.setWhereStatement(QString());
+        }
+    }
+
+    void visit(CreateDateCriterion * criterion)
+    {
+        switch(criterion->mode){
+        case CreateDateCriterion::DateFilterBefore:
+        {
+            _createDateClause.setWhereStatement(QString("part.createDate<%1").arg(criterion->dateTimeUtc.toTime_t()));
+        }
+            break;
+        case CreateDateCriterion::DateFilterOn:
+        {
+            const QDateTime & periodStart = criterion->dateTimeUtc;
+            const QDateTime periodEnd = criterion->dateTimeUtc.addDays(1);
+            _createDateClause.setWhereStatement(QString("part.createDate>=%1 && part.createDate<%2").arg(periodStart.toTime_t()).arg(periodEnd.toTime_t()));
+        }
+            break;
+        case CreateDateCriterion::DateFilterAfter:
+        {
+            QDateTime nextDay = criterion->dateTimeUtc.addDays(1);
+            _createDateClause.setWhereStatement(QString("part.createDate>=%1").arg(nextDay.toTime_t()));
+        }
+            break;
+        default:
+            _createDateClause.setWhereStatement(QString());
+            break;
+        }
+    }
+
+    void visit(ConditionCriterion * criterion)
+    {
+        if(criterion->conditionId.isValid() && criterion->conditionId.canConvert(QVariant::Int)){
+            _conditionClause.setWhereStatement(QString("part.condition = %1").arg(criterion->conditionId.toInt()));
+        }
+        else{
+            _conditionClause.setWhereStatement(QString());
+        }
+    }
+
+    void visit(FootprintCriterion * criterion)
+    {
+        if(criterion->footprintId.isValid() && criterion->footprintId.canConvert(QVariant::Int)){
+            _footprintClause.setWhereStatement(QString("part.footprint = %1").arg(criterion->footprintId.toInt()));
+        }
+        else{
+            _footprintClause.setWhereStatement(QString());
+        }
+    }
+
+    void visit(TextCriterion * criterion)
+    {
+        if(!criterion->text.isEmpty()){
+            _textClause.setWhereStatement(QString("(part.name LIKE '\%%1\%' OR part.description LIKE '\%%1\%')").arg(criterion->text));
+        }
+        else{
+            _textClause.setWhereStatement(QString());
+        }
+    }
+
+    void visit(CategoryCriterion * criterion)
+    {
+        QString statement;
+        const QVector<QVariant> & selectCategories = criterion->selectedCategories;
+
+        switch(criterion->mode){
+        case CategoryCriterion::Disabled:
+            break;
+        case CategoryCriterion::SelectedAndChilds:
+            if(selectCategories.size()>0){
+                QString inStatement("c.id IN (");
+                inStatement+=selectCategories.at(0).toString();
+
+                for(int i=1; i<selectCategories.size();++i){
+                    inStatement+=QLatin1String(",");
+                    inStatement+=selectCategories.at(i).toString();
+                }
+                inStatement+=QLatin1Char(')');
+                statement = inStatement;
+            }
+            break;
+        case CategoryCriterion::SelectedOnly:
+            if(criterion->selectedCategories.size()>0){
+                statement = QString("c.id = %1").arg(selectCategories.at(0).toString());
+            }
+            break;
+        }
+        _categoryClause.setWhereStatement(statement);
+    }
+
+    void visit(StorageCriterion * criterion)
+    {
+        QString statement;
+        const QVector<QVariant> & selectStorage = criterion->selectedStorages;
+
+        switch(criterion->mode){
+        case StorageCriterion::Disabled:
+            break;
+        case StorageCriterion::SelectedAndChilds:
+            if(selectStorage.size()>0){
+                QString inStatement("s.id IN (");
+                inStatement+=selectStorage.at(0).toString();
+
+                for(int i=1; i<selectStorage.size();++i){
+                    inStatement+=QLatin1String(",");
+                    inStatement+=selectStorage.at(i).toString();
+                }
+                inStatement+=QLatin1Char(')');
+                statement = inStatement;
+            }
+            break;
+        case StorageCriterion::SelectedOnly:
+            if(selectStorage.size()>0){
+                statement = QString("s.id = %1").arg(selectStorage.at(0).toString());
+            }
+            break;
+        }
+        _storageClause.setWhereStatement(statement);
+    }
+
+    QString generateSelectStatement()
+    {
+        QStringList clauses;
+        //Keeps the criterium used for the WHERE clause
+        QStringList criterium;
+
+        clauses.append(_baseSelectClause);
+
+        CriterionClause* criterion;
+        foreach (criterion, _criterions) {
+            if(criterion->isEnabled()){
+                criterium.append(criterion->whereStatement());
+                if(!criterion->joinStatement().isEmpty())
+                    clauses.append(criterion->joinStatement());
+            }
+        }
+
+        //Join the criterium as an where clause
+        if(criterium.size()>0){
+            clauses.append(QLatin1String("WHERE"));
+            clauses.append(criterium.join(" AND "));
+        }
+
+        QString orderBy = orderByClause();
+        if (!orderBy.isEmpty())
+            clauses.append(orderBy);
+
+        const QString statement = clauses.join(QLatin1String(" "));
+
+        qDebug()<<"Select statement is "<<statement;
+        return statement;
+    }
+};
+
+
+class SelectQueryBuilder : FilterVisitor
+{
+    const QString _baseSelectClause;
+    CriterionClause _stockClause;
+    CriterionClause _distributorClause;
+    CriterionClause _manufacturerClause;
+    CriterionClause _createDateClause;
+    CriterionClause _conditionClause;
+    CriterionClause _footprintClause;
+    CriterionClause _textClause;
+    CriterionClause _categoryClause;
+    CriterionClause _storageClause;
+    QList<CriterionClause*> _criterions;
+public:
+    SelectQueryBuilder() :
+        _baseSelectClause(BASE_CLAUSE),
+        _distributorClause(CriterionClause(QString(), DISTRIBUTOR_JOIN_CLAUSE)),
+        _manufacturerClause(CriterionClause(QString(), MANUFACTURER_JOIN_CLAUSE))
+    {
+        _criterions.append(&_stockClause);
+        _criterions.append(&_distributorClause);
+        _criterions.append(&_manufacturerClause);
+        _criterions.append(&_createDateClause);
+        _criterions.append(&_conditionClause);
+        _criterions.append(&_footprintClause);
+        _criterions.append(&_textClause);
+        _criterions.append(&_categoryClause);
+        _criterions.append(&_storageClause);
+    }
+
+    void addCriterion(FilterCriterion & criterion)
+    {
+        criterion.accept(this);
+    }
+
+    void visit(StockCriterion * criterion)
+    {
+        switch(criterion->mode)
+        {
+        case StockCriterion::AnyStockLevel:
+            _stockClause.setWhereStatement(QString());
+            break;
+        case StockCriterion::StockLevelZero:
+            _stockClause.setWhereStatement(QLatin1String("part.actualStock=0"));
+            break;
+        case StockCriterion::StockLevelGreaterZero:
+            _stockClause.setWhereStatement(QLatin1String("part.actualStock>0"));
+            break;
+        case StockCriterion::StockLevelBelowMin:
+            _stockClause.setWhereStatement(QLatin1String("part.actualStock<0"));
+            break;
+        }
+    }
+
+    void visit(DistributorCriterion * criterion)
+    {
+        if(criterion->distributorId.isValid() && criterion->distributorId.canConvert(QVariant::Int)){
+            _distributorClause.setWhereStatement(QString("d.distributor = %1").arg(criterion->distributorId.toInt()));
+        }
+        else{
+            _distributorClause.setWhereStatement(QString());
+        }
+    }
+
+    void visit(ManufacturerCriterion * criterion)
+    {
+        if(criterion->manufacturerId.isValid() && criterion->manufacturerId.canConvert(QVariant::Int)){
+            _manufacturerClause.setWhereStatement(QString("m.manufacturer = %1").arg(criterion->manufacturerId.toInt()));
+        }
+        else{
+            _manufacturerClause.setWhereStatement(QString());
+        }
+    }
+
+    void visit(CreateDateCriterion * criterion)
+    {
+        switch(criterion->mode){
+        case CreateDateCriterion::DateFilterBefore:
+        {
+            _createDateClause.setWhereStatement(QString("part.createDate<%1").arg(criterion->dateTimeUtc.toTime_t()));
+        }
+            break;
+        case CreateDateCriterion::DateFilterOn:
+        {
+            const QDateTime & periodStart = criterion->dateTimeUtc;
+            const QDateTime periodEnd = criterion->dateTimeUtc.addDays(1);
+            _createDateClause.setWhereStatement(QString("part.createDate>=%1 && part.createDate<%2").arg(periodStart.toTime_t()).arg(periodEnd.toTime_t()));
+        }
+            break;
+        case CreateDateCriterion::DateFilterAfter:
+        {
+            QDateTime nextDay = criterion->dateTimeUtc.addDays(1);
+            _createDateClause.setWhereStatement(QString("part.createDate>=%1").arg(nextDay.toTime_t()));
+        }
+            break;
+        default:
+            _createDateClause.setWhereStatement(QString());
+            break;
+        }
+    }
+
+    void visit(ConditionCriterion * criterion)
+    {
+        if(criterion->conditionId.isValid() && criterion->conditionId.canConvert(QVariant::Int)){
+            _conditionClause.setWhereStatement(QString("part.condition = %1").arg(criterion->conditionId.toInt()));
+        }
+        else{
+            _conditionClause.setWhereStatement(QString());
+        }
+    }
+
+    void visit(FootprintCriterion * criterion)
+    {
+        if(criterion->footprintId.isValid() && criterion->footprintId.canConvert(QVariant::Int)){
+            _footprintClause.setWhereStatement(QString("part.footprint = %1").arg(criterion->footprintId.toInt()));
+        }
+        else{
+            _footprintClause.setWhereStatement(QString());
+        }
+    }
+
+    void visit(TextCriterion * criterion)
+    {
+        if(!criterion->text.isEmpty()){
+            _textClause.setWhereStatement(QString("(part.name LIKE '\%%1\%' OR part.description LIKE '\%%1\%')").arg(criterion->text));
+        }
+        else{
+            _textClause.setWhereStatement(QString());
+        }
+    }
+
+    void visit(CategoryCriterion * criterion)
+    {
+        QString statement;
+        const QVector<QVariant> & selectCategories = criterion->selectedCategories;
+
+        switch(criterion->mode){
+        case CategoryCriterion::Disabled:
+            break;
+        case CategoryCriterion::SelectedAndChilds:
+            if(selectCategories.size()>0){
+                QString inStatement("c.id IN (");
+                inStatement+=selectCategories.at(0).toString();
+
+                for(int i=1; i<selectCategories.size();++i){
+                    inStatement+=QLatin1String(",");
+                    inStatement+=selectCategories.at(i).toString();
+                }
+                inStatement+=QLatin1Char(')');
+                statement = inStatement;
+            }
+            break;
+        case CategoryCriterion::SelectedOnly:
+            if(criterion->selectedCategories.size()>0){
+                statement = QString("c.id = %1").arg(selectCategories.at(0).toString());
+            }
+            break;
+        }
+        _categoryClause.setWhereStatement(statement);
+    }
+
+    void visit(StorageCriterion * criterion)
+    {
+        QString statement;
+        const QVector<QVariant> & selectStorage = criterion->selectedStorages;
+
+        switch(criterion->mode){
+        case StorageCriterion::Disabled:
+            break;
+        case StorageCriterion::SelectedAndChilds:
+            if(selectStorage.size()>0){
+                QString inStatement("s.id IN (");
+                inStatement+=selectStorage.at(0).toString();
+
+                for(int i=1; i<selectStorage.size();++i){
+                    inStatement+=QLatin1String(",");
+                    inStatement+=selectStorage.at(i).toString();
+                }
+                inStatement+=QLatin1Char(')');
+                statement = inStatement;
+            }
+            break;
+        case StorageCriterion::SelectedOnly:
+            if(selectStorage.size()>0){
+                statement = QString("s.id = %1").arg(selectStorage.at(0).toString());
+            }
+            break;
+        }
+        _storageClause.setWhereStatement(statement);
+    }
+
+    QString generateSelectStatement()
+    {
+        QStringList clauses;
+        //Keeps the criterium used for the WHERE clause
+        QStringList criterium;
+
+        clauses.append(_baseSelectClause);
+
+        CriterionClause* criterion;
+        foreach (criterion, _criterions) {
+            if(criterion->isEnabled()){
+                criterium.append(criterion->whereStatement());
+                if(!criterion->joinStatement().isEmpty())
+                    clauses.append(criterion->joinStatement());
+            }
+        }
+
+        //Join the criterium as an where clause
+        if(criterium.size()>0){
+            clauses.append(QLatin1String("WHERE"));
+            clauses.append(criterium.join(" AND "));
+        }
+
+        QString orderBy = orderByClause();
+        if (!orderBy.isEmpty())
+            clauses.append(orderBy);
+
+        const QString statement = clauses.join(QLatin1String(" "));
+
+        qDebug()<<"Select statement is "<<statement;
+        return statement;
+    }
+};

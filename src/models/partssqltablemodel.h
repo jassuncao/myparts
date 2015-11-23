@@ -4,12 +4,14 @@
 #include <QSqlTableModel>
 #include <QVector>
 #include <QDate>
+#include "filterbuilder.h"
 
+/*
 class Criterion
 {
-public:
+public:    
     virtual QString clause() const = 0;
-    virtual QString joinClause() const;
+    virtual QString joinClause() const;    
 };
 
 class StockCriterion : public Criterion
@@ -75,8 +77,9 @@ private:
     const CreateDateCriterion::Mode _mode;
     const QDateTime _dateTimeUtc;
 };
+*/
 
-
+class SelectQueryBuilder;
 
 class PartsSqlTableModel : public QSqlTableModel
 {
@@ -105,6 +108,7 @@ public:
         LAST_COLUMN
     };
 
+
     enum SuportedFilters {
         FilterByStock,
         FilterByCondition,
@@ -112,8 +116,11 @@ public:
         FilterByManufacturer,
         FilterByFootprint,
         FilterByText,
+        FilterByCategory,
+        FilterByStorage,
     };
 
+    /*
     enum CategoryFilterMode {
         AllCategories=1,
         SubCategories=2,
@@ -139,6 +146,7 @@ public:
         DateFilterOn,
         DateFilterAfter
     };
+    */
 
     static const int VISIBILITY_COLUMN_ROLE = Qt::UserRole+1;
     static const int FAKE_COLUMNS_INDEX = ColumnPartUnit;
@@ -146,7 +154,6 @@ public:
     explicit PartsSqlTableModel(QObject *parent = 0);
     ~PartsSqlTableModel();
     int columnCount(const QModelIndex &index = QModelIndex()) const;
-    QString selectStatement2() const;
     QString selectStatement() const;
     bool insertRowIntoTable(const QSqlRecord &values);
     bool updateRowInTable(int row, const QSqlRecord &values);
@@ -156,17 +163,21 @@ public:
     QMimeData *mimeData(const QModelIndexList &indexes) const;
     Qt::DropActions supportedDropActions() const;
     inline QVariant lastInsertedId() const {return _lastInsertedId;}
-    void setFilter(SuportedFilters filter, const QVariant & value);
+    void setCriterion(SuportedFilters kind, FilterCriterion * criterion);
+    void unsetCriterion(SuportedFilters kind);
+    //void setFilter(SuportedFilters filter, const QVariant & value);
     bool updatePartAvgPrice(const QModelIndex &currentIndex, double partPrice);
     bool updatePartStock(const QModelIndex & currentIndex, int stockChange);
 
 private:
+    SelectQueryBuilder * _selectQueryBuilder;
     void setColumnName(int section, const QString & columnName);
+    QVariant _lastInsertedId;
+
+    /*
     const QLatin1String _baseSelectClause;
     const QLatin1String _distributorJoinClause;
-    const QLatin1String _manufacturerJoinClause;
-    QVector<Criterion*> _criterions;
-    QVariant _lastInsertedId;
+    const QLatin1String _manufacturerJoinClause;        
     QVariant _textFilter;
     CategoryFilterMode _categoryFilterMode;
     QVector<QVariant> _selectedCategories;
@@ -180,7 +191,7 @@ private:
     QVariant _selectedDistributorId;
     QVariant _selectedManufacturerId;    
     QString _cachedSelectStatement;
-
+    */
 };
 
 #endif // PARTSSQLTABLEMODEL_H

@@ -1,5 +1,6 @@
 #include "filterarguments.h"
 
+/*
 FilterArguments::FilterArguments(QObject *parent) : QObject(parent)
 {
 
@@ -31,3 +32,4 @@ void FilterArguments::setSelectedDate(const QDate & date)
     _selectedDateUtc = t.toUTC();
 }
 
+*/

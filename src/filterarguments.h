@@ -1,6 +1,7 @@
 #ifndef FILTERARGUMENTS_H
 #define FILTERARGUMENTS_H
 
+/*
 #include <QObject>
 #include <QDate>
 
@@ -38,4 +39,5 @@ private:
     QDateTime _selectedDateUtc;
 };
 
+*/
 #endif // FILTERARGUMENTS_H
