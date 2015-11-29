@@ -4,6 +4,7 @@
 #include "widgets/filteritemwidget.h"
 #include "models/extrarowproxymodel.h"
 #include "models/partssqltablemodel.h"
+#include "models/partsquerybuilder.h"
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -78,24 +79,24 @@ PartsFilterWidget::~PartsFilterWidget()
 {
 }
 
-/*
-void PartsFilterWidget::setFilterBuilder(FilterBuilder * filterBuilder)
+void PartsFilterWidget::setPartsQueryBuilder(PartsQueryBuilder * partsQueryBuilder)
 {
-    _filterBuilder = filterBuilder;
+    _partsQueryBuilder = partsQueryBuilder;
 }
-*/
 
+/*
 void PartsFilterWidget::setPartsModel(PartsSqlTableModel* tableModel)
 {
     _tableModel = tableModel;
 }
+*/
 
 QMenu * PartsFilterWidget::createFilterMoreMenu()
 {
     QMenu * menu = new QMenu(this);
-    createFilterItemAction(menu, tr("Distributor"), PartsSqlTableModel::FilterByDistributor);
-    createFilterItemAction(menu, tr("Manufacturer"), PartsSqlTableModel::FilterByManufacturer);
-    createFilterItemAction(menu, tr("Footprint"), PartsSqlTableModel::FilterByFootprint);
+    createFilterItemAction(menu, tr("Distributor"), PartsQueryBuilder::FilterByDistributor);
+    createFilterItemAction(menu, tr("Manufacturer"), PartsQueryBuilder::FilterByManufacturer);
+    createFilterItemAction(menu, tr("Footprint"), PartsQueryBuilder::FilterByFootprint);
     return menu;
 }
 
@@ -121,23 +122,23 @@ FilterItemWidget * PartsFilterWidget::createStockFilterItem()
 {
     QStandardItemModel * stockFilterItemModel = new QStandardItemModel(4,0,this);
     QStandardItem * anyStockItem = new QStandardItem(tr("Any"));
-    anyStockItem->setData(PartsSqlTableModel::AnyStockLevel);
+    anyStockItem->setData(PartsQueryBuilder::AnyStockLevel);
 
     QStandardItem * zeroStockItem = new QStandardItem(tr("Out of stock"));
-    zeroStockItem->setData(PartsSqlTableModel::StockLevelZero);
+    zeroStockItem->setData(PartsQueryBuilder::StockLevelZero);
 
     QStandardItem * inStockItem = new QStandardItem(tr("In Stock"));
-    inStockItem->setData(PartsSqlTableModel::StockLevelGreaterZero);
+    inStockItem->setData(PartsQueryBuilder::StockLevelGreaterZero);
 
     QStandardItem * belowMinStockItem = new QStandardItem(tr("Below Minimum"));
-    belowMinStockItem->setData(PartsSqlTableModel::StockLevelBelowMin);
+    belowMinStockItem->setData(PartsQueryBuilder::StockLevelBelowMin);
 
     stockFilterItemModel->setItem(0,anyStockItem);
     stockFilterItemModel->setItem(1,zeroStockItem);
     stockFilterItemModel->setItem(2,inStockItem);
     stockFilterItemModel->setItem(3,belowMinStockItem);
 
-    FilterItemWidget * item  = new FilterItemWidget(tr("Stock:"), PartsSqlTableModel::FilterByStock, false, this);
+    FilterItemWidget * item  = new FilterItemWidget(tr("Stock:"), PartsQueryBuilder::FilterByStock, false, this);
     item->setOptionsModel(stockFilterItemModel);
     item->setDisplayColumn(0);
     item->setValueColumn(0,  Qt::UserRole + 1);
@@ -153,7 +154,7 @@ FilterItemWidget * PartsFilterWidget::createPartConditionFilterItem()
     conditionProxyModel->setEmptyDisplayText(tr("Any"));
     conditionProxyModel->setSourceModel(conditionModel);
 
-    FilterItemWidget * item  = new FilterItemWidget(tr("Condition:"), PartsSqlTableModel::FilterByCondition, false, this);
+    FilterItemWidget * item  = new FilterItemWidget(tr("Condition:"), PartsQueryBuilder::FilterByCondition, false, this);
     item->setOptionsModel(conditionProxyModel);
     item->setDisplayColumn(1);
     item->setValueColumn(0, Qt::EditRole);
@@ -169,7 +170,7 @@ FilterItemWidget * PartsFilterWidget::createPartDistributorFilterItem()
     proxyModel->setEmptyDisplayText(tr("Any"));
     proxyModel->setSourceModel(sourceModel);
 
-    FilterItemWidget * item  = new FilterItemWidget(tr("Distributor:"), PartsSqlTableModel::FilterByDistributor, true, this);
+    FilterItemWidget * item  = new FilterItemWidget(tr("Distributor:"), PartsQueryBuilder::FilterByDistributor, true, this);
     item->setOptionsModel(proxyModel);
     item->setDisplayColumn(1);
     item->setValueColumn(0, Qt::EditRole);
@@ -185,7 +186,7 @@ FilterItemWidget * PartsFilterWidget::createPartManufacturerFilterItem()
     proxyModel->setEmptyDisplayText(tr("Any"));
     proxyModel->setSourceModel(sourceModel);
 
-    FilterItemWidget * item  = new FilterItemWidget(tr("Manufacturer:"), PartsSqlTableModel::FilterByManufacturer, true, this);
+    FilterItemWidget * item  = new FilterItemWidget(tr("Manufacturer:"), PartsQueryBuilder::FilterByManufacturer, true, this);
     item->setOptionsModel(proxyModel);
     item->setDisplayColumn(1);
     item->setValueColumn(0, Qt::EditRole);
@@ -201,7 +202,7 @@ FilterItemWidget * PartsFilterWidget::createPartFootprintFilterItem()
     proxyModel->setEmptyDisplayText(tr("Any"));
     proxyModel->setSourceModel(sourceModel);
 
-    FilterItemWidget * item  = new FilterItemWidget(tr("Footprint:"), PartsSqlTableModel::FilterByFootprint, true, this);
+    FilterItemWidget * item  = new FilterItemWidget(tr("Footprint:"), PartsQueryBuilder::FilterByFootprint, true, this);
     item->setOptionsModel(proxyModel);
     item->setDisplayColumn(1);
     item->setValueColumn(0, Qt::EditRole);
@@ -216,13 +217,13 @@ void PartsFilterWidget::slotAddFilterItem(const int filterTag)
     }
     FilterItemWidget * item = 0;
     switch(filterTag){
-        case PartsSqlTableModel::FilterByDistributor:
+        case PartsQueryBuilder::FilterByDistributor:
         item = createPartDistributorFilterItem();
         break;
-    case PartsSqlTableModel::FilterByManufacturer:
+    case PartsQueryBuilder::FilterByManufacturer:
         item = createPartManufacturerFilterItem();
         break;
-    case PartsSqlTableModel::FilterByFootprint:
+    case PartsQueryBuilder::FilterByFootprint:
         item = createPartFootprintFilterItem();
         break;
     default:
@@ -254,13 +255,13 @@ void PartsFilterWidget::slotRemoveFilterItem(const int filterTag)
 void PartsFilterWidget::slotFilterItemValueChange(const int filterTag, const QVariant & value)
 {
     qDebug()<<"Filter criterion for "<<filterTag<<" is "<<value;
+    /*
     if(_tableModel){
         _tableModel->setFilter((PartsSqlTableModel::SuportedFilters)filterTag, value);
     }
-    /*
-    if(_filterBuilder)
-        _filterBuilder->setFilter((PartsSqlTableModel::SuportedFilters)filterTag, value);
-        */
+    */
+    if(_partsQueryBuilder)
+        _partsQueryBuilder->setFilter((PartsQueryBuilder::SupportedFilters)filterTag, value);
     emit filterChanged();
 }
 
@@ -280,7 +281,7 @@ void PartsFilterWidget::slotDeleteFilterItem(const int filterTag)
 void PartsFilterWidget::slotTextFilterItemChanged()
 {
     const QString & text = _textFilterItem->text();
-    slotFilterItemValueChange(PartsSqlTableModel::FilterByText, text);
+    slotFilterItemValueChange(PartsQueryBuilder::FilterByText, text);
 }
 
 

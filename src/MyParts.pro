@@ -107,7 +107,8 @@ SOURCES += main.cpp\
     models/extrarowproxymodel.cpp \
     models/partssqltablemodel.cpp \
     widgets/gridwidget.cpp \
-    models/filterbuilder.cpp
+    models/filterbuilder.cpp \
+    models/partsquerybuilder.cpp
 
 HEADERS  += mainwindow.h \
     entities/entities.h \
@@ -198,7 +199,8 @@ HEADERS  += mainwindow.h \
     models/extrarowproxymodel.h \
     models/partssqltablemodel.h \
     widgets/gridwidget.h \
-    models/filterbuilder.h
+    models/filterbuilder.h \
+    models/partsquerybuilder.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \

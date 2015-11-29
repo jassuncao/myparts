@@ -11,6 +11,7 @@
 #include <QDataWidgetMapper>
 #include <QIdentityProxyModel>
 #include <QAbstractItemModel>
+#include <QDateTime>
 
 /*
 class StockChangeDelegate : public QStyledItemDelegate {

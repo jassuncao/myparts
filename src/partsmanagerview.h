@@ -22,6 +22,7 @@ class QPushButton;
 class QToolButton;
 class FilterBuilder;
 class PartsSqlTableModel;
+class PartsQueryBuilder;
 
 class PartsManagerView : public Manhattan::MiniSplitter
 {
@@ -53,6 +54,7 @@ private:
     PartsFilterWidget * _partsFilterWidget;
     QPushButton * _deletePartButton;
     QPushButton * _duplicatePartButton;
+    PartsQueryBuilder * _partsQueryBuilder;
 };
 
 #endif // PARTSMANAGERVIEW_H

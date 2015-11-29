@@ -1,5 +1,6 @@
 #include "filterbuilder.h"
 
+/*
 #include <QStringList>
 #include <QDebug>
 
@@ -356,10 +357,10 @@ public:
         QString orderBy = orderByClause();
         if (!orderBy.isEmpty())
             clauses.append(orderBy);
-
         const QString statement = clauses.join(QLatin1String(" "));
 
         qDebug()<<"Select statement is "<<statement;
         return statement;
     }
 };
+*/

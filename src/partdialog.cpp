@@ -14,6 +14,7 @@
 #include <QSortFilterProxyModel>
 #include <QIdentityProxyModel>
 #include <QSqlRecord>
+#include <QDateTime>
 #include "quickaddstoragedialog.h"
 
 #include "widgets/parametervaluedelegate.h"

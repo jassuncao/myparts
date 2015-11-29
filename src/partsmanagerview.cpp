@@ -14,6 +14,7 @@
 #include "addstockdialog.h"
 #include "removestockdialog.h"
 #include "parts/partsdao.h"
+#include "models/partsquerybuilder.h"
 
 #include <QHBoxLayout>
 #include <QPushButton>
@@ -29,7 +30,8 @@
 PartsManagerView::PartsManagerView(QWidget *parent)
     : MiniSplitter(parent)      
 {
-    _partsModel = new PartsSqlTableModel(this);
+    _partsQueryBuilder = new PartsQueryBuilder();
+    _partsModel = new PartsSqlTableModel(_partsQueryBuilder, this);
     _partsModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
     connect(_partsModel,SIGNAL(primeInsert(int,QSqlRecord&)), this, SLOT(slotPartsModelPrimeInsert(int,QSqlRecord&)));
 
@@ -85,8 +87,9 @@ PartsManagerView::PartsManagerView(QWidget *parent)
     hLine->setFrameShape(QFrame::HLine);
     hLine->setFrameShadow(QFrame::Sunken);
 
+
     _partsFilterWidget = new PartsFilterWidget(this);
-    _partsFilterWidget->setPartsModel(_partsModel);
+    _partsFilterWidget->setPartsQueryBuilder(_partsQueryBuilder);
 
     _partsTableView = createPartsTableView(_partsModel);
     QVBoxLayout * centerLayout = new QVBoxLayout;
@@ -126,6 +129,9 @@ PartsManagerView::PartsManagerView(QWidget *parent)
 
 PartsManagerView::~PartsManagerView()
 {
+    if(_partsQueryBuilder){
+        delete _partsQueryBuilder;        
+    }
 }
 
 PartsTableView *PartsManagerView::createPartsTableView(QAbstractTableModel * tableModel){

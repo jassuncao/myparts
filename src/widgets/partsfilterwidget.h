@@ -14,6 +14,7 @@ class QPushButton;
 class QMenu;
 class FilterBuilder;
 class PartsSqlTableModel;
+class PartsQueryBuilder;
 
 class QFilterItemAction : public QAction {
     Q_OBJECT
@@ -35,8 +36,7 @@ class PartsFilterWidget : public QWidget
 public:
     explicit PartsFilterWidget(QWidget *parent = 0);
     ~PartsFilterWidget();
-    //void setFilterBuilder(FilterBuilder * filterBuilder);
-    void setPartsModel(PartsSqlTableModel* tableModel);
+    void setPartsQueryBuilder(PartsQueryBuilder * partsQueryBuilder);
 signals:
     void filterChanged();
 public slots:
@@ -62,8 +62,7 @@ private:
     QSearchLineEdit * _textFilterItem;
     QPushButton * _moreButton;
     QHash<int, FilterItemWidget*> _activeFilterItems;
-    //FilterBuilder * _filterBuilder;
-    PartsSqlTableModel * _tableModel;
+    PartsQueryBuilder * _partsQueryBuilder;
 };
 
 #endif // PARTSFILTERWIDGET_H

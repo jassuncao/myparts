@@ -1,6 +1,7 @@
 #ifndef FILTERBUILDER_H
 #define FILTERBUILDER_H
 
+/*
 #include <QDateTime>
 #include <QVariant>
 #include <QVector>
@@ -114,6 +115,7 @@ public:
     virtual void visit(CategoryCriterion * criterion)=0;
     virtual void visit(StorageCriterion * criterion)=0;
 };
+*/
 
 
 

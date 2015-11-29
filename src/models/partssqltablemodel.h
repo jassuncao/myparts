@@ -2,84 +2,9 @@
 #define PARTSSQLTABLEMODEL_H
 
 #include <QSqlTableModel>
-#include <QVector>
-#include <QDate>
 #include "filterbuilder.h"
 
-/*
-class Criterion
-{
-public:    
-    virtual QString clause() const = 0;
-    virtual QString joinClause() const;    
-};
-
-class StockCriterion : public Criterion
-{
-public:
-    enum Mode {
-        AnyStockLevel,
-        StockLevelZero,
-        StockLevelGreaterZero,
-        StockLevelBelowMin
-    };
-    explicit StockCriterion(StockCriterion::Mode mode);
-    QString clause() const;
-
-private:
-    const StockCriterion::Mode _mode;
-};
-
-class BasicForeignKeyCriterion : public Criterion
-{
-public:
-    explicit BasicForeignKeyCriterion(const QString & name, const QVariant & value);
-    QString clause() const;
-private:
-    const QString _foreignKeyName;
-    const QVariant _foreignKeyValue;
-};
-
-class DistributorCriterion : public Criterion
-{
-public:
-    explicit DistributorCriterion(QVariant & distributorId);
-    QString clause() const;
-    QString joinClause() const;
-private:
-    const QVariant _distributorId;
-    const QLatin1String _joinClause;
-};
-
-class ManufacturerCriterion : public Criterion
-{
-public:
-    explicit ManufacturerCriterion(QVariant & manufacturerId);
-    QString clause() const;
-    QString joinClause() const;
-private:
-    const QVariant _manufacturerId;
-    const QLatin1String _joinClause;
-};
-
-class CreateDateCriterion : public Criterion
-{
-public:
-    enum Mode {
-        DateFilterNone,
-        DateFilterBefore,
-        DateFilterOn,
-        DateFilterAfter
-    };
-    explicit CreateDateCriterion(CreateDateCriterion::Mode mode, const QDate & dateUtc);
-    QString clause() const;
-private:
-    const CreateDateCriterion::Mode _mode;
-    const QDateTime _dateTimeUtc;
-};
-*/
-
-class SelectQueryBuilder;
+class PartsQueryBuilder;
 
 class PartsSqlTableModel : public QSqlTableModel
 {
@@ -108,50 +33,10 @@ public:
         LAST_COLUMN
     };
 
-
-    enum SuportedFilters {
-        FilterByStock,
-        FilterByCondition,
-        FilterByDistributor,
-        FilterByManufacturer,
-        FilterByFootprint,
-        FilterByText,
-        FilterByCategory,
-        FilterByStorage,
-    };
-
-    /*
-    enum CategoryFilterMode {
-        AllCategories=1,
-        SubCategories=2,
-        SelectedCategory=3
-    };
-
-    enum StorageLocationFilterMode {
-        StorageLocationFilterAll=1,
-        StorageLocationFilterSub=2,
-        StorageLocationFilterSelected=3
-    };
-
-    enum StockFilterMode {
-        AnyStockLevel,
-        StockLevelZero,
-        StockLevelGreaterZero,
-        StockLevelBelowMin
-    };
-
-    enum DateFilterMode {
-        DateFilterNone,
-        DateFilterBefore,
-        DateFilterOn,
-        DateFilterAfter
-    };
-    */
-
     static const int VISIBILITY_COLUMN_ROLE = Qt::UserRole+1;
     static const int FAKE_COLUMNS_INDEX = ColumnPartUnit;
 
-    explicit PartsSqlTableModel(QObject *parent = 0);
+    explicit PartsSqlTableModel(PartsQueryBuilder * partsQueryBuilder, QObject *parent = 0);
     ~PartsSqlTableModel();
     int columnCount(const QModelIndex &index = QModelIndex()) const;
     QString selectStatement() const;
@@ -162,36 +47,14 @@ public:
     QStringList mimeTypes() const;
     QMimeData *mimeData(const QModelIndexList &indexes) const;
     Qt::DropActions supportedDropActions() const;
-    inline QVariant lastInsertedId() const {return _lastInsertedId;}
-    void setCriterion(SuportedFilters kind, FilterCriterion * criterion);
-    void unsetCriterion(SuportedFilters kind);
-    //void setFilter(SuportedFilters filter, const QVariant & value);
+    inline QVariant lastInsertedId() const {return _lastInsertedId;}  
     bool updatePartAvgPrice(const QModelIndex &currentIndex, double partPrice);
     bool updatePartStock(const QModelIndex & currentIndex, int stockChange);
-
+    void setSort(int column, Qt::SortOrder order);
 private:
-    SelectQueryBuilder * _selectQueryBuilder;
+    PartsQueryBuilder * _partsQueryBuilder;
     void setColumnName(int section, const QString & columnName);
-    QVariant _lastInsertedId;
-
-    /*
-    const QLatin1String _baseSelectClause;
-    const QLatin1String _distributorJoinClause;
-    const QLatin1String _manufacturerJoinClause;        
-    QVariant _textFilter;
-    CategoryFilterMode _categoryFilterMode;
-    QVector<QVariant> _selectedCategories;
-    StorageLocationFilterMode _storageLocationFilterMode;
-    QVector<QVariant> _selectedStorageLocations;
-    StockFilterMode _stockFilterMode;
-    DateFilterMode _dateFilterMode;
-    QDateTime _selectedDateUtc;
-    QVariant _selectedConditionId;
-    QVariant _selectedFootprintId;
-    QVariant _selectedDistributorId;
-    QVariant _selectedManufacturerId;    
-    QString _cachedSelectStatement;
-    */
+    QVariant _lastInsertedId;   
 };
 
 #endif // PARTSSQLTABLEMODEL_H
