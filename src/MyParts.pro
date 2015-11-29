@@ -26,7 +26,7 @@ SOURCES += main.cpp\
     category/categoymimedata.cpp \
     entities/entities.cpp \
     widgets/customtreeview.cpp \
-    partcategorydialog.cpp \
+    dialogs/partcategorydialog.cpp \
     models/treeitem.cpp \
     category/partunitdialog.cpp \
     widgets/booleanitemdelegate.cpp \
@@ -42,16 +42,16 @@ SOURCES += main.cpp\
     parts/partssqlquerymodel.cpp \
     widgets/datetimedelegate.cpp \
     parts/partssqlquerymodel2.cpp \
-    addstockdialog.cpp \
+    dialogs/addstockdialog.cpp \
     parts/partsdao.cpp \
-    removestockdialog.cpp \
+    dialogs/removestockdialog.cpp \
     parts/stockhistoryproxymodel.cpp \
     parts/stockhistorymodel.cpp \
     widgets/stockactioncolumndelegate.cpp \
     widgets/qtreebox.cpp \
     models/partconditionsqltablemodel.cpp \
     widgets/partstoragewidget.cpp \
-    quickaddstoragedialog.cpp \
+    dialogs/quickaddstoragedialog.cpp \
     widgets/currencydelegate.cpp \
     widgets/optionswidget.cpp \
     models/treeitemmodel.cpp \
@@ -79,7 +79,7 @@ SOURCES += main.cpp\
     distributormanagerwidget.cpp \
     distributordetailswidget.cpp \
     utils.cpp \
-    attachmentselectiondialog.cpp \
+    dialogs/attachmentselectiondialog.cpp \
     valuewithunit.cpp \
     parametervalue.cpp \
     models/customtablemodel.cpp \
@@ -114,7 +114,7 @@ HEADERS  += mainwindow.h \
     category/categorytreemodel.h \
     category/categoymimedata.h \
     widgets/customtreeview.h \
-    partcategorydialog.h \
+    dialogs/partcategorydialog.h \
     models/treeitem.h \
     category/partunitdialog.h \
     widgets/booleanitemdelegate.h \
@@ -130,16 +130,16 @@ HEADERS  += mainwindow.h \
     parts/partssqlquerymodel.h \
     widgets/datetimedelegate.h \
     parts/partssqlquerymodel2.h \
-    addstockdialog.h \
+    dialogs/addstockdialog.h \
     parts/partsdao.h \
-    removestockdialog.h \
+    dialogs/removestockdialog.h \
     parts/stockhistoryproxymodel.h \
     parts/stockhistorymodel.h \
     widgets/stockactioncolumndelegate.h \
     widgets/qtreebox.h \
     models/partconditionsqltablemodel.h \
     widgets/partstoragewidget.h \
-    quickaddstoragedialog.h \
+    dialogs/quickaddstoragedialog.h \
     widgets/currencydelegate.h \
     widgets/optionswidget.h \
     models/treeitemmodel.h \
@@ -166,7 +166,7 @@ HEADERS  += mainwindow.h \
     distributormanagerwidget.h \
     distributordetailswidget.h \
     utils.h \
-    attachmentselectiondialog.h \
+    dialogs/attachmentselectiondialog.h \
     valuewithunit.h \
     parametervalue.h \
     models/customtablemodel.h \
@@ -197,13 +197,13 @@ HEADERS  += mainwindow.h \
 FORMS    += mainwindow.ui \
     partdialog.ui \
     partunitsdialog.ui \
-    addstockdialog.ui \
-    removestockdialog.ui \
+    dialogs/addstockdialog.ui \
+    dialogs/removestockdialog.ui \
     dialog.ui \
     partdetailsview.ui \
     storagemanagerform.ui \
     testform1.ui \
-    attachmentselectiondialog.ui \
+    dialogs/attachmentselectiondialog.ui \
     testform2.ui \
     optionsdialog.ui \
     dialogs/manufacturersdialog.ui

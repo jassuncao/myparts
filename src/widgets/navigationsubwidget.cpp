@@ -47,9 +47,9 @@
 #include "styledbar.h"
 #include "navigationtreeview.h"
 #include "qsearchlineedit.h"
-#include "models/partssqltablemodel.h"
 #include "models/partsquerybuilder.h"
 #include "models/treeitemmodel.h"
+#include "dialogs/partcategorydialog.h"
 
 NavigationSubWidget::NavigationSubWidget(QWidget *parent) : QWidget(parent)
 {  
@@ -135,8 +135,8 @@ TreeNavigator::TreeNavigator(QWidget *parent) : QWidget(parent),
     _treeView->setFrameStyle(QFrame::NoFrame);
     _treeView->setTextElideMode(Qt::ElideNone);
     _treeView->setAttribute(Qt::WA_MacShowFocusRect, false);
-    //_treeView->setDragDropMode(QAbstractItemView::DragDrop);
-    _treeView->setDragDropMode(QAbstractItemView::InternalMove);
+    _treeView->setDragDropMode(QAbstractItemView::DragDrop);
+    //_treeView->setDragDropMode(QAbstractItemView::InternalMove);
     _treeView->setDefaultDropAction(Qt::MoveAction);
     _treeView->setHeaderHidden(true);
     _treeView->setSelectionMode(QTreeView::SingleSelection);
@@ -179,13 +179,6 @@ TreeItemModel * TreeNavigator::model() const
 {
     return _model;
 }
-
-/*
-void TreeNavigator::setPartsModel(PartsSqlTableModel * partsModel)
-{
-    _partsModel = partsModel;
-}
-*/
 
 QList<QToolButton *> TreeNavigator::toolButtons()
 {
@@ -236,6 +229,11 @@ void TreeNavigator::onFilterChanged(const QString &)
 
 }
 
+QModelIndex TreeNavigator::currentIndex() const
+{
+    return _treeView->currentIndex();
+}
+
 void TreeNavigator::slotTreeFilterModeToggled(bool checked)
 {
     _filterSelectedItemChecked=checked;    
@@ -269,7 +267,7 @@ void TreeNavigator::slotCurrentChanged(const QModelIndex &current, const QModelI
     else{
         selected = _model->getSubTreeIds(current);
     }
-    emit selectionChanged(selected);
+    emit selectionChanged(selected);    
 }
 
 
@@ -293,7 +291,7 @@ void CategoryNavigator::onContextMenuRequested(const QPoint & globalPos, const Q
     bool canDelete = false;
     if(indexValid){
         canDelete = !index.sibling(0, 0).isValid();
-    }
+    }    
     _actionDeleteCategory->setEnabled(indexValid);
     _actionEditCategory->setEnabled(canDelete);
     _actionsMenu->exec(globalPos);
@@ -305,6 +303,18 @@ void CategoryNavigator::onFilterChanged(const QString & text)
 
 void CategoryNavigator::slotAddCategory()
 {
+    const QModelIndex & parent = currentIndex();
+    int newRow = model()->rowCount(parent);
+    if(model()->insertItem(parent)){
+        PartCategoryDialog dlg(model(), this);
+        dlg.setRootIndex(parent);
+        dlg.setCurrentIndex(newRow);
+        if(dlg.exec()){
+        }
+    }
+    else{
+        qWarning()<<"Failed to insert category";
+    }
 
 }
 

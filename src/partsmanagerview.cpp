@@ -11,8 +11,8 @@
 #include "widgets/qactionpushbutton.h"
 #include "models/partssqltablemodel.h"
 #include "partdialog.h"
-#include "addstockdialog.h"
-#include "removestockdialog.h"
+#include "dialogs/addstockdialog.h"
+#include "dialogs/removestockdialog.h"
 #include "parts/partsdao.h"
 #include "models/partsquerybuilder.h"
 

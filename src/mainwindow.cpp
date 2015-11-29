@@ -10,7 +10,6 @@
 #include "unitmanagerwidget.h"
 #include "distributormanagerwidget.h"
 #include "dialogs/manufacturersdialog.h"
-#include "partmanagerform.h"
 #include "partsmanagerview.h"
 #include "distributorsmanagerview.h"
 #include "editormanagerview.h"

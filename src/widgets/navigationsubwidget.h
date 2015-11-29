@@ -93,6 +93,7 @@ protected:
     explicit TreeNavigator(QWidget *parent = 0);
     virtual void onContextMenuRequested(const QPoint &globalPos, const QModelIndex & index);
     virtual void onFilterChanged(const QString & text);
+    QModelIndex currentIndex() const;
 private slots:
     void slotCustomContextMenuRequested(const QPoint &pos);
     void slotTextChanged();
