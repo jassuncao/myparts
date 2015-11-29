@@ -41,14 +41,14 @@ public:
         SelectedNode=3
     };
     NodeCriterionValue();
-    NodeCriterionValue(Mode mode, QVector<int> selectedNodes);
+    NodeCriterionValue(Mode mode, QList<int> selectedNodes);
     NodeCriterionValue(const NodeCriterionValue &other);
     ~NodeCriterionValue();
     Mode mode() const { return _mode; }
-    QVector<int> selectedNodes() const { return _selectedNodes; }
+    QList<int> selectedNodes() const { return _selectedNodes; }
 private:
     Mode _mode;
-    QVector<int> _selectedNodes;
+    QList<int> _selectedNodes;
 };
 
 QDebug operator<<(QDebug dbg, const DateCriterionValue &value);

@@ -25,6 +25,7 @@
 #include <QSqlQuery>
 #include <QMenu>
 #include <QToolButton>
+#include <QIcon>
 #include <QDebug>
 
 PartsManagerView::PartsManagerView(QWidget *parent)
@@ -45,14 +46,13 @@ PartsManagerView::PartsManagerView(QWidget *parent)
 
     CategoryNavigator * categoryNavigator = new CategoryNavigator(_navWidget);
     categoryNavigator->setModel(_categoriesTreeModel);
-    categoryNavigator->setPartsModel(_partsModel);
+    connect(categoryNavigator, SIGNAL(selectionChanged(QList<int>)), this, SLOT(slotSelectedCategoryChanged(QList<int>)));
     _navWidget->addNavigator(categoryNavigator);
-
 
     StorageNavigator * storageNavigator = new StorageNavigator(_navWidget);
     storageNavigator->setModel(_storageTreeModel);
-    storageNavigator->setPartsModel(_partsModel);
-    _navWidget->addNavigator(storageNavigator);
+    connect(storageNavigator, SIGNAL(selectionChanged(QList<int>)), this, SLOT(slotSelectedStorageChanged(QList<int>)));
+    _navWidget->addNavigator(storageNavigator);    
     _navWidget->setCurrentNavigator(0);
 
     Manhattan::StyledBar * centerPaneTitleBar = new Manhattan::StyledBar;
@@ -64,16 +64,14 @@ PartsManagerView::PartsManagerView(QWidget *parent)
     centerPaneTitleLayout->addWidget(centerPaneTitleLabel);
     centerPaneTitleBar->setLayout(centerPaneTitleLayout);
 
-    /*
     QMenu * duplicateBtnMenu = new QMenu(this);
-    QAction * duplicateAllDataAction = duplicateBtnMenu->addAction(tr("Duplicate with all data"));
-    duplicateBtnMenu->addAction(tr("Duplicate basic data only"));
-    QAction * duplicateAction = new QAction(tr("Duplicate"), this);
-    */
+    duplicateBtnMenu->addAction(tr("Duplicate with all data"));
+    duplicateBtnMenu->addAction(tr("Duplicate basic data only"));    
 
-    QPushButton * addPartButton = new QPushButton(tr("Add part"), this);
-    _deletePartButton = new QPushButton(tr("Delete part"), this);           
-    _duplicatePartButton = new QPushButton(tr("Duplicate"), this);
+    QPushButton * addPartButton = new QPushButton(QIcon(QString::fromLatin1(":/icons/addStock")), tr("Add part"), this);
+    _deletePartButton = new QPushButton(QIcon(QString::fromLatin1(":/icons/removeStock")), tr("Delete part"), this);
+    _duplicatePartButton = new QPushButton(QIcon(QString::fromLatin1(":/icons/duplicatePart")), tr("Duplicate"), this);
+    _duplicatePartButton->setMenu(duplicateBtnMenu);
 
     QHBoxLayout * partsActionsLayout = new QHBoxLayout;
     partsActionsLayout->setSpacing(6);
@@ -86,7 +84,6 @@ PartsManagerView::PartsManagerView(QWidget *parent)
     QFrame * hLine = new QFrame(this);
     hLine->setFrameShape(QFrame::HLine);
     hLine->setFrameShadow(QFrame::Sunken);
-
 
     _partsFilterWidget = new PartsFilterWidget(this);
     _partsFilterWidget->setPartsQueryBuilder(_partsQueryBuilder);
@@ -119,7 +116,6 @@ PartsManagerView::PartsManagerView(QWidget *parent)
     addWidget(_navWidget);
     addWidget(centerPane);
     addWidget(rightPane);
-    //connect(_navWidget, SIGNAL(modeChanged(int)), this, SLOT(slotNavModeChanged(int)));
     connect(addPartButton, SIGNAL(clicked()), this, SLOT(slotAddPart()));
     connect(_deletePartButton, SIGNAL(clicked()), this, SLOT(slotDeletePart()));
     connect(_duplicatePartButton, SIGNAL(clicked()), this, SLOT(slotDuplicatePart()));
@@ -149,18 +145,53 @@ void PartsManagerView::slotNavModeChanged(int mode)
 {
     switch(mode){
         case NavigationSubWidget::Storage:
-        //_navWidget->setModel(_storageTreeModel);
         break;
     default:
-        //_navWidget->setModel(_categoriesTreeModel);
         break;
     }
 }
 
 void PartsManagerView::slotFilterChanged()
 {
-
     _partsModel->select();    
+}
+
+void PartsManagerView::slotSelectedCategoryChanged(const QList<int> selectedIds)
+{
+    NodeCriterionValue::Mode mode;
+    if(selectedIds.size()>1){
+        mode = NodeCriterionValue::IncludeNodeChilds;
+    }
+    else if(selectedIds.size()==1)
+    {
+        mode = NodeCriterionValue::SelectedNode;
+    }
+    else{
+        mode = NodeCriterionValue::All;
+    }
+    NodeCriterionValue value(mode, selectedIds);
+    _partsQueryBuilder->setFilter(PartsQueryBuilder::FilterByCategory, QVariant::fromValue(value));
+    _partsQueryBuilder->setFilter(PartsQueryBuilder::FilterByStorage, QVariant::fromValue(NodeCriterionValue()));
+    slotFilterChanged();
+}
+
+void PartsManagerView::slotSelectedStorageChanged(const QList<int> selectedIds)
+{
+    NodeCriterionValue::Mode mode;
+    if(selectedIds.size()>1){
+        mode = NodeCriterionValue::IncludeNodeChilds;
+    }
+    else if(selectedIds.size()==1)
+    {
+        mode = NodeCriterionValue::SelectedNode;
+    }
+    else{
+        mode = NodeCriterionValue::All;
+    }
+    NodeCriterionValue value(mode, selectedIds);
+    _partsQueryBuilder->setFilter(PartsQueryBuilder::FilterByStorage, QVariant::fromValue(value));
+    _partsQueryBuilder->setFilter(PartsQueryBuilder::FilterByCategory, QVariant::fromValue(NodeCriterionValue()));
+    slotFilterChanged();
 }
 
 void PartsManagerView::slotPartTableCurrentRowChanged(const QModelIndex &current, const QModelIndex &)

@@ -28,6 +28,7 @@ public:
    // void reparent(TreeItem *newParent);
     void appendChild(TreeItem *child);
     void removeAll();
+    void collectIds(QList<int> &to) const;
     /*
     void insertChild(int i, TreeItem *child);
     void removeChild(TreeItem *child);

@@ -47,7 +47,8 @@ QT_END_NAMESPACE
 
 class QSearchLineEdit;
 class TreeNavigator;
-class PartsSqlTableModel;
+class PartsQueryBuilder;
+class TreeItemModel;
 
 namespace Manhattan { class StyledBar; }
 
@@ -83,10 +84,11 @@ class TreeNavigator : public QWidget {
     Q_OBJECT
 public:
     virtual QString title() const = 0;
-    void setModel(QAbstractItemModel *model);
-    QAbstractItemModel * model() const;
+    void setModel(TreeItemModel *model);
+    TreeItemModel *model() const;
     QList<QToolButton*> toolButtons();
-    void setPartsModel(PartsSqlTableModel * partsModel);
+signals:
+    void selectionChanged(const QList<int> selectedIds);
 protected:
     explicit TreeNavigator(QWidget *parent = 0);
     virtual void onContextMenuRequested(const QPoint &globalPos, const QModelIndex & index);
@@ -94,14 +96,14 @@ protected:
 private slots:
     void slotCustomContextMenuRequested(const QPoint &pos);
     void slotTextChanged();
-    void slotCurrentChanged(const QModelIndex &current, const QModelIndex &previous);
+    void slotCurrentChanged(const QModelIndex &current, const QModelIndex &);
     void slotCollapseAll();
     void slotTreeFilterModeToggled(bool checked);
 private:
+    TreeItemModel * _model;
     QSearchLineEdit * _filterLineEdit;
     QTreeView * _treeView;
     bool _filterSelectedItemChecked;
-    PartsSqlTableModel * _partsModel;
 };
 
 class CategoryNavigator : public TreeNavigator
@@ -111,8 +113,8 @@ public:
     explicit CategoryNavigator(QWidget *parent = 0);
     virtual QString title() const { return tr("Categories");}
 protected:
-    virtual void onContextMenuRequested(const QPoint &globalPos, const QModelIndex & index);
-    virtual void onFilterChanged(const QString & text);
+    void onContextMenuRequested(const QPoint &globalPos, const QModelIndex & index);
+    void onFilterChanged(const QString & text);
 private slots:
     void slotAddCategory();
     void slotDeleteCategory();
@@ -130,8 +132,8 @@ public:
     explicit StorageNavigator(QWidget *parent = 0);
     virtual QString title() const { return tr("Storage");}
 protected:
-    virtual void onContextMenuRequested(const QPoint &globalPos, const QModelIndex & index);
-    virtual void onFilterChanged(const QString & text);
+    void onContextMenuRequested(const QPoint &globalPos, const QModelIndex & index);
+    void onFilterChanged(const QString & text);
 private slots:
     void slotAddStorage();
     void slotDeleteStorage();

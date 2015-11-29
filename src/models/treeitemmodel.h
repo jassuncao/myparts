@@ -6,6 +6,7 @@
 #include <QIcon>
 #include <QQueue>
 #include <QMap>
+#include <QList>
 
 class TreeItem;
 
@@ -28,6 +29,7 @@ public:
     bool insertItem(const QModelIndex &parent);
     bool removeItem(const QModelIndex &index);
     int getItemId(const QModelIndex &index) const;
+    QList<int> getSubTreeIds(const QModelIndex &index) const;
     int rootItemId() const;
     bool select();
     void setToolTipColumn(int column);

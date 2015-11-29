@@ -2,7 +2,6 @@
 #define PARTSSQLTABLEMODEL_H
 
 #include <QSqlTableModel>
-#include "filterbuilder.h"
 
 class PartsQueryBuilder;
 

@@ -19,6 +19,7 @@ PartsTableView::PartsTableView(QWidget *parent) :
     verticalHeader()->setVisible(false);
     //horizontalHeader()->setStretchLastSection(true);     
     horizontalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
+    horizontalHeader()->setHighlightSections(false);
     connect(horizontalHeader(), SIGNAL(customContextMenuRequested(QPoint)),
             this, SLOT(slotHeaderContextMenu(QPoint)));
 }

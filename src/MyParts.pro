@@ -20,7 +20,6 @@ include($$DQUEST_INCLUDE_PATH)
 SOURCES += main.cpp\
         mainwindow.cpp \
     partdialog.cpp \
-    partmanagerform.cpp \
     entities/categoriesdao.cpp \
     category/categorytreeitem.cpp \
     category/categorytreemodel.cpp \
@@ -60,8 +59,6 @@ SOURCES += main.cpp\
     entities/storagedao.cpp \
     widgets/treeviewcombobox.cpp \
     models/treemodelmimedata.cpp \
-    partsfilterform.cpp \
-    filterarguments.cpp \
     partdetailsview.cpp \
     storagemanagerform.cpp \
     storagemanagerwidget.cpp \
@@ -107,13 +104,11 @@ SOURCES += main.cpp\
     models/extrarowproxymodel.cpp \
     models/partssqltablemodel.cpp \
     widgets/gridwidget.cpp \
-    models/filterbuilder.cpp \
     models/partsquerybuilder.cpp
 
 HEADERS  += mainwindow.h \
     entities/entities.h \
     partdialog.h \
-    partmanagerform.h \
     entities/categoriesdao.h \
     category/categorytreeitem.h \
     category/categorytreemodel.h \
@@ -152,8 +147,6 @@ HEADERS  += mainwindow.h \
     entities/storagedao.h \
     widgets/treeviewcombobox.h \
     models/treemodelmimedata.h \
-    partsfilterform.h \
-    filterarguments.h \
     partdetailsview.h \
     storagemanagerform.h \
     storagemanagerwidget.h \
@@ -199,17 +192,14 @@ HEADERS  += mainwindow.h \
     models/extrarowproxymodel.h \
     models/partssqltablemodel.h \
     widgets/gridwidget.h \
-    models/filterbuilder.h \
     models/partsquerybuilder.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \
-    partmanagerform.ui \
     partunitsdialog.ui \
     addstockdialog.ui \
     removestockdialog.ui \
     dialog.ui \
-    partsfilterform.ui \
     partdetailsview.ui \
     storagemanagerform.ui \
     testform1.ui \

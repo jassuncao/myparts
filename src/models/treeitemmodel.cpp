@@ -97,6 +97,17 @@ int TreeItemModel::getItemId(const QModelIndex &index) const
     return item->id();
 }
 
+QList<int> TreeItemModel::getSubTreeIds(const QModelIndex &index) const
+{
+    QList<int> list;
+    if(index.isValid()){
+        TreeItem *item = getItem(index);
+        if(item)
+            item->collectIds(list);
+    }
+    return list;
+}
+
 int TreeItemModel::rootItemId() const
 {
     return _invisibleRootItem->child(0)->id();

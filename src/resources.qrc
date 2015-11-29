@@ -60,6 +60,7 @@
         <file alias="expand_tree2">images/expand_tree2.png</file>
         <file alias="tree_filter_selected">images/tree_filter_selected.png</file>
         <file alias="tree_filter_childs">images/tree_filter.png</file>
+        <file alias="duplicatePart">images/brick_link.png</file>
     </qresource>
     <qresource prefix="/largeIcons">
         <file alias="options_general">images/cog_32x32.png</file>

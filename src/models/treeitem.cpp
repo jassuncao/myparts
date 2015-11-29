@@ -130,6 +130,15 @@ TreeItem::TreeItem(const int id, const QVector<QVariant> &data, TreeItem *parent
      childItems.clear();;
  }
 
+ void TreeItem::collectIds(QList<int> & to) const
+ {
+     to.append(_id);
+     TreeItem* it;
+     foreach (it, childItems) {
+         it->collectIds(to);
+     }
+ }
+
  /*
  void TreeItem::reparent(TreeItem *newParent)
  {

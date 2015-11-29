@@ -48,6 +48,8 @@
 #include "navigationtreeview.h"
 #include "qsearchlineedit.h"
 #include "models/partssqltablemodel.h"
+#include "models/partsquerybuilder.h"
+#include "models/treeitemmodel.h"
 
 NavigationSubWidget::NavigationSubWidget(QWidget *parent) : QWidget(parent)
 {  
@@ -144,6 +146,8 @@ TreeNavigator::TreeNavigator(QWidget *parent) : QWidget(parent),
     _treeView->setDragEnabled(true);
     _treeView->setAutoExpandDelay(750);
     _treeView->setAnimated(true);
+    _treeView->setUniformRowHeights(true);
+    _treeView->header()->setStretchLastSection(true);
     setFocusProxy(_treeView);
 
     QVBoxLayout * layout = new QVBoxLayout;
@@ -159,26 +163,29 @@ TreeNavigator::TreeNavigator(QWidget *parent) : QWidget(parent),
     connect(_treeView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slotCustomContextMenuRequested(QPoint)));
 }
 
-void TreeNavigator::setModel(QAbstractItemModel *model)
+void TreeNavigator::setModel(TreeItemModel *model)
 {
     if(_treeView->selectionModel()){
         disconnect(_treeView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
                    this, SLOT(slotCurrentChanged(QModelIndex,QModelIndex)));
     }
+    _model = model;
     _treeView->setModel(model);
     connect(_treeView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
             this, SLOT(slotCurrentChanged(QModelIndex,QModelIndex)));
 }
 
-QAbstractItemModel * TreeNavigator::model() const
+TreeItemModel * TreeNavigator::model() const
 {
-    return _treeView->model();
+    return _model;
 }
 
+/*
 void TreeNavigator::setPartsModel(PartsSqlTableModel * partsModel)
 {
     _partsModel = partsModel;
 }
+*/
 
 QList<QToolButton *> TreeNavigator::toolButtons()
 {
@@ -231,9 +238,10 @@ void TreeNavigator::onFilterChanged(const QString &)
 
 void TreeNavigator::slotTreeFilterModeToggled(bool checked)
 {
-    _filterSelectedItemChecked=checked;
+    _filterSelectedItemChecked=checked;    
     QString tooltip = checked ? tr("Scope: Selected item") : tr("Scope: Include childs");
     static_cast<QWidget*>(sender())->setToolTip(tooltip);
+    slotCurrentChanged(_treeView->currentIndex(), QModelIndex());
 }
 
 
@@ -249,9 +257,19 @@ void TreeNavigator::slotTextChanged()
     onFilterChanged(_filterLineEdit->text());
 }
 
-void TreeNavigator::slotCurrentChanged(const QModelIndex &current, const QModelIndex &previous)
-{
-    qDebug()<<"Changed to "<<current;
+void TreeNavigator::slotCurrentChanged(const QModelIndex &current, const QModelIndex &)
+{    
+    QList<int> selected;
+    if(_filterSelectedItemChecked){
+        int itemId = _model->getItemId(current);
+        if(itemId>=0){
+            selected.append(itemId);
+        }
+    }
+    else{
+        selected = _model->getSubTreeIds(current);
+    }
+    emit selectionChanged(selected);
 }
 
 

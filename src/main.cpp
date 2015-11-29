@@ -66,6 +66,7 @@ int main(int argc, char *argv[])
     QStringList keys = QStyleFactory::keys();
     QLatin1String fusionStyleName("Fusion");
     QLatin1String plastiqueStyleName("Plastique");
+    //QLatin1String plastiqueStyleName("Oxygen");
     bool fusionFound = false;
     bool plastiqueFound = false;
     for(int i=0; i<keys.size(); ++i){

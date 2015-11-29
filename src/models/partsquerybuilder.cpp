@@ -43,10 +43,10 @@ QDebug operator<<(QDebug dbg, const DateCriterionValue &value)
 }
 
 NodeCriterionValue::NodeCriterionValue() :
-    _mode(All), _selectedNodes(QVector<int>())
+    _mode(All), _selectedNodes(QList<int>())
 {}
 
-NodeCriterionValue::NodeCriterionValue(Mode mode, QVector<int> selectedNodes) :
+NodeCriterionValue::NodeCriterionValue(Mode mode, QList<int> selectedNodes) :
     _mode(mode), _selectedNodes(selectedNodes)
 {}
 
@@ -292,7 +292,7 @@ void TextCriterion::setValue(const QVariant & value)
 
 QString TextCriterion::clause() const
 {
-    if(_text.isEmpty()){
+    if(!_text.isEmpty()){
         return QString("(part.name LIKE '\%%1\%' OR part.description LIKE '\%%1\%')").arg(_text);
     }
     return QString();
@@ -326,15 +326,14 @@ void NodeCriterion::setValue(const QVariant & value)
 
 QString NodeCriterion::clause() const
 {
-    const QVector<int> selectedIds = _value.selectedNodes();
+    const QList<int> selectedIds = _value.selectedNodes();
     switch(_value.mode()){
     case NodeCriterionValue::All:
         break;
 
     case NodeCriterionValue::IncludeNodeChilds:
         if(selectedIds.size()>0){
-            QString inStatement = QString("%1 IN (").arg(_foreignKeyName);
-            inStatement+=selectedIds.at(0);
+            QString inStatement = QString("%1 IN (%2").arg(_foreignKeyName).arg(selectedIds.at(0));
 
             for(int i=1; i<selectedIds.size();++i){
                 inStatement+=QString(", %1").arg(selectedIds.at(i));
@@ -384,8 +383,8 @@ PartsQueryBuilder::PartsQueryBuilder() :
     _criterions[FilterByManufacturer] = new ManufacturerCriterion();
     _criterions[FilterByFootprint] = new BasicForeignKeyCriterion("footprint");
     _criterions[FilterByText] = new TextCriterion();
-    _criterions[FilterByCategory] = new NodeCriterion("category");
-    _criterions[FilterByStorage] = new NodeCriterion("storage");
+    _criterions[FilterByCategory] = new NodeCriterion("part.category");
+    _criterions[FilterByStorage] = new NodeCriterion("part.storage");
 
 }
 
