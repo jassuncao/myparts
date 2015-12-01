@@ -44,15 +44,15 @@ PartsManagerView::PartsManagerView(QWidget *parent)
 
     _navWidget = new NavigationSubWidget(this);
 
-    CategoryNavigator * categoryNavigator = new CategoryNavigator(_navWidget);
-    categoryNavigator->setModel(_categoriesTreeModel);
-    connect(categoryNavigator, SIGNAL(selectionChanged(QList<int>)), this, SLOT(slotSelectedCategoryChanged(QList<int>)));
-    _navWidget->addNavigator(categoryNavigator);
+    _categoryNavigator = new CategoryNavigator(_navWidget);
+    _categoryNavigator->setModel(_categoriesTreeModel);
+    connect(_categoryNavigator, SIGNAL(selectionChanged(QList<int>)), this, SLOT(slotSelectedCategoryChanged(QList<int>)));
+    _navWidget->addNavigator(_categoryNavigator);
 
-    StorageNavigator * storageNavigator = new StorageNavigator(_navWidget);
-    storageNavigator->setModel(_storageTreeModel);
-    connect(storageNavigator, SIGNAL(selectionChanged(QList<int>)), this, SLOT(slotSelectedStorageChanged(QList<int>)));
-    _navWidget->addNavigator(storageNavigator);    
+    _storageNavigator = new StorageNavigator(_navWidget);
+    _storageNavigator->setModel(_storageTreeModel);
+    connect(_storageNavigator, SIGNAL(selectionChanged(QList<int>)), this, SLOT(slotSelectedStorageChanged(QList<int>)));
+    _navWidget->addNavigator(_storageNavigator);
     _navWidget->setCurrentNavigator(0);
 
     Manhattan::StyledBar * centerPaneTitleBar = new Manhattan::StyledBar;
@@ -232,9 +232,8 @@ void PartsManagerView::slotPartsModelPrimeInsert(int, QSqlRecord &record)
     //The generated flag needs to be set or this field will not be included in the insert
     record.setGenerated(PartsSqlTableModel::ColumnCreateDate,true);
 
-    //Set the category field using the category selected in the tree view
-    /*
-    QModelIndex currentCategoryIdx = ui->mainTreeView->selectionModel()->currentIndex();
+    //Set the category field using the category selected in the tree view    
+    QModelIndex currentCategoryIdx = _categoryNavigator->currentIndex();
     int categoryId;
     if(currentCategoryIdx.isValid()){
         categoryId = _categoriesTreeModel->getItemId(currentCategoryIdx);
@@ -242,9 +241,20 @@ void PartsManagerView::slotPartsModelPrimeInsert(int, QSqlRecord &record)
     else{
         categoryId = _categoriesTreeModel->rootItemId();
     }
-    record.setValue(PartsSqlQueryModel2::ColumnCategoryId, categoryId);
-    record.setGenerated(PartsSqlQueryModel2::ColumnCategoryId,true);
-    */
+    record.setValue(PartsSqlTableModel::ColumnCategoryId, categoryId);
+    record.setGenerated(PartsSqlTableModel::ColumnCategoryId,true);
+
+    //Set the storage field using the storage selected in the tree view
+    QModelIndex currentStorageIdx = _storageNavigator->currentIndex();
+    int storageId;
+    if(currentStorageIdx.isValid()){
+        storageId = _storageTreeModel->getItemId(currentStorageIdx);
+    }
+    else{
+        storageId = _storageTreeModel->rootItemId();
+    }
+    record.setValue(PartsSqlTableModel::ColumnStorageId, storageId);
+    record.setGenerated(PartsSqlTableModel::ColumnStorageId,true);
 
     //Used to avoid an error in the sql statment generator
     record.setGenerated(PartsSqlTableModel::ColumnId,true);

@@ -87,13 +87,14 @@ public:
     void setModel(TreeItemModel *model);
     TreeItemModel *model() const;
     QList<QToolButton*> toolButtons();
+    QModelIndex currentIndex() const;
 signals:
     void selectionChanged(const QList<int> selectedIds);
 protected:
     explicit TreeNavigator(QWidget *parent = 0);
     virtual void onContextMenuRequested(const QPoint &globalPos, const QModelIndex & index);
-    virtual void onFilterChanged(const QString & text);
-    QModelIndex currentIndex() const;
+    virtual void onFilterChanged(const QString & text);    
+    QTreeView * view();
 private slots:
     void slotCustomContextMenuRequested(const QPoint &pos);
     void slotTextChanged();

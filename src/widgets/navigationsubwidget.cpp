@@ -234,6 +234,12 @@ QModelIndex TreeNavigator::currentIndex() const
     return _treeView->currentIndex();
 }
 
+QTreeView * TreeNavigator::view()
+{
+    return _treeView;
+}
+
+
 void TreeNavigator::slotTreeFilterModeToggled(bool checked)
 {
     _filterSelectedItemChecked=checked;    
@@ -288,12 +294,9 @@ CategoryNavigator::CategoryNavigator(QWidget *parent)
 void CategoryNavigator::onContextMenuRequested(const QPoint & globalPos, const QModelIndex & index)
 {
     bool indexValid = index.isValid();
-    bool canDelete = false;
-    if(indexValid){
-        canDelete = !index.sibling(0, 0).isValid();
-    }    
-    _actionDeleteCategory->setEnabled(indexValid);
-    _actionEditCategory->setEnabled(canDelete);
+    bool canDelete = true;
+    _actionEditCategory->setEnabled(indexValid);
+    _actionDeleteCategory->setEnabled(canDelete);
     _actionsMenu->exec(globalPos);
 }
 
@@ -303,14 +306,23 @@ void CategoryNavigator::onFilterChanged(const QString & text)
 
 void CategoryNavigator::slotAddCategory()
 {
-    const QModelIndex & parent = currentIndex();
-    int newRow = model()->rowCount(parent);
-    if(model()->insertItem(parent)){
+    const QModelIndex & parentIndex = currentIndex();
+    if(model()->insertItem(parentIndex)){
+        view()->expand(parentIndex);
+        int newRow = model()->rowCount(parentIndex) - 1;
         PartCategoryDialog dlg(model(), this);
-        dlg.setRootIndex(parent);
+        dlg.setWindowTitle(tr("Add Category"));
+        dlg.setRootIndex(parentIndex);
         dlg.setCurrentIndex(newRow);
-        if(dlg.exec()){
+        if(dlg.exec()==QDialog::Accepted){
+            QModelIndex childIndex = model()->index(newRow, 0, parentIndex);
+            view()->setCurrentIndex(childIndex);
         }
+        else{
+            model()->revert();
+            view()->setCurrentIndex(parentIndex);
+        }
+        view()->setFocus();
     }
     else{
         qWarning()<<"Failed to insert category";
@@ -320,11 +332,28 @@ void CategoryNavigator::slotAddCategory()
 
 void CategoryNavigator::slotDeleteCategory()
 {
+    QModelIndex currentIdx = currentIndex();
+    if(currentIdx.isValid()){
+        model()->removeItem(currentIdx);
+    }
 
 }
 
 void CategoryNavigator::slotEditCategory()
 {
+    QModelIndex currentIdx = currentIndex();
+    if(!currentIdx.isValid()){
+        return;
+    }
+    PartCategoryDialog dlg(model(), this);
+    dlg.setWindowTitle(tr("Edit Category"));
+    dlg.setRootIndex(currentIdx.parent());
+    dlg.setCurrentModelIndex(currentIdx);
+    if(dlg.exec()==QDialog::Accepted){
+    }
+    else{
+        model()->revert();
+    }
 }
 
 StorageNavigator::StorageNavigator(QWidget *parent)

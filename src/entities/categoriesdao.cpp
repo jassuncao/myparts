@@ -437,16 +437,20 @@ bool CategoriesDAO::remove(int nodeId, int newParent)
         return false;
     }
     int width = (cat.rgt-cat.lft)+1;
+    /*
     if(width>2){
         qWarning("Removing a whole subtree is not supported");
         return false;
     }
+    */
     //First we replace the category of the parts belonging to this category with the parent.
     DQConnection conn;
     QSqlQuery query = conn.query();
-    query.prepare("UPDATE part SET category=? WHERE category=?");
+    query.prepare("UPDATE part SET category=? WHERE category IN (SELECT id FROM part_category WHERE lft BETWEEN ? AND ?)");
+    //query.prepare("UPDATE part SET category=? WHERE category=?");
     query.bindValue(0,newParent);
-    query.bindValue(1,nodeId);
+    query.bindValue(1,cat.lft.get());
+    query.bindValue(2,cat.rgt.get());
     query.exec();
     qDebug("Updated %d parts",query.numRowsAffected());
 
