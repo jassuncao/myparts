@@ -491,13 +491,13 @@ AttachmentTableModel3 * AttachmentTableModel3::createNewPartAttachmentModel(QObj
     return new AttachmentTableModel3("part_attachment", fieldNames, columnNames, "part", parent);
 }
 
-AttachmentTableModel3 * AttachmentTableModel3::createNewFootprintAttachmentModel(QObject * parent)
+AttachmentTableModel3 * AttachmentTableModel3::createNewPackageAttachmentModel(QObject * parent)
 {
     QStringList fieldNames;
     QStringList columnNames;
     fieldNames<<"url"<<"description";
     columnNames<<tr("Location")<<tr("Description");
-    return new AttachmentTableModel3("footprint_attachment", fieldNames, columnNames, "footprint", parent);
+    return new AttachmentTableModel3("package_attachment", fieldNames, columnNames, "package", parent);
 }
 
 

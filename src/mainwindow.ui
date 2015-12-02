@@ -48,7 +48,7 @@
     </property>
     <addaction name="actionManufacturers"/>
     <addaction name="actionDistributors"/>
-    <addaction name="actionFootprints"/>
+    <addaction name="actionPackages"/>
     <addaction name="separator"/>
     <addaction name="actionPreferences"/>
    </widget>
@@ -77,13 +77,13 @@
     <string>Preferences</string>
    </property>
   </action>
-  <action name="actionFootprints">
+  <action name="actionPackages">
    <property name="icon">
     <iconset resource="resources.qrc">
-     <normaloff>:/largeIcons/page_footprints</normaloff>:/largeIcons/page_footprints</iconset>
+     <normaloff>:/largeIcons/page_packages</normaloff>:/largeIcons/page_packages</iconset>
    </property>
    <property name="text">
-    <string>Footprints</string>
+    <string>Packages</string>
    </property>
   </action>
  </widget>

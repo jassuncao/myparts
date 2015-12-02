@@ -30,9 +30,9 @@
         <file alias="box_add">images/box_add.png</file>
         <file alias="box_edit">images/box_edit.png</file>
         <file alias="box_delete">images/box_delete.png</file>
-        <file alias="footprint_add">images/footprint_add.png</file>
-        <file alias="footprint_delete">images/footprint_delete.png</file>
-        <file alias="footprint">images/footprint.png</file>
+        <file alias="package_add">images/footprint_add.png</file>
+        <file alias="package_delete">images/footprint_delete.png</file>
+        <file alias="package">images/footprint.png</file>
         <file alias="view">images/zoom.png</file>
         <file alias="attach">images/attach.png</file>
         <file alias="image_add">images/image_add.png</file>
@@ -71,7 +71,7 @@
         <file alias="options_condition">images/new_32x32.png</file>
         <file alias="page_storage">images/box_open_32x32.png</file>
         <file alias="page_parts">images/brick_32x32.png</file>
-        <file alias="page_footprints">images/footprint_32x32.png</file>
+        <file alias="page_packages">images/footprint_32x32.png</file>
         <file alias="page_projects">images/table_32x32.png</file>
     </qresource>
 </RCC>

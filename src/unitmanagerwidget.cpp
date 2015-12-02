@@ -13,8 +13,8 @@ UnitManagerWidget::UnitManagerWidget(QWidget *parent) : QWidget(parent)
     QToolBar * toolbar = new QToolBar;
     toolbar->setIconSize(QSize(16,16));
 
-    toolbar->addAction(QIcon(":/icons/footprint_add"),tr("Add Unit"), this, SLOT(slotAddItem()));
-    toolbar->addAction(QIcon(":/icons/footprint_delete"),tr("Delete Unit"), this, SLOT(slotDeleteItem()));
+    toolbar->addAction(QIcon(":/icons/package_add"),tr("Add Unit"), this, SLOT(slotAddItem()));
+    toolbar->addAction(QIcon(":/icons/package_delete"),tr("Delete Unit"), this, SLOT(slotDeleteItem()));
 
     _searchLineEdit = new QSearchLineEdit;
     toolbar->addWidget(_searchLineEdit);

@@ -3,7 +3,7 @@
 PartConditionSqlTableModel::PartConditionSqlTableModel(QObject *parent) :
     QSqlTableModel(parent)
 {
-    setTable("part_condition");
+    setTable("condition");
 }
 
 Qt::ItemFlags PartConditionSqlTableModel::flags(const QModelIndex &index) const

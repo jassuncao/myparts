@@ -15,12 +15,12 @@
 #include <QIdentityProxyModel>
 #include <QSqlRecord>
 #include <QDateTime>
-#include "quickaddstoragedialog.h"
+#include "dialogs/quickaddstoragedialog.h"
 
 #include "widgets/parametervaluedelegate.h"
 #include "parts/partsdao.h"
 #include "widgets/currencydelegate.h"
-#include "attachmentselectiondialog.h"
+#include "dialogs/attachmentselectiondialog.h"
 #include <QDialogButtonBox>
 #include <QDesktopServices>
 #include "models/customtablemodel.h"
@@ -34,7 +34,7 @@ PartDialog::PartDialog(PartsSqlTableModel *model, TreeItemModel *storageModel, Q
     ui(new Ui::PartDialog),
     _partsModel(model),
     _storageModel(storageModel),
-    _lastSelectedFootprint(-1),
+    _lastSelectedPackage(-1),
     _addMode(false)
 {
     ui->setupUi(this);
@@ -57,7 +57,7 @@ PartDialog::PartDialog(PartsSqlTableModel *model, TreeItemModel *storageModel, Q
     _mapper->addMapping(ui->minStockSpinBox, PartsSqlTableModel::ColumnMinStock);
     _mapper->addMapping(ui->partConditionCombo, PartsSqlTableModel::ColumnConditionId, "currentKey");
     _mapper->addMapping(ui->partUnitCombo, PartsSqlTableModel::ColumnPartUnitId, "currentKey");
-    _mapper->addMapping(ui->partFootprintCombo, PartsSqlTableModel::ColumnFootprintId, "currentKey");
+    _mapper->addMapping(ui->partPackageCombo, PartsSqlTableModel::ColumnPackageId, "currentKey");
     _mapper->addMapping(ui->initialStockSpinBox,PartsSqlTableModel::ColumnActualStock, "value");
 
     ui->partParametersTableView->setModel(_partParamsModel);
@@ -87,9 +87,9 @@ PartDialog::PartDialog(PartsSqlTableModel *model, TreeItemModel *storageModel, Q
 
     ui->deleteParameterButton->setEnabled(false);    
 
-    connect(ui->partFootprintCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(slotFootprintChanged(int)));
-    connect(ui->noneFootprintRadioButton, SIGNAL(clicked()), this, SLOT(slotDeselectFootprint()));
-    connect(ui->useFootprintRadioButton, SIGNAL(clicked()), this, SLOT(slotUseFootprint()));
+    connect(ui->partPackageCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(slotPackageChanged(int)));
+    connect(ui->nonePackageRadioButton, SIGNAL(clicked()), this, SLOT(slotDeselectPackage()));
+    connect(ui->usePackageRadioButton, SIGNAL(clicked()), this, SLOT(slotUsePackage()));
     connect(ui->addParameterButton, SIGNAL(clicked()), this, SLOT(slotAddParameter()));
     connect(ui->deleteParameterButton, SIGNAL(clicked()), this, SLOT(slotDeleteParameter()));        
     connect(ui->partParametersTableView->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), this, SLOT(slotCurrentPartParameterRowChanged(QModelIndex,QModelIndex)));
@@ -236,11 +236,11 @@ void PartDialog::initCombos()
     ui->partUnitCombo->setModelKeyColumn(0);
     ui->partUnitCombo->setModelColumn(1);
 
-    _footprintsModel = new QSqlQueryModel();
-    _footprintsModel->setQuery("SELECT id, name FROM part_footprint ORDER BY name ASC");
-    ui->partFootprintCombo->setModel(_footprintsModel);
-    ui->partFootprintCombo->setModelKeyColumn(0);
-    ui->partFootprintCombo->setModelColumn(1);
+    _packagesModel = new QSqlQueryModel();
+    _packagesModel->setQuery("SELECT id, name FROM part_package ORDER BY name ASC");
+    ui->partPackageCombo->setModel(_packagesModel);
+    ui->partPackageCombo->setModelKeyColumn(0);
+    ui->partPackageCombo->setModelColumn(1);
 }
 
 void PartDialog::reset()
@@ -301,12 +301,12 @@ void PartDialog::setCurrentModelIndex(const QModelIndex &index)
     _mapper->setCurrentModelIndex(index);
 
     int row = index.isValid() ? index.row() : -1;
-    _lastSelectedFootprint = ui->partFootprintCombo->currentIndex();
-    if(_lastSelectedFootprint<0){
-        ui->noneFootprintRadioButton->setChecked(true);
+    _lastSelectedPackage = ui->partPackageCombo->currentIndex();
+    if(_lastSelectedPackage<0){
+        ui->nonePackageRadioButton->setChecked(true);
     }
     else{
-        ui->useFootprintRadioButton->setChecked(true);
+        ui->usePackageRadioButton->setChecked(true);
     }
 
     QVariant fkey = getColumnValue(_partsModel, row, PartsSqlTableModel::ColumnStorageId);
@@ -404,23 +404,23 @@ void PartDialog::on_quickStorageButton_clicked()
 //    }
 }
 
-void PartDialog::slotFootprintChanged(int index)
+void PartDialog::slotPackageChanged(int index)
 {
     if(index<0){
-        ui->noneFootprintRadioButton->setChecked(true);
+        ui->nonePackageRadioButton->setChecked(true);
     }
     else{
-        ui->useFootprintRadioButton->setChecked(true);
+        ui->usePackageRadioButton->setChecked(true);
     }
 }
 
-void PartDialog::slotDeselectFootprint(){   
-    _lastSelectedFootprint = ui->partFootprintCombo->currentIndex();
-    ui->partFootprintCombo->setCurrentIndex(-1);
+void PartDialog::slotDeselectPackage(){
+    _lastSelectedPackage = ui->partPackageCombo->currentIndex();
+    ui->partPackageCombo->setCurrentIndex(-1);
 }
 
-void PartDialog::slotUseFootprint(){
-    ui->partFootprintCombo->setCurrentIndex(_lastSelectedFootprint);
+void PartDialog::slotUsePackage(){
+    ui->partPackageCombo->setCurrentIndex(_lastSelectedPackage);
 }
 
 void PartDialog::slotAddParameter(){    

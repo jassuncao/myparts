@@ -1,7 +1,7 @@
-#include "footprinteditorwidget.h"
-#include "../attachmentselectiondialog.h"
+#include "packageeditorwidget.h"
+#include "dialogs/attachmentselectiondialog.h"
 #include "models/customtablemodel.h"
-#include "models/footprinttablemodel.h"
+#include "models/packagetablemodel.h"
 #include <QDebug>
 #include <QToolButton>
 #include <QLineEdit>
@@ -22,7 +22,7 @@
 #include <QSqlQuery>
 #include <QDesktopServices>
 
-FootprintEditorWidget::FootprintEditorWidget(QWidget *parent) :
+PackageEditorWidget::PackageEditorWidget(QWidget *parent) :
     AbstractEditor(parent)
 {
     //Info groupbox START
@@ -62,7 +62,7 @@ FootprintEditorWidget::FootprintEditorWidget(QWidget *parent) :
     //Image groupbox END
 
     //Attachments groupbox START
-    _attachmentModel = AttachmentTableModel3::createNewFootprintAttachmentModel(this);
+    _attachmentModel = AttachmentTableModel3::createNewPackageAttachmentModel(this);
 
     _attachmentsTable = new QTableView;
     _attachmentsTable->setSelectionMode(QTableView::SingleSelection);
@@ -104,36 +104,36 @@ FootprintEditorWidget::FootprintEditorWidget(QWidget *parent) :
     connect(_attachmentsTable, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(slotAttachmentDoubleClicked(QModelIndex)));    
 }
 
-QModelIndex FootprintEditorWidget::currentModelIndex() const
+QModelIndex PackageEditorWidget::currentModelIndex() const
 {
     return _currentIndex;
 }
 
-void FootprintEditorWidget::setCurrentModelIndex(const QModelIndex & modelIndex)
+void PackageEditorWidget::setCurrentModelIndex(const QModelIndex & modelIndex)
 {
     _currentIndex = modelIndex;
     _mapper->setCurrentModelIndex(modelIndex);
     setImageEditorData(_mapper->currentIndex());
     setEnabled(_currentIndex.isValid());
-    QVariant footprintId = modelIndex.data(Qt::EditRole);
-    qDebug()<<"footprintId is "<< footprintId;
+    QVariant packageId = modelIndex.data(Qt::EditRole);
+    qDebug()<<"packageId is "<< packageId;
 
-    _attachmentModel->setCurrentForeignKey(footprintId);
+    _attachmentModel->setCurrentForeignKey(packageId);
     _attachmentModel->select();
 }
 
-void FootprintEditorWidget::setModel(QAbstractItemModel * model)
+void PackageEditorWidget::setModel(QAbstractItemModel * model)
 {
     if(_model==model)
         return;
     _model = model;
     _mapper->setModel(_model);
     _mapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
-    _mapper->addMapping(_nameLineEdit, FootprintTableModel::ColumnName);
-    _mapper->addMapping(_descriptionLineEdit, FootprintTableModel::ColumnDescription);
+    _mapper->addMapping(_nameLineEdit, PackageTableModel::ColumnName);
+    _mapper->addMapping(_descriptionLineEdit, PackageTableModel::ColumnDescription);
 }
 
-bool FootprintEditorWidget::validate()
+bool PackageEditorWidget::validate()
 {
     if(_nameLineEdit->text().isEmpty()){
         QMessageBox::warning(this, tr("Required field"), tr("Please fill the name field"), QMessageBox::Close);
@@ -142,25 +142,25 @@ bool FootprintEditorWidget::validate()
     return true;
 }
 
-void FootprintEditorWidget::submit()
+void PackageEditorWidget::submit()
 {
     setImageModelData(_mapper->currentIndex());
     _mapper->submit();
 }
 
-void FootprintEditorWidget::submitChilds(const QVariant & id)
+void PackageEditorWidget::submitChilds(const QVariant & id)
 {
    _attachmentModel->setCurrentForeignKey(id);
    _attachmentModel->submitAll();
 }
 
-void FootprintEditorWidget::revert()
+void PackageEditorWidget::revert()
 {
     _mapper->revert();
     _attachmentModel->select();
 }
 
-void FootprintEditorWidget::slotImageContextMenu(const QPoint &pos)
+void PackageEditorWidget::slotImageContextMenu(const QPoint &pos)
 {
     QMenu menu;
     menu.addAction(_actionSetImageLocal);
@@ -170,44 +170,44 @@ void FootprintEditorWidget::slotImageContextMenu(const QPoint &pos)
     menu.exec(_imageButton->mapToGlobal(pos));
 }
 
-void FootprintEditorWidget::setImageEditorData(int row)
+void PackageEditorWidget::setImageEditorData(int row)
 {
     QString filename;
-    QModelIndex filenameIndex = _model->index(row, FootprintTableModel::ColumnFilename);
+    QModelIndex filenameIndex = _model->index(row, PackageTableModel::ColumnFilename);
     QVariant data = _model->data(filenameIndex, Qt::EditRole);
     if(data.isValid() && data.canConvert(QVariant::String)){
         filename = data.toString();
     }
-    setFootprintImage(filename);
+    setPackageImage(filename);
 }
 
-void FootprintEditorWidget::setFootprintImage(const QString & filePath)
+void PackageEditorWidget::setPackageImage(const QString & filePath)
 {
     QImage pix;
-    QString aux = filePath.isEmpty() ? QLatin1String(":/icons/images/footprintplaceholder.png") : filePath;
-    qDebug()<<"Loading footprint image "<< aux;
+    QString aux = filePath.isEmpty() ? QLatin1String(":/icons/images/packageplaceholder.png") : filePath;
+    qDebug()<<"Loading package image "<< aux;
     if(pix.load(aux)){
-        qDebug()<<"Footprint image loaded" << aux;
+        qDebug()<<"Package image loaded" << aux;
         //Perform rescaling if necessary
         if(pix.width()> _imageButton->width() || pix.height()> _imageButton->height()){
              pix = pix.scaled( _imageButton->width(), _imageButton->height(), Qt::KeepAspectRatio, Qt::SmoothTransformation );
         }
     }
     else{
-        qWarning()<<"Failed to load footprint image "<<filePath;
+        qWarning()<<"Failed to load package image "<<filePath;
         //TODO: Show some warning
     }
     _imageButton->setText(filePath);
     _imageButton->setIcon(QIcon(QPixmap::fromImage(pix)));
 }
 
-void FootprintEditorWidget::setImageModelData(int row)
+void PackageEditorWidget::setImageModelData(int row)
 {
-    QModelIndex filenameIndex = _model->index(row, FootprintTableModel::ColumnFilename);
+    QModelIndex filenameIndex = _model->index(row, PackageTableModel::ColumnFilename);
     _model->setData(filenameIndex, _imageButton->text());
 }
 
-void FootprintEditorWidget::slotImageShow()
+void PackageEditorWidget::slotImageShow()
 {
     if(_imageButton->text().isEmpty()){
         slotAddImage();
@@ -217,7 +217,7 @@ void FootprintEditorWidget::slotImageShow()
     }
 }
 
-void FootprintEditorWidget::slotAddImage()
+void PackageEditorWidget::slotAddImage()
 {
     QFileDialog dlg(this);
     dlg.setNameFilter(tr("Images (*.png *.xpm *.jpg)"));
@@ -227,24 +227,24 @@ void FootprintEditorWidget::slotAddImage()
         QStringList fileNames = dlg.selectedFiles();
         if(fileNames.size()>0){
             QString selectedFile = fileNames.first();
-            setFootprintImage(selectedFile);
+            setPackageImage(selectedFile);
             slotContentChanged();
         }
     }
 }
 
-void FootprintEditorWidget::slotAddImageRemote()
+void PackageEditorWidget::slotAddImageRemote()
 {
     //TODO: Download image from URL and store it locally
 }
 
-void FootprintEditorWidget::slotRemoveImage()
+void PackageEditorWidget::slotRemoveImage()
 {
-    setFootprintImage(QString::null);
+    setPackageImage(QString::null);
     slotContentChanged();
 }
 
-void FootprintEditorWidget::slotAddAttachment()
+void PackageEditorWidget::slotAddAttachment()
 {
     AttachmentSelectionDialog dlg(this);
     if(dlg.exec()){
@@ -257,7 +257,7 @@ void FootprintEditorWidget::slotAddAttachment()
     }
 }
 
-void FootprintEditorWidget::slotRemoveAttachment()
+void PackageEditorWidget::slotRemoveAttachment()
 {
     QModelIndex index = _attachmentsTable->currentIndex();
     if(index.isValid()){
@@ -269,12 +269,12 @@ void FootprintEditorWidget::slotRemoveAttachment()
     }
 }
 
-void FootprintEditorWidget::slotCurrentAttachmentRowChanged(const QModelIndex &current, const QModelIndex &)
+void PackageEditorWidget::slotCurrentAttachmentRowChanged(const QModelIndex &current, const QModelIndex &)
 {
     _removeAttachmentButton->setEnabled(current.isValid());
 }
 
-void FootprintEditorWidget::slotAttachmentDoubleClicked(const QModelIndex &index)
+void PackageEditorWidget::slotAttachmentDoubleClicked(const QModelIndex &index)
 {
     if(!index.isValid()) {
         return;

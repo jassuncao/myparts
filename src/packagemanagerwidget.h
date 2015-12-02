@@ -1,5 +1,5 @@
-#ifndef FOOTPRINTMANAGERWIDGET_H
-#define FOOTPRINTMANAGERWIDGET_H
+#ifndef PACKAGEMANAGERWIDGET_H
+#define PACKAGEMANAGERWIDGET_H
 
 #include <QWidget>
 #include <QModelIndex>
@@ -13,23 +13,23 @@ class QAction;
 class QGraphicsView;
 class QDialogButtonBox;
 class QSqlTableModel;
-class FootprintDetailsWidget;
-class FootprintAttachmentTableModel;
+class PackageDetailsWidget;
+class PackageAttachmentTableModel;
 
 
-class FootprintManagerWidget : public QWidget
+class PackageManagerWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit FootprintManagerWidget(QWidget *parent = 0);
-    ~FootprintManagerWidget();
+    explicit PackageManagerWidget(QWidget *parent = 0);
+    ~PackageManagerWidget();
 
 signals:    
 
 public slots:
 private slots:    
-    void slotAddFootprint();
-    void slotDeleteFootprint();
+    void slotAddPackage();
+    void slotDeletePackage();
     void slotFilterChanged();
     void slotAddImage();
     void slotDeleteImage();   
@@ -37,10 +37,10 @@ private slots:
     void slotReject();    
     void slotCurrentRowChanged(const QModelIndex &current, const QModelIndex &);
 private:
-    QListView * _footprintsListView;
+    QListView * _packagesListView;
     QSearchLineEdit *_searchLineEdit;
-    QSqlTableModel * _footprintsTableModel;
-    FootprintDetailsWidget * _detailsWidget;
+    QSqlTableModel * _packagesTableModel;
+    PackageDetailsWidget * _detailsWidget;
 };
 
-#endif // FOOTPRINTMANAGERWIDGET_H
+#endif // PACKAGEMANAGERWIDGET_H

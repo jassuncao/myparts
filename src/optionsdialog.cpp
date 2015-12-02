@@ -74,7 +74,7 @@ void OptionsDialog::setupPartConditionModel()
     fieldNames<<QLatin1String("defaultCondition")<<QLatin1String("value")<<QLatin1String("Description");
     QStringList columnNames;
     columnNames<<QString()<<tr("Name")<<tr("Description");
-    _partConditionModel = new SimpleSqlTableModel("part_condition", fieldNames, columnNames, QString(), this);
+    _partConditionModel = new SimpleSqlTableModel("condition", fieldNames, columnNames, QString(), this);
     ui->partConditionTableView->setModel(_partConditionModel);
     ui->partConditionTableView->setItemDelegateForColumn(COLUMN_CONDITION_DEFAULT, defaultValueDelegate);
     ui->partConditionTableView->setColumnWidth(COLUMN_CONDITION_DEFAULT, defaultValueDelegate->widthHint());

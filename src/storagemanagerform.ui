@@ -45,7 +45,7 @@
            </property>
            <property name="icon">
             <iconset resource="resources.qrc">
-             <normaloff>:/icons/footprint_add</normaloff>:/icons/footprint_add</iconset>
+             <normaloff>:/icons/package_add</normaloff>:/icons/package_add</iconset>
            </property>
           </widget>
          </item>
@@ -56,7 +56,7 @@
            </property>
            <property name="icon">
             <iconset resource="resources.qrc">
-             <normaloff>:/icons/footprint_delete</normaloff>:/icons/footprint_delete</iconset>
+             <normaloff>:/icons/package_delete</normaloff>:/icons/package_delete</iconset>
            </property>
           </widget>
          </item>
@@ -79,7 +79,7 @@
         <item>
          <widget class="QGroupBox" name="groupBox_4">
           <property name="title">
-           <string>Footprint Information</string>
+           <string>Package Information</string>
           </property>
           <layout class="QFormLayout" name="formLayout_2">
            <item row="0" column="0">
@@ -259,7 +259,7 @@
            <bool>false</bool>
           </property>
           <property name="title">
-           <string>Footprint Information</string>
+           <string>Package Information</string>
           </property>
           <property name="checkable">
            <bool>false</bool>

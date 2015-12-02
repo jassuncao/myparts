@@ -1,6 +1,6 @@
 #include "editormanagerview.h"
 #include "editors/companyeditorwidget.h"
-#include "editors/footprinteditorwidget.h"
+#include "editors/packageeditorwidget.h"
 #include "widgets/itemstreeview.h"
 #include "widgets/listnavigatorwidget.h"
 #include "widgets/qsearchlineedit.h"
@@ -44,15 +44,15 @@ AbstractEditor* ManufacturerManagerHelper::createEditor() const {
     return new CompanyEditorWidget;
 }
 
-QWidget* FootprintManagerHelper::createNoDataWidget() const
+QWidget* PackageManagerHelper::createNoDataWidget() const
 {
-    QLabel * l = new QLabel(tr("Select a footprint"));
+    QLabel * l = new QLabel(tr("Select a package"));
     l->setAlignment(Qt::AlignCenter);
     return l;
 }
 
-AbstractEditor* FootprintManagerHelper::createEditor() const {
-    return new FootprintEditorWidget;
+AbstractEditor* PackageManagerHelper::createEditor() const {
+    return new PackageEditorWidget;
 }
 
 

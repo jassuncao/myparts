@@ -55,7 +55,7 @@ private:
     FilterItemWidget * createPartConditionFilterItem();
     FilterItemWidget * createPartDistributorFilterItem();
     FilterItemWidget * createPartManufacturerFilterItem();
-    FilterItemWidget * createPartFootprintFilterItem();
+    FilterItemWidget * createPartPackageFilterItem();
 
     QHBoxLayout * _fixedItemsLayout;
     FlowLayout * _dynamicItemsLayout;   

@@ -4,8 +4,8 @@
 #include "widgets/currencydelegate.h"
 #include "widgets/datetimedelegate.h"
 #include "models/customtablemodel.h"
-#include "addstockdialog.h"
-#include "removestockdialog.h"
+#include "dialogs/addstockdialog.h"
+#include "dialogs/removestockdialog.h"
 #include <QDebug>
 #include <QPushButton>
 #include <QDataWidgetMapper>
@@ -237,7 +237,7 @@ void PartDetailsView::setPartsModel(PartsSqlTableModel * model)
     _widgetMapper->addMapping(ui->partCreateDateLabel, PartsSqlTableModel::ColumnCreateDate);
     _widgetMapper->addMapping(ui->partStorageLocationLabel, PartsSqlTableModel::ColumnStorage);
     _widgetMapper->addMapping(ui->partConditionLabel, PartsSqlTableModel::ColumnCondition);
-    _widgetMapper->addMapping(ui->partFootprintLabel, PartsSqlTableModel::ColumnFootprintName);
+    _widgetMapper->addMapping(ui->partPackageLabel, PartsSqlTableModel::ColumnPackageName);
     setCurrentIndex(QModelIndex());        
 }
 

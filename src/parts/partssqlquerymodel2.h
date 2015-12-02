@@ -24,12 +24,12 @@ public:
         ColumnCategoryId,
         ColumnStorageId,
         ColumnConditionId,
-        ColumnFootprintId,
+        ColumnPackageId,
         ColumnPartUnit,
         ColumnCategoryName,
         ColumnStorage,
         ColumnCondition,
-        ColumnFootprintName
+        ColumnPackageName
     };
     static const int VISIBILITY_COLUMN_ROLE = Qt::UserRole+1;
     static const int FAKE_COLUMNS_INDEX = ColumnPartUnit;    
@@ -62,7 +62,7 @@ public:
         FilterByCondition,
         FilterByDistributor,
         FilterByManufacturer,
-        FilterByFootprint,
+        FilterByPackage,
         FilterByText,
     };
 
@@ -108,8 +108,8 @@ public:
     void setSelectedDate(const QDate & date);
     void setFilterByConditionEnabled(bool value);
     void setSelectedCondition(QVariant conditionId);
-    void setSelectedFootprint(QVariant footprintId);
-    void setFilterByFootprintEnabled(bool b);
+    void setSelectedPackage(QVariant packageId);
+    void setFilterByPackageEnabled(bool b);
     void setSelectedDistributor(QVariant distributorId);
     void setFilter(SuportedFilters filter, const QVariant & value);
 
@@ -123,9 +123,9 @@ private:
     DateFilterMode _dateFilterMode;
     QDateTime _selectedDateUtc;
     bool _filterByCondition;
-    bool _filterByFootprint;
+    bool _filterByPackage;
     QVariant _selectedConditionId;
-    QVariant _selectedFootprintId;
+    QVariant _selectedPackageId;
     QVariant _selectedDistributorId;
 };
 

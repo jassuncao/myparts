@@ -5,16 +5,16 @@
 
 static const char * BASE_CLAUSE = "SELECT part.id, part.name, part.description, part.actualStock, part.minimumStock, part.averagePrice, part.comment, part.customPartNumber, "
 "part.createDate, part.partUnit, part.category, part.storage, part.condition, "
-"part.footprint, u.name AS unitName, c.name AS categoryName, s.name AS storageName, cond.value AS conditionValue, "
-"footprint.name as footprintName "
-"FROM part LEFT JOIN part_category c ON part.category=c.id "
+"part.package, u.name AS unitName, c.name AS categoryName, s.name AS storageName, cond.value AS conditionValue, "
+"package.name as packageName "
+"FROM part LEFT JOIN category c ON part.category=c.id "
 "LEFT JOIN part_unit u ON part.partUnit=u.id "
-"LEFT JOIN part_storage s ON part.storage=s.id "
-"LEFT JOIN part_condition cond ON part.condition=cond.id "
-"LEFT JOIN part_footprint footprint ON part.footprint=footprint.id ";
+"LEFT JOIN storage s ON part.storage=s.id "
+"LEFT JOIN condition cond ON part.condition=cond.id "
+"LEFT JOIN package package ON part.package=package.id ";
 
-static const char * DISTRIBUTOR_JOIN_CLAUSE = "INNER JOIN part_distributor d ON part.id=d.part ";
-static const char * MANUFACTURER_JOIN_CLAUSE = "INNER JOIN part_manufacturer m ON part.id=m.part ";
+static const char * DISTRIBUTOR_JOIN_CLAUSE = "INNER JOIN distributor d ON part.id=d.part ";
+static const char * MANUFACTURER_JOIN_CLAUSE = "INNER JOIN manufacturer m ON part.id=m.part ";
 
 DateCriterionValue::DateCriterionValue() :
     _mode(DateFilterNone), _dateTimeUtc(QDateTime())
@@ -370,18 +370,18 @@ PartsQueryBuilder::PartsQueryBuilder() :
     _columnNames.append(QLatin1String("part.category"));
     _columnNames.append(QLatin1String("part.storage"));
     _columnNames.append(QLatin1String("part.condition"));
-    _columnNames.append(QLatin1String("part.footprint"));
+    _columnNames.append(QLatin1String("part.package"));
     _columnNames.append(QLatin1String("u.name"));
     _columnNames.append(QLatin1String("c.name"));
     _columnNames.append(QLatin1String("s.name"));
     _columnNames.append(QLatin1String("cond.value"));
-    _columnNames.append(QLatin1String("footprint.name"));
+    _columnNames.append(QLatin1String("package.name"));
 
     _criterions[FilterByStock] = new StockCriterion();
     _criterions[FilterByCondition] = new BasicForeignKeyCriterion("condition");
     _criterions[FilterByDistributor] = new DistributorCriterion();
     _criterions[FilterByManufacturer] = new ManufacturerCriterion();
-    _criterions[FilterByFootprint] = new BasicForeignKeyCriterion("footprint");
+    _criterions[FilterByPackage] = new BasicForeignKeyCriterion("package");
     _criterions[FilterByText] = new TextCriterion();
     _criterions[FilterByCategory] = new NodeCriterion("part.category");
     _criterions[FilterByStorage] = new NodeCriterion("part.storage");

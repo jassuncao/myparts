@@ -6,7 +6,6 @@
 #include <QMessageBox>
 #include <dquest.h>
 #include "entities/entities.h"
-#include "partcategorydialog.h"
 //#include <QWindowsXPStyle>
 #include "manhattanstyle.h"
 #include "stylehelper.h"
@@ -30,10 +29,10 @@ bool createTables(DQConnection & connection)
     }
     connection.open(db); // Establish the connection to database. It will become the "default connection" shared by all DQModel    
     connection.addModel<Entities::PartUnitEntity>();
-    connection.addModel<Entities::PartStorageEntity>();
-    connection.addModel<Entities::PartCategoryEntity>();
-    connection.addModel<Entities::PartConditionEntity>();
-    connection.addModel<Entities::FootprintEntity>();
+    connection.addModel<Entities::StorageEntity>();
+    connection.addModel<Entities::CategoryEntity>();
+    connection.addModel<Entities::ConditionEntity>();
+    connection.addModel<Entities::PackageEntity>();
     connection.addModel<Entities::PartEntity>();
     connection.addModel<Entities::StockChangeEntity>();
     connection.addModel<Entities::SiPrefix>();
@@ -46,10 +45,10 @@ bool createTables(DQConnection & connection)
     connection.addModel<Entities::ManufacturerEntity>();
     connection.addModel<Entities::PartManufacturerEntity>();
     connection.addModel<Entities::PartAttachmentEntity>();
-    connection.addModel<Entities::FootprintAttachmentEntity>();
+    connection.addModel<Entities::PackageAttachmentEntity>();
     if(connection.createTables()){
-        DQIndex<Entities::PartCategoryEntity> lft_idx("lft_idx");
-        DQIndex<Entities::PartCategoryEntity> rgt_idx("rgt_idx");
+        DQIndex<Entities::CategoryEntity> lft_idx("lft_idx");
+        DQIndex<Entities::CategoryEntity> rgt_idx("rgt_idx");
         lft_idx<<"lft";
         rgt_idx<<"rgt";
         connection.createIndex(lft_idx);
@@ -94,7 +93,7 @@ int main(int argc, char *argv[])
     //TODO: Fetch values from settings
     QLocale curLocale(QLocale("pt_PT"));
     QLocale::setDefault(curLocale);
-    QDir::addSearchPath("footprints", "/home/jassuncao/MyProjects/myparts/images/footprints");
+    QDir::addSearchPath("packages", "/home/jassuncao/MyProjects/myparts/images/packages");
     QDir::addSearchPath("attachments", "/home/jassuncao/MyProjects/myparts/attachments");
     QDir::addSearchPath("tmp","/home/jassuncao/MyProjects/myparts/images/tmp");
     MainWindow w;

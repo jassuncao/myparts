@@ -1,27 +1,27 @@
-#include "footprinttablemodel.h"
+#include "packagetablemodel.h"
 #include <QDebug>
 #include <QFileInfo>
 #include <QSqlError>
 #include <QSqlQuery>
 #include "utils.h"
 
-FootprintTableModel::FootprintTableModel(QObject *parent, QSqlDatabase db) :
+PackageTableModel::PackageTableModel(QObject *parent, QSqlDatabase db) :
                                          QSqlTableModel(parent, db)
 {
-    setTable("part_footprint");
-    _targetDir = QDir(QDir::searchPaths("footprints").first());
+    setTable("package");
+    _targetDir = QDir(QDir::searchPaths("packages").first());
 }
 
-FootprintTableModel::~FootprintTableModel()
+PackageTableModel::~PackageTableModel()
 {
 }
 
-bool FootprintTableModel::insertRowIntoTable(const QSqlRecord &values)
+bool PackageTableModel::insertRowIntoTable(const QSqlRecord &values)
 {    
     /*
-     * Before doing the actual insert, we check if the filename starts with the prefix "footprints:"
-     * meaning the associated file is already stored in the footprints directory.
-     * If is not, we move the file to the footprints directory and update the filename
+     * Before doing the actual insert, we check if the filename starts with the prefix "packages:"
+     * meaning the associated file is already stored in the packages directory.
+     * If is not, we move the file to the packages directory and update the filename
      */
 
 #ifdef QT_DEBUG
@@ -32,19 +32,19 @@ bool FootprintTableModel::insertRowIntoTable(const QSqlRecord &values)
     QVariant filename = values.value(ColumnFilename);
     if(!filename.isNull() && filename.isValid()){
         QString fName = filename.toString();
-        if(fName.startsWith("footprints:") || fName.startsWith(":")  || fName.isEmpty()){
+        if(fName.startsWith("packages:") || fName.startsWith(":")  || fName.isEmpty()){
             //nothing to do
         }
         else{
             QString finalFilename = copyFileToDir(fName, _targetDir);
-            finalFilename = QString("footprints:%1").arg(finalFilename);
+            finalFilename = QString("packages:%1").arg(finalFilename);
             qDebug()<<"Final filename is "<<finalFilename;
             //We need to create a copy due to const
             QSqlRecord rec(values);
             rec.setValue(ColumnFilename, QVariant(finalFilename));
             bool res = QSqlTableModel::insertRowIntoTable(rec);
             if(!res){
-                qWarning()<<"Error saving footprint:"<<lastError().text();
+                qWarning()<<"Error saving package:"<<lastError().text();
             }
             return res;
         }
@@ -52,14 +52,14 @@ bool FootprintTableModel::insertRowIntoTable(const QSqlRecord &values)
     return QSqlTableModel::insertRowIntoTable(values);
 }
 
-bool FootprintTableModel::updateRowInTable(int row, const QSqlRecord &values)
+bool PackageTableModel::updateRowInTable(int row, const QSqlRecord &values)
 {
 #ifdef QT_DEBUG
     for(int i=0; i<values.count(); ++i){
         qDebug()<<"Value to update "<<values.fieldName(i)<<" to "<< values.value(i);
     }
 #endif
-    //If the footprint image changed we might need to delete the previous one. We need the original value to handle this situation
+    //If the packages image changed we might need to delete the previous one. We need the original value to handle this situation
     QModelIndex index = QSqlQueryModel::index(row, ColumnFilename);
     QVariant oldFilename = QSqlQueryModel::data(index);
     QVariant newFilename = values.value(ColumnFilename);
@@ -85,12 +85,12 @@ bool FootprintTableModel::updateRowInTable(int row, const QSqlRecord &values)
 
         if(!newFilename.isNull() && newFilename.isValid()){
             QString fName = newFilename.toString();
-            if(fName.startsWith("footprints:") || fName.startsWith(":") || fName.isEmpty()){
+            if(fName.startsWith("packages:") || fName.startsWith(":") || fName.isEmpty()){
                 //nothing to do
             }
             else{
                 QString finalFilename = copyFileToDir(fName, _targetDir);
-                finalFilename = QString("footprints:%1").arg(finalFilename);
+                finalFilename = QString("packages:%1").arg(finalFilename);
                 qDebug()<<"Final filename is "<<finalFilename;
                 //We need to create a copy due to const
                 QSqlRecord rec(values);
@@ -109,7 +109,7 @@ bool FootprintTableModel::updateRowInTable(int row, const QSqlRecord &values)
     return QSqlTableModel::updateRowInTable(row, values);
 }
 
-bool FootprintTableModel::deleteRowFromTable(int row)
+bool PackageTableModel::deleteRowFromTable(int row)
 {
     QModelIndex index = QSqlQueryModel::index(row, ColumnFilename);
     QVariant filename = QSqlQueryModel::data(index);
@@ -118,7 +118,7 @@ bool FootprintTableModel::deleteRowFromTable(int row)
         //We need to remove the file from the filesystem
         if(!filename.isNull() && filename.isValid()){
             QString fName = filename.toString();
-            if(fName.startsWith("footprints:")){
+            if(fName.startsWith("packages:")){
                 QFile file(fName);
                 qDebug("Removing file");
                 if(!file.remove()){

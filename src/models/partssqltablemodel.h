@@ -23,12 +23,12 @@ public:
         ColumnCategoryId,
         ColumnStorageId,
         ColumnConditionId,
-        ColumnFootprintId,
+        ColumnPackageId,
         ColumnPartUnit,
         ColumnCategoryName,
         ColumnStorage,
         ColumnCondition,
-        ColumnFootprintName,
+        ColumnPackageName,
         LAST_COLUMN
     };
 

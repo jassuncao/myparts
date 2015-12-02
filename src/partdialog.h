@@ -45,9 +45,9 @@ public slots:
 private slots:
     int exec();
     void on_quickStorageButton_clicked();
-    void slotFootprintChanged(int index);
-    void slotDeselectFootprint();
-    void slotUseFootprint();
+    void slotPackageChanged(int index);
+    void slotDeselectPackage();
+    void slotUsePackage();
     void slotAddParameter();
     void slotDeleteParameter();
     void slotAddDistributor();
@@ -81,10 +81,10 @@ private:
     TreeItemModel * _storageModel;
     QSqlQueryModel * _partConditionModel;
     QSqlQueryModel * _partUnitsModel;
-    QSqlQueryModel * _footprintsModel;
+    QSqlQueryModel * _packagesModel;
     QDataWidgetMapper * _mapper;
     QModelIndex _currentModelIndex;
-    int _lastSelectedFootprint;
+    int _lastSelectedPackage;
     bool _addMode;
     QVariant _currentPartId;
 

@@ -26,7 +26,7 @@ PartsSqlQueryModel2::PartsSqlQueryModel2(QObject *parent) :
     setColumnName(PartsSqlQueryModel2::ColumnCategoryName,tr("Category"));
     setColumnName(PartsSqlQueryModel2::ColumnStorage,tr("Storage Location"));
     setColumnName(PartsSqlQueryModel2::ColumnCondition,tr("Condition"));
-    setColumnName(PartsSqlQueryModel2::ColumnFootprintName,tr("Footprint"));
+    setColumnName(PartsSqlQueryModel2::ColumnPackageName,tr("Package"));
 }
 
 void PartsSqlQueryModel2::setColumnName(int section, const QString & columnName)
@@ -39,14 +39,14 @@ QString PartsSqlQueryModel2::selectStatement() const
 {
     QString query("SELECT part.id, part.name, part.description, part.actualStock, part.minimumStock, part.averagePrice, part.comment, part.customPartNumber, "
                   "part.createDate, part.partUnit, part.category, part.storage, part.condition, "
-                  "part.footprint, u.name AS unitName, c.name AS categoryName, s.name AS storageName, cond.value AS conditionValue, "
-                  "footprint.name as footprintName "
+                  "part.package, u.name AS unitName, c.name AS categoryName, s.name AS storageName, cond.value AS conditionValue, "
+                  "package.name as packageName "
                   "FROM part "
                   "LEFT JOIN part_category c ON part.category=c.id "
                   "LEFT JOIN part_unit u ON part.partUnit=u.id "
                   "LEFT JOIN part_storage s ON part.storage=s.id "
                   "LEFT JOIN part_condition cond ON part.condition=cond.id "
-                  "LEFT JOIN part_footprint footprint ON part.footprint=footprint.id "
+                  "LEFT JOIN part_package package ON part.package=package.id "
                   "INNER JOIN part_distributor d ON part.id=d.part ");
 
     if(!filter().isEmpty()){
@@ -216,9 +216,9 @@ void FilterBuilder::setFilterByConditionEnabled(bool value)
     _filterByCondition = value;
 }
 
-void FilterBuilder::setFilterByFootprintEnabled(bool b)
+void FilterBuilder::setFilterByPackageEnabled(bool b)
 {
-    _filterByFootprint = b;
+    _filterByPackage = b;
 }
 
 void FilterBuilder::setSelectedCondition(QVariant conditionId)
@@ -226,9 +226,9 @@ void FilterBuilder::setSelectedCondition(QVariant conditionId)
     _selectedConditionId = conditionId;
 }
 
-void FilterBuilder::setSelectedFootprint(QVariant footprintId)
+void FilterBuilder::setSelectedPackage(QVariant packageId)
 {
-    _selectedFootprintId = footprintId;
+    _selectedPackageId = packageId;
 }
 
 void FilterBuilder::setSelectedDistributor(QVariant distributorId)
@@ -256,11 +256,11 @@ void FilterBuilder::setFilter(SuportedFilters filter, const QVariant & value)
     case FilterByText:
         setTextFilter(value.toString());
         break;
-    case FilterByFootprint:
+    case FilterByPackage:
         if(value.isValid()){
-            setSelectedFootprint(value);
+            setSelectedPackage(value);
         }
-        setFilterByFootprintEnabled(value.isValid());
+        setFilterByPackageEnabled(value.isValid());
         break;
     case FilterByDistributor:
         setSelectedDistributor(value);
@@ -380,10 +380,10 @@ QString FilterBuilder::build() const {
         criterium.append(QString("part.condition = %1").arg(_selectedConditionId.toInt()));
     }
 
-    //Part footprint section
+    //Part package section
 
-    if(_filterByFootprint && _selectedFootprintId.isValid()){
-        criterium.append(QString("part.footprint = %1").arg(_selectedFootprintId.toInt()));
+    if(_filterByPackage && _selectedPackageId.isValid()){
+        criterium.append(QString("part.package = %1").arg(_selectedPackageId.toInt()));
     }
 
     //Distributor section

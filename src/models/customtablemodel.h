@@ -177,7 +177,7 @@ public:
     Qt::ItemFlags flags(const QModelIndex &index) const;
     bool appendRow(const QString &url, const QString & description);
 
-    static AttachmentTableModel3 * createNewFootprintAttachmentModel(QObject *parent);
+    static AttachmentTableModel3 * createNewPackageAttachmentModel(QObject *parent);
     static AttachmentTableModel3 * createNewPartAttachmentModel(QObject *parent);
 
 protected:

@@ -27,7 +27,7 @@ PartsSqlTableModel::PartsSqlTableModel(PartsQueryBuilder * partsQueryBuilder, QO
     setColumnName(ColumnCategoryName,tr("Category"));
     setColumnName(ColumnStorage,tr("Storage Location"));
     setColumnName(ColumnCondition,tr("Condition"));
-    setColumnName(ColumnFootprintName,tr("Footprint"));
+    setColumnName(ColumnPackageName,tr("Package"));
 }
 
 PartsSqlTableModel::~PartsSqlTableModel()

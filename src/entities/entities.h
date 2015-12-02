@@ -15,7 +15,7 @@ public:
     DQSharedList initialData() const;
 };
 
-class PartCategoryEntity : public DQModel
+class CategoryEntity : public DQModel
 {
     DQ_MODEL
 public:
@@ -27,7 +27,7 @@ public:
     DQSharedList initialData() const;
 };
 
-class PartStorageEntity : public DQModel
+class StorageEntity : public DQModel
 {
     DQ_MODEL
 public:
@@ -39,7 +39,7 @@ public:
 };
 
 
-class FootprintEntity : public DQModel
+class PackageEntity : public DQModel
 {
     DQ_MODEL
 public:
@@ -49,7 +49,7 @@ public:
     DQSharedList initialData() const;
 };
 
-class PartConditionEntity : public DQModel
+class ConditionEntity : public DQModel
 {
     DQ_MODEL
 public:
@@ -72,10 +72,10 @@ public:
     DQField<QString> customPartNumber;
     DQField<QDateTime> createDate;    
     DQForeignKey<PartUnitEntity> partUnit;
-    DQForeignKey<PartCategoryEntity> category;
-    DQForeignKey<PartStorageEntity> storage;
-    DQForeignKey<FootprintEntity> footprint;
-    DQForeignKey<PartConditionEntity> condition;
+    DQForeignKey<CategoryEntity> category;
+    DQForeignKey<StorageEntity> storage;
+    DQForeignKey<PackageEntity> package;
+    DQForeignKey<ConditionEntity> condition;
 
     //Parameters
     //StockHistory
@@ -197,11 +197,11 @@ public:
     DQField<QString> description;
 };
 
-class FootprintAttachmentEntity : public DQModel
+class PackageAttachmentEntity : public DQModel
 {
     DQ_MODEL
 public:
-    DQForeignKey<FootprintEntity> footprint;
+    DQForeignKey<PackageEntity> package;
     DQField<QString> url;
     DQField<QString> description;
 };
@@ -215,8 +215,8 @@ DQ_DECLARE_MODEL(Entities::PartUnitEntity,
                      DQ_FIELD(defaultUnit )
                      )
 
-DQ_DECLARE_MODEL(Entities::PartCategoryEntity,
-                 "part_category", // the table name.
+DQ_DECLARE_MODEL(Entities::CategoryEntity,
+                 "category", // the table name.
                  DQ_FIELD(name, DQNotNull),
                  DQ_FIELD(description),
                  DQ_FIELD(categoryPath),
@@ -224,23 +224,23 @@ DQ_DECLARE_MODEL(Entities::PartCategoryEntity,
                  DQ_FIELD(rgt, DQNotNull)
                  )
 
-DQ_DECLARE_MODEL(Entities::PartStorageEntity,
-                 "part_storage", // the table name.
+DQ_DECLARE_MODEL(Entities::StorageEntity,
+                 "storage", // the table name.
                  DQ_FIELD(name, DQNotNull),
                  DQ_FIELD(path),
                  DQ_FIELD(lft, DQNotNull),
                  DQ_FIELD(rgt, DQNotNull)
                  )
 
-DQ_DECLARE_MODEL(Entities::FootprintEntity,
-                 "part_footprint", // the table name.
+DQ_DECLARE_MODEL(Entities::PackageEntity,
+                 "package", // the table name.
                  DQ_FIELD(name, DQNotNull),
                  DQ_FIELD(description),
                  DQ_FIELD(imageFilename)
                  )
 
-DQ_DECLARE_MODEL(Entities::PartConditionEntity,
-                 "part_condition", // the table name.
+DQ_DECLARE_MODEL(Entities::ConditionEntity,
+                 "condition", // the table name.
                  DQ_FIELD(value, DQNotNull),
                  DQ_FIELD(description),
                  DQ_FIELD(defaultCondition)
@@ -258,9 +258,9 @@ DQ_DECLARE_MODEL(Entities::PartEntity,
                  DQ_FIELD(createDate, DQNotNull),
                  DQ_FIELD(partUnit , DQNotNull),
                  DQ_FIELD(category , DQNotNull),
-                 DQ_FIELD(storage),
+                 DQ_FIELD(storage , DQNotNull),
                  DQ_FIELD(condition),
-                 DQ_FIELD(footprint)
+                 DQ_FIELD(package)
                  )
 
 DQ_DECLARE_MODEL(Entities::StockChangeEntity,
@@ -343,9 +343,9 @@ DQ_DECLARE_MODEL(Entities::PartAttachmentEntity,
                  DQ_FIELD(description)
                  )
 
-DQ_DECLARE_MODEL(Entities::FootprintAttachmentEntity,
-                 "footprint_attachment", // the table name.
-                 DQ_FIELD(footprint, DQNotNull | DQCascadeDelete),
+DQ_DECLARE_MODEL(Entities::PackageAttachmentEntity,
+                 "package_attachment", // the table name.
+                 DQ_FIELD(package, DQNotNull | DQCascadeDelete),
                  DQ_FIELD(url, DQNotNull),
                  DQ_FIELD(description)
                  )

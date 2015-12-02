@@ -66,16 +66,16 @@ public:
     virtual QString createFilterExpression(const QString & filterText) const { return QString("name LIKE '\%%1\%'").arg(filterText);}
 };
 
-class FootprintManagerHelper : public EditorManagerHelper
+class PackageManagerHelper : public EditorManagerHelper
 {
 public:
-    virtual QString mainTitle() const { return tr("Footprints"); }
-    virtual QString deleteButtonText() const { return tr("Delete footprint"); }
-    virtual QString saveNewButtonText() const { return tr("Save footprint"); }
+    virtual QString mainTitle() const { return tr("Packages"); }
+    virtual QString deleteButtonText() const { return tr("Delete package"); }
+    virtual QString saveNewButtonText() const { return tr("Save package"); }
     virtual QString saveChangesButtonText() const { return tr("Save changes"); }
     virtual AbstractEditor* createEditor() const;
     virtual QWidget* createNoDataWidget() const;
-    virtual QString tableName() const { return QLatin1String("part_footprint"); }
+    virtual QString tableName() const { return QLatin1String("package"); }
     virtual int itemLabelColumn() const { return 1; }
     virtual int itemIDColumn() const  { return 0; }
     virtual QString createFilterExpression(const QString & filterText) const { return QString("name LIKE '\%%1\%'").arg(filterText);}

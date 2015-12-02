@@ -155,7 +155,7 @@
             </widget>
            </item>
            <item row="4" column="1">
-            <widget class="QLabel" name="partFootprintLabel">
+            <widget class="QLabel" name="partPackageLabel">
              <property name="text">
               <string/>
              </property>
@@ -185,7 +185,7 @@
            <item row="4" column="0">
             <widget class="QLabel" name="label">
              <property name="text">
-              <string>Footprint:</string>
+              <string>Package:</string>
              </property>
             </widget>
            </item>

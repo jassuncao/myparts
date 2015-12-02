@@ -1,11 +1,11 @@
-#ifndef FOOTPRINTTABLEMODEL_H
-#define FOOTPRINTTABLEMODEL_H
+#ifndef PACKAGETABLEMODEL_H
+#define PACKAGETABLEMODEL_H
 
 #include <QSqlTableModel>
 #include <QSqlRecord>
 #include <QDir>
 
-class FootprintTableModel : public QSqlTableModel
+class PackageTableModel : public QSqlTableModel
 {
     Q_OBJECT
 public:    
@@ -16,8 +16,8 @@ public:
         ColumnFilename
     };
 
-    FootprintTableModel(QObject *parent = 0, QSqlDatabase db = QSqlDatabase());
-    ~FootprintTableModel(); 
+    PackageTableModel(QObject *parent = 0, QSqlDatabase db = QSqlDatabase());
+    ~PackageTableModel();
     virtual bool insertRowIntoTable(const QSqlRecord &values);
     virtual bool updateRowInTable(int row, const QSqlRecord &values);
     virtual bool deleteRowFromTable(int row);
@@ -25,4 +25,4 @@ private:
     QDir _targetDir;
 };
 
-#endif // FOOTPRINTTABLEMODEL_H
+#endif // PACKAGETABLEMODEL_H

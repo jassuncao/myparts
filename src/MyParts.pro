@@ -61,16 +61,13 @@ SOURCES += main.cpp\
     models/treemodelmimedata.cpp \
     partdetailsview.cpp \
     storagemanagerform.cpp \
-    storagemanagerwidget.cpp \
-    models/footprinttreemodel.cpp \
-    footprintmanagerwidget.cpp \
-    footprintdetailswidget.cpp \
+    storagemanagerwidget.cpp \    
+    packagedetailswidget.cpp \
     widgets/qtabwidget2.cpp \
     unitmanagerwidget.cpp \
     unitdetailswidget.cpp \
     widgets/checkedheader.cpp \
     models/unittablemodel.cpp \
-    models/footprinttablemodel.cpp \
     widgets/parametervaluevalidator.cpp \
     widgets/unitparser.cpp \
     widgets/unitformatter.cpp \
@@ -93,7 +90,6 @@ SOURCES += main.cpp\
     widgets/itemstreeview.cpp \
     widgets/listnavigatorwidget.cpp \
     editors/companyeditorwidget.cpp \
-    editors/footprinteditorwidget.cpp \
     editors/abstracteditor.cpp \
     editormanagerview.cpp \
     widgets/flowlayout.cpp \
@@ -104,7 +100,11 @@ SOURCES += main.cpp\
     models/extrarowproxymodel.cpp \
     models/partssqltablemodel.cpp \
     widgets/gridwidget.cpp \
-    models/partsquerybuilder.cpp
+    models/partsquerybuilder.cpp \
+    models/packagetreemodel.cpp \
+    models/packagetablemodel.cpp \
+    editors/packageeditorwidget.cpp \
+    packagemanagerwidget.cpp
 
 HEADERS  += mainwindow.h \
     entities/entities.h \
@@ -150,15 +150,12 @@ HEADERS  += mainwindow.h \
     partdetailsview.h \
     storagemanagerform.h \
     storagemanagerwidget.h \
-    models/footprinttreemodel.h \
-    footprintmanagerwidget.h \
-    footprintdetailswidget.h \
+    packagedetailswidget.h \
     widgets/qtabwidget2.h \
     unitmanagerwidget.h \
     unitdetailswidget.h \
     widgets/checkedheader.h \
     models/unittablemodel.h \
-    models/footprinttablemodel.h \
     widgets/parametervaluevalidator.h \
     widgets/unitparser.h \
     widgets/parametervaluedelegate.h \
@@ -181,7 +178,6 @@ HEADERS  += mainwindow.h \
     widgets/itemstreeview.h \
     widgets/listnavigatorwidget.h \
     editors/companyeditorwidget.h \
-    editors/footprinteditorwidget.h \
     editors/abstracteditor.h \
     editormanagerview.h \
     widgets/flowlayout.h \
@@ -192,7 +188,11 @@ HEADERS  += mainwindow.h \
     models/extrarowproxymodel.h \
     models/partssqltablemodel.h \
     widgets/gridwidget.h \
-    models/partsquerybuilder.h
+    models/partsquerybuilder.h \
+    models/packagetablemodel.h \
+    models/packagetreemodel.h \
+    editors/packageeditorwidget.h \
+    packagemanagerwidget.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \

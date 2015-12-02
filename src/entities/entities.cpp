@@ -13,9 +13,9 @@ DQSharedList PartUnitEntity::initialData() const
     return initialUnits;
 }
 
-DQSharedList PartCategoryEntity::initialData() const
+DQSharedList CategoryEntity::initialData() const
 {
-    DQList<Entities::PartCategoryEntity> initialCategories;
+    DQList<Entities::CategoryEntity> initialCategories;
     DQListWriter writer(&initialCategories);
     writer << "Root Category" << "" << "" << 1 << 20
            << "Active Components" << "Active Components" << "" << 2 << 17
@@ -71,15 +71,19 @@ DQSharedList PartEntity::initialData() const
     //QVariant now = QVariant(QDateTime::currentDateTimeUtc().toTime_t());
     DQList<Entities::PartEntity> initialParts;
     DQListWriter writer(&initialParts);
-    writer << "BC547A" << "Transistor NPN TO-92 45V 0,1A 0,5W" << 30  << 0 << 0.5 << "Comment 1" << "PART01" << now.toTime_t() << 1 << 4 << writer.next()
-           << "BC547B" << "Transistor NPN TO-92 45V 0,1A 0,5W" << 30 << 10 << 0.8 << "Comment 2" << "PART02" << now.addDays(-1).toTime_t() << 1 << 4 << writer.next()
-           << "BC548" << "Transistor PNP TO-92 45V 0,1A 0,5W"  << 50 << 20 << 1.2 << "Comment 3" << "PART03" << now.addDays(-2).toTime_t() << 1 << 5 << writer.next();
+    writer << "BC547A" << "Transistor NPN TO-92 45V 0,1A 0,5W" << 30  << 0 << 0.5 << "Comment 1" << "PART01" << now.toTime_t() << 1 << 4 << 2 << writer.next()
+           << "BC547B" << "Transistor NPN TO-92 45V 0,1A 0,5W" << 30 << 10 << 0.8 << "Comment 2" << "PART02" << now.addDays(-1).toTime_t() << 1 << 4 << 2 << writer.next()
+           << "BC548" << "Transistor PNP TO-92 45V 0,1A 0,5W"  << 50 << 20 << 1.2 << "Comment 3" << "PART03" << now.addDays(-2).toTime_t() << 1 << 5 << 2 << writer.next();
+    for(int i=1; i<10; ++i){
+        QString partName = QString("BC%1").arg(i,4,10,QLatin1Char('0'));
+       writer << partName << "Transistor PNP TO-92 45V 0,1A 0,5W"  << 50 << 20 << 1.2 << "Comment 3" << "PART03" << now.addDays(-2).toTime_t() << 1 << 5 << 2 << writer.next();
+    }
     return initialParts;
 }
 
-DQSharedList PartStorageEntity::initialData() const
+DQSharedList StorageEntity::initialData() const
 {
-    DQList<Entities::PartStorageEntity> initialLocations;
+    DQList<Entities::StorageEntity> initialLocations;
     DQListWriter writer(&initialLocations);
     writer << "Root Storage" << "" << 1 << 44
             << "Cabinet 1" << "" << 2 << 27
@@ -106,9 +110,9 @@ DQSharedList PartStorageEntity::initialData() const
     return initialLocations;
 }
 
-DQSharedList PartConditionEntity::initialData() const
+DQSharedList ConditionEntity::initialData() const
 {
-    DQList<Entities::PartConditionEntity> initialCondition;
+    DQList<Entities::ConditionEntity> initialCondition;
     DQListWriter writer(&initialCondition);
     writer << "New" << "Brand New" << 1
            << "Used" << "Used" << 0
@@ -116,14 +120,14 @@ DQSharedList PartConditionEntity::initialData() const
     return initialCondition;
 }
 
-DQSharedList FootprintEntity::initialData() const
+DQSharedList PackageEntity::initialData() const
 {
-    DQList<Entities::FootprintEntity> initialCondition;
-    DQListWriter writer(&initialCondition);
+    DQList<Entities::PackageEntity> initialPackages;
+    DQListWriter writer(&initialPackages);
     writer << "0805" <<  "0805 (2.0 x 1.2mm)" << "0805_2015-03-01.png"
            << "0603" <<  "0603 (1.6 x 0.8mm)" << "0603_2015-03-01.png"
            << "0402" <<  "0402 (1.0 x 0.5mm)" << "0402_2015-03-01.png";
-    return initialCondition;
+    return initialPackages;
 }
 
 DQSharedList SiPrefix::initialData() const

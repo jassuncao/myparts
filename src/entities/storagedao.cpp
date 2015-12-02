@@ -9,7 +9,7 @@
 #include <QSqlDatabase>
 
 StorageDAO::StorageDAO() :
-    _tableName("part_storage")
+    _tableName("storage")
 {
 }
 
@@ -382,7 +382,7 @@ bool StorageDAO::reload(TreeItem * item)
 bool StorageDAO::update(TreeItem * item)
 {
     int id = item->id();
-    Entities::PartStorageEntity entity;
+    Entities::StorageEntity entity;
     if(!entity.load(DQWhere("id")==id)){
         qWarning("Entity with id %d not found", id);
         return false;

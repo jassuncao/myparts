@@ -64,7 +64,7 @@ public:
         FilterByCondition,
         FilterByDistributor,
         FilterByManufacturer,
-        FilterByFootprint,
+        FilterByPackage,
         FilterByText,
         FilterByCategory,
         FilterByStorage

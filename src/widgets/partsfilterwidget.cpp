@@ -96,7 +96,7 @@ QMenu * PartsFilterWidget::createFilterMoreMenu()
     QMenu * menu = new QMenu(this);
     createFilterItemAction(menu, tr("Distributor"), PartsQueryBuilder::FilterByDistributor);
     createFilterItemAction(menu, tr("Manufacturer"), PartsQueryBuilder::FilterByManufacturer);
-    createFilterItemAction(menu, tr("Footprint"), PartsQueryBuilder::FilterByFootprint);
+    createFilterItemAction(menu, tr("Package"), PartsQueryBuilder::FilterByPackage);
     return menu;
 }
 
@@ -148,7 +148,7 @@ FilterItemWidget * PartsFilterWidget::createStockFilterItem()
 FilterItemWidget * PartsFilterWidget::createPartConditionFilterItem()
 {
     QSqlQueryModel * conditionModel = new QSqlQueryModel(this);
-    conditionModel->setQuery("SELECT id, value FROM part_condition");
+    conditionModel->setQuery("SELECT id, value FROM condition");
 
     ExtraRowProxyModel * conditionProxyModel = new ExtraRowProxyModel(this);
     conditionProxyModel->setEmptyDisplayText(tr("Any"));
@@ -193,16 +193,16 @@ FilterItemWidget * PartsFilterWidget::createPartManufacturerFilterItem()
     return item;
 }
 
-FilterItemWidget * PartsFilterWidget::createPartFootprintFilterItem()
+FilterItemWidget * PartsFilterWidget::createPartPackageFilterItem()
 {
     QSqlQueryModel * sourceModel = new QSqlQueryModel(this);
-    sourceModel->setQuery("SELECT id, name FROM part_footprint");
+    sourceModel->setQuery("SELECT id, name FROM part_package");
 
     ExtraRowProxyModel * proxyModel = new ExtraRowProxyModel(this);
     proxyModel->setEmptyDisplayText(tr("Any"));
     proxyModel->setSourceModel(sourceModel);
 
-    FilterItemWidget * item  = new FilterItemWidget(tr("Footprint:"), PartsQueryBuilder::FilterByFootprint, true, this);
+    FilterItemWidget * item  = new FilterItemWidget(tr("Package:"), PartsQueryBuilder::FilterByPackage, true, this);
     item->setOptionsModel(proxyModel);
     item->setDisplayColumn(1);
     item->setValueColumn(0, Qt::EditRole);
@@ -223,8 +223,8 @@ void PartsFilterWidget::slotAddFilterItem(const int filterTag)
     case PartsQueryBuilder::FilterByManufacturer:
         item = createPartManufacturerFilterItem();
         break;
-    case PartsQueryBuilder::FilterByFootprint:
-        item = createPartFootprintFilterItem();
+    case PartsQueryBuilder::FilterByPackage:
+        item = createPartPackageFilterItem();
         break;
     default:
         qDebug()<<"Missing filter creator for "<<filterTag;

@@ -115,7 +115,7 @@
          </item>
          <item>
           <property name="text">
-           <string>Footprints</string>
+           <string>Packages</string>
           </property>
           <property name="icon">
            <iconset>

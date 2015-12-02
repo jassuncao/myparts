@@ -1,7 +1,7 @@
-#include "footprintdetailswidget.h"
-#include "attachmentselectiondialog.h"
+#include "packagedetailswidget.h"
+#include "dialogs/attachmentselectiondialog.h"
 #include "models/customtablemodel.h"
-#include "models/footprinttablemodel.h"
+#include "models/packagetablemodel.h"
 #include <QDebug>
 #include <QToolButton>
 #include <QLineEdit>
@@ -22,15 +22,15 @@
 #include <QSqlQuery>
 #include <QDesktopServices>
 
-FootprintDetailsDelegate::FootprintDetailsDelegate(QObject * parent)
+PackageDetailsDelegate::PackageDetailsDelegate(QObject * parent)
     : QStyledItemDelegate(parent)
 {
 }
 
-void FootprintDetailsDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
+void PackageDetailsDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
 {
     QToolButton* view = dynamic_cast<QToolButton*>(editor);
-    if(index.column() == FootprintTableModel::ColumnFilename && view) {
+    if(index.column() == PackageTableModel::ColumnFilename && view) {
         QString filename;
         QVariant data = index.data(Qt::EditRole);
         if(data.isValid() && data.canConvert(QVariant::String)){
@@ -39,10 +39,10 @@ void FootprintDetailsDelegate::setEditorData(QWidget *editor, const QModelIndex 
         view->setText(filename);
         if(filename.isEmpty())
         {
-            filename = QLatin1String(":/icons/images/footprintplaceholder.png");
+            filename = QLatin1String(":/icons/images/packageplaceholder.png");
         }
         QImage img;
-        qDebug()<<"Loading footprint image "<< filename;
+        qDebug()<<"Loading package image "<< filename;
         if(img.load(filename)){
              //Perform rescaling if necessary
              if(img.width()> view->width() || img.height()> view->height()){
@@ -50,7 +50,7 @@ void FootprintDetailsDelegate::setEditorData(QWidget *editor, const QModelIndex 
              }
          }
          else{
-             qWarning()<<"Failed to load footprint image "<<filename;
+             qWarning()<<"Failed to load package image "<<filename;
          }
 
         view->setIcon(QIcon(QPixmap::fromImage(img)));
@@ -58,10 +58,10 @@ void FootprintDetailsDelegate::setEditorData(QWidget *editor, const QModelIndex 
     }
     QStyledItemDelegate::setEditorData(editor, index);
 }
-void FootprintDetailsDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
+void PackageDetailsDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
 {
     QToolButton* view = dynamic_cast<QToolButton*>(editor);
-    if(index.column() == FootprintTableModel::ColumnFilename && view){
+    if(index.column() == PackageTableModel::ColumnFilename && view){
         model->setData(index, view->text());
         return;
     }
@@ -69,7 +69,7 @@ void FootprintDetailsDelegate::setModelData(QWidget *editor, QAbstractItemModel 
 }
 
 
-FootprintDetailsWidget::FootprintDetailsWidget(QWidget *parent)
+PackageDetailsWidget::PackageDetailsWidget(QWidget *parent)
     : QWidget(parent),
       _dirty(false)
 {
@@ -109,7 +109,7 @@ FootprintDetailsWidget::FootprintDetailsWidget(QWidget *parent)
     //Image groupbox END
 
     //Attachments groupbox START    
-    _attachmentModel = AttachmentTableModel3::createNewFootprintAttachmentModel(this);
+    _attachmentModel = AttachmentTableModel3::createNewPackageAttachmentModel(this);
 
     _attachmentsTable = new QTableView;
     _attachmentsTable->setSelectionMode(QTableView::SingleSelection);
@@ -150,7 +150,7 @@ FootprintDetailsWidget::FootprintDetailsWidget(QWidget *parent)
     setLayout(mainLayout);
 
     _mapper = new QDataWidgetMapper(this);
-    _mapper->setItemDelegate(new FootprintDetailsDelegate(this));
+    _mapper->setItemDelegate(new PackageDetailsDelegate(this));
     connect(_nameLineEdit, SIGNAL(textChanged(QString)), this, SLOT(slotSetDirty()));
     connect(_descriptionLineEdit, SIGNAL(textChanged(QString)), this, SLOT(slotSetDirty()));
     connect(_attachmentsTable->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), this, SLOT(slotCurrentAttachmentRowChanged(QModelIndex,QModelIndex)));        
@@ -158,26 +158,26 @@ FootprintDetailsWidget::FootprintDetailsWidget(QWidget *parent)
     connect(_attachmentsTable, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(slotAttachmentDoubleClicked(QModelIndex)));
 }
 
-FootprintDetailsWidget::~FootprintDetailsWidget()
+PackageDetailsWidget::~PackageDetailsWidget()
 {
-    qDebug("Deleting FootprintDetailsWidget");
+    qDebug("Deleting PackageDetailsWidget");
 }
 
-QModelIndex FootprintDetailsWidget::currentModelIndex() const
+QModelIndex PackageDetailsWidget::currentModelIndex() const
 {
     return _currentIndex;
 }
 
-void FootprintDetailsWidget::setCurrentModelIndex(const QModelIndex & modelIndex, bool newRecord)
+void PackageDetailsWidget::setCurrentModelIndex(const QModelIndex & modelIndex, bool newRecord)
 {    
     _currentIndex = modelIndex;
     _newRecord = newRecord;
     _mapper->setCurrentModelIndex(modelIndex);
     qDebug()<<"Curr idx "<< _currentIndex;
     setEnabled(_currentIndex.isValid());
-    QVariant footprintId = modelIndex.data(Qt::EditRole);
-    qDebug()<<"footprintId is "<< footprintId;
-    _attachmentModel->setCurrentForeignKey(footprintId);
+    QVariant packageId = modelIndex.data(Qt::EditRole);
+    qDebug()<<"packageId is "<< packageId;
+    _attachmentModel->setCurrentForeignKey(packageId);
     _attachmentModel->select();
     if(newRecord){
         _nameLineEdit->setFocus();        
@@ -188,15 +188,15 @@ void FootprintDetailsWidget::setCurrentModelIndex(const QModelIndex & modelIndex
     }
 }
 
-bool FootprintDetailsWidget::setFootprintImage(const QString & filePath)
+bool PackageDetailsWidget::setPackageImage(const QString & filePath)
 {
     _imageButton->setText(filePath);
 
     QImage pix;
-    QString aux = filePath.isEmpty() ? QLatin1String(":/icons/images/footprintplaceholder.png") : filePath;
-    qDebug()<<"Loading footprint image "<< aux;
+    QString aux = filePath.isEmpty() ? QLatin1String(":/icons/images/packageplaceholder.png") : filePath;
+    qDebug()<<"Loading package image "<< aux;
     if(pix.load(aux)){
-        qDebug()<<"Footprint image loaded" << aux;
+        qDebug()<<"Package image loaded" << aux;
         if(pix.width()> _imageButton->width() || pix.height()> _imageButton->height()){
              pix = pix.scaled( _imageButton->width(), _imageButton->height(), Qt::KeepAspectRatio, Qt::SmoothTransformation );
         }
@@ -208,31 +208,31 @@ bool FootprintDetailsWidget::setFootprintImage(const QString & filePath)
     return !pix.isNull();
 }
 
-void FootprintDetailsWidget::setModel(QAbstractItemModel * model)
+void PackageDetailsWidget::setModel(QAbstractItemModel * model)
 {
     if(_model==model)
         return;
     _model = model;
     _mapper->setModel(_model);
     _mapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
-    _mapper->addMapping(_nameLineEdit, FootprintTableModel::ColumnName);
-    _mapper->addMapping(_descriptionLineEdit, FootprintTableModel::ColumnDescription);
-    _mapper->addMapping(_imageButton, FootprintTableModel::ColumnFilename);
+    _mapper->addMapping(_nameLineEdit, PackageTableModel::ColumnName);
+    _mapper->addMapping(_descriptionLineEdit, PackageTableModel::ColumnDescription);
+    _mapper->addMapping(_imageButton, PackageTableModel::ColumnFilename);
 }
 
-void FootprintDetailsWidget::slotSetDirty()
+void PackageDetailsWidget::slotSetDirty()
 {
    _dirty = true;
    _buttonBox->setEnabled(true);
 }
 
-void FootprintDetailsWidget::slotResetDirty()
+void PackageDetailsWidget::slotResetDirty()
 {
    _dirty = false;
    _buttonBox->setEnabled(false);
 }
 
-void FootprintDetailsWidget::slotImageContextMenu(const QPoint &pos)
+void PackageDetailsWidget::slotImageContextMenu(const QPoint &pos)
 {
     QMenu menu;
     menu.addAction(_actionSetImageLocal);
@@ -243,46 +243,46 @@ void FootprintDetailsWidget::slotImageContextMenu(const QPoint &pos)
 }
 
 
-void FootprintDetailsWidget::slotAccept()
+void PackageDetailsWidget::slotAccept()
 {
     if(_nameLineEdit->text().isEmpty()){
-        QMessageBox::warning(this, tr("Required field"), tr("The footprint must have a name"), QMessageBox::Close);
+        QMessageBox::warning(this, tr("Required field"), tr("The package must have a name"), QMessageBox::Close);
         return;
     }
-    QVariant footprintId = _currentIndex.data(Qt::EditRole);
-    qDebug()<<"Footprint ID is "<<footprintId;
+    QVariant packageId = _currentIndex.data(Qt::EditRole);
+    qDebug()<<"Package ID is "<<packageId;
 
-    qDebug()<<"Saving changes to footprint with model index" << _currentIndex ;
+    qDebug()<<"Saving changes to package with model index" << _currentIndex ;
     if(!_mapper->submit()){
         qWarning()<<"Failed to submit changes ";
         //TODO:SHow error message
     }
     if(_newRecord){
-        footprintId = _currentIndex.data(Qt::EditRole);
-        qDebug()<<"New footprint ID is "<<footprintId;
-        _attachmentModel->setCurrentForeignKey(footprintId);
+        packageId = _currentIndex.data(Qt::EditRole);
+        qDebug()<<"New package ID is "<<packageId;
+        _attachmentModel->setCurrentForeignKey(packageId);
     }
     _attachmentModel->submitAll();
-    //_attachmentModel->save(footprintId);
+    //_attachmentModel->save(packageId);
     slotResetDirty();
     emit accepted();
 }
 
-void FootprintDetailsWidget::slotReject()
+void PackageDetailsWidget::slotReject()
 {
-    qDebug()<<"Reject changes to footprint with model index" << _currentIndex ;
+    qDebug()<<"Reject changes to package with model index" << _currentIndex ;
     if(!isNew()){
         _mapper->revert();
     }    
-    QVariant footprintId = _currentIndex.data(Qt::EditRole);
-    //_attachmentModel->load(footprintId);
+    QVariant packageId = _currentIndex.data(Qt::EditRole);
+    //_attachmentModel->load(packageId);
     _attachmentModel->select();
     slotResetDirty();
     emit rejected();
 
 }
 
-void FootprintDetailsWidget::slotImageShow()
+void PackageDetailsWidget::slotImageShow()
 {
     if(_imageButton->icon().isNull()){
         slotAddImage();
@@ -292,7 +292,7 @@ void FootprintDetailsWidget::slotImageShow()
     }
 }
 
-void FootprintDetailsWidget::slotAddImage()
+void PackageDetailsWidget::slotAddImage()
 {
     QFileDialog dlg(this);
     dlg.setNameFilter(tr("Images (*.png *.xpm *.jpg)"));
@@ -302,25 +302,25 @@ void FootprintDetailsWidget::slotAddImage()
         QStringList fileNames = dlg.selectedFiles();
         if(fileNames.size()>0){
             QString selectedFile = fileNames.first();
-            if(setFootprintImage(selectedFile)){
+            if(setPackageImage(selectedFile)){
                 slotSetDirty();
             }
         }        
     }   
 }
 
-void FootprintDetailsWidget::slotAddImageRemote()
+void PackageDetailsWidget::slotAddImageRemote()
 {
     slotSetDirty();
 }
 
-void FootprintDetailsWidget::slotRemoveImage()
+void PackageDetailsWidget::slotRemoveImage()
 {  
-    setFootprintImage(QString::null);
+    setPackageImage(QString::null);
     slotSetDirty();
 }
 
-void FootprintDetailsWidget::slotAddAttachment()
+void PackageDetailsWidget::slotAddAttachment()
 {
     AttachmentSelectionDialog dlg(this);
     if(dlg.exec()){
@@ -330,7 +330,7 @@ void FootprintDetailsWidget::slotAddAttachment()
     }
 }
 
-void FootprintDetailsWidget::slotRemoveAttachment()
+void PackageDetailsWidget::slotRemoveAttachment()
 {
     QModelIndex index = _attachmentsTable->currentIndex();
     if(index.isValid()){
@@ -343,12 +343,12 @@ void FootprintDetailsWidget::slotRemoveAttachment()
     }
 }
 
-void FootprintDetailsWidget::slotCurrentAttachmentRowChanged(const QModelIndex &current, const QModelIndex &)
+void PackageDetailsWidget::slotCurrentAttachmentRowChanged(const QModelIndex &current, const QModelIndex &)
 {
     _removeAttachmentButton->setEnabled(current.isValid());
 }
 
-void FootprintDetailsWidget::slotAttachmentDoubleClicked(const QModelIndex &index)
+void PackageDetailsWidget::slotAttachmentDoubleClicked(const QModelIndex &index)
 {
     if(!index.isValid()) {
         return;
