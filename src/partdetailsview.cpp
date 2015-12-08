@@ -12,6 +12,7 @@
 #include <QIdentityProxyModel>
 #include <QAbstractItemModel>
 #include <QDateTime>
+#include <QItemSelectionModel>
 
 /*
 class StockChangeDelegate : public QStyledItemDelegate {
@@ -184,6 +185,7 @@ void PartDetailsView::onAddStock()
     _partStockModel->appendRow(dlg.getStockChange(), dlg.getPartPrice(), dlg.getComment());
     _partsModel->updatePartStock(_currentIndex, dlg.getStockChange());
     _partsModel->updatePartAvgPrice(_currentIndex, dlg.getPartPrice());
+
     if(_partStockModel->submitAll() && _partsModel->submitAll()){
         _partsModel->database().commit();
     }
@@ -191,7 +193,7 @@ void PartDetailsView::onAddStock()
         _partsModel->database().rollback();
         //TODO: Display some warning
         qWarning("Failed to insert stock change (addition) in database");
-    }
+    }   
 }
 
 void PartDetailsView::onRemoveStock()

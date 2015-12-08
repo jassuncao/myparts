@@ -24,20 +24,27 @@
 #include <QDialogButtonBox>
 #include <QDesktopServices>
 #include "models/customtablemodel.h"
+#include "widgets/validatingitemdelegate.h"
 
 inline static QVariant getColumnValue(QAbstractItemModel * model, int row, int column){
     return model->index(row, column).data(Qt::EditRole);
 }
 
-PartDialog::PartDialog(PartsSqlTableModel *model, TreeItemModel *storageModel, QWidget *parent) :
+PartDialog::PartDialog(PartsSqlTableModel *model, TreeItemModel * categoryModel, TreeItemModel *storageModel, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::PartDialog),
     _partsModel(model),
+    _categoryModel(categoryModel),
     _storageModel(storageModel),
     _lastSelectedPackage(-1),
     _addMode(false)
 {
     ui->setupUi(this);
+    ui->tabWidget->setCurrentIndex(0);
+
+    ui->partCategoryCombo->setMinimumContentsLength(22);
+    ui->partCategoryCombo->setMaxVisibleItems(40);
+
     ui->quickStorageButton->setVisible(false);//Not supported yet
     _partParamsModel = PartParametersTableModel3::createNew(this);
     _partDistributorModel = PartDistributorTableModel2::createNew(this);
@@ -66,6 +73,7 @@ PartDialog::PartDialog(PartsSqlTableModel *model, TreeItemModel *storageModel, Q
 
     ui->partDistributorsTableView->setModel(_partDistributorModel);
     ui->partDistributorsTableView->setItemDelegateForColumn(PartDistributorTableModel2::ColumnUnitPrice, new CurrencyDelegate(this));
+    ui->partDistributorsTableView->setItemDelegateForColumn(PartDistributorTableModel2::ColumnMinimumOrder, new ValidatingItemDelegate(new QIntValidator()));
     ui->partDistributorsTableView->setItemDelegate(new CustomTableRelationDelegate(ui->partDistributorsTableView));
 
     ui->partManufacturerTableView->setModel(_partManufacturerModel);
@@ -221,11 +229,13 @@ int findDefaultValueIndex(const QSqlQueryModel * model, int column)
 
 void PartDialog::initCombos()
 {
+    ui->partCategoryCombo->setModel(_categoryModel);
     ui->partStorageCombo->setModel(_storageModel);
+    connect(ui->partCategoryCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(slotPartCategoryChanged(int)));
     connect(ui->partStorageCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(slotPartStorageChanged(int)));
 
     _partConditionModel = new QSqlQueryModel();
-    _partConditionModel->setQuery("SELECT id, value, defaultCondition FROM part_condition ORDER BY value ASC");
+    _partConditionModel->setQuery("SELECT id, value, defaultCondition FROM condition ORDER BY value ASC");
     ui->partConditionCombo->setModel(_partConditionModel);
     ui->partConditionCombo->setModelKeyColumn(0);
     ui->partConditionCombo->setModelColumn(1);
@@ -237,7 +247,7 @@ void PartDialog::initCombos()
     ui->partUnitCombo->setModelColumn(1);
 
     _packagesModel = new QSqlQueryModel();
-    _packagesModel->setQuery("SELECT id, name FROM part_package ORDER BY name ASC");
+    _packagesModel->setQuery("SELECT id, name FROM package ORDER BY name ASC");
     ui->partPackageCombo->setModel(_packagesModel);
     ui->partPackageCombo->setModelKeyColumn(0);
     ui->partPackageCombo->setModelColumn(1);
@@ -247,7 +257,7 @@ void PartDialog::reset()
 {
     ui->tabWidget->setCurrentIndex(0);
     ui->partNameEdit->setFocus();    
-    ui->partCategoryCombo->setCurrentIndex(-1);
+    ui->partCategoryCombo->setCurrentIndex(QModelIndex());
     ui->partStorageCombo->setCurrentIndex(QModelIndex());
 
     QVariant invalidId;
@@ -295,6 +305,19 @@ void setIndexForFkey(QComboBox * combo, QVariant fkey){
     combo->setCurrentIndex(comboIdx);
 }
 
+static void setTreeViewComboBoxIndex(TreeViewComboBox * combo, QVariant key)
+{
+    if(!key.isNull()){
+        TreeItemModel * viewModel = static_cast<TreeItemModel*>(combo->model());
+        QModelIndex treeIndex = viewModel->findIndex(key.toInt());
+        if(treeIndex.isValid()){
+            bool blocked = combo->blockSignals(true);
+            combo->setCurrentIndex(treeIndex);
+            combo->blockSignals(blocked);
+        }
+    }
+}
+
 void PartDialog::setCurrentModelIndex(const QModelIndex &index)
 {
     _currentModelIndex = index;
@@ -310,12 +333,10 @@ void PartDialog::setCurrentModelIndex(const QModelIndex &index)
     }
 
     QVariant fkey = getColumnValue(_partsModel, row, PartsSqlTableModel::ColumnStorageId);
-    if(!fkey.isNull() ){                
-        QModelIndex treeIndex = _storageModel->findIndex(fkey.toInt());
-        if(treeIndex.isValid()){            
-            ui->partStorageCombo->setCurrentIndex(treeIndex);
-        }       
-    }  
+    setTreeViewComboBoxIndex(ui->partStorageCombo, fkey);
+
+    fkey = getColumnValue(_partsModel, row, PartsSqlTableModel::ColumnCategoryId);
+    setTreeViewComboBoxIndex(ui->partCategoryCombo, fkey);
 }
 
 void PartDialog::accept()
@@ -387,21 +408,6 @@ void PartDialog::commitChanges()
 void PartDialog::discardChanges()
 {
     _partsModel->revertAll();
-}
-
-void PartDialog::on_quickStorageButton_clicked()
-{
-//    QuickAddStorageDialog dlg(this);
-//    dlg.setModal(true);
-//    dlg.setWindowTitle(tr("Add Storage Container"));
-//    if(dlg.exec()==QDialog::Accepted){
-//       if(!dlg.addedStorageId().isNull()){
-//           ui->partStorageCombo->setCurrentIndex(QModelIndex());
-//           QSqlQueryModel * model = static_cast<QSqlQueryModel*>(ui->partStorageCombo->model());
-//           model->setQuery("SELECT id, name FROM part_storage ORDER BY name ASC");
-//           setIndexForFkey(ui->partStorageCombo, dlg.addedStorageId());
-//       }
-//    }
 }
 
 void PartDialog::slotPackageChanged(int index)
@@ -522,8 +528,9 @@ void PartDialog::slotCurrentPartAttachmentRowChanged(const QModelIndex &current,
     ui->viewAttachmentButton->setEnabled(current.isValid());
 }
 
-void PartDialog::slotPartStorageChanged(int)
+void PartDialog::slotPartStorageChanged(int idx)
 {
+    qDebug()<<"IDX:"<<idx;
     QVariant value;
     QComboBox* combo = static_cast<QComboBox*>(sender());
     QModelIndex currIndex = combo->view()->currentIndex();
@@ -532,8 +539,25 @@ void PartDialog::slotPartStorageChanged(int)
         qDebug()<<"Storage id is "<<storageId;
         value.setValue(storageId);
     }
+    qDebug()<<"Changing part storage to "<<value;
     QModelIndex storageColIdx = _partsModel->index(_currentModelIndex.row(),PartsSqlTableModel::ColumnStorageId);
     _partsModel->setData(storageColIdx, value);
+}
+
+void PartDialog::slotPartCategoryChanged(int idx)
+{
+    qDebug()<<"IDX:"<<idx;
+    QVariant value;
+    QComboBox* combo = static_cast<QComboBox*>(sender());
+    QModelIndex currIndex = combo->view()->currentIndex();
+    if(currIndex.isValid()){
+        int categoryId = _categoryModel->getItemId(currIndex);
+        qDebug()<<"Category id is "<<categoryId;
+        value.setValue(categoryId);
+    }
+    qDebug()<<"Changing part category to "<<value;
+    QModelIndex categoryColIdx = _partsModel->index(_currentModelIndex.row(),PartsSqlTableModel::ColumnCategoryId);
+    _partsModel->setData(categoryColIdx, value);
 }
 
 void PartDialog::slotAttachmentDoubleClicked(const QModelIndex &index)

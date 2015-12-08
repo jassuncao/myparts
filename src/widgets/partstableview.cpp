@@ -12,6 +12,9 @@
 PartsTableView::PartsTableView(QWidget *parent) :
     QTableView(parent), _tableHeaderContextMenu(0)
 {
+    QFont f = font();
+    f.setPointSize(8);
+    setFont(f);
     setFrameStyle(QFrame::StyledPanel);
     setSelectionBehavior(QAbstractItemView::SelectRows);
     setSelectionMode(QAbstractItemView::ExtendedSelection);
@@ -21,7 +24,7 @@ PartsTableView::PartsTableView(QWidget *parent) :
     horizontalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
     horizontalHeader()->setHighlightSections(false);
     connect(horizontalHeader(), SIGNAL(customContextMenuRequested(QPoint)),
-            this, SLOT(slotHeaderContextMenu(QPoint)));
+            this, SLOT(slotHeaderContextMenu(QPoint)));    
 }
 
 void PartsTableView::setModel(QAbstractItemModel * model)
@@ -42,7 +45,7 @@ void PartsTableView::setModel(QAbstractItemModel * model)
             setColumnHidden(section, true);
         }
     }
-    setupHeaderContextMenu();
+    setupHeaderContextMenu();    
 }
 
 void PartsTableView::setupHeaderContextMenu(){

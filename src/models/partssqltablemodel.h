@@ -50,6 +50,12 @@ public:
     bool updatePartAvgPrice(const QModelIndex &currentIndex, double partPrice);
     bool updatePartStock(const QModelIndex & currentIndex, int stockChange);
     void setSort(int column, Qt::SortOrder order);
+    QModelIndex findIndex(QVariant partId);
+signals:
+    void beforeSubmit();
+    void afterSubmit();
+public slots:
+    bool submitAll();
 private:
     PartsQueryBuilder * _partsQueryBuilder;
     void setColumnName(int section, const QString & columnName);

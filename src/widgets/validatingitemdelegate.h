@@ -12,7 +12,7 @@ public:
     explicit ValidatingItemDelegate(QValidator * validator, QObject *parent = 0);
     ~ValidatingItemDelegate();
     void setModelData(QWidget *editor,QAbstractItemModel *model, const QModelIndex &index) const;
-
+    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 private:
     QValidator * _validator;
 };

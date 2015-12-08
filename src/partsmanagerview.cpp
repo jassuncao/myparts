@@ -35,6 +35,10 @@ PartsManagerView::PartsManagerView(QWidget *parent)
     _partsModel = new PartsSqlTableModel(_partsQueryBuilder, this);
     _partsModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
     connect(_partsModel,SIGNAL(primeInsert(int,QSqlRecord&)), this, SLOT(slotPartsModelPrimeInsert(int,QSqlRecord&)));
+    connect(_partsModel, SIGNAL(beforeSubmit()), this, SLOT(slotBeforeSubmit()));
+    connect(_partsModel, SIGNAL(afterSubmit()), this, SLOT(slotAfterSubmit()));
+    //connect(_partsModel, SIGNAL(layoutAboutToBeChanged()), this, SLOT(slotLayoutAboutToBeChanged()));
+    //connect(_partsModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(slotDataChanged(QModelIndex,QModelIndex)));
 
     _categoriesTreeModel = new CategoryTreeModel(this);
     _categoriesTreeModel->select();
@@ -137,8 +141,26 @@ PartsTableView *PartsManagerView::createPartsTableView(QAbstractTableModel * tab
     //_partsTableView->setEditTriggers(QAbstractItemView::DoubleClicked | QAbstractItemView::EditKeyPressed);
     connect(_partsTableView->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
             this, SLOT(slotPartTableCurrentRowChanged(QModelIndex,QModelIndex)));
-    connect(_partsTableView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(slotEditPart()));
+    connect(_partsTableView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(slotEditPart()));    
     return _partsTableView;
+}
+
+void PartsManagerView::slotBeforeSubmit()
+{
+    QModelIndex curr = _partsTableView->currentIndex();
+    if(curr.isValid()){
+        _savedPartId = _partsModel->data(_partsModel->index(curr.row(), PartsSqlTableModel::ColumnId), Qt::EditRole);
+    }
+}
+
+void PartsManagerView::slotAfterSubmit()
+{
+    qDebug()<<"slotAfterSubmit";
+    if(_savedPartId.isValid()){
+        QModelIndex newIndex = _partsModel->findIndex(_savedPartId);
+        _savedPartId = QVariant();
+        _partsTableView->selectionModel()->setCurrentIndex(newIndex, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
+    }
 }
 
 void PartsManagerView::slotNavModeChanged(int mode)
@@ -194,14 +216,16 @@ void PartsManagerView::slotSelectedStorageChanged(const QList<int> selectedIds)
     slotFilterChanged();
 }
 
-void PartsManagerView::slotPartTableCurrentRowChanged(const QModelIndex &current, const QModelIndex &)
+void PartsManagerView::slotPartTableCurrentRowChanged(const QModelIndex &current, const QModelIndex &previous)
 {
+    qDebug()<<"Current is "<<current<<" Previous is "<<previous;   
     _partDetailsView->setCurrentIndex(current);
+
 }
 
 void PartsManagerView::slotAddPart()
 {
-    PartDialog dlg(_partsModel, _storageTreeModel, this);
+    PartDialog dlg(_partsModel, _categoriesTreeModel, _storageTreeModel, this);
     dlg.addNewPart();
 }
 
@@ -210,7 +234,7 @@ void PartsManagerView::slotEditPart()
     QModelIndex index = _partsTableView->currentIndex();
     if(!index.isValid())
         return;
-    PartDialog dlg(_partsModel, _storageTreeModel, this);
+    PartDialog dlg(_partsModel, _categoriesTreeModel, _storageTreeModel, this);
     dlg.editPart(index);
 }
 

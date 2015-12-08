@@ -7,6 +7,8 @@ AddStockDialog::AddStockDialog(QWidget *parent) :
     ui(new Ui::AddStockDialog)
 {
     ui->setupUi(this);
+    ui->quantitySpinBox->setAccelerated(true);
+    ui->commentTextEdit->setTabChangesFocus(true);
     QSettings settings;
     QString defaultCurrency(QChar(8364));
     QString currency = settings.value("currency/symbol", defaultCurrency).toString();
@@ -20,6 +22,11 @@ AddStockDialog::AddStockDialog(QWidget *parent) :
 AddStockDialog::~AddStockDialog()
 {
     delete ui;
+}
+
+int AddStockDialog::exec(){
+    ui->quantitySpinBox->selectAll();
+    return QDialog::exec();
 }
 
 void AddStockDialog::setPartUnit(const QString & partUnit)

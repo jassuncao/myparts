@@ -14,6 +14,7 @@ class AddStockDialog : public QDialog
 public:
     explicit AddStockDialog(QWidget *parent = 0);
     ~AddStockDialog();
+    int exec();
     void setPartUnit(const QString & partUnit);
     int getStockChange() const;
     double getPartPrice() const;

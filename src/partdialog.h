@@ -32,7 +32,7 @@ class PartDialog : public QDialog
     Q_OBJECT
     
 public:
-    explicit PartDialog(PartsSqlTableModel *model, TreeItemModel* storageModel,/* bool addMode,*/ QWidget *parent = 0);
+    explicit PartDialog(PartsSqlTableModel *model, TreeItemModel *categoryModel, TreeItemModel* storageModel, /* bool addMode,*/ QWidget *parent = 0);
     ~PartDialog();    
     int initialStock() const;
     double partPrice() const;
@@ -44,7 +44,6 @@ public slots:
     void accept();
 private slots:
     int exec();
-    void on_quickStorageButton_clicked();
     void slotPackageChanged(int index);
     void slotDeselectPackage();
     void slotUsePackage();
@@ -60,7 +59,8 @@ private slots:
     void slotCurrentPartDistributorRowChanged(const QModelIndex &current, const QModelIndex &);
     void slotCurrentPartManufacturerRowChanged(const QModelIndex &current, const QModelIndex &);
     void slotCurrentPartAttachmentRowChanged(const QModelIndex &current, const QModelIndex &);
-    void slotPartStorageChanged(int);
+    void slotPartStorageChanged(int idx);
+    void slotPartCategoryChanged(int idx);
     void slotAttachmentDoubleClicked(const QModelIndex &index);
 
 private:
@@ -78,6 +78,7 @@ private:
     PartDistributorTableModel2 * _partDistributorModel;
     PartManufacturerTableModel2 * _partManufacturerModel;
     AttachmentTableModel3 * _partAttachmentModel;
+    TreeItemModel * _categoryModel;
     TreeItemModel * _storageModel;
     QSqlQueryModel * _partConditionModel;
     QSqlQueryModel * _partUnitsModel;

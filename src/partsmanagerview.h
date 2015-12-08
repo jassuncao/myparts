@@ -37,7 +37,9 @@ signals:
 
 public slots:
 protected slots:
-    void slotPartTableCurrentRowChanged(const QModelIndex &current, const QModelIndex &);    
+    void slotBeforeSubmit();
+    void slotAfterSubmit();    
+    void slotPartTableCurrentRowChanged(const QModelIndex &current, const QModelIndex &previous);
     void slotAddPart();
     void slotEditPart();
     void slotDeletePart();
@@ -61,6 +63,7 @@ private:
     PartsQueryBuilder * _partsQueryBuilder;
     CategoryNavigator * _categoryNavigator;
     StorageNavigator * _storageNavigator;
+    QVariant _savedPartId;
 };
 
 #endif // PARTSMANAGERVIEW_H

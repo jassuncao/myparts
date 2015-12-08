@@ -6,11 +6,18 @@ RemoveStockDialog::RemoveStockDialog(QWidget *parent) :
     ui(new Ui::RemoveStockDialog)
 {
     ui->setupUi(this);
+    ui->quantitySpinBox->setAccelerated(true);
+    ui->commentTextEdit->setTabChangesFocus(true);
 }
 
 RemoveStockDialog::~RemoveStockDialog()
 {
     delete ui;
+}
+
+int RemoveStockDialog::exec(){
+    ui->quantitySpinBox->selectAll();
+    return QDialog::exec();
 }
 
 void RemoveStockDialog::setPartUnit(const QString & partUnit)

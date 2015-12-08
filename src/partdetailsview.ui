@@ -285,6 +285,11 @@
             <verstretch>1</verstretch>
            </sizepolicy>
           </property>
+          <property name="font">
+           <font>
+            <pointsize>8</pointsize>
+           </font>
+          </property>
           <property name="styleSheet">
            <string notr="true"/>
           </property>

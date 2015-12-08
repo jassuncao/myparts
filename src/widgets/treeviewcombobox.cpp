@@ -129,10 +129,10 @@ void TreeViewComboBox::setCurrentIndex(const QModelIndex &index)
 {
     if (!index.isValid())
         return;
+    m_view->setCurrentIndex(index);
     setRootModelIndex(model()->parent(index));
     QComboBox::setCurrentIndex(index.row());
     setRootModelIndex(QModelIndex());
-    m_view->setCurrentIndex(index);
 }
 
 bool TreeViewComboBox::eventFilter(QObject *object, QEvent *event)

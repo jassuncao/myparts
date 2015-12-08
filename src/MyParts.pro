@@ -104,7 +104,8 @@ SOURCES += main.cpp\
     models/packagetreemodel.cpp \
     models/packagetablemodel.cpp \
     editors/packageeditorwidget.cpp \
-    packagemanagerwidget.cpp
+    packagemanagerwidget.cpp \
+    widgets/extendedtableview.cpp
 
 HEADERS  += mainwindow.h \
     entities/entities.h \
@@ -192,7 +193,8 @@ HEADERS  += mainwindow.h \
     models/packagetablemodel.h \
     models/packagetreemodel.h \
     editors/packageeditorwidget.h \
-    packagemanagerwidget.h
+    packagemanagerwidget.h \
+    widgets/extendedtableview.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \

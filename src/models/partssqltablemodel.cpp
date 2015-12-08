@@ -163,4 +163,27 @@ bool PartsSqlTableModel::updatePartStock(const QModelIndex & currentIndex, int s
     return setData(colIndex, currentStock, Qt::EditRole);
 }
 
+QModelIndex PartsSqlTableModel::findIndex(QVariant partId)
+{
+    int row = 0;
+    int count = rowCount();
+    while(row<count){
+        QModelIndex rowIndex = index(row, ColumnId);
+        QVariant other = data(rowIndex, Qt::EditRole);
+        if(partId==other){
+            return rowIndex;
+        }
+        ++row;
+    }
+    return QModelIndex();
+}
+
+bool PartsSqlTableModel::submitAll()
+{
+    emit beforeSubmit();
+    bool res = QSqlTableModel::submitAll();
+    emit afterSubmit();
+    return res;
+}
+
 

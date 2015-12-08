@@ -14,6 +14,7 @@ class RemoveStockDialog : public QDialog
 public:
     explicit RemoveStockDialog(QWidget *parent = 0);
     ~RemoveStockDialog();
+    int exec();
     void setPartUnit(const QString & partUnit);
     void setAvailableStock(int availableStock);
     int getStockChange() const;
