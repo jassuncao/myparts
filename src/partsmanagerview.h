@@ -26,6 +26,7 @@ class PartsQueryBuilder;
 class CategoryNavigator;
 class StorageNavigator;
 class CategoryTreeModel2;
+class TreeItem;
 
 class PartsManagerView : public Manhattan::MiniSplitter
 {
@@ -50,7 +51,8 @@ protected slots:
     void slotFilterChanged();
     void slotSelectedCategoryChanged(const QList<int> selectedIds);
     void slotSelectedStorageChanged(const QList<int> selectedIds);
-    void slotSetPartsCategory(QVector<int> parts, int categoryId);
+    void slotPartsDroppedInCategory(QVector<int> parts, TreeItem* item);
+    void slotPartsDroppedInStorage(QVector<int> parts, TreeItem* item);
 private:
     PartsTableView * createPartsTableView(QAbstractTableModel * tableModel);
     NavigationSubWidget * _navWidget;

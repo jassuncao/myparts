@@ -2,7 +2,7 @@
 #include "treeitem.h"
 
 PackageTreeModel::PackageTreeModel( QObject *parent)
-    : TreeItemModel(parent)
+    : TreeItemModel(0, QString(), parent)
 {
 
 }

@@ -16,6 +16,7 @@
 #include "parts/partsdao.h"
 #include "models/partsquerybuilder.h"
 #include "models/categorytreemodel2.h"
+#include "models/treeitem.h"
 
 #include <QHBoxLayout>
 #include <QPushButton>
@@ -127,7 +128,8 @@ PartsManagerView::PartsManagerView(QWidget *parent)
     connect(_duplicatePartButton, SIGNAL(clicked()), this, SLOT(slotDuplicatePart()));
     connect(_partsFilterWidget, SIGNAL(filterChanged()), this, SLOT(slotFilterChanged()));    
     connect(_partDetailsView, SIGNAL(editPartSelected()), this, SLOT(slotEditPart()));
-    connect(_categoriesTreeModel, SIGNAL(partsDropped(QVector<int>,int)), this, SLOT(slotSetPartsCategory(QVector<int>,int)));
+    connect(_categoriesTreeModel, SIGNAL(partsDropped(QVector<int>,TreeItem*)), this, SLOT(slotPartsDroppedInCategory(QVector<int>,TreeItem*)));
+    connect(_storageTreeModel, SIGNAL(partsDropped(QVector<int>,TreeItem*)), this, SLOT(slotPartsDroppedInStorage(QVector<int>,TreeItem*)));
 }
 
 PartsManagerView::~PartsManagerView()
@@ -296,8 +298,14 @@ void PartsManagerView::slotPartsModelPrimeInsert(int, QSqlRecord &record)
     }
 }
 
-void PartsManagerView::slotSetPartsCategory(QVector<int> parts, int categoryId)
+void PartsManagerView::slotPartsDroppedInCategory(QVector<int> parts, TreeItem* item)
 {
-    _partsModel->updatePartsCategory(parts, categoryId);
+    _partsModel->updatePartsCategory(parts, item->id());
+    _partsModel->select();
+}
+
+void PartsManagerView::slotPartsDroppedInStorage(QVector<int> parts, TreeItem* item)
+{
+    _partsModel->updatePartsStorage(parts, item->id());
     _partsModel->select();
 }

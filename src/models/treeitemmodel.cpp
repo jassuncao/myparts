@@ -1,26 +1,30 @@
 #include "treeitemmodel.h"
 #include "treeitem.h"
+#include "treeitemmodelpersistence.h"
+#include "treemodelmimedata.h"
 #include <QDebug>
 #include <QMimeData>
 #include <limits>
 
 
+const char * PART_MIME_TYPE= "myparts/part";
+
 static const int COLUMN_COUNT = 1;
 
-TreeItemModel::TreeItemModel(QObject *parent) :
-    QAbstractItemModel(parent)//, _toolTipColumn(-1)
+TreeItemModel::TreeItemModel(TreeItemModelPersistence *modelPersistence, const QString &mimeType, QObject *parent) :
+    QAbstractItemModel(parent), _modelPersistence(modelPersistence), _mimeType(mimeType)
 {
-    _invisibleRootItem = new TreeItem(-1, tr("Name"), tr("Description"));
-    //_uncommitedItem=0;
-    //_uncommitedItemParent=0;
+    _invisibleRootItem = new TreeItem(-1, tr("Name"), tr("Description"));   
     _folderIcon.addFile(":icons/folder_closed", QSize(), QIcon::Normal, QIcon::Off);
     _folderIcon.addFile(":icons/folder_open", QSize(), QIcon::Normal, QIcon::On);
 }
 
 TreeItemModel::~TreeItemModel()
 {
-    delete _invisibleRootItem;
+    delete _invisibleRootItem;    
+    delete _modelPersistence;
     _invisibleRootItem = NULL;
+    _modelPersistence = NULL;
 }
 
 bool TreeItemModel::select()
@@ -28,17 +32,10 @@ bool TreeItemModel::select()
     bool res;
     beginResetModel();
     _invisibleRootItem->removeAll();
-    res = fillTree(_invisibleRootItem);
+    res = _modelPersistence->loadTree(_invisibleRootItem);
     endResetModel();
     return res;
 }
-
-/*
-void TreeItemModel::setToolTipColumn(int column)
-{
-    _toolTipColumn = column;
-}
-*/
 
 TreeItem * TreeItemModel::getItem(const QModelIndex &index) const
 {
@@ -224,53 +221,18 @@ bool TreeItemModel::insertItem(const QModelIndex &parent)
     return success;
 }
 
-bool TreeItemModel::doInsert(TreeItem * item)
-{
-    return true;
-}
-
-bool TreeItemModel::doUpdate(TreeItem * item)
-{
-    return true;
-}
-
-bool TreeItemModel::doDelete(TreeItem * item)
-{
-    return true;
-}
-
-bool TreeItemModel::doRevert(TreeItem * item)
-{
-    return true;
-}
-
 bool TreeItemModel::submit()
 {
-    bool res = true;
-    /*
-    if(_uncommitedItem){
-        if(_uncommitedItem->id()<0){
-            qDebug("Inserting new item (1)");
-            res = doInsert(_uncommitedItem);
-        }
-        else{
-            qDebug("Saving changes to item (1)");
-            res = doUpdate(_uncommitedItem);
-        }
-        _uncommitedItem=0;
-        _uncommitedItemParent=0;
-    }
-    */
+    bool res = true;  
     while (!_uncommited.isEmpty()){
         TreeItem * item = _uncommited.dequeue();
-        //item->commitChanges();
         if(item->id()<0){
             qDebug("Inserting new item (n)");
-            res = res | doInsert(item);
+            res = res | _modelPersistence->insertAtEnd(item);
         }
         else{
             qDebug("Saving changes to item (n)");
-            res = res | doUpdate(item);
+            res = res | _modelPersistence->save(item);
         }
     }
     return res;
@@ -278,27 +240,7 @@ bool TreeItemModel::submit()
 
 void TreeItemModel::revert()
 {
-    qDebug("revert changes");
-    /*
-    if(_uncommitedItem){        
-        if(_uncommitedItem->id()==-1){//not saved to the database
-            qDebug("Reverting unsaved item (1)");
-            int idx = _uncommitedItem->row();
-            beginRemoveRows(*_uncommitedItemParent,idx,idx);
-            _uncommitedItem->parent()->removeChildren(_uncommitedItem->row(),1);
-            endRemoveRows();
-        }
-        else{
-            qDebug("Reverting item (1)");
-            doRevert(_uncommitedItem);
-        }
-        _uncommitedItem=0;
-        _uncommitedItemParent=0;
-    }
-
-    if(_uncommited.isEmpty())
-        return;
-    */
+    qDebug("revert changes");   
     while (!_uncommited.isEmpty()){
         TreeItem * item = _uncommited.dequeue();
         if(item->id()==-1){//not saved to the database
@@ -310,9 +252,7 @@ void TreeItemModel::revert()
             endRemoveRows();
         }
         else{
-            qDebug("Reverting item (n)");
-            //doRevert(_uncommitedItem);
-            //item->revertChanges();
+            qDebug("Reverting item (n)");          
         }
     }
 }
@@ -324,7 +264,8 @@ bool TreeItemModel::removeItem(const QModelIndex &index)
     TreeItem *parentItem = getItem(parent);
     int position = index.row();
     bool success = false;
-    if(doDelete(parentItem->child(position))){
+    TreeItem * child = parentItem->child(position);
+    if(_modelPersistence->remove(child)){
         beginRemoveRows(parent, position, position);
         success = parentItem->removeChildren(position, 1);
         endRemoveRows();
@@ -353,5 +294,105 @@ QModelIndex TreeItemModel::internalFindIndex(int nodeId, const TreeItem * parent
             return res;
     }
     return QModelIndex();
+}
+
+Qt::DropActions TreeItemModel::supportedDropActions() const
+{
+    return Qt::MoveAction | Qt::LinkAction;
+}
+
+QStringList TreeItemModel::mimeTypes() const
+{
+    QStringList types;
+    types << _mimeType << PART_MIME_TYPE;
+    return types;
+}
+
+
+QMimeData * TreeItemModel::mimeData(const QModelIndexList &indexes) const
+{
+    TreeModelMimeData * mimeData = new TreeModelMimeData(indexes);
+
+    QByteArray encodedData;
+    QDataStream stream(&encodedData, QIODevice::WriteOnly);
+    foreach (const QModelIndex &index, indexes) {
+        if (index.isValid()) {
+            TreeItem* item = getItem(index);
+            stream << (qint32)item->id();
+        }
+    }
+    mimeData->setData(_mimeType, encodedData);
+    return mimeData;
+}
+
+bool TreeItemModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent)
+{
+    if (action == Qt::IgnoreAction){
+        return true;
+    }
+    TreeItem* targetNode = getItem(parent);
+    qDebug("Action = %d", action);
+    qDebug("Original row = %d and col %d", row, column);
+    int dstRow;
+    if (row != -1)
+        dstRow = row;
+    else if (parent.isValid())
+        dstRow = 0;
+    else
+        dstRow = rowCount(QModelIndex());
+
+    const TreeModelMimeData * mimeData = dynamic_cast<const TreeModelMimeData*>(data);
+    if(mimeData){
+        foreach (const QModelIndex &index, mimeData->indexes()) {
+            if (index.isValid()) {
+                TreeItem* item = getItem(index);
+
+                if(dstRow>=0 && dstRow<targetNode->childCount()){
+                    TreeItem* sibling = targetNode->child(dstRow);
+                    qDebug()<<"Sibling is "<<sibling->id();
+                    if(!_modelPersistence->moveBeforeNode(item, sibling)){
+                        return false;
+                    }
+                }
+                else{
+                    if(!_modelPersistence->reparentNode(item, targetNode)){
+                        return false;
+                    }
+
+                }
+                int srcRow = index.row();
+                qDebug("beginMoveRows from %d to %d", srcRow, dstRow);
+                qDebug()<<"Item is "<<index.row()<<" col "<<index.column()<<" with "<<srcRow;
+                qDebug()<<"Parent is "<<parent.row()<<" col "<<parent.column()<<" with "<<dstRow;
+                if(!beginMoveRows(index,srcRow,srcRow, parent,dstRow)){
+                    qDebug("beginMoveRows returned false");
+                    return false;
+                }
+
+                if(targetNode==item->parent()){
+                    if(srcRow<=dstRow)
+                        dstRow--;
+                    qDebug("Moving from %d to %d", srcRow, dstRow);
+                    item->parent()->moveChild(srcRow, dstRow);
+                }
+                else{
+                    qDebug("Reparenting node to row %d", dstRow);
+                    targetNode->insertChild(dstRow,item);
+                }
+                endMoveRows();
+            }
+        }
+        return true;
+    }
+    else if(data->hasFormat(PART_MIME_TYPE)){
+        QByteArray encodedData = data->data(PART_MIME_TYPE);
+        QDataStream stream(&encodedData, QIODevice::ReadOnly);
+        QVector<int> parts;
+        stream >> parts;
+        emit partsDropped(parts, targetNode);
+        return true;
+    }
+
+    return false;
 }
 

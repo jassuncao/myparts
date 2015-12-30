@@ -7,14 +7,16 @@
 #include <QQueue>
 #include <QMap>
 #include <QList>
+#include <QMimeData>
 
 class TreeItem;
+class TreeItemModelPersistence;
 
 class TreeItemModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:
-    explicit TreeItemModel(QObject *parent = 0);
+    explicit TreeItemModel(TreeItemModelPersistence * modelPersistence, const QString & mimeType, QObject *parent = 0);
     ~TreeItemModel();
 
     QVariant data(const QModelIndex &index, int role) const;
@@ -35,31 +37,26 @@ public:
     void setToolTipColumn(int column);
     bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex());
     bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
-protected:
-    virtual bool fillTree(TreeItem * rootItem) = 0;
-    virtual bool doInsert(TreeItem * item);
-    virtual bool doUpdate(TreeItem * item);
-    virtual bool doDelete(TreeItem * item);
-    virtual bool doRevert(TreeItem * item);
-
+    Qt::DropActions supportedDropActions() const;
+    QStringList mimeTypes() const;
+    QMimeData * mimeData(const QModelIndexList &indexes) const;
+    bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
+protected:   
     TreeItem * getItem(const QModelIndex &index) const;
     QModelIndex internalFindIndex(int nodeId, const TreeItem *parentNode) const;
     TreeItem * rootItem() {return _invisibleRootItem;}
     void setFolderIcon(const QIcon & icon) {_folderIcon = icon;}
 signals:
-    
+    void partsDropped(QVector<int> parts, TreeItem * item);
 public slots:
     bool submit();
     void revert();
-
 private:
     TreeItem * _invisibleRootItem;
-    QIcon _folderIcon;
-    //const QModelIndex * _uncommitedItemParent;
-    //TreeItem * _uncommitedItem;
-    QQueue<TreeItem*> _uncommited;
-    //int _toolTipColumn;
-    //QMap<int,QModelIndex> _indexesLookup;
+    QIcon _folderIcon;    
+    QQueue<TreeItem*> _uncommited;  
+    TreeItemModelPersistence * _modelPersistence;
+    const QString _mimeType;
 };
 
 #endif // TREEITEMMODEL_H

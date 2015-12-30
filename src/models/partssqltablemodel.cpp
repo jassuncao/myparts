@@ -177,6 +177,20 @@ void PartsSqlTableModel::updatePartsCategory(QVector<int> parts, int categoryId)
     database().commit();
 }
 
+void PartsSqlTableModel::updatePartsStorage(QVector<int> parts, int storageId)
+{
+    QSqlQuery query(database());
+    database().transaction();
+    query.prepare("UPDATE part SET storage=? WHERE id=?");
+    query.bindValue(0, storageId);
+    int partId;
+    foreach (partId, parts) {
+        query.bindValue(1, partId);
+        query.exec();
+    }
+    database().commit();
+}
+
 QModelIndex PartsSqlTableModel::findIndex(QVariant partId)
 {
     int row = 0;

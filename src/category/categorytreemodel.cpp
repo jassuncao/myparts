@@ -8,7 +8,7 @@
 #include <limits>
 
 CategoryTreeModel::CategoryTreeModel(QObject *parent) :
-    TreeItemModel(parent)
+    TreeItemModel(0, QString(), parent)
 {
 }
 

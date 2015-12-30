@@ -42,7 +42,6 @@ public:
     bool remove(TreeItem * item) const;
     QStringList getPath(TreeItem * item) const;
 protected:
-    //virtual TreeItem * createNewItem(const QSqlRecord & record) const = 0 ;
     void initRecordAndPrimaryIndex();
     QSqlDatabase database() const;
     virtual void beforeRemoveNode(int newParentId, const Node & node) const;

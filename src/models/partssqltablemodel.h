@@ -50,6 +50,7 @@ public:
     bool updatePartAvgPrice(const QModelIndex &currentIndex, double partPrice);
     bool updatePartStock(const QModelIndex & currentIndex, int stockChange);
     void updatePartsCategory(QVector<int> parts, int categoryId);
+    void updatePartsStorage(QVector<int> parts, int storageId);
     void setSort(int column, Qt::SortOrder order);
     QModelIndex findIndex(QVariant partId);
 
