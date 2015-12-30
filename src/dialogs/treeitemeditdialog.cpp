@@ -1,5 +1,4 @@
-#include "partcategorydialog.h"
-#include <QtGui>
+#include "treeitemeditdialog.h"
 #include <QLineEdit>
 #include <QPlainTextEdit>
 #include <QFormLayout>
@@ -7,17 +6,16 @@
 #include <QPushButton>
 #include <QMessageBox>
 #include <QDebug>
-#include <QDataWidgetMapper>
-#include "entities/categoriesdao.h"
 
-PartCategoryDialog::PartCategoryDialog(QAbstractItemModel *model, QWidget *parent) :
+TreeItemEditDialog::TreeItemEditDialog(QWidget *parent) :
     QDialog(parent)
 {
     _nameEdit = new QLineEdit(this);
     _descriptionEdit = new QPlainTextEdit(this);
     QFontMetrics m (_descriptionEdit->font()) ;
-    int RowHeight = m.lineSpacing() ;
-    _descriptionEdit->setMaximumHeight(4 * RowHeight) ;
+    int rowHeight = m.lineSpacing() ;
+    _descriptionEdit->setMaximumHeight(4 * rowHeight) ;
+    _descriptionEdit->setTabChangesFocus(true);
 
     QDialogButtonBox * buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     buttonBox->button(QDialogButtonBox::Ok)->setDefault(true);
@@ -32,50 +30,48 @@ PartCategoryDialog::PartCategoryDialog(QAbstractItemModel *model, QWidget *paren
     mainLayout->addLayout(_formLayout);
     mainLayout->addStretch();
     mainLayout->addWidget(buttonBox);
-
     setLayout(mainLayout);
-    _widgetMapper = new QDataWidgetMapper(this);
-    _widgetMapper->setModel(model);
-    _widgetMapper->addMapping(_nameEdit, 0);
-    _widgetMapper->addMapping(_descriptionEdit, 1);
-    _widgetMapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
-    //qDebug("Spacing %d", _formLayout->verticalSpacing());
 }
 
-void PartCategoryDialog::setRootIndex(const QModelIndex &index)
+
+TreeItemEditDialog::~TreeItemEditDialog()
 {
-    _widgetMapper->setRootIndex(index);
 }
 
-void PartCategoryDialog::setCurrentIndex(const int index)
+void TreeItemEditDialog::setItemName(const QString & name)
 {
-    _widgetMapper->setCurrentIndex(index);
+    _nameEdit->setText(name);
 }
 
-void PartCategoryDialog::setCurrentModelIndex(const QModelIndex &index)
+QString TreeItemEditDialog::itemName() const
 {
-    _widgetMapper->setCurrentModelIndex(index);
+    return _nameEdit->text();
 }
 
-void PartCategoryDialog::accept()
+void TreeItemEditDialog::setItemDescription(const QString & description)
+{
+    _descriptionEdit->setPlainText(description);
+}
+
+QString TreeItemEditDialog::itemDescription() const
+{
+    return _descriptionEdit->toPlainText();
+}
+
+void TreeItemEditDialog::accept()
 {
     if(_nameEdit->text().isEmpty()){
         QFont font = _formLayout->labelForField(_nameEdit)->font();
         font.setBold(true);
         _formLayout->labelForField(_nameEdit)->setFont(font);
-        QMessageBox::critical(this,tr("Invalid category name"),tr("Category name is required"),QMessageBox::NoButton);
+        QMessageBox::critical(this,tr("Invalid input"),tr("Name is a required field"),QMessageBox::NoButton);
     }
     else{
         qDebug("Submit");
-        _widgetMapper->submit();
         QDialog::accept();
     }
 }
 
-void PartCategoryDialog::reject(){   
+void TreeItemEditDialog::reject(){
     QDialog::reject();
 }
-
-
-
-

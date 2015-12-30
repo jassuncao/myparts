@@ -17,16 +17,16 @@ DQSharedList CategoryEntity::initialData() const
 {
     DQList<Entities::CategoryEntity> initialCategories;
     DQListWriter writer(&initialCategories);
-    writer << "Root Category" << "" << "" << 1 << 20
-           << "Active Components" << "Active Components" << "" << 2 << 17
-             << "Semiconductors" << "Semiconductors" << "" << 3 << 12
-              << "Transistors" << "Transistors" << ""  << 4 << 9
-                 << "NPN" << "" << ""  << 5 << 6
-                 << "PNP" << "" << ""  << 7 << 8
-              << "Integrated Circuits" << "" << ""  << 10 << 11
-             << "Optoelectronics" << "" << ""  <<13 << 14
-             << "Others" << "" << ""  <<15 << 16
-           << "Passive Components" << "Passive Components" << ""  << 18 << 19
+    writer << "Root Category" << "" << 1 << 20
+           << "Active Components" << "Active Components" << 2 << 17
+             << "Semiconductors" << "Semiconductors" << 3 << 12
+              << "Transistors" << "Transistors" << 4 << 9
+                 << "NPN" << "" << 5 << 6
+                 << "PNP" << "" << 7 << 8
+              << "Integrated Circuits" << "" << 10 << 11
+             << "Optoelectronics" << "" <<13 << 14
+             << "Others" << "" <<15 << 16
+           << "Passive Components" << "Passive Components" << 18 << 19
               ;
     return initialCategories;
 }

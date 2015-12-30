@@ -163,6 +163,20 @@ bool PartsSqlTableModel::updatePartStock(const QModelIndex & currentIndex, int s
     return setData(colIndex, currentStock, Qt::EditRole);
 }
 
+void PartsSqlTableModel::updatePartsCategory(QVector<int> parts, int categoryId)
+{
+    QSqlQuery query(database());
+    database().transaction();
+    query.prepare("UPDATE part SET category=? WHERE id=?");
+    query.bindValue(0, categoryId);
+    int partId;
+    foreach (partId, parts) {
+        query.bindValue(1,partId);
+        query.exec();
+    }
+    database().commit();
+}
+
 QModelIndex PartsSqlTableModel::findIndex(QVariant partId)
 {
     int row = 0;

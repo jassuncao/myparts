@@ -25,6 +25,7 @@ class PartsSqlTableModel;
 class PartsQueryBuilder;
 class CategoryNavigator;
 class StorageNavigator;
+class CategoryTreeModel2;
 
 class PartsManagerView : public Manhattan::MiniSplitter
 {
@@ -49,13 +50,14 @@ protected slots:
     void slotFilterChanged();
     void slotSelectedCategoryChanged(const QList<int> selectedIds);
     void slotSelectedStorageChanged(const QList<int> selectedIds);
+    void slotSetPartsCategory(QVector<int> parts, int categoryId);
 private:
     PartsTableView * createPartsTableView(QAbstractTableModel * tableModel);
     NavigationSubWidget * _navWidget;
     PartsTableView * _partsTableView;
     PartDetailsView * _partDetailsView;
     PartsSqlTableModel * _partsModel;  
-    CategoryTreeModel * _categoriesTreeModel;
+    CategoryTreeModel2 * _categoriesTreeModel;
     StorageTreeModel * _storageTreeModel;
     PartsFilterWidget * _partsFilterWidget;
     QPushButton * _deletePartButton;

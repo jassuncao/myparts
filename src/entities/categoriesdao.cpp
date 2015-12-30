@@ -76,11 +76,11 @@ void CategoriesDAO::createCategoriesTree(TreeItem * rootItem)
                     stack.pop();
                 }
             }
-            QVector<QVariant> data(3);
-            data[NAME_COL] = category.name.get();
-            data[DESCRIPTION_COL] = category.description.get();
-            data[ID_COL] = category.id.get();
-            TreeItem * item = new TreeItem(category.id, data, stack.top().item);
+
+            QString name = category.name.get().toString();
+            QString description = category.description.get().toString();
+            int id = category.id.get().toInt();
+            TreeItem * item = new TreeItem(id, name, description, stack.top().item);
             //CategoryTreeItem * item = new CategoryTreeItem(category.id, category.name, category.description, stack.top().item);
             stack.top().item->appendChild(item);
             //the category has children if the rgt-lft > 1
@@ -391,8 +391,8 @@ bool CategoriesDAO::insertAtEnd(TreeItem * item)
     qDebug("Changed %d rows",query.numRowsAffected());
 
     Entities::CategoryEntity category;
-    category.name.set(item->data(NAME_COL));
-    category.description.set(item->data(DESCRIPTION_COL));
+    category.name.set(item->name());
+    category.description.set(item->description());
     category.lft = newPos;
     category.rgt = newPos+1;
     if(category.save()){
@@ -408,8 +408,8 @@ bool CategoriesDAO::reload(TreeItem * item)
 {
     Entities::CategoryEntity cat;
     if(cat.load(DQWhere("id")==item->id())){
-        item->setData(NAME_COL, cat.name);
-        item->setData(DESCRIPTION_COL, cat.description);
+        item->setName(cat.name.get().toString());
+        item->setDescription(cat.description.get().toString());
         return true;
     }
     qWarning("PartCategory with id %d not found",item->id());
@@ -424,8 +424,8 @@ bool CategoriesDAO::update(TreeItem * item)
         qWarning("PartCategory with id %d not found", id);
         return false;
     }
-    cat.name.set(item->data(NAME_COL));
-    cat.description.set(item->data(DESCRIPTION_COL));
+    cat.name.set(item->name());
+    cat.description.set(item->description());
     return cat.save();
 }
 

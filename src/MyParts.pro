@@ -105,7 +105,10 @@ SOURCES += main.cpp\
     models/packagetablemodel.cpp \
     editors/packageeditorwidget.cpp \
     packagemanagerwidget.cpp \
-    widgets/extendedtableview.cpp
+    widgets/extendedtableview.cpp \
+    models/treeitemmodelpersistence.cpp \
+    models/categorytreemodel2.cpp \
+    dialogs/treeitemeditdialog.cpp
 
 HEADERS  += mainwindow.h \
     entities/entities.h \
@@ -194,7 +197,10 @@ HEADERS  += mainwindow.h \
     models/packagetreemodel.h \
     editors/packageeditorwidget.h \
     packagemanagerwidget.h \
-    widgets/extendedtableview.h
+    widgets/extendedtableview.h \
+    models/treeitemmodelpersistence.h \
+    models/categorytreemodel2.h \
+    dialogs/treeitemeditdialog.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \

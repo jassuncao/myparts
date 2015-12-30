@@ -49,8 +49,10 @@ public:
     inline QVariant lastInsertedId() const {return _lastInsertedId;}  
     bool updatePartAvgPrice(const QModelIndex &currentIndex, double partPrice);
     bool updatePartStock(const QModelIndex & currentIndex, int stockChange);
+    void updatePartsCategory(QVector<int> parts, int categoryId);
     void setSort(int column, Qt::SortOrder order);
     QModelIndex findIndex(QVariant partId);
+
 signals:
     void beforeSubmit();
     void afterSubmit();

@@ -5,7 +5,7 @@
 class PackageTreeModel : public TreeItemModel
 {
 public:
-    PackageTreeModel(const QVector<QVariant> columns, QObject *parent = 0);
+    PackageTreeModel(QObject *parent = 0);
     ~PackageTreeModel();
 };
 

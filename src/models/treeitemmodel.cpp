@@ -5,12 +5,14 @@
 #include <limits>
 
 
-TreeItemModel::TreeItemModel(int columns, QObject *parent) :
-    QAbstractItemModel(parent), _toolTipColumn(-1)
+static const int COLUMN_COUNT = 1;
+
+TreeItemModel::TreeItemModel(QObject *parent) :
+    QAbstractItemModel(parent)//, _toolTipColumn(-1)
 {
-    _invisibleRootItem = new TreeItem(-1, QVector<QVariant>(columns));
-    _uncommitedItem=0;
-    _uncommitedItemParent=0;
+    _invisibleRootItem = new TreeItem(-1, tr("Name"), tr("Description"));
+    //_uncommitedItem=0;
+    //_uncommitedItemParent=0;
     _folderIcon.addFile(":icons/folder_closed", QSize(), QIcon::Normal, QIcon::Off);
     _folderIcon.addFile(":icons/folder_open", QSize(), QIcon::Normal, QIcon::On);
 }
@@ -31,10 +33,12 @@ bool TreeItemModel::select()
     return res;
 }
 
+/*
 void TreeItemModel::setToolTipColumn(int column)
 {
     _toolTipColumn = column;
 }
+*/
 
 TreeItem * TreeItemModel::getItem(const QModelIndex &index) const
 {
@@ -50,19 +54,17 @@ QVariant TreeItemModel::data(const QModelIndex &index, int role) const
     if(!index.isValid()){
         return QVariant();
     }
+    if(index.column()<0 || index.column()>=COLUMN_COUNT)
+        return QVariant();
     TreeItem *item = getItem(index);
     switch(role){
     case Qt::DecorationRole:
-            return _folderIcon;
-        break;
+        return _folderIcon;        ;
     case Qt::DisplayRole:
     case Qt::EditRole:
-            return item->data(index.column());
-        break;
+        return item->name();
     case Qt::ToolTipRole:
-        if(_toolTipColumn!=-1)
-            return item->data(_toolTipColumn);       
-        return QVariant();
+        return item->description();
     default:
         return QVariant();
         break;
@@ -74,18 +76,22 @@ bool TreeItemModel::setData(const QModelIndex &index, const QVariant &value, int
     if(!index.isValid()){
         return false;
     }
-    if(role!=Qt::EditRole){
+    if(index.column()<0 || index.column()>=COLUMN_COUNT)
+        return false;
+
+    if(role!=Qt::EditRole && role!=Qt::ToolTipRole){
         return false;
     }
     TreeItem *item = getItem(index);
-    bool res = item->setData(index.column(), value);
-    if(res){
-        if(!_uncommited.contains(item)){
-            _uncommited.enqueue(item);
-        }
-        emit dataChanged(index,index);
+    if(role==Qt::EditRole){
+        item->setName(value);
     }
-    return res;
+    else if(role==Qt::ToolTipRole){
+        item->setDescription(value);
+    }
+    if(!_uncommited.contains(item))
+        _uncommited.append(item);
+    return true;
 }
 
 int TreeItemModel::getItemId(const QModelIndex &index) const
@@ -128,17 +134,21 @@ Qt::ItemFlags TreeItemModel::flags(const QModelIndex &index) const
 
 QVariant TreeItemModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    if (orientation == Qt::Horizontal && role == Qt::DisplayRole){
-             return _invisibleRootItem->data(section);
+    if (orientation == Qt::Horizontal && role == Qt::DisplayRole && section>=0 && section<COLUMN_COUNT){
+             return _invisibleRootItem->name();
     }
     return QVariant();
 }
 
 QModelIndex TreeItemModel::index(int row, int column, const QModelIndex &parentIndex) const
 {
+    if(!hasIndex(row, column,parentIndex))
+        return QModelIndex();
+    /*
     if (parentIndex.isValid() && parentIndex.column() != 0){
       return QModelIndex();
     }
+    */
 
      TreeItem *parentItem = getItem(parentIndex);
      TreeItem *childItem = parentItem->child(row);
@@ -162,18 +172,42 @@ QModelIndex TreeItemModel::parent(const QModelIndex &index) const
     if (parentItem == _invisibleRootItem){
         return QModelIndex();
     }
-    return createIndex(parentItem->childNumber(), 0, parentItem);
+    return createIndex(parentItem->row(), 0, parentItem);
 }
 
 int TreeItemModel::rowCount(const QModelIndex &parent) const
 {
+    if(parent.column()>0)
+        return 0;
+    TreeItem * parentItem;
+    if(!parent.isValid())
+        parentItem = _invisibleRootItem;
+    else
+        parentItem = static_cast<TreeItem*>(parent.internalPointer());
+    return parentItem->childCount();
+    /*
     TreeItem *parentItem = getItem(parent);
     return parentItem->childCount();
+    */
 }
 
 int TreeItemModel::columnCount(const QModelIndex &parent) const
+{        
+    if(!parent.isValid())
+        return 1;
+    return 2;
+}
+
+bool TreeItemModel::insertRows(int row, int count, const QModelIndex &parent)
 {
-    return 1;
+    qDebug("insertRows rows called");
+    return true;
+}
+
+bool TreeItemModel::removeRows(int row, int count, const QModelIndex &parent)
+{
+    qDebug("Remove rows called");
+    return true;
 }
 
 bool TreeItemModel::insertItem(const QModelIndex &parent)
@@ -181,10 +215,11 @@ bool TreeItemModel::insertItem(const QModelIndex &parent)
     TreeItem * parentNode = getItem(parent);
     int row = parentNode->childCount();
     beginInsertRows(parent,row,row);
-    bool success = parentNode->insertChildren(row,1, 3);
+    bool success = parentNode->insertChildren(row,1);
     TreeItem * newItem = parentNode->child(row);
-    _uncommitedItem= newItem;
-    _uncommitedItemParent= &parent;
+    _uncommited.append(newItem);
+    //_uncommitedItem= newItem;
+    //_uncommitedItemParent= &parent;
     endInsertRows();
     return success;
 }
@@ -212,6 +247,7 @@ bool TreeItemModel::doRevert(TreeItem * item)
 bool TreeItemModel::submit()
 {
     bool res = true;
+    /*
     if(_uncommitedItem){
         if(_uncommitedItem->id()<0){
             qDebug("Inserting new item (1)");
@@ -224,8 +260,10 @@ bool TreeItemModel::submit()
         _uncommitedItem=0;
         _uncommitedItemParent=0;
     }
+    */
     while (!_uncommited.isEmpty()){
         TreeItem * item = _uncommited.dequeue();
+        //item->commitChanges();
         if(item->id()<0){
             qDebug("Inserting new item (n)");
             res = res | doInsert(item);
@@ -241,12 +279,13 @@ bool TreeItemModel::submit()
 void TreeItemModel::revert()
 {
     qDebug("revert changes");
+    /*
     if(_uncommitedItem){        
         if(_uncommitedItem->id()==-1){//not saved to the database
             qDebug("Reverting unsaved item (1)");
-            int idx = _uncommitedItem->childNumber();
+            int idx = _uncommitedItem->row();
             beginRemoveRows(*_uncommitedItemParent,idx,idx);
-            _uncommitedItem->parent()->removeChildren(_uncommitedItem->childNumber(),1);
+            _uncommitedItem->parent()->removeChildren(_uncommitedItem->row(),1);
             endRemoveRows();
         }
         else{
@@ -256,19 +295,24 @@ void TreeItemModel::revert()
         _uncommitedItem=0;
         _uncommitedItemParent=0;
     }
+
     if(_uncommited.isEmpty())
         return;
-
+    */
     while (!_uncommited.isEmpty()){
         TreeItem * item = _uncommited.dequeue();
         if(item->id()==-1){//not saved to the database
             qDebug("Reverting unsaved item (n)");
-            int idx = item->childNumber();
+            QModelIndex parentIndex = findIndex(item->parent()->id());
+            int idx = item->row();
+            beginRemoveRows(parentIndex,idx,idx);
             item->parent()->removeChildren(idx,1);
+            endRemoveRows();
         }
         else{
             qDebug("Reverting item (n)");
-            doRevert(_uncommitedItem);
+            //doRevert(_uncommitedItem);
+            //item->revertChanges();
         }
     }
 }

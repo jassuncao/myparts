@@ -63,25 +63,23 @@ void StorageDAO::createTree(TreeItem * rootItem)
     QStack<TreeItemWrapper> stack;
     TreeItemWrapper rootAux(rootItem, std::numeric_limits<qint32>::max());
     stack.push(rootAux);
-    QString queryText = QString("SELECT id, name, lft, rgt FROM %1 ORDER BY lft ASC").arg(_tableName);   
+    QString queryText = QString("SELECT id, name, description, lft, rgt FROM %1 ORDER BY lft ASC").arg(_tableName);
     if(query.exec(queryText)){
         while(query.next())
         {
             QVariant id = query.value(0);
             QVariant name = query.value(1);
-            int lft = query.value(2).toInt();
-            int rgt = query.value(3).toInt();
+            QVariant description = query.value(2);
+            int lft = query.value(3).toInt();
+            int rgt = query.value(4).toInt();
             //Check if the current top node is parent of the new entity
             if(stack.count()>0){
                 while(rgt>stack.top().rgt){
                     stack.pop();
                 }
-            }
-            QVector<QVariant> data(2);
-            data[NAME_COL] = name;
-            data[ID_COL] = id;
+            }          
             qDebug()<<"Loaded item "<<name;
-            TreeItem * item = new TreeItem(id.toInt(), data, stack.top().item);
+            TreeItem * item = new TreeItem(id.toInt(), name, description, stack.top().item);
             stack.top().item->appendChild(item);
             //the node has children if the rgt-lft > 1
             if(rgt-lft>1){
@@ -356,7 +354,7 @@ bool StorageDAO::insertAtEnd(TreeItem * item)
     qDebug("Changed %d rows",query.numRowsAffected());
 
     query.prepare(QString("INSERT INTO %1 (name, lft, rgt) VALUES (?,?,?)").arg(_tableName));
-    query.bindValue(0,item->data(NAME_COL));
+    query.bindValue(0,item->name());
     query.bindValue(1,newPos);
     query.bindValue(2,newPos+1);
     if(query.exec()){
@@ -375,7 +373,7 @@ bool StorageDAO::reload(TreeItem * item)
         qWarning("Entity with id %d not found",item->id());
         return false;
     }
-    item->setData(NAME_COL, node.name);
+    item->setName(node.name);
     return true;
 }
 
@@ -387,7 +385,7 @@ bool StorageDAO::update(TreeItem * item)
         qWarning("Entity with id %d not found", id);
         return false;
     }
-    entity.name.set(item->data(NAME_COL));
+    entity.name.set(item->name());
     return entity.save();
 }
 

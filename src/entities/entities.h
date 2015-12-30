@@ -21,7 +21,6 @@ class CategoryEntity : public DQModel
 public:
     DQField<QString> name;
     DQField<QString> description;
-    DQField<QString> categoryPath;
     DQField<int> lft;
     DQField<int> rgt;
     DQSharedList initialData() const;
@@ -32,7 +31,7 @@ class StorageEntity : public DQModel
     DQ_MODEL
 public:
     DQField<QString> name;
-    DQField<QString> path;
+    DQField<QString> description;
     DQField<int> lft;
     DQField<int> rgt;
     DQSharedList initialData() const;
@@ -218,8 +217,7 @@ DQ_DECLARE_MODEL(Entities::PartUnitEntity,
 DQ_DECLARE_MODEL(Entities::CategoryEntity,
                  "category", // the table name.
                  DQ_FIELD(name, DQNotNull),
-                 DQ_FIELD(description),
-                 DQ_FIELD(categoryPath),
+                 DQ_FIELD(description),                 
                  DQ_FIELD(lft, DQNotNull),
                  DQ_FIELD(rgt, DQNotNull)
                  )
@@ -227,7 +225,7 @@ DQ_DECLARE_MODEL(Entities::CategoryEntity,
 DQ_DECLARE_MODEL(Entities::StorageEntity,
                  "storage", // the table name.
                  DQ_FIELD(name, DQNotNull),
-                 DQ_FIELD(path),
+                 DQ_FIELD(description),
                  DQ_FIELD(lft, DQNotNull),
                  DQ_FIELD(rgt, DQNotNull)
                  )

@@ -49,7 +49,7 @@
 #include "qsearchlineedit.h"
 #include "models/partsquerybuilder.h"
 #include "models/treeitemmodel.h"
-#include "dialogs/partcategorydialog.h"
+#include "dialogs/treeitemeditdialog.h"
 
 NavigationSubWidget::NavigationSubWidget(QWidget *parent) : QWidget(parent)
 {  
@@ -170,7 +170,7 @@ void TreeNavigator::setModel(TreeItemModel *model)
                    this, SLOT(slotCurrentChanged(QModelIndex,QModelIndex)));
     }
     _model = model;
-    _treeView->setModel(model);
+    _treeView->setModel(model);    
     connect(_treeView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
             this, SLOT(slotCurrentChanged(QModelIndex,QModelIndex)));
 }
@@ -294,9 +294,8 @@ CategoryNavigator::CategoryNavigator(QWidget *parent)
 void CategoryNavigator::onContextMenuRequested(const QPoint & globalPos, const QModelIndex & index)
 {
     bool indexValid = index.isValid();
-    bool canDelete = true;
     _actionEditCategory->setEnabled(indexValid);
-    _actionDeleteCategory->setEnabled(canDelete);
+    _actionDeleteCategory->setEnabled(indexValid);
     _actionsMenu->exec(globalPos);
 }
 
@@ -308,13 +307,17 @@ void CategoryNavigator::slotAddCategory()
 {
     const QModelIndex & parentIndex = currentIndex();
     if(model()->insertItem(parentIndex)){
-        view()->expand(parentIndex);
+        view()->expand(parentIndex);        
         int newRow = model()->rowCount(parentIndex) - 1;
-        PartCategoryDialog dlg(model(), this);
-        dlg.setWindowTitle(tr("Add Category"));
-        dlg.setRootIndex(parentIndex);
-        dlg.setCurrentIndex(newRow);
+        QModelIndex itemIndex = model()->index(newRow, 0, parentIndex);
+        TreeItemEditDialog dlg(this);
+        dlg.setWindowTitle(tr("Add new category"));
+        dlg.setItemName(model()->data(itemIndex, Qt::EditRole).toString());
+        dlg.setItemDescription(model()->data(itemIndex, Qt::ToolTipRole).toString());
         if(dlg.exec()==QDialog::Accepted){
+            model()->setData(itemIndex, dlg.itemName(), Qt::EditRole);
+            model()->setData(itemIndex, dlg.itemDescription(), Qt::ToolTipRole);
+            model()->submit();
             QModelIndex childIndex = model()->index(newRow, 0, parentIndex);
             view()->setCurrentIndex(childIndex);
         }
@@ -322,6 +325,7 @@ void CategoryNavigator::slotAddCategory()
             model()->revert();
             view()->setCurrentIndex(parentIndex);
         }
+
         view()->setFocus();
     }
     else{
@@ -336,20 +340,23 @@ void CategoryNavigator::slotDeleteCategory()
     if(currentIdx.isValid()){
         model()->removeItem(currentIdx);
     }
-
 }
 
 void CategoryNavigator::slotEditCategory()
 {
-    QModelIndex currentIdx = currentIndex();
-    if(!currentIdx.isValid()){
+    QModelIndex itemIndex = currentIndex();
+    if(!itemIndex.isValid()){
         return;
     }
-    PartCategoryDialog dlg(model(), this);
-    dlg.setWindowTitle(tr("Edit Category"));
-    dlg.setRootIndex(currentIdx.parent());
-    dlg.setCurrentModelIndex(currentIdx);
+
+    TreeItemEditDialog dlg(this);
+    dlg.setWindowTitle(tr("Edit category"));
+    dlg.setItemName(model()->data(itemIndex, Qt::EditRole).toString());
+    dlg.setItemDescription(model()->data(itemIndex, Qt::ToolTipRole).toString());
     if(dlg.exec()==QDialog::Accepted){
+        model()->setData(itemIndex, dlg.itemName(), Qt::EditRole);
+        model()->setData(itemIndex, dlg.itemDescription(), Qt::ToolTipRole);
+        model()->submit();
     }
     else{
         model()->revert();
@@ -374,12 +381,8 @@ StorageNavigator::StorageNavigator(QWidget *parent)
 void StorageNavigator::onContextMenuRequested(const QPoint & globalPos, const QModelIndex & index)
 {
     bool indexValid = index.isValid();
-    bool canDelete = false;
-    if(indexValid){
-        canDelete = !index.sibling(0, 0).isValid();
-    }
     _actionDeleteStorage->setEnabled(indexValid);
-    _actionEditStorage->setEnabled(canDelete);
+    _actionEditStorage->setEnabled(indexValid);
     _actionsMenu->exec(globalPos);
 }
 
@@ -389,14 +392,59 @@ void StorageNavigator::onFilterChanged(const QString & text)
 
 void StorageNavigator::slotAddStorage()
 {
+    const QModelIndex & parentIndex = currentIndex();
+    if(model()->insertItem(parentIndex)){
+        view()->expand(parentIndex);
+        int newRow = model()->rowCount(parentIndex) - 1;
+        QModelIndex itemIndex = model()->index(newRow, 0, parentIndex);
+        TreeItemEditDialog dlg(this);
+        dlg.setWindowTitle(tr("Add new storage"));
+        dlg.setItemName(model()->data(itemIndex, Qt::EditRole).toString());
+        dlg.setItemDescription(model()->data(itemIndex, Qt::ToolTipRole).toString());
+        if(dlg.exec()==QDialog::Accepted){
+            model()->setData(itemIndex, dlg.itemName(), Qt::EditRole);
+            model()->setData(itemIndex, dlg.itemDescription(), Qt::ToolTipRole);
+            model()->submit();
+            QModelIndex childIndex = model()->index(newRow, 0, parentIndex);
+            view()->setCurrentIndex(childIndex);
+        }
+        else{
+            model()->revert();
+            view()->setCurrentIndex(parentIndex);
+        }
 
+        view()->setFocus();
+    }
+    else{
+        qWarning()<<"Failed to insert storage";
+    }
 }
 
 void StorageNavigator::slotDeleteStorage()
 {
-
+    QModelIndex currentIdx = currentIndex();
+    if(currentIdx.isValid()){
+        model()->removeItem(currentIdx);
+    }
 }
 
 void StorageNavigator::slotEditStorage()
 {
+    QModelIndex itemIndex = currentIndex();
+    if(!itemIndex.isValid()){
+        return;
+    }
+
+    TreeItemEditDialog dlg(this);
+    dlg.setWindowTitle(tr("Edit storage"));
+    dlg.setItemName(model()->data(itemIndex, Qt::EditRole).toString());
+    dlg.setItemDescription(model()->data(itemIndex, Qt::ToolTipRole).toString());
+    if(dlg.exec()==QDialog::Accepted){
+        model()->setData(itemIndex, dlg.itemName(), Qt::EditRole);
+        model()->setData(itemIndex, dlg.itemDescription(), Qt::ToolTipRole);
+        model()->submit();
+    }
+    else{
+        model()->revert();
+    }
 }

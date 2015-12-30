@@ -15,6 +15,7 @@
 #include "dialogs/removestockdialog.h"
 #include "parts/partsdao.h"
 #include "models/partsquerybuilder.h"
+#include "models/categorytreemodel2.h"
 
 #include <QHBoxLayout>
 #include <QPushButton>
@@ -40,8 +41,9 @@ PartsManagerView::PartsManagerView(QWidget *parent)
     //connect(_partsModel, SIGNAL(layoutAboutToBeChanged()), this, SLOT(slotLayoutAboutToBeChanged()));
     //connect(_partsModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(slotDataChanged(QModelIndex,QModelIndex)));
 
-    _categoriesTreeModel = new CategoryTreeModel(this);
-    _categoriesTreeModel->select();
+    _categoriesTreeModel = new CategoryTreeModel2(this);
+    //_categoriesTreeModel = new CategoryTreeModel(this);
+    _categoriesTreeModel->select();    
 
     _storageTreeModel = new StorageTreeModel(this);
     _storageTreeModel->select();
@@ -124,7 +126,8 @@ PartsManagerView::PartsManagerView(QWidget *parent)
     connect(_deletePartButton, SIGNAL(clicked()), this, SLOT(slotDeletePart()));
     connect(_duplicatePartButton, SIGNAL(clicked()), this, SLOT(slotDuplicatePart()));
     connect(_partsFilterWidget, SIGNAL(filterChanged()), this, SLOT(slotFilterChanged()));    
-    connect(_partDetailsView, SIGNAL(editPartSelected()), this, SLOT(slotEditPart()));      
+    connect(_partDetailsView, SIGNAL(editPartSelected()), this, SLOT(slotEditPart()));
+    connect(_categoriesTreeModel, SIGNAL(partsDropped(QVector<int>,int)), this, SLOT(slotSetPartsCategory(QVector<int>,int)));
 }
 
 PartsManagerView::~PartsManagerView()
@@ -291,4 +294,10 @@ void PartsManagerView::slotPartsModelPrimeInsert(int, QSqlRecord &record)
         if(q.next())
             record.setValue(PartsSqlTableModel::ColumnConditionId, q.value(0));
     }
+}
+
+void PartsManagerView::slotSetPartsCategory(QVector<int> parts, int categoryId)
+{
+    _partsModel->updatePartsCategory(parts, categoryId);
+    _partsModel->select();
 }

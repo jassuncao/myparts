@@ -14,7 +14,7 @@ class TreeItemModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:
-    explicit TreeItemModel(int columns, QObject *parent = 0);
+    explicit TreeItemModel(QObject *parent = 0);
     ~TreeItemModel();
 
     QVariant data(const QModelIndex &index, int role) const;
@@ -33,7 +33,8 @@ public:
     int rootItemId() const;
     bool select();
     void setToolTipColumn(int column);
-
+    bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex());
+    bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
 protected:
     virtual bool fillTree(TreeItem * rootItem) = 0;
     virtual bool doInsert(TreeItem * item);
@@ -54,11 +55,11 @@ public slots:
 private:
     TreeItem * _invisibleRootItem;
     QIcon _folderIcon;
-    const QModelIndex * _uncommitedItemParent;
-    TreeItem * _uncommitedItem;
+    //const QModelIndex * _uncommitedItemParent;
+    //TreeItem * _uncommitedItem;
     QQueue<TreeItem*> _uncommited;
-    int _toolTipColumn;
-    QMap<int,QModelIndex> _indexesLookup;
+    //int _toolTipColumn;
+    //QMap<int,QModelIndex> _indexesLookup;
 };
 
 #endif // TREEITEMMODEL_H

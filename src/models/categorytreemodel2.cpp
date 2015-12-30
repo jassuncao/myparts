@@ -1,35 +1,45 @@
-#include "storagetreemodel.h"
-#include "entities/storagedao.h"
-#include "models/treeitem.h"
-#include "models/treemodelmimedata.h"
-#include <QDebug>
+#include "categorytreemodel2.h"
+#include <QVector>
+#include <QMimeData>
+#include <QSqlRecord>
 #include <QSqlQuery>
+#include <QDebug>
+#include "treeitem.h"
 
-const char * MIME_TYPE= "myparts/storage";
-
-class StorageTreeItemModelPersistence : public TreeItemModelPersistence
+class CategoryMimeData : public QMimeData
 {
 public:
-    explicit StorageTreeItemModelPersistence();
-    virtual ~StorageTreeItemModelPersistence();
+    CategoryMimeData() : QMimeData(){}
+    void setIndexes(const QList<QPersistentModelIndex> &indexes) {_indexes = indexes;}
+    const QList<QPersistentModelIndex> & indexes() const {return _indexes;}
+private:
+    QList<QPersistentModelIndex> _indexes;
+};
+
+
+class CategoryTreeItemModelPersistence : public TreeItemModelPersistence
+{
+public:
+    explicit CategoryTreeItemModelPersistence();
+    virtual ~CategoryTreeItemModelPersistence();
 protected:
     TreeItem * createNewItem(const QSqlRecord & record) const;
     void beforeRemoveNode(int newParentId, const Node & node) const;
 };
 
-StorageTreeItemModelPersistence::StorageTreeItemModelPersistence() :
-    TreeItemModelPersistence("storage")
+CategoryTreeItemModelPersistence::CategoryTreeItemModelPersistence() :
+    TreeItemModelPersistence("category")
 {
 }
 
-StorageTreeItemModelPersistence::~StorageTreeItemModelPersistence()
+CategoryTreeItemModelPersistence::~CategoryTreeItemModelPersistence()
 {
 }
 
-void StorageTreeItemModelPersistence::beforeRemoveNode(int newParentId, const Node & node) const
+void CategoryTreeItemModelPersistence::beforeRemoveNode(int newParentId, const Node & node) const
 {
     QSqlQuery query(database());
-    query.prepare("UPDATE part SET storage=? WHERE storage IN (SELECT id FROM storage WHERE lft BETWEEN ? AND ?)");
+    query.prepare("UPDATE part SET category=? WHERE category IN (SELECT id FROM category WHERE lft BETWEEN ? AND ?)");
     query.bindValue(0,newParentId);
     query.bindValue(1,node.lft);
     query.bindValue(2,node.rgt);
@@ -38,60 +48,61 @@ void StorageTreeItemModelPersistence::beforeRemoveNode(int newParentId, const No
 
 }
 
-StorageTreeModel::StorageTreeModel(QObject *parent) :
-    TreeItemModel(parent), _modelPersistence(new StorageTreeItemModelPersistence())
-{  
-    QIcon folderIcon;
-    folderIcon.addFile(":icons/box_closed", QSize(), QIcon::Normal, QIcon::Off);
-    folderIcon.addFile(":icons/box_open", QSize(), QIcon::Normal, QIcon::On);
-    setFolderIcon(folderIcon);
+CategoryTreeModel2::CategoryTreeModel2(QObject *parent) :
+    TreeItemModel(parent), _modelPersistence(new CategoryTreeItemModelPersistence())
+{   
 }
 
-StorageTreeModel::~StorageTreeModel()
+CategoryTreeModel2::~CategoryTreeModel2()
 {
     delete _modelPersistence;
 }
 
-bool StorageTreeModel::fillTree(TreeItem * rootItem)
+bool CategoryTreeModel2::fillTree(TreeItem * rootItem)
 {
-    return _modelPersistence->loadTree(rootItem);;
+    return _modelPersistence->loadTree(rootItem);
 }
 
-bool StorageTreeModel::doInsert(TreeItem * item)
+bool CategoryTreeModel2::doInsert(TreeItem * item)
 {
     return _modelPersistence->insertAtEnd(item);
 }
 
-bool StorageTreeModel::doUpdate(TreeItem * item)
+bool CategoryTreeModel2::doUpdate(TreeItem * item)
 {
     return _modelPersistence->save(item);
 }
 
-bool StorageTreeModel::doDelete(TreeItem * item)
+bool CategoryTreeModel2::doDelete(TreeItem * item)
 {
     return _modelPersistence->remove(item);
 }
 
-bool StorageTreeModel::doRevert(TreeItem * item)
+bool CategoryTreeModel2::doRevert(TreeItem * item)
 {
     return _modelPersistence->revert(item);
 }
 
-Qt::DropActions StorageTreeModel::supportedDropActions() const
+Qt::DropActions CategoryTreeModel2::supportedDropActions() const
 {
     return Qt::MoveAction | Qt::LinkAction;
 }
 
-QStringList StorageTreeModel::mimeTypes() const
+QStringList CategoryTreeModel2::mimeTypes() const
 {
     QStringList types;
-    types << MIME_TYPE << "myparts/part";
+    types << "myparts/category" << "myparts/part";
     return types;
 }
 
-QMimeData *StorageTreeModel::mimeData(const QModelIndexList &indexes) const
+QMimeData *CategoryTreeModel2::mimeData(const QModelIndexList &indexes) const
 {
-    TreeModelMimeData * mimeData = new TreeModelMimeData(indexes);
+    QList<QPersistentModelIndex> persistentIndexes;
+    foreach (const QModelIndex &index, indexes) {
+        persistentIndexes.append(QPersistentModelIndex(index));
+    }
+    CategoryMimeData * mimeData = new CategoryMimeData();
+    mimeData->setIndexes(persistentIndexes);
 
     QByteArray encodedData;
     QDataStream stream(&encodedData, QIODevice::WriteOnly);
@@ -101,18 +112,17 @@ QMimeData *StorageTreeModel::mimeData(const QModelIndexList &indexes) const
             stream << (qint32)item->id();
         }
     }
-    mimeData->setData(MIME_TYPE, encodedData);
+    mimeData->setData("myparts/category", encodedData);
     return mimeData;
 }
 
-
-bool StorageTreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent)
+bool CategoryTreeModel2::dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent)
 {
     if (action == Qt::IgnoreAction){
         return true;
     }
     TreeItem* targetNode = getItem(parent);
-
+    qDebug("Action = %d", action);
     qDebug("Original row = %d and col %d", row, column);
     int dstRow;
     if (row != -1)
@@ -122,9 +132,11 @@ bool StorageTreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action
     else
         dstRow = rowCount(QModelIndex());
 
-    const TreeModelMimeData * mimeData = qobject_cast<const TreeModelMimeData*>(data);
-    if(mimeData){
-        foreach (const QModelIndex &index, mimeData->indexes()) {
+    const CategoryMimeData * catMimeData = dynamic_cast<const CategoryMimeData*>(data);
+    if(catMimeData){
+        //qDebug("Droped CategoyMimeData");
+        //qDebug("At row %d and beginRow %d and col %d", row, beginRow, column);
+        foreach (const QPersistentModelIndex &index, catMimeData->indexes()) {
             if (index.isValid()) {
                 TreeItem* item = getItem(index);
 
@@ -139,16 +151,18 @@ bool StorageTreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action
                     if(!_modelPersistence->reparentNode(item, targetNode)){
                         return false;
                     }
+
                 }
                 int srcRow = index.row();
                 qDebug("beginMoveRows from %d to %d", srcRow, dstRow);
                 qDebug()<<"Item is "<<index.row()<<" col "<<index.column()<<" with "<<srcRow;
                 qDebug()<<"Parent is "<<parent.row()<<" col "<<parent.column()<<" with "<<dstRow;
-                if(!beginMoveRows(index,srcRow, srcRow,parent,dstRow)){
+                if(!beginMoveRows(index,srcRow,srcRow, parent,dstRow)){
                     qDebug("beginMoveRows returned false");
                     return false;
                 }
-                if(targetNode==item->parent()){                    
+
+                if(targetNode==item->parent()){
                     if(srcRow<=dstRow)
                         dstRow--;
                     qDebug("Moving from %d to %d", srcRow, dstRow);
@@ -168,11 +182,16 @@ bool StorageTreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action
         QDataStream stream(&encodedData, QIODevice::ReadOnly);
         QVector<int> parts;
         stream >> parts;
-        int storageId = targetNode->id();
-        qDebug()<<"Dropped parts: "<<parts.count()<<" at storage "<<storageId;
-        emit partsDropped(parts, storageId);
+        //Entities::CategoriesDAO::setPartCategory(parts, targetNode->id());
+        int categoryId = targetNode->id();
+        qDebug()<<"Dropped parts: "<<parts.count()<<" at category "<<categoryId;
+        emit partsDropped(parts, categoryId);
         return true;
     }
 
     return false;
 }
+
+
+
+

@@ -8,37 +8,31 @@
 class TreeItem
 {
 public:
-    TreeItem(const int id, const QVector<QVariant> &data, TreeItem *parent = 0);
+    TreeItem(const int id, const QVariant & name, const QVariant & description, TreeItem *parent = 0);
     ~TreeItem();
 
     int id() const { return _id;}
     void setId(int id) { _id=id;}
+    QVariant name() const {return _name;}
+    void setName(const QVariant & name) { _name = name; }
+    QVariant description() const { return _description; }
+    void setDescription(const QVariant & description) { _description = description;}
     TreeItem *child(int number) const;
-    int childCount() const;
-    int columnCount() const;
-    QVariant data(int column) const;
-    bool insertChildren(int position, int count, int columns);
-    bool insertColumns(int position, int columns);
+    int childCount() const;    
+    bool insertChildren(int position, int count);
     TreeItem *parent();
-    bool removeChildren(int position, int count);
-    bool removeColumns(int position, int columns);
-    int childNumber() const;
-    bool setData(int column, const QVariant &value);
+    bool removeChildren(int position, int count);    
+    int row() const;    
     void moveChild(int from, int to);
-   // void reparent(TreeItem *newParent);
     void appendChild(TreeItem *child);
+    void insertChild(int index, TreeItem *child);
     void removeAll();
-    void collectIds(QList<int> &to) const;
-    /*
-    void insertChild(int i, TreeItem *child);
-    void removeChild(TreeItem *child);
-    void removeChild(int at);
-    */
-
+    void collectIds(QList<int> &to) const;             
 private:
     int _id;
-    QList<TreeItem*> childItems;
-    QVector<QVariant> itemData;
+    QVariant _name;
+    QVariant _description;
+    QList<TreeItem*> childItems;    
     TreeItem *parentItem;
 };
 
