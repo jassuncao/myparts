@@ -13,8 +13,8 @@ static const char * BASE_CLAUSE = "SELECT part.id, part.name, part.description, 
 "LEFT JOIN condition cond ON part.condition=cond.id "
 "LEFT JOIN package package ON part.package=package.id ";
 
-static const char * DISTRIBUTOR_JOIN_CLAUSE = "INNER JOIN distributor d ON part.id=d.part ";
-static const char * MANUFACTURER_JOIN_CLAUSE = "INNER JOIN manufacturer m ON part.id=m.part ";
+static const char * DISTRIBUTOR_JOIN_CLAUSE = "INNER JOIN part_distributor d ON part.id=d.part ";
+static const char * MANUFACTURER_JOIN_CLAUSE = "INNER JOIN part_manufacturer m ON part.id=m.part ";
 
 DateCriterionValue::DateCriterionValue() :
     _mode(DateFilterNone), _dateTimeUtc(QDateTime())
