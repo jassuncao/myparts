@@ -21,9 +21,6 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     partdialog.cpp \
     entities/categoriesdao.cpp \
-    category/categorytreeitem.cpp \
-    category/categorytreemodel.cpp \
-    category/categoymimedata.cpp \
     entities/entities.cpp \
     widgets/customtreeview.cpp \
     dialogs/partcategorydialog.cpp \
@@ -107,16 +104,13 @@ SOURCES += main.cpp\
     packagemanagerwidget.cpp \
     widgets/extendedtableview.cpp \
     models/treeitemmodelpersistence.cpp \
-    models/categorytreemodel2.cpp \
-    dialogs/treeitemeditdialog.cpp
+    dialogs/treeitemeditdialog.cpp \
+    models/categorytreemodel.cpp
 
 HEADERS  += mainwindow.h \
     entities/entities.h \
     partdialog.h \
     entities/categoriesdao.h \
-    category/categorytreeitem.h \
-    category/categorytreemodel.h \
-    category/categoymimedata.h \
     widgets/customtreeview.h \
     dialogs/partcategorydialog.h \
     models/treeitem.h \
@@ -199,8 +193,8 @@ HEADERS  += mainwindow.h \
     packagemanagerwidget.h \
     widgets/extendedtableview.h \
     models/treeitemmodelpersistence.h \
-    models/categorytreemodel2.h \
-    dialogs/treeitemeditdialog.h
+    dialogs/treeitemeditdialog.h \
+    models/categorytreemodel.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \

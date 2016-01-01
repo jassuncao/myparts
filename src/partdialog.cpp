@@ -4,7 +4,7 @@
 #include <QDataWidgetMapper>
 #include <QSqlRelationalDelegate>
 #include "models/partssqltablemodel.h"
-#include "category/categorytreemodel.h"
+#include "models/storagetreemodel.h"
 #include <QTreeView>
 #include <QSqlQueryModel>
 #include <QSqlQuery>

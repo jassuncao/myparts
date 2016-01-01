@@ -1,4 +1,4 @@
-#include "categorytreemodel2.h"
+#include "categorytreemodel.h"
 #include "treeitem.h"
 #include "models/treemodelmimedata.h"
 #include <QVector>
@@ -38,12 +38,12 @@ void CategoryTreeItemModelPersistence::beforeRemoveNode(int newParentId, const N
 
 }
 
-CategoryTreeModel2::CategoryTreeModel2(QObject *parent) :
+CategoryTreeModel::CategoryTreeModel(QObject *parent) :
     TreeItemModel(new CategoryTreeItemModelPersistence(), QLatin1String("myparts/category"), parent)
 {   
 }
 
-CategoryTreeModel2::~CategoryTreeModel2()
+CategoryTreeModel::~CategoryTreeModel()
 {
 }
 

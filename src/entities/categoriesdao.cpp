@@ -1,7 +1,6 @@
 #include "categoriesdao.h"
 #include <dquest.h>
 #include "entities.h"
-#include "category/categorytreeitem.h"
 #include "models//treeitem.h"
 #include <QStack>
 #include <QDebug>
@@ -14,42 +13,6 @@ CategoriesDAO::CategoriesDAO()
 {
 }
 
-
-typedef struct NodeAuxT  {
-    NodeAuxT(){}
-    NodeAuxT(CategoryTreeItem * item, int rgt): item(item), rgt(rgt){}
-    CategoryTreeItem * item;
-    int rgt;
-} NodeAux;
-
-void CategoriesDAO::createCategoriesTree(CategoryTreeItem *rootHolder)
-{
-    QStack<NodeAuxT> stack;
-    NodeAux rootAux(rootHolder, std::numeric_limits<qint32>::max());
-    stack.push(rootAux);
-
-    DQQuery<Entities::CategoryEntity> query;
-    query = query.orderBy("lft ASC");       
-    if(query.exec()){       
-        while(query.next())
-        {
-            Entities::CategoryEntity category = query.record();
-            //Check if the current top node is parent of the new category
-            if(stack.count()>0){
-                while(category.rgt>stack.top().rgt){
-                    stack.pop();
-                }
-            }
-            CategoryTreeItem * item = new CategoryTreeItem(category.id, category.name, category.description, stack.top().item);
-            stack.top().item->appendChild(item);
-            //the category has children if the rgt-lft > 1
-            if(category.rgt-category.lft>1){
-                NodeAux aux(item, category.rgt);
-                stack.push(aux);
-            }
-        }
-    }        
-}
 
 typedef struct TreeItemWrapperT  {
     TreeItemWrapperT(){}
@@ -273,46 +236,7 @@ QStringList CategoriesDAO::getPath(int nodeId)
    return list;
 }
 
-CategoryTreeItem* CategoriesDAO::insertCategoryAtEnd(const QString &name, const QString &description, int parentId)
-{
-    int newPos;
-    if(parentId>=0){
-        Entities::CategoryEntity parentCat;
-        if(!parentCat.load(DQWhere("id")==parentId)){
-            qWarning("PartCategory with id %d not found",parentId);
-            return 0;
-        }
-        newPos = parentCat.rgt;
-    }
-    else{
-        QSqlQuery auxQuery = DQConnection::defaultConnection().query();
-        auxQuery.exec("SELECT MAX(rgt) FROM category");
-        if(auxQuery.next()){
-            newPos = auxQuery.value(0).toInt()+1;
-        }
-        else{
-            qWarning("Unable to find tree position for root category");
-            return 0;
-        }
-    }
-    DQConnection conn;
-    QSqlQuery query = conn.query();
-    query.prepare("UPDATE category SET lft = lft+2 WHERE lft >= ?");
-    query.bindValue(0,newPos);
-    query.exec();
-    qDebug("Changed %d rows",query.numRowsAffected());
-    query.prepare("UPDATE category SET rgt = rgt+2 WHERE rgt >= ?");
-    query.bindValue(0,newPos);
-    query.exec();
-    qDebug("Changed %d rows",query.numRowsAffected());
-    Entities::CategoryEntity category;
-    category.name.set(name);
-    category.description.set(description);
-    category.lft = newPos;
-    category.rgt = newPos+1;
-    category.save();
-    return new CategoryTreeItem(category.id, category.name, category.description);
-}
+
 
 int CategoriesDAO::insertCategoryAtEnd(const QVector<QVariant> & data, int parentId)
 {

@@ -9,15 +9,14 @@
 #include "treeitemmodel.h"
 #include "treeitemmodelpersistence.h"
 
-class CategoryTreeItem;
 class TreeItem;
 
-class CategoryTreeModel2 : public TreeItemModel
+class CategoryTreeModel : public TreeItemModel
 {
     Q_OBJECT
 public:
-    explicit CategoryTreeModel2(QObject *parent = 0);
-    ~CategoryTreeModel2();     
+    explicit CategoryTreeModel(QObject *parent = 0);
+    ~CategoryTreeModel();
 };
 
 #endif // CATEGORYTREEMODEL2_H

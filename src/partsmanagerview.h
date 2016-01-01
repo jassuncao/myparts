@@ -25,7 +25,7 @@ class PartsSqlTableModel;
 class PartsQueryBuilder;
 class CategoryNavigator;
 class StorageNavigator;
-class CategoryTreeModel2;
+class CategoryTreeModel;
 class TreeItem;
 
 class PartsManagerView : public Manhattan::MiniSplitter
@@ -59,7 +59,7 @@ private:
     PartsTableView * _partsTableView;
     PartDetailsView * _partDetailsView;
     PartsSqlTableModel * _partsModel;  
-    CategoryTreeModel2 * _categoriesTreeModel;
+    CategoryTreeModel * _categoriesTreeModel;
     StorageTreeModel * _storageTreeModel;
     PartsFilterWidget * _partsFilterWidget;
     QPushButton * _deletePartButton;

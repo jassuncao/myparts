@@ -5,7 +5,6 @@
 #include "widgets/currencydelegate.h"
 #include "widgets/datetimedelegate.h"
 #include "widgets/partstableview.h"
-#include "category/categorytreemodel.h"
 #include "models/storagetreemodel.h"
 #include "widgets/partsfilterwidget.h"
 #include "widgets/qactionpushbutton.h"
@@ -15,7 +14,7 @@
 #include "dialogs/removestockdialog.h"
 #include "parts/partsdao.h"
 #include "models/partsquerybuilder.h"
-#include "models/categorytreemodel2.h"
+#include "models/categorytreemodel.h"
 #include "models/treeitem.h"
 
 #include <QHBoxLayout>
@@ -42,7 +41,7 @@ PartsManagerView::PartsManagerView(QWidget *parent)
     //connect(_partsModel, SIGNAL(layoutAboutToBeChanged()), this, SLOT(slotLayoutAboutToBeChanged()));
     //connect(_partsModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(slotDataChanged(QModelIndex,QModelIndex)));
 
-    _categoriesTreeModel = new CategoryTreeModel2(this);
+    _categoriesTreeModel = new CategoryTreeModel(this);
     //_categoriesTreeModel = new CategoryTreeModel(this);
     _categoriesTreeModel->select();    
 
