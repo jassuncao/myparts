@@ -20,16 +20,13 @@ include($$DQUEST_INCLUDE_PATH)
 SOURCES += main.cpp\
         mainwindow.cpp \
     partdialog.cpp \
-    entities/categoriesdao.cpp \
     entities/entities.cpp \
     widgets/customtreeview.cpp \
     dialogs/partcategorydialog.cpp \
     models/treeitem.cpp \
     widgets/booleanitemdelegate.cpp \
     models/partunitssqltablemodel.cpp \
-    widgets/partunitswidget.cpp \
     optionsdialog.cpp \
-    widgets/partconditionwidget.cpp \
     qsortfiltersqlquerymodel.cpp \
     widgets/qsearchlineedit.cpp \
     partmimedata.cpp \
@@ -44,20 +41,14 @@ SOURCES += main.cpp\
     widgets/partstoragewidget.cpp \
     dialogs/quickaddstoragedialog.cpp \
     widgets/currencydelegate.cpp \
-    widgets/optionswidget.cpp \
     models/treeitemmodel.cpp \
     models/storagetreemodel.cpp \
-    entities/storagedao.cpp \
     widgets/treeviewcombobox.cpp \
     models/treemodelmimedata.cpp \
     partdetailsview.cpp \
     storagemanagerform.cpp \
-    storagemanagerwidget.cpp \    
     packagedetailswidget.cpp \
     widgets/qtabwidget2.cpp \
-    unitmanagerwidget.cpp \
-    unitdetailswidget.cpp \
-    widgets/checkedheader.cpp \
     models/unittablemodel.cpp \
     widgets/parametervaluevalidator.cpp \
     widgets/unitparser.cpp \
@@ -106,15 +97,12 @@ SOURCES += main.cpp\
 HEADERS  += mainwindow.h \
     entities/entities.h \
     partdialog.h \
-    entities/categoriesdao.h \
     widgets/customtreeview.h \
     dialogs/partcategorydialog.h \
     models/treeitem.h \
     widgets/booleanitemdelegate.h \
     models/partunitssqltablemodel.h \
-    widgets/partunitswidget.h \
     optionsdialog.h \
-    widgets/partconditionwidget.h \
     qsortfiltersqlquerymodel.h \
     widgets/qsearchlineedit.h \
     partmimedata.h \
@@ -129,20 +117,14 @@ HEADERS  += mainwindow.h \
     widgets/partstoragewidget.h \
     dialogs/quickaddstoragedialog.h \
     widgets/currencydelegate.h \
-    widgets/optionswidget.h \
     models/treeitemmodel.h \
     models/storagetreemodel.h \
-    entities/storagedao.h \
     widgets/treeviewcombobox.h \
     models/treemodelmimedata.h \
     partdetailsview.h \
     storagemanagerform.h \
-    storagemanagerwidget.h \
     packagedetailswidget.h \
     widgets/qtabwidget2.h \
-    unitmanagerwidget.h \
-    unitdetailswidget.h \
-    widgets/checkedheader.h \
     models/unittablemodel.h \
     widgets/parametervaluevalidator.h \
     widgets/unitparser.h \

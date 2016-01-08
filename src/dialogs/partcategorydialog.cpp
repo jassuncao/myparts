@@ -8,7 +8,6 @@
 #include <QMessageBox>
 #include <QDebug>
 #include <QDataWidgetMapper>
-#include "entities/categoriesdao.h"
 
 PartCategoryDialog::PartCategoryDialog(QAbstractItemModel *model, QWidget *parent) :
     QDialog(parent)

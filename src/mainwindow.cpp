@@ -3,11 +3,8 @@
 #include "optionsdialog.h"
 #include <QSettings>
 #include <QtGui>
-#include "widgets/partconditionwidget.h"
-#include "widgets/partunitswidget.h"
 #include "models/storagetreemodel.h"
 #include "packagemanagerwidget.h"
-#include "unitmanagerwidget.h"
 #include "distributormanagerwidget.h"
 #include "dialogs/manufacturersdialog.h"
 #include "partsmanagerview.h"
