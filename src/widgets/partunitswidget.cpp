@@ -8,7 +8,7 @@
 #include <QPushButton>
 #include <QHBoxLayout>
 #include <QMessageBox>
-#include "partunits/partunitssqltablemodel.h"
+#include "models/partunitssqltablemodel.h"
 #include "widgets/booleanitemdelegate.h"
 
 PartUnitsWidget::PartUnitsWidget(QWidget *parent) :

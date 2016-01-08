@@ -12,7 +12,6 @@ namespace Manhattan {
 
 class PartsTableView;
 class PartDetailsView;
-class PartsSqlQueryModel2;
 class CategoryTreeModel;
 class StorageTreeModel;
 class NavigationSubWidget;

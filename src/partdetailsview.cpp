@@ -4,6 +4,7 @@
 #include "widgets/currencydelegate.h"
 #include "widgets/datetimedelegate.h"
 #include "models/partstocktablemodel.h"
+#include "models/stocktableformatproxymodel.h"
 #include "dialogs/addstockdialog.h"
 #include "dialogs/removestockdialog.h"
 #include <QDebug>
@@ -13,37 +14,6 @@
 #include <QAbstractItemModel>
 #include <QDateTime>
 #include <QItemSelectionModel>
-
-/*
-class StockChangeDelegate : public QStyledItemDelegate {
-public:
-    explicit StockChangeDelegate(QObject *parent);
-    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
-protected:
-    void initStyleOption(QStyleOptionViewItem *option, const QModelIndex &index) const;
-};
-
-
-StockChangeDelegate::StockChangeDelegate(QObject *parent) :
-    QStyledItemDelegate(parent)
-{
-}
-
-void StockChangeDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
-{
-    QStyleOptionViewItem optionCopy(option);
-    optionCopy.displayAlignment = Qt::AlignCenter;
-
-    int change = index.data().toInt();
-    if(change<0){
-        optionCopy.palette.setColor(QPalette::Text, QColor(Qt::red));
-    }
-    else if(change>0) {
-        optionCopy.palette.setColor(QPalette::Text, QColor(Qt::darkGreen));
-    }
-   QStyledItemDelegate::paint(painter, optionCopy, index);
-}
-*/
 
 class PartDetailsDelegate : public QStyledItemDelegate {
 public:
@@ -84,50 +54,6 @@ void PartDetailsDelegate::setEditorData(QWidget *editor, const QModelIndex &inde
         setEditorData(editor, index);
     }
 }
-
-class StockTableFormatProxyModel : public QIdentityProxyModel {
-public:
-    explicit StockTableFormatProxyModel(QObject *parent);
-    QVariant data(const QModelIndex &proxyIndex, int role = Qt::DisplayRole) const;
-    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
-};
-
-
-StockTableFormatProxyModel::StockTableFormatProxyModel(QObject *parent) :
-    QIdentityProxyModel(parent)
-{}
-
-QVariant StockTableFormatProxyModel::headerData(int section, Qt::Orientation orientation, int role) const
-{
-    return sourceModel()->headerData(section, orientation, role);
-}
-
-QVariant StockTableFormatProxyModel::data(const QModelIndex &proxyIndex, int role) const
-{
-    if(!proxyIndex.isValid()) return QVariant();
-    if(role==Qt::ForegroundRole){
-        if(proxyIndex.column()==PartStockTableModel::ColumnChange){
-            QVariant var = sourceModel()->data(proxyIndex, Qt::DisplayRole);
-            int change = var.toInt();
-            if(change<0)
-                return QColor(Qt::red);
-            else if(change>0)
-                return QColor(Qt::darkGreen);
-        }
-    }
-    else if(role == Qt::TextAlignmentRole) {
-        if(proxyIndex.column()==PartStockTableModel::ColumnChange){
-            return Qt::AlignCenter;
-        }
-    }
-    else if(role == Qt::ToolTipRole){
-        if(proxyIndex.column()==PartStockTableModel::ColumnComment){
-            return QIdentityProxyModel::data(proxyIndex, Qt::DisplayRole);
-        }
-    }
-    return QIdentityProxyModel::data(proxyIndex, role);
-}
-
 
 PartDetailsView::PartDetailsView(QWidget *parent) :
     QWidget(parent),
