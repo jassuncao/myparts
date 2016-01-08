@@ -26,6 +26,7 @@ class PartParameterTableModel2;
 class PartManufacturerTableModel2;
 class PartDistributorTableModel2;
 class PartParametersTableModel3;
+class PartStockTableModel;
 
 class PartDialog : public QDialog
 {
@@ -78,6 +79,7 @@ private:
     PartDistributorTableModel2 * _partDistributorModel;
     PartManufacturerTableModel2 * _partManufacturerModel;
     AttachmentTableModel3 * _partAttachmentModel;
+    PartStockTableModel * _partStockModel;
     TreeItemModel * _categoryModel;
     TreeItemModel * _storageModel;
     QSqlQueryModel * _partConditionModel;

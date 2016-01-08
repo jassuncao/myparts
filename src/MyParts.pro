@@ -25,9 +25,8 @@ SOURCES += main.cpp\
     widgets/customtreeview.cpp \
     dialogs/partcategorydialog.cpp \
     models/treeitem.cpp \
-    category/partunitdialog.cpp \
     widgets/booleanitemdelegate.cpp \
-    partunits/partunitssqltablemodel.cpp \
+    models/partunitssqltablemodel.cpp \
     widgets/partunitswidget.cpp \
     optionsdialog.cpp \
     widgets/partconditionwidget.cpp \
@@ -40,7 +39,6 @@ SOURCES += main.cpp\
     widgets/datetimedelegate.cpp \
     parts/partssqlquerymodel2.cpp \
     dialogs/addstockdialog.cpp \
-    parts/partsdao.cpp \
     dialogs/removestockdialog.cpp \
     parts/stockhistoryproxymodel.cpp \
     parts/stockhistorymodel.cpp \
@@ -105,7 +103,8 @@ SOURCES += main.cpp\
     widgets/extendedtableview.cpp \
     models/treeitemmodelpersistence.cpp \
     dialogs/treeitemeditdialog.cpp \
-    models/categorytreemodel.cpp
+    models/categorytreemodel.cpp \
+    models/partstocktablemodel.cpp
 
 HEADERS  += mainwindow.h \
     entities/entities.h \
@@ -114,9 +113,8 @@ HEADERS  += mainwindow.h \
     widgets/customtreeview.h \
     dialogs/partcategorydialog.h \
     models/treeitem.h \
-    category/partunitdialog.h \
     widgets/booleanitemdelegate.h \
-    partunits/partunitssqltablemodel.h \
+    models/partunitssqltablemodel.h \
     widgets/partunitswidget.h \
     optionsdialog.h \
     widgets/partconditionwidget.h \
@@ -129,7 +127,6 @@ HEADERS  += mainwindow.h \
     widgets/datetimedelegate.h \
     parts/partssqlquerymodel2.h \
     dialogs/addstockdialog.h \
-    parts/partsdao.h \
     dialogs/removestockdialog.h \
     parts/stockhistoryproxymodel.h \
     parts/stockhistorymodel.h \
@@ -194,7 +191,8 @@ HEADERS  += mainwindow.h \
     widgets/extendedtableview.h \
     models/treeitemmodelpersistence.h \
     dialogs/treeitemeditdialog.h \
-    models/categorytreemodel.h
+    models/categorytreemodel.h \
+    models/partstocktablemodel.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \

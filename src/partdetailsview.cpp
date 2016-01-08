@@ -3,7 +3,7 @@
 #include "models/partssqltablemodel.h"
 #include "widgets/currencydelegate.h"
 #include "widgets/datetimedelegate.h"
-#include "models/customtablemodel.h"
+#include "models/partstocktablemodel.h"
 #include "dialogs/addstockdialog.h"
 #include "dialogs/removestockdialog.h"
 #include <QDebug>

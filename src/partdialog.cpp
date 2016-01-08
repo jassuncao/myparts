@@ -3,8 +3,6 @@
 #include "ui_partdialog.h"
 #include <QDataWidgetMapper>
 #include <QSqlRelationalDelegate>
-#include "models/partssqltablemodel.h"
-#include "models/storagetreemodel.h"
 #include <QTreeView>
 #include <QSqlQueryModel>
 #include <QSqlQuery>
@@ -15,16 +13,19 @@
 #include <QIdentityProxyModel>
 #include <QSqlRecord>
 #include <QDateTime>
-#include "dialogs/quickaddstoragedialog.h"
-
-#include "widgets/parametervaluedelegate.h"
-#include "parts/partsdao.h"
-#include "widgets/currencydelegate.h"
-#include "dialogs/attachmentselectiondialog.h"
 #include <QDialogButtonBox>
 #include <QDesktopServices>
-#include "models/customtablemodel.h"
+
+#include "dialogs/quickaddstoragedialog.h"
+#include "widgets/parametervaluedelegate.h"
+#include "widgets/currencydelegate.h"
 #include "widgets/validatingitemdelegate.h"
+#include "dialogs/attachmentselectiondialog.h"
+#include "models/partssqltablemodel.h"
+#include "models/storagetreemodel.h"
+#include "models/customtablemodel.h"
+#include "models/partstocktablemodel.h"
+
 
 inline static QVariant getColumnValue(QAbstractItemModel * model, int row, int column){
     return model->index(row, column).data(Qt::EditRole);
@@ -50,6 +51,7 @@ PartDialog::PartDialog(PartsSqlTableModel *model, TreeItemModel * categoryModel,
     _partDistributorModel = PartDistributorTableModel2::createNew(this);
     _partManufacturerModel = PartManufacturerTableModel2::createNew(this);
     _partAttachmentModel = AttachmentTableModel3::createNewPartAttachmentModel(this);
+    _partStockModel = PartStockTableModel::createNew(this);
 
     _nextActionCheckbox = new QCheckBox(this);
     ui->buttonBox->addButton(_nextActionCheckbox, QDialogButtonBox::HelpRole);
@@ -380,7 +382,9 @@ void PartDialog::commitChanges()
             qDebug()<<"New Part id is "<<partId;
             if(initialStock()>0){
                 qDebug("Adding initial stock");
-                PartsDAO::addStock(partId, initialStock(), partPrice(), QString());
+                _partStockModel->setCurrentPartId(partId);
+                _partStockModel->appendRow(initialStock(), partPrice(), QString());
+                _partStockModel->submitAll();
             }
             _partParamsModel->setCurrentPartId(partId);      
             _partDistributorModel->setCurrentPartId(partId);
