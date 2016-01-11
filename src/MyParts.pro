@@ -63,7 +63,6 @@ SOURCES += main.cpp\
     parametervalue.cpp \
     models/customtablemodel.cpp \
     widgets/validatingitemdelegate.cpp \
-    dialogs/manufacturersdialog.cpp \
     widgets/navigator.cpp \
     widgets/navigationsubwidget.cpp \
     partsmanagerview.cpp \
@@ -92,7 +91,8 @@ SOURCES += main.cpp\
     dialogs/treeitemeditdialog.cpp \
     models/categorytreemodel.cpp \
     models/partstocktablemodel.cpp \
-    models/stocktableformatproxymodel.cpp
+    models/stocktableformatproxymodel.cpp \
+    widgets/elidinglabel.cpp
 
 HEADERS  += mainwindow.h \
     entities/entities.h \
@@ -139,7 +139,6 @@ HEADERS  += mainwindow.h \
     models/customtablemodel.h \
     widgets/validatingitemdelegate.h \
     constants.h \
-    dialogs/manufacturersdialog.h \
     widgets/navigator.h \
     widgets/navigationsubwidget.h \
     partsmanagerview.h \
@@ -168,7 +167,8 @@ HEADERS  += mainwindow.h \
     dialogs/treeitemeditdialog.h \
     models/categorytreemodel.h \
     models/partstocktablemodel.h \
-    models/stocktableformatproxymodel.h
+    models/stocktableformatproxymodel.h \
+    widgets/elidinglabel.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \
@@ -181,8 +181,7 @@ FORMS    += mainwindow.ui \
     testform1.ui \
     dialogs/attachmentselectiondialog.ui \
     testform2.ui \
-    optionsdialog.ui \
-    dialogs/manufacturersdialog.ui
+    optionsdialog.ui
 
 RESOURCES += \
     resources.qrc
@@ -201,4 +200,6 @@ unix:!macx: PRE_TARGETDEPS += $$PWD/../../build-qt-manhattan-style-Desktop-Debug
 win32: LIBS += -L$$PWD/../../build-qt-manhattan-style-Desktop_Qt_5_2_1_MinGW_32bit-Debug/debug/ -lqt-manhattan-style
 win32-g++: PRE_TARGETDEPS += $$PWD/../../build-qt-manhattan-style-Desktop_Qt_5_2_1_MinGW_32bit-Debug/debug/libqt-manhattan-style.a
 
-unix:!macx: LIBS += -lwwwidgets4
+#unix:!macx: LIBS += -lwwwidgets4
+
+DISTFILES +=

@@ -52,13 +52,16 @@
 #include "dialogs/treeitemeditdialog.h"
 
 NavigationSubWidget::NavigationSubWidget(QWidget *parent) : QWidget(parent)
-{  
-   _navigationComboBox = new QComboBox(this);
+{
+    setObjectName("NavigationSubWidget");
+   _navigationComboBox = new QComboBox(this);   
    _navigationComboBox->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
    _navigationComboBox->setFocusPolicy(Qt::TabFocus);
    _navigationComboBox->setMinimumContentsLength(0);
+   _navigationComboBox->setObjectName("navigationComboBox");
 
    _toolBar = new Manhattan::StyledBar(this);
+   _toolBar->setObjectName("toolBar");
    QHBoxLayout * toolBarLayout = new QHBoxLayout;
    toolBarLayout->setMargin(0);
    toolBarLayout->setSpacing(0);
@@ -75,7 +78,7 @@ NavigationSubWidget::NavigationSubWidget(QWidget *parent) : QWidget(parent)
    setLayout(lay);
    lay->addWidget(_toolBar);
    lay->addLayout(_stack);
-   connect(_navigationComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(slotComboBoxIndexChanged(int)));
+   connect(_navigationComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(slotComboBoxIndexChanged(int)));   
 }
 
 NavigationSubWidget::~NavigationSubWidget()
@@ -92,7 +95,7 @@ void NavigationSubWidget::addNavigator(TreeNavigator * navigator)
 
 void NavigationSubWidget::setCurrentNavigator(int index)
 {
-    _navigationComboBox->setCurrentIndex(index);
+    _navigationComboBox->setCurrentIndex(index);    
 }
 
 void NavigationSubWidget::slotComboBoxIndexChanged(int index)
@@ -130,8 +133,10 @@ TreeNavigator::TreeNavigator(QWidget *parent) : QWidget(parent),
   _filterSelectedItemChecked(false)
 {
     _filterLineEdit = new QSearchLineEdit(this);
+    _filterLineEdit->setObjectName("QSearchLineEdit");
 
     _treeView = new QTreeView;
+    _treeView->setObjectName("QTreeView");
     _treeView->setFrameStyle(QFrame::NoFrame);
     _treeView->setTextElideMode(Qt::ElideNone);
     _treeView->setAttribute(Qt::WA_MacShowFocusRect, false);
@@ -146,8 +151,8 @@ TreeNavigator::TreeNavigator(QWidget *parent) : QWidget(parent),
     _treeView->setDragEnabled(true);
     _treeView->setAutoExpandDelay(750);
     _treeView->setAnimated(true);
-    _treeView->setUniformRowHeights(true);
-    _treeView->header()->setStretchLastSection(true);
+    _treeView->setUniformRowHeights(true);       
+    //_treeView->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
     setFocusProxy(_treeView);
 
     QVBoxLayout * layout = new QVBoxLayout;
@@ -170,7 +175,9 @@ void TreeNavigator::setModel(TreeItemModel *model)
                    this, SLOT(slotCurrentChanged(QModelIndex,QModelIndex)));
     }
     _model = model;
-    _treeView->setModel(model);    
+    _treeView->setModel(model);
+    _treeView->header()->setResizeMode(0, QHeaderView::ResizeToContents);
+    _treeView->header()->setStretchLastSection(false);
     connect(_treeView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
             this, SLOT(slotCurrentChanged(QModelIndex,QModelIndex)));
 }

@@ -28,6 +28,29 @@
 #include <QIcon>
 #include <QDebug>
 
+
+void debugLayout(QString tab, QLayoutItem * item){
+    if(item->widget()){
+        //qDebug()<<tab<<"Widget "<<item->widget()->objectName()<<" policy is "<<item->widget()->sizePolicy().horizontalPolicy();
+        qDebug()<<tab<<"Widget "<<item->widget()->objectName()<<" width is "<<item->widget()->minimumSizeHint().width();
+
+        QLayout * layout = item->widget()->layout();
+        if(layout){
+            int c = layout->count();
+            for(int i=0; i<c; ++i){
+                debugLayout(tab+"\t", layout->itemAt(i));
+            }
+        }
+    }
+    else if(item->layout()){
+        QLayout * layout = item->layout();
+        int c = layout->count();
+        for(int i=0; i<c; ++i){
+            debugLayout(tab+"\t", layout->itemAt(i));
+        }
+    }
+}
+
 PartsManagerView::PartsManagerView(QWidget *parent)
     : MiniSplitter(parent)      
 {
@@ -41,20 +64,21 @@ PartsManagerView::PartsManagerView(QWidget *parent)
     //connect(_partsModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(slotDataChanged(QModelIndex,QModelIndex)));
 
     _categoriesTreeModel = new CategoryTreeModel(this);
-    //_categoriesTreeModel = new CategoryTreeModel(this);
     _categoriesTreeModel->select();    
 
     _storageTreeModel = new StorageTreeModel(this);
     _storageTreeModel->select();
 
-    _navWidget = new NavigationSubWidget(this);
+    _navWidget = new NavigationSubWidget(this);    
 
     _categoryNavigator = new CategoryNavigator(_navWidget);
+    _categoryNavigator->setObjectName("CategoryNavigator");
     _categoryNavigator->setModel(_categoriesTreeModel);
     connect(_categoryNavigator, SIGNAL(selectionChanged(QList<int>)), this, SLOT(slotSelectedCategoryChanged(QList<int>)));
     _navWidget->addNavigator(_categoryNavigator);
 
     _storageNavigator = new StorageNavigator(_navWidget);
+    _storageNavigator->setObjectName("StorageNavigator");
     _storageNavigator->setModel(_storageTreeModel);
     connect(_storageNavigator, SIGNAL(selectionChanged(QList<int>)), this, SLOT(slotSelectedStorageChanged(QList<int>)));
     _navWidget->addNavigator(_storageNavigator);
@@ -106,8 +130,9 @@ PartsManagerView::PartsManagerView(QWidget *parent)
     QWidget * centerPane = new QWidget(this);
     centerPane->setLayout(centerLayout);
 
+
     _partDetailsView = new PartDetailsView(this);
-    _partDetailsView->setPartsModel(_partsModel);
+    _partDetailsView->setPartsModel(_partsModel);    
 
     QVBoxLayout * rightLayout = new QVBoxLayout;
     rightLayout->setMargin(0);
@@ -121,6 +146,7 @@ PartsManagerView::PartsManagerView(QWidget *parent)
     addWidget(_navWidget);
     addWidget(centerPane);
     addWidget(rightPane);
+
     connect(addPartButton, SIGNAL(clicked()), this, SLOT(slotAddPart()));
     connect(_deletePartButton, SIGNAL(clicked()), this, SLOT(slotDeletePart()));
     connect(_duplicatePartButton, SIGNAL(clicked()), this, SLOT(slotDuplicatePart()));
@@ -128,6 +154,16 @@ PartsManagerView::PartsManagerView(QWidget *parent)
     connect(_partDetailsView, SIGNAL(editPartSelected()), this, SLOT(slotEditPart()));
     connect(_categoriesTreeModel, SIGNAL(partsDropped(QVector<int>,TreeItem*)), this, SLOT(slotPartsDroppedInCategory(QVector<int>,TreeItem*)));
     connect(_storageTreeModel, SIGNAL(partsDropped(QVector<int>,TreeItem*)), this, SLOT(slotPartsDroppedInStorage(QVector<int>,TreeItem*)));
+
+/*
+    QLayout * layout = _navWidget->layout();
+    int c = layout->count();
+    for(int i=0; i<c; ++i){
+        debugLayout("", layout->itemAt(i));
+    }
+    */
+    _navWidget->setMinimumWidth(_navWidget->minimumSizeHint().width());
+    _navWidget->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
 }
 
 PartsManagerView::~PartsManagerView()

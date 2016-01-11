@@ -6,7 +6,6 @@
 #include "models/storagetreemodel.h"
 #include "packagemanagerwidget.h"
 #include "distributormanagerwidget.h"
-#include "dialogs/manufacturersdialog.h"
 #include "partsmanagerview.h"
 #include "distributorsmanagerview.h"
 #include "editormanagerview.h"
@@ -17,17 +16,17 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     readSettings();
+    /*
     QVector<QVariant> headerData(3);
     headerData.append("Name");
     headerData.append("Description");
     headerData.append("ID");
-
-    //DistributorManagerHelper  distributorHelper;
+    */
 
     EditorManagerView * distributorsView = new EditorManagerView(new DistributorManagerHelper, this);
     EditorManagerView * manufacturersView = new EditorManagerView(new ManufacturerManagerHelper, this);
-    EditorManagerView * packageView = new EditorManagerView(new PackageManagerHelper, this);
-  //  ui->centralWidget->insertTab(0, new QWidget(this), QIcon(QString::fromUtf8(":/largeIcons/page_packages")), tr("Packages"));
+    EditorManagerView * packageView = new EditorManagerView(new PackageManagerHelper, this);    
+
     ui->centralWidget->insertTab(0,new PartsManagerView(this), QIcon(QString::fromUtf8(":/largeIcons/page_parts")), tr("Parts"));
     ui->centralWidget->setTabEnabled(0, true);
 
@@ -39,6 +38,12 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->centralWidget->insertTab(3, packageView, QIcon(QString::fromUtf8(":/largeIcons/page_packages")), tr("Packages"));
     ui->centralWidget->setTabEnabled(3, true);
+
+
+    //qDebug("MIN WIDTH %d", ui->centralWidget->minimumSizeHint().width());
+    ui->centralWidget->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+    ui->centralWidget->setMinimumWidth(ui->centralWidget->minimumSizeHint().width());
+
 
     //ui->centralWidget->insertTab(2,new PartManagerForm(this), QIcon(QString::fromUtf8(":/largeIcons/page_parts")), tr("Parts"));
     //ui->centralWidget->insertTab(1,new PackageManagerWidget(this), QIcon(QString::fromUtf8(":/largeIcons/page_packages")), tr("Packages"));
@@ -58,7 +63,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->tabWidget->addTab(distributorManager, QIcon(":/icons/distributor"), tr("Distributors"));
 */
     connect(ui->actionPreferences, SIGNAL(triggered()), this, SLOT(slotEditPreferences()));
-    connect(ui->actionManufacturers, SIGNAL(triggered()), this, SLOT(slotEditManufacturers()));
 }
 
 MainWindow::~MainWindow()
@@ -70,12 +74,6 @@ void MainWindow::closeEvent(QCloseEvent *event)
 {
     writeSettings();
     event->accept();
-}
-
-void MainWindow::on_actionEdit_part_units_triggered()
-{
-    OptionsDialog dlg(this);
-    dlg.exec();
 }
 
 void MainWindow::readSettings()
@@ -94,26 +92,8 @@ void MainWindow::writeSettings()
      settings.setValue("size", size());
 }
 
-void MainWindow::on_actionPart_conditions_triggered()
-{    
-    OptionsDialog dlg(this);
-    //OptionsDialog dlg(new PartUnitsWidget(), this);
-    dlg.exec();
-}
-
-void MainWindow::on_actionActionPartParameters_triggered()
-{        
-
-}
-
 void MainWindow::slotEditPreferences()
 {
     OptionsDialog dlg(this);
-    dlg.exec();
-}
-
-void MainWindow::slotEditManufacturers()
-{
-    ManufacturersDialog dlg(this);
     dlg.exec();
 }

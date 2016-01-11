@@ -2,19 +2,8 @@
 <ui version="4.0">
  <class>PartDetailsView</class>
  <widget class="QWidget" name="PartDetailsView">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>527</width>
-    <height>561</height>
-   </rect>
-  </property>
   <property name="windowTitle">
    <string>Form</string>
-  </property>
-  <property name="styleSheet">
-   <string notr="true"/>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <property name="leftMargin">
@@ -31,6 +20,12 @@
    </property>
    <item>
     <widget class="QWidget" name="widget_8" native="true">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="autoFillBackground">
       <bool>false</bool>
      </property>
@@ -56,16 +51,6 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="partDescriptionLabel">
-        <property name="text">
-         <string>Part Description</string>
-        </property>
-        <property name="margin">
-         <number>0</number>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="1">
        <widget class="QDialogButtonBox" name="partActionsButtonBox">
         <property name="enabled">
@@ -76,6 +61,19 @@
         </property>
         <property name="centerButtons">
          <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" colspan="2">
+       <widget class="ElidingLabel" name="partDescriptionLabel">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Part Description</string>
         </property>
        </widget>
       </item>
@@ -104,16 +102,7 @@
        <layout class="QVBoxLayout" name="verticalLayout_4">
         <item>
          <widget class="GridWidget" name="widget" native="true">
-          <layout class="QFormLayout" name="formLayout">
-           <property name="labelAlignment">
-            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-           </property>
-           <property name="horizontalSpacing">
-            <number>8</number>
-           </property>
-           <property name="verticalSpacing">
-            <number>8</number>
-           </property>
+          <layout class="QGridLayout" name="gridLayout_2" columnstretch="0,1">
            <property name="leftMargin">
             <number>6</number>
            </property>
@@ -124,7 +113,10 @@
             <number>6</number>
            </property>
            <property name="bottomMargin">
-            <number>4</number>
+            <number>6</number>
+           </property>
+           <property name="spacing">
+            <number>6</number>
            </property>
            <item row="0" column="0">
             <widget class="QLabel" name="label_2">
@@ -134,7 +126,7 @@
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="QLabel" name="partCategoryLabel">
+            <widget class="ElidingLabel" name="partCategoryLabel">
              <property name="text">
               <string/>
              </property>
@@ -143,33 +135,12 @@
            <item row="1" column="0">
             <widget class="QLabel" name="label_4">
              <property name="text">
-              <string>Stock Level:</string>
+              <string>Stock Level</string>
              </property>
             </widget>
            </item>
            <item row="1" column="1">
-            <widget class="QLabel" name="partStockLevelLabel">
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="1">
-            <widget class="QLabel" name="partPackageLabel">
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="1">
-            <widget class="QLabel" name="partStorageLocationLabel">
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="QLabel" name="partMinStockLabel">
+            <widget class="ElidingLabel" name="partStockLevelLabel">
              <property name="text">
               <string/>
              </property>
@@ -178,47 +149,12 @@
            <item row="2" column="0">
             <widget class="QLabel" name="label_6">
              <property name="text">
-              <string>Minimum Stock Level:</string>
+              <string>Minimum Stock Level</string>
              </property>
             </widget>
            </item>
-           <item row="4" column="0">
-            <widget class="QLabel" name="label">
-             <property name="text">
-              <string>Package:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="0">
-            <widget class="QLabel" name="label_10">
-             <property name="text">
-              <string>Storage Location:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="0">
-            <widget class="QLabel" name="label_11">
-             <property name="text">
-              <string>Create Date:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="1">
-            <widget class="QLabel" name="partCreateDateLabel">
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item row="7" column="0">
-            <widget class="QLabel" name="label_9">
-             <property name="text">
-              <string>Condition:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="7" column="1">
-            <widget class="QLabel" name="partConditionLabel">
+           <item row="2" column="1">
+            <widget class="ElidingLabel" name="partMinStockLabel">
              <property name="text">
               <string/>
              </property>
@@ -227,12 +163,68 @@
            <item row="3" column="0">
             <widget class="QLabel" name="label_3">
              <property name="text">
-              <string>Custom Number:</string>
+              <string>Custom Number</string>
              </property>
             </widget>
            </item>
            <item row="3" column="1">
-            <widget class="QLabel" name="partCustomNumberLabel">
+            <widget class="ElidingLabel" name="partCustomNumberLabel">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="label">
+             <property name="text">
+              <string>Package</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="ElidingLabel" name="partPackageLabel">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0">
+            <widget class="QLabel" name="label_10">
+             <property name="text">
+              <string>Storage Location</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <widget class="ElidingLabel" name="partStorageLocationLabel">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="0">
+            <widget class="QLabel" name="label_11">
+             <property name="text">
+              <string>Create Date</string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="1">
+            <widget class="ElidingLabel" name="partCreateDateLabel">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="0">
+            <widget class="QLabel" name="label_9">
+             <property name="text">
+              <string>Condition</string>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="1">
+            <widget class="ElidingLabel" name="partConditionLabel">
              <property name="text">
               <string/>
              </property>
@@ -241,12 +233,12 @@
            <item row="8" column="0">
             <widget class="QLabel" name="label_5">
              <property name="text">
-              <string>Comment:</string>
+              <string>Comment</string>
              </property>
             </widget>
            </item>
            <item row="8" column="1">
-            <widget class="QLabel" name="partCommentLabel">
+            <widget class="ElidingLabel" name="partCommentLabel">
              <property name="text">
               <string/>
              </property>
@@ -341,6 +333,11 @@
    <extends>QWidget</extends>
    <header>widgets/gridwidget.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ElidingLabel</class>
+   <extends>QLabel</extends>
+   <header>widgets/elidinglabel.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
