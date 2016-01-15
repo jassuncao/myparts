@@ -44,8 +44,8 @@ protected slots:
     void slotAddPart();
     void slotEditPart();
     void slotDeletePart();
-    void slotDuplicatePart();
-    void slotPartsModelPrimeInsert(int, QSqlRecord &record);
+    void slotDuplicatePartAllData();
+    void slotDuplicatePartBasicData();
     void slotNavModeChanged(int mode);
     void slotFilterChanged();
     void slotSelectedCategoryChanged(const QList<int> selectedIds);
@@ -54,6 +54,7 @@ protected slots:
     void slotPartsDroppedInStorage(QVector<int> parts, TreeItem* item);
 private:
     PartsTableView * createPartsTableView(QAbstractTableModel * tableModel);
+    void duplicatePart(bool allData);
     NavigationSubWidget * _navWidget;
     PartsTableView * _partsTableView;
     PartDetailsView * _partDetailsView;

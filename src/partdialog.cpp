@@ -68,20 +68,24 @@ PartDialog::PartDialog(PartsSqlTableModel *model, TreeItemModel * categoryModel,
     _mapper->addMapping(ui->partUnitCombo, PartsSqlTableModel::ColumnPartUnitId, "currentKey");
     _mapper->addMapping(ui->partPackageCombo, PartsSqlTableModel::ColumnPackageId, "currentKey");
     _mapper->addMapping(ui->initialStockSpinBox,PartsSqlTableModel::ColumnActualStock, "value");
+    _mapper->addMapping(ui->partCommentText, PartsSqlTableModel::ColumnComment);
 
     ui->partParametersTableView->setModel(_partParamsModel);
     ui->partParametersTableView->setItemDelegate(new CustomTableRelationDelegate(ui->partParametersTableView));
     ui->partParametersTableView->setItemDelegateForColumn(PartParametersTableModel3::ColumnValue, new ParameterValueDelegate());
+    ui->partParametersTableView->setColumnWidth(PartParametersTableModel3::ColumnName, 180);
 
     ui->partDistributorsTableView->setModel(_partDistributorModel);
     ui->partDistributorsTableView->setItemDelegateForColumn(PartDistributorTableModel2::ColumnUnitPrice, new CurrencyDelegate(this));
     ui->partDistributorsTableView->setItemDelegateForColumn(PartDistributorTableModel2::ColumnMinimumOrder, new ValidatingItemDelegate(new QIntValidator()));
     ui->partDistributorsTableView->setItemDelegate(new CustomTableRelationDelegate(ui->partDistributorsTableView));
+    ui->partDistributorsTableView->setColumnWidth(PartDistributorTableModel2::ColumnDistributor, 180);
+    ui->partDistributorsTableView->setColumnWidth(PartDistributorTableModel2::ColumnPartNumber, 180);
 
     ui->partManufacturerTableView->setModel(_partManufacturerModel);
     ui->partManufacturerTableView->setItemDelegate(new CustomTableRelationDelegate(ui->partManufacturerTableView));  
-    ui->partManufacturerTableView->setColumnWidth(PartManufacturerTableModel2::ColumnManufacturer, 256);
-    ui->partManufacturerTableView->setColumnWidth(PartManufacturerTableModel2::ColumnPartNumber, 256);
+    ui->partManufacturerTableView->setColumnWidth(PartManufacturerTableModel2::ColumnManufacturer, 220);
+    //ui->partManufacturerTableView->setColumnWidth(PartManufacturerTableModel2::ColumnPartNumber, 256);
 
     ui->partAttachmentsTableView->setModel(_partAttachmentModel);
     ui->partAttachmentsTableView->setColumnWidth(0, 512);
@@ -120,6 +124,16 @@ PartDialog::~PartDialog()
     delete ui;
 }
 
+void PartDialog::setCurrentCategory(const QVariant & category)
+{
+    _currentCategory = category;
+}
+
+void PartDialog::setCurrentStorage(const QVariant & storage)
+{
+    _currentStorage = storage;
+}
+
 int PartDialog::exec()
 {
     return QDialog::exec();
@@ -130,7 +144,14 @@ int PartDialog::addNewPart()
     setWindowTitle(tr("Add Part"));
     _addMode = true;    
     _nextActionCheckbox->setText(tr("Create blank item after save"));
-    internalAddPart(QModelIndex());
+
+    QSqlRecord initialData = _partsModel->record();
+    initialData.setValue(PartsSqlTableModel::ColumnConditionId, _defaultCondition);
+    initialData.setValue(PartsSqlTableModel::ColumnPartUnitId, _defaultUnit);
+    initialData.setValue(PartsSqlTableModel::ColumnCategoryId, _currentCategory);
+    initialData.setValue(PartsSqlTableModel::ColumnStorageId, _currentStorage);
+    const QModelIndex insertedIndex = insertNewPart(initialData);
+    setCurrentModelIndex(insertedIndex);
     return exec();
 }
 
@@ -162,35 +183,16 @@ int PartDialog::editPart(const QModelIndex &index)
     return exec();
 }
 
-int PartDialog::duplicatePart(const QModelIndex &index)
+int PartDialog::duplicatePart(const QModelIndex &index, bool allData)
 {
+    setWindowTitle(tr("Add Part"));
+    _nextActionCheckbox->setText(tr("Create blank item after save"));
     _addMode = true;
-    internalAddPart(index);
-    return exec();
-}
-
-void PartDialog::internalAddPart(const QModelIndex &index){
-    int newRow = _partsModel->rowCount();
-
-    if(index.isValid()){
-        //When add mode is used and the index is valid, duplicate the part
-
-        //Make a copy of the existing part parameters
+    QSqlRecord initialData;
+    if(allData){
+        initialData = copyAllData(index);
         QVariant partId = getColumnValue(_partsModel, index.row(), PartsSqlTableModel::ColumnId);
 
-        //Make a copy of the part attributes
-        QSqlRecord copy = _partsModel->record(index.row());
-        copy.setNull(PartsSqlTableModel::ColumnId);
-        copy.setNull(PartsSqlTableModel::ColumnActualStock);
-
-        //Set the createDate field
-        QDateTime now = QDateTime::currentDateTimeUtc();
-        QVariant t = QVariant(now.toTime_t());
-        copy.setValue(PartsSqlTableModel::ColumnCreateDate, t);
-        //Add a new record with values from the duplicate part
-        _partsModel->insertRecord(newRow,copy);
-
-        setCurrentModelIndex(_partsModel->index(newRow, PartsSqlTableModel::ColumnId));
         QVariant invalidId;
         _partParamsModel->setCurrentPartId(partId);
         _partParamsModel->select();
@@ -213,13 +215,56 @@ void PartDialog::internalAddPart(const QModelIndex &index){
         _partAttachmentModel->setCurrentForeignKey(invalidId);
     }
     else{
-        _partsModel->insertRow(newRow);        
-        setCurrentModelIndex(_partsModel->index(newRow, PartsSqlTableModel::ColumnId));
-        reset();
+        initialData = copySomeData(index);
+    }
+    const QModelIndex insertedIndex = insertNewPart(initialData);
+    setCurrentModelIndex(insertedIndex);
+    return exec();
+}
+
+QModelIndex PartDialog::insertNewPart(QSqlRecord initialData)
+{
+    //Set the createDate field
+    QDateTime now = QDateTime::currentDateTimeUtc();
+    QVariant t = QVariant(now.toTime_t());
+    initialData.setValue(PartsSqlTableModel::ColumnCreateDate, t);
+
+    int newRow = _partsModel->rowCount();
+    bool success = _partsModel->insertRecord(newRow, initialData);
+    if(success) {
+        return  _partsModel->index(newRow, PartsSqlTableModel::ColumnId);
+    }
+    else {
+        qWarning("Failed to insert new part");
+        return QModelIndex();
     }
 }
 
-int findDefaultValueIndex(const QSqlQueryModel * model, int column)
+QSqlRecord PartDialog::copySomeData(const QModelIndex & index)
+{
+    QSqlRecord initialData =_partsModel->record();
+    QVariant storageId = getColumnValue(_partsModel, index.row(), PartsSqlTableModel::ColumnStorageId);
+    QVariant categoryId = getColumnValue(_partsModel, index.row(), PartsSqlTableModel::ColumnCategoryId);
+    QVariant partUnitId = getColumnValue(_partsModel, index.row(), PartsSqlTableModel::ColumnPartUnitId);
+    QVariant packageId = getColumnValue(_partsModel, index.row(), PartsSqlTableModel::ColumnPackageId);
+    QVariant conditionId = getColumnValue(_partsModel, index.row(), PartsSqlTableModel::ColumnConditionId);
+    initialData.setValue(PartsSqlTableModel::ColumnStorageId, storageId);
+    initialData.setValue(PartsSqlTableModel::ColumnCategoryId, categoryId);
+    initialData.setValue(PartsSqlTableModel::ColumnPartUnitId, partUnitId);
+    initialData.setValue(PartsSqlTableModel::ColumnPackageId, packageId);
+    initialData.setValue(PartsSqlTableModel::ColumnConditionId, conditionId);
+    return initialData;
+}
+
+QSqlRecord PartDialog::copyAllData(const QModelIndex & index)
+{
+    QSqlRecord initialData = _partsModel->record(index.row());
+    initialData.setNull(PartsSqlTableModel::ColumnId);
+    initialData.setNull(PartsSqlTableModel::ColumnActualStock);
+    return initialData;
+}
+
+int findDefaultValueRow(const QSqlQueryModel * model, int column)
 {
     QModelIndex start = model->index(0, column);
     QModelIndexList res = model->match(start, Qt::EditRole, QVariant(1));
@@ -238,43 +283,31 @@ void PartDialog::initCombos()
 
     _partConditionModel = new QSqlQueryModel();
     _partConditionModel->setQuery("SELECT id, value, defaultCondition FROM condition ORDER BY value ASC");
+
+    int row = findDefaultValueRow(_partConditionModel, 2);
+    _defaultCondition = _partConditionModel->index(row,0).data(Qt::EditRole);
+
     ui->partConditionCombo->setModel(_partConditionModel);
     ui->partConditionCombo->setModelKeyColumn(0);
-    ui->partConditionCombo->setModelColumn(1);
+    ui->partConditionCombo->setModelColumn(1);        
+
 
     _partUnitsModel = new QSqlQueryModel();
     _partUnitsModel->setQuery("SELECT id, name, defaultUnit FROM part_unit ORDER BY name ASC");
+
+    row = findDefaultValueRow(_partUnitsModel, 2);
+    _defaultUnit = _partUnitsModel->index(row,0).data(Qt::EditRole);
+
     ui->partUnitCombo->setModel(_partUnitsModel);
     ui->partUnitCombo->setModelKeyColumn(0);
     ui->partUnitCombo->setModelColumn(1);
+
 
     _packagesModel = new QSqlQueryModel();
     _packagesModel->setQuery("SELECT id, name FROM package ORDER BY name ASC");
     ui->partPackageCombo->setModel(_packagesModel);
     ui->partPackageCombo->setModelKeyColumn(0);
     ui->partPackageCombo->setModelColumn(1);
-}
-
-void PartDialog::reset()
-{
-    ui->tabWidget->setCurrentIndex(0);
-    ui->partNameEdit->setFocus();    
-    ui->partCategoryCombo->setCurrentIndex(QModelIndex());
-    ui->partStorageCombo->setCurrentIndex(QModelIndex());
-
-    QVariant invalidId;
-    _partParamsModel->setCurrentPartId(invalidId);
-    _partParamsModel->select();
-
-    _partDistributorModel->setCurrentPartId(invalidId);
-    _partDistributorModel->select();
-
-    _partManufacturerModel->setCurrentPartId(invalidId);
-    _partManufacturerModel->select();
-
-    _partAttachmentModel->setCurrentForeignKey(invalidId);
-    _partAttachmentModel->select();
-
 }
 
 int PartDialog::initialStock() const
@@ -342,23 +375,63 @@ void PartDialog::setCurrentModelIndex(const QModelIndex &index)
 }
 
 void PartDialog::accept()
-{
-    commitChanges();
+{    
     if(_nextActionCheckbox->isChecked()){
+        /*If the user chooses to keep adding parts we need to copy some attributes before
+         commiting changes, because after the commit, the current model index becomes invalid and can't be
+         used to access data
+        */
+        QSqlRecord initialData;
         if(_addMode){
-            //In add mode we create a blank item            
-            internalAddPart(QModelIndex());
-            reset();
+            //In add mode we create a new item with some minimal data
+            initialData = copySomeData(_currentModelIndex);
+            //We discard the data from the auxiliary tables by using an invalid
+            QVariant invalidId;
+            _partParamsModel->setCurrentPartId(invalidId);
+            _partParamsModel->select();
+
+            _partDistributorModel->setCurrentPartId(invalidId);
+            _partDistributorModel->select();
+
+            _partManufacturerModel->setCurrentPartId(invalidId);
+            _partManufacturerModel->select();
+
+            _partAttachmentModel->setCurrentPartId(invalidId);
+            _partAttachmentModel->select();
+
         }
         else{
-            reset();
-            internalAddPart(_currentModelIndex);            
-            //In edit mode we make a duplicate
+            //In edit mode we make a duplicate with all the data
+            initialData = copyAllData(_currentModelIndex);
+            //We "clone" the data from the auxiliary tables
+            QVariant invalidId;
+            _partParamsModel->cloneData();
+            _partParamsModel->setCurrentPartId(invalidId);
+
+            _partDistributorModel->cloneData();
+            _partDistributorModel->setCurrentPartId(invalidId);
+
+            _partManufacturerModel->cloneData();
+            _partManufacturerModel->setCurrentPartId(invalidId);
+
+            _partAttachmentModel->cloneData();
+            _partAttachmentModel->setCurrentPartId(invalidId);
         }
+
+        commitChanges();
+        //Insert a new record with initial data
+        QModelIndex insertIndex = insertNewPart(initialData);
+        setCurrentModelIndex(insertIndex);
+
+        ui->priceSpinBox->setValue(0.0);
+        ui->pricePerItemCheckBox->setChecked(false);
+        ui->tabWidget->setCurrentIndex(0);
+        ui->partNameEdit->setFocus();
     }
     else{
+        commitChanges();
         QDialog::accept();
-    }
+    }   
 }
 
 void PartDialog::reject()

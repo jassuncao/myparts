@@ -56,8 +56,7 @@ PartsManagerView::PartsManagerView(QWidget *parent)
 {
     _partsQueryBuilder = new PartsQueryBuilder();
     _partsModel = new PartsSqlTableModel(_partsQueryBuilder, this);
-    _partsModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
-    connect(_partsModel,SIGNAL(primeInsert(int,QSqlRecord&)), this, SLOT(slotPartsModelPrimeInsert(int,QSqlRecord&)));
+    _partsModel->setEditStrategy(QSqlTableModel::OnManualSubmit);    
     connect(_partsModel, SIGNAL(beforeSubmit()), this, SLOT(slotBeforeSubmit()));
     connect(_partsModel, SIGNAL(afterSubmit()), this, SLOT(slotAfterSubmit()));
     //connect(_partsModel, SIGNAL(layoutAboutToBeChanged()), this, SLOT(slotLayoutAboutToBeChanged()));
@@ -94,8 +93,8 @@ PartsManagerView::PartsManagerView(QWidget *parent)
     centerPaneTitleBar->setLayout(centerPaneTitleLayout);
 
     QMenu * duplicateBtnMenu = new QMenu(this);
-    duplicateBtnMenu->addAction(tr("Duplicate with all data"));
-    duplicateBtnMenu->addAction(tr("Duplicate basic data only"));    
+    duplicateBtnMenu->addAction(tr("Duplicate with all data"), this, SLOT(slotDuplicatePartAllData()));
+    duplicateBtnMenu->addAction(tr("Duplicate basic data only"), this, SLOT(slotDuplicatePartBasicData()));
 
     QPushButton * addPartButton = new QPushButton(QIcon(QString::fromLatin1(":/icons/addStock")), tr("Add part"), this);
     _deletePartButton = new QPushButton(QIcon(QString::fromLatin1(":/icons/removeStock")), tr("Delete part"), this);
@@ -265,6 +264,8 @@ void PartsManagerView::slotPartTableCurrentRowChanged(const QModelIndex &current
 void PartsManagerView::slotAddPart()
 {
     PartDialog dlg(_partsModel, _categoriesTreeModel, _storageTreeModel, this);
+    dlg.setCurrentCategory(_categoryNavigator->currentCategory());
+    dlg.setCurrentStorage(_storageNavigator->currentStorage());
     dlg.addNewPart();
 }
 
@@ -282,55 +283,25 @@ void PartsManagerView::slotDeletePart()
 
 }
 
-void PartsManagerView::slotDuplicatePart()
+void PartsManagerView::slotDuplicatePartAllData()
 {
+    duplicatePart(true);
 }
 
-void PartsManagerView::slotPartsModelPrimeInsert(int, QSqlRecord &record)
+void PartsManagerView::slotDuplicatePartBasicData()
 {
-    //Set the createDate field
-    QDateTime now = QDateTime::currentDateTimeUtc();
-    QVariant t = QVariant(now.toTime_t());
-    record.setValue(PartsSqlTableModel::ColumnCreateDate, t);
-    //The generated flag needs to be set or this field will not be included in the insert
-    record.setGenerated(PartsSqlTableModel::ColumnCreateDate,true);
-
-    //Set the category field using the category selected in the tree view    
-    QModelIndex currentCategoryIdx = _categoryNavigator->currentIndex();
-    int categoryId;
-    if(currentCategoryIdx.isValid()){
-        categoryId = _categoriesTreeModel->getItemId(currentCategoryIdx);
-    }
-    else{
-        categoryId = _categoriesTreeModel->rootItemId();
-    }
-    record.setValue(PartsSqlTableModel::ColumnCategoryId, categoryId);
-    record.setGenerated(PartsSqlTableModel::ColumnCategoryId,true);
-
-    //Set the storage field using the storage selected in the tree view
-    QModelIndex currentStorageIdx = _storageNavigator->currentIndex();
-    int storageId;
-    if(currentStorageIdx.isValid()){
-        storageId = _storageTreeModel->getItemId(currentStorageIdx);
-    }
-    else{
-        storageId = _storageTreeModel->rootItemId();
-    }
-    record.setValue(PartsSqlTableModel::ColumnStorageId, storageId);
-    record.setGenerated(PartsSqlTableModel::ColumnStorageId,true);
-
-    //Used to avoid an error in the sql statment generator
-    record.setGenerated(PartsSqlTableModel::ColumnId,true);
-
-    QSqlQuery q("SELECT id FROM part_unit WHERE defaultUnit=1");
-    if(q.exec() && q.next()){
-        record.setValue(PartsSqlTableModel::ColumnPartUnitId, q.value(0));
-    }
-    if(q.exec("SELECT id FROM part_condition WHERE defaultCondition=1")){
-        if(q.next())
-            record.setValue(PartsSqlTableModel::ColumnConditionId, q.value(0));
-    }
+    duplicatePart(false);
 }
+
+void PartsManagerView::duplicatePart(bool allData)
+{
+    QModelIndex index = _partsTableView->currentIndex();
+    if(!index.isValid())
+        return;
+    PartDialog dlg(_partsModel, _categoriesTreeModel, _storageTreeModel, this);
+    dlg.duplicatePart(index, allData);
+}
+
 
 void PartsManagerView::slotPartsDroppedInCategory(QVector<int> parts, TreeItem* item)
 {

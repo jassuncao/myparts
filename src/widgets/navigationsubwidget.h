@@ -114,6 +114,7 @@ class CategoryNavigator : public TreeNavigator
 public:
     explicit CategoryNavigator(QWidget *parent = 0);
     virtual QString title() const { return tr("Categories");}
+    QVariant currentCategory() const;
 protected:
     void onContextMenuRequested(const QPoint &globalPos, const QModelIndex & index);
     void onFilterChanged(const QString & text);
@@ -133,6 +134,8 @@ class StorageNavigator : public TreeNavigator
 public:
     explicit StorageNavigator(QWidget *parent = 0);
     virtual QString title() const { return tr("Storage");}
+    QVariant currentStorage() const;
+protected:
 protected:
     void onContextMenuRequested(const QPoint &globalPos, const QModelIndex & index);
     void onFilterChanged(const QString & text);

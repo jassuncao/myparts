@@ -176,6 +176,7 @@ public:
 
     Qt::ItemFlags flags(const QModelIndex &index) const;
     bool appendRow(const QString &url, const QString & description);
+    inline void setCurrentPartId(const QVariant & partId) { setCurrentForeignKey(partId); }
 
     static AttachmentTableModel3 * createNewPackageAttachmentModel(QObject *parent);
     static AttachmentTableModel3 * createNewPartAttachmentModel(QObject *parent);

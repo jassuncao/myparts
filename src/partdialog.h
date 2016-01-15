@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QModelIndex>
+#include <QSqlRecord>
 
 namespace Ui {
 class PartDialog;
@@ -37,10 +38,12 @@ public:
     ~PartDialog();    
     int initialStock() const;
     double partPrice() const;
+    void setCurrentCategory(const QVariant & category);
+    void setCurrentStorage(const QVariant & storage);
 public slots:
     int addNewPart();
     int editPart(const QModelIndex &index);
-    int duplicatePart(const QModelIndex &index);
+    int duplicatePart(const QModelIndex &index, bool allData);
     void reject();
     void accept();
 private slots:
@@ -63,14 +66,15 @@ private slots:
     void slotPartStorageChanged(int idx);
     void slotPartCategoryChanged(int idx);
     void slotAttachmentDoubleClicked(const QModelIndex &index);
-
 private:
-    void reset();
     void initCombos();
     void commitChanges();
     void discardChanges();
-    void internalAddPart(const QModelIndex &index);
+    void internalAddPart(const QModelIndex &index, bool copyAll);
     void setCurrentModelIndex(const QModelIndex &index);
+    QSqlRecord copySomeData(const QModelIndex &index);
+    QSqlRecord copyAllData(const QModelIndex &index);
+    QModelIndex insertNewPart(QSqlRecord initialData);
 
     QCheckBox * _nextActionCheckbox;
     Ui::PartDialog *ui;
@@ -90,6 +94,10 @@ private:
     int _lastSelectedPackage;
     bool _addMode;
     QVariant _currentPartId;
+    QVariant _defaultCondition;
+    QVariant _defaultUnit;
+    QVariant _currentCategory;
+    QVariant _currentStorage;
 
 };
 

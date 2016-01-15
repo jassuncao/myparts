@@ -298,6 +298,17 @@ CategoryNavigator::CategoryNavigator(QWidget *parent)
     _actionEditCategory->setEnabled(false);  
 }
 
+QVariant CategoryNavigator::currentCategory() const
+{
+    QModelIndex currentIdx = currentIndex();
+    if(currentIdx.isValid()){
+        return model()->getItemId(currentIdx);
+    }
+    else{
+        return model()->rootItemId();
+    }
+}
+
 void CategoryNavigator::onContextMenuRequested(const QPoint & globalPos, const QModelIndex & index)
 {
     bool indexValid = index.isValid();
@@ -382,7 +393,17 @@ StorageNavigator::StorageNavigator(QWidget *parent)
     _actionEditStorage = _actionsMenu->addAction(editStorageIcon, tr("Edit Storage"), this, SLOT(slotEditStorage()));
     _actionDeleteStorage->setEnabled(false);
     _actionEditStorage->setEnabled(false);
+}
 
+QVariant StorageNavigator::currentStorage() const
+{
+    QModelIndex currentIdx = currentIndex();
+    if(currentIdx.isValid()){
+        return model()->getItemId(currentIdx);
+    }
+    else{
+        return model()->rootItemId();
+    }
 }
 
 void StorageNavigator::onContextMenuRequested(const QPoint & globalPos, const QModelIndex & index)

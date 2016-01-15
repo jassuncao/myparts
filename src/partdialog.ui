@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>3</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab_1">
       <attribute name="title">
@@ -97,6 +97,12 @@
        </item>
        <item row="3" column="1">
         <widget class="TreeViewComboBox" name="partCategoryCombo">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="minimumContentsLength">
           <number>24</number>
          </property>
@@ -113,6 +119,12 @@
         <layout class="QHBoxLayout" name="horizontalLayout_6">
          <item>
           <widget class="TreeViewComboBox" name="partStorageCombo">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="sizeAdjustPolicy">
             <enum>QComboBox::AdjustToContentsOnFirstShow</enum>
            </property>
@@ -179,16 +191,6 @@
         <widget class="QLabel" name="label_8">
          <property name="text">
           <string>Comment:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="1">
-        <widget class="QTextEdit" name="partCommentText">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
          </property>
         </widget>
        </item>
@@ -266,6 +268,16 @@
           </spacer>
          </item>
         </layout>
+       </item>
+       <item row="6" column="1">
+        <widget class="QPlainTextEdit" name="partCommentText">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
