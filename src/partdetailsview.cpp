@@ -89,7 +89,6 @@ PartDetailsView::PartDetailsView(QWidget *parent) :
     connect(editPartButton, SIGNAL(clicked()), this, SIGNAL(editPartSelected()));
     connect(addStockButton, SIGNAL(clicked()), this, SLOT(onAddStock()));
     connect(removeStockButton, SIGNAL(clicked()), this, SLOT(onRemoveStock()));
-    //connect(editPartButton, SIGNAL(clicked()), this, SLOT(onEditPart()));
 
     _partStockModel->setCurrentPartId(QVariant());
     _partStockModel->select();

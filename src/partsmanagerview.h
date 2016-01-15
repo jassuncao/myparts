@@ -26,6 +26,7 @@ class CategoryNavigator;
 class StorageNavigator;
 class CategoryTreeModel;
 class TreeItem;
+class PartsTableProxyModel;
 
 class PartsManagerView : public Manhattan::MiniSplitter
 {
@@ -68,6 +69,7 @@ private:
     CategoryNavigator * _categoryNavigator;
     StorageNavigator * _storageNavigator;
     QVariant _savedPartId;
+    PartsTableProxyModel * _partsTableProxyModel;
 };
 
 #endif // PARTSMANAGERVIEW_H

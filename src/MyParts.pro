@@ -92,7 +92,8 @@ SOURCES += main.cpp\
     models/categorytreemodel.cpp \
     models/partstocktablemodel.cpp \
     models/stocktableformatproxymodel.cpp \
-    widgets/elidinglabel.cpp
+    widgets/elidinglabel.cpp \
+    models/partstableproxymodel.cpp
 
 HEADERS  += mainwindow.h \
     entities/entities.h \
@@ -168,7 +169,8 @@ HEADERS  += mainwindow.h \
     models/categorytreemodel.h \
     models/partstocktablemodel.h \
     models/stocktableformatproxymodel.h \
-    widgets/elidinglabel.h
+    widgets/elidinglabel.h \
+    models/partstableproxymodel.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \

@@ -15,6 +15,7 @@
 #include "models/partsquerybuilder.h"
 #include "models/categorytreemodel.h"
 #include "models/treeitem.h"
+#include "models/partstableproxymodel.h"
 
 #include <QHBoxLayout>
 #include <QPushButton>
@@ -56,11 +57,11 @@ PartsManagerView::PartsManagerView(QWidget *parent)
 {
     _partsQueryBuilder = new PartsQueryBuilder();
     _partsModel = new PartsSqlTableModel(_partsQueryBuilder, this);
-    _partsModel->setEditStrategy(QSqlTableModel::OnManualSubmit);    
+    _partsModel->setEditStrategy(QSqlTableModel::OnManualSubmit);        
     connect(_partsModel, SIGNAL(beforeSubmit()), this, SLOT(slotBeforeSubmit()));
     connect(_partsModel, SIGNAL(afterSubmit()), this, SLOT(slotAfterSubmit()));
-    //connect(_partsModel, SIGNAL(layoutAboutToBeChanged()), this, SLOT(slotLayoutAboutToBeChanged()));
-    //connect(_partsModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(slotDataChanged(QModelIndex,QModelIndex)));
+
+    _partsTableProxyModel = new PartsTableProxyModel(this);
 
     _categoriesTreeModel = new CategoryTreeModel(this);
     _categoriesTreeModel->select();    
@@ -147,8 +148,7 @@ PartsManagerView::PartsManagerView(QWidget *parent)
     addWidget(rightPane);
 
     connect(addPartButton, SIGNAL(clicked()), this, SLOT(slotAddPart()));
-    connect(_deletePartButton, SIGNAL(clicked()), this, SLOT(slotDeletePart()));
-    connect(_duplicatePartButton, SIGNAL(clicked()), this, SLOT(slotDuplicatePart()));
+    connect(_deletePartButton, SIGNAL(clicked()), this, SLOT(slotDeletePart()));    
     connect(_partsFilterWidget, SIGNAL(filterChanged()), this, SLOT(slotFilterChanged()));    
     connect(_partDetailsView, SIGNAL(editPartSelected()), this, SLOT(slotEditPart()));
     connect(_categoriesTreeModel, SIGNAL(partsDropped(QVector<int>,TreeItem*)), this, SLOT(slotPartsDroppedInCategory(QVector<int>,TreeItem*)));
@@ -174,7 +174,8 @@ PartsManagerView::~PartsManagerView()
 
 PartsTableView *PartsManagerView::createPartsTableView(QAbstractTableModel * tableModel){
     _partsTableView = new PartsTableView(this);
-    _partsTableView->setModel(tableModel);
+    _partsTableProxyModel->setSourceModel(tableModel);
+    _partsTableView->setModel(_partsTableProxyModel);
     //To enable in the future to allow editing stocks in place
     //_partsTableView->setEditTriggers(QAbstractItemView::DoubleClicked | QAbstractItemView::EditKeyPressed);
     connect(_partsTableView->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
@@ -185,9 +186,10 @@ PartsTableView *PartsManagerView::createPartsTableView(QAbstractTableModel * tab
 
 void PartsManagerView::slotBeforeSubmit()
 {
-    QModelIndex curr = _partsTableView->currentIndex();
+    QModelIndex curr = _partsTableView->currentIndex();    
     if(curr.isValid()){
-        _savedPartId = _partsModel->data(_partsModel->index(curr.row(), PartsSqlTableModel::ColumnId), Qt::EditRole);
+        QModelIndex sourceIndex = _partsTableProxyModel->mapToSource(curr);
+        _savedPartId = _partsModel->data(_partsModel->index(sourceIndex.row(), PartsSqlTableModel::ColumnId), Qt::EditRole);
     }
 }
 
@@ -196,8 +198,9 @@ void PartsManagerView::slotAfterSubmit()
     qDebug()<<"slotAfterSubmit";
     if(_savedPartId.isValid()){
         QModelIndex newIndex = _partsModel->findIndex(_savedPartId);
+        QModelIndex proxyIndex = _partsTableProxyModel->mapFromSource(newIndex);
         _savedPartId = QVariant();
-        _partsTableView->selectionModel()->setCurrentIndex(newIndex, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
+        _partsTableView->selectionModel()->setCurrentIndex(proxyIndex, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
     }
 }
 
@@ -256,8 +259,8 @@ void PartsManagerView::slotSelectedStorageChanged(const QList<int> selectedIds)
 
 void PartsManagerView::slotPartTableCurrentRowChanged(const QModelIndex &current, const QModelIndex &previous)
 {
-    qDebug()<<"Current is "<<current<<" Previous is "<<previous;   
-    _partDetailsView->setCurrentIndex(current);
+    qDebug()<<"Current is "<<current<<" Previous is "<<previous;
+    _partDetailsView->setCurrentIndex(_partsTableProxyModel->mapToSource(current));
 
 }
 
@@ -273,9 +276,9 @@ void PartsManagerView::slotEditPart()
 {
     QModelIndex index = _partsTableView->currentIndex();
     if(!index.isValid())
-        return;
-    PartDialog dlg(_partsModel, _categoriesTreeModel, _storageTreeModel, this);
-    dlg.editPart(index);
+        return;   
+    PartDialog dlg(_partsModel, _categoriesTreeModel, _storageTreeModel, this);    
+    dlg.editPart(_partsTableProxyModel->mapToSource(index));
 }
 
 void PartsManagerView::slotDeletePart()
@@ -299,7 +302,7 @@ void PartsManagerView::duplicatePart(bool allData)
     if(!index.isValid())
         return;
     PartDialog dlg(_partsModel, _categoriesTreeModel, _storageTreeModel, this);
-    dlg.duplicatePart(index, allData);
+    dlg.duplicatePart(_partsTableProxyModel->mapToSource(index), allData);
 }
 
 
