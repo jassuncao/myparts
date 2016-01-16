@@ -77,7 +77,7 @@ PartsManagerView::PartsManagerView(QWidget *parent)
     _categoryNavigator->setObjectName("CategoryNavigator");
     _categoryNavigator->setModel(_categoriesTreeModel);
     connect(_categoryNavigator, SIGNAL(selectionChanged(QList<int>)), this, SLOT(slotSelectedCategoryChanged(QList<int>)));
-    _navWidget->addNavigator(_categoryNavigator);
+    _navWidget->addNavigator(_categoryNavigator);    
 
     _storageNavigator = new StorageNavigator(_navWidget);
     _storageNavigator->setObjectName("StorageNavigator");
@@ -86,6 +86,12 @@ PartsManagerView::PartsManagerView(QWidget *parent)
     _navWidget->addNavigator(_storageNavigator);
     _navWidget->setCurrentNavigator(0);
 
+    _showDetailsPaneButton = new QToolButton;
+    _showDetailsPaneButton->setIcon(QIcon(QLatin1String(":/icons/splitbutton_vertical")));
+    _showDetailsPaneButton->setToolTip("Show details side bar");
+    _showDetailsPaneButton->hide();
+
+
     Manhattan::StyledBar * centerPaneTitleBar = new Manhattan::StyledBar;
     QLabel * centerPaneTitleLabel = new QLabel(tr("Parts List"), centerPaneTitleBar);
     QHBoxLayout *centerPaneTitleLayout = new QHBoxLayout;
@@ -93,6 +99,8 @@ PartsManagerView::PartsManagerView(QWidget *parent)
     centerPaneTitleLayout->setMargin(0);
     centerPaneTitleLayout->setSpacing(0);
     centerPaneTitleLayout->addWidget(centerPaneTitleLabel);
+    centerPaneTitleLayout->addStretch();
+    centerPaneTitleLayout->addWidget(_showDetailsPaneButton);
     centerPaneTitleBar->setLayout(centerPaneTitleLayout);
 
     QMenu * duplicateBtnMenu = new QMenu(this);
@@ -132,22 +140,35 @@ PartsManagerView::PartsManagerView(QWidget *parent)
     QWidget * centerPane = new QWidget(this);
     centerPane->setLayout(centerLayout);
 
-
     _partDetailsView = new PartDetailsView(this);
     _partDetailsView->setPartsModel(_partsModel);    
+
+    _hideDetailsPaneButton = new QToolButton;
+    _hideDetailsPaneButton->setIcon(QIcon(QLatin1String(":/icons/splitbutton_closeright")));
+    _hideDetailsPaneButton->setToolTip("Close details side bar");
+
+
+    Manhattan::StyledBar * detailsTopBar = new Manhattan::StyledBar;
+    QHBoxLayout *detailsTopBarLayout = new QHBoxLayout;
+    detailsTopBarLayout->addSpacing(4);
+    detailsTopBarLayout->setMargin(0);
+    detailsTopBarLayout->setSpacing(0);
+    detailsTopBarLayout->addStretch();
+    detailsTopBarLayout->addWidget(_hideDetailsPaneButton);
+    detailsTopBar->setLayout(detailsTopBarLayout);
 
     QVBoxLayout * rightLayout = new QVBoxLayout;
     rightLayout->setMargin(0);
     rightLayout->setSpacing(0);
-    rightLayout->addWidget(new Manhattan::StyledBar);
+    rightLayout->addWidget(detailsTopBar);
     rightLayout->addWidget(_partDetailsView);
 
-    QWidget * rightPane = new QWidget(this);
-    rightPane->setLayout(rightLayout);
+    _detailsPane = new QWidget(this);
+    _detailsPane->setLayout(rightLayout);
 
     addWidget(_navWidget);
     addWidget(centerPane);
-    addWidget(rightPane);
+    addWidget(_detailsPane);
 
     connect(addPartButton, SIGNAL(clicked()), this, SLOT(slotAddPart()));
     connect(_deletePartButton, SIGNAL(clicked()), this, SLOT(slotDeletePart()));    
@@ -156,6 +177,8 @@ PartsManagerView::PartsManagerView(QWidget *parent)
     connect(_categoriesTreeModel, SIGNAL(partsDropped(QVector<int>,TreeItem*)), this, SLOT(slotPartsDroppedInCategory(QVector<int>,TreeItem*)));
     connect(_storageTreeModel, SIGNAL(partsDropped(QVector<int>,TreeItem*)), this, SLOT(slotPartsDroppedInStorage(QVector<int>,TreeItem*)));
 
+    connect(_hideDetailsPaneButton, SIGNAL(clicked(bool)), this, SLOT(slotHideDetailsPane()));
+    connect(_showDetailsPaneButton, SIGNAL(clicked(bool)), this, SLOT(slotShowDetailsPane()));
 /*
     QLayout * layout = _navWidget->layout();
     int c = layout->count();
@@ -185,6 +208,18 @@ PartsTableView *PartsManagerView::createPartsTableView(QAbstractTableModel * tab
     connect(_partsTableView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(slotEditPart()));
     connect(_partsTableView, SIGNAL(deletePressed()), this, SLOT(slotDeletePart()));
     return _partsTableView;
+}
+
+void PartsManagerView::slotShowDetailsPane()
+{
+    _detailsPane->show();
+    _showDetailsPaneButton->hide();
+}
+
+void PartsManagerView::slotHideDetailsPane()
+{
+    _detailsPane->hide();
+    _showDetailsPaneButton->show();
 }
 
 void PartsManagerView::slotBeforeSubmit()

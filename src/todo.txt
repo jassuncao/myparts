@@ -1,7 +1,7 @@
 === Doing ===
-* Footprint attachments
 
 === Done ===
+* Footprint attachments
 * Handle PartDialog "next action" checkbox. -> Need to intercept the accept slot();
 * Duplicate part
 * Support Distributors

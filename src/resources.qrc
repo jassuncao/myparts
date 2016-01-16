@@ -61,6 +61,10 @@
         <file alias="tree_filter_selected">images/tree_filter_selected.png</file>
         <file alias="tree_filter_childs">images/tree_filter.png</file>
         <file alias="duplicatePart">images/brick_link.png</file>
+        <file alias="sidebaricon_right">images/sidebaricon.png</file>
+        <file alias="splitbutton_closeleft">images/splitbutton_closeleft.png</file>
+        <file alias="splitbutton_closeright">images/splitbutton_closeright.png</file>
+        <file alias="splitbutton_vertical">images/splitbutton_vertical.png</file>
     </qresource>
     <qresource prefix="/largeIcons">
         <file alias="options_general">images/cog_32x32.png</file>

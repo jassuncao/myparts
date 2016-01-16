@@ -53,6 +53,9 @@ protected slots:
     void slotSelectedStorageChanged(const QList<int> selectedIds);
     void slotPartsDroppedInCategory(QVector<int> parts, TreeItem* item);
     void slotPartsDroppedInStorage(QVector<int> parts, TreeItem* item);
+    void slotShowDetailsPane();
+    void slotHideDetailsPane();
+
 private:
     PartsTableView * createPartsTableView(QAbstractTableModel * tableModel);
     void duplicatePart(bool allData);
@@ -70,6 +73,9 @@ private:
     StorageNavigator * _storageNavigator;
     QVariant _savedPartId;
     PartsTableProxyModel * _partsTableProxyModel;
+    QToolButton * _showDetailsPaneButton;
+    QToolButton * _hideDetailsPaneButton;
+    QWidget * _detailsPane;
 };
 
 #endif // PARTSMANAGERVIEW_H
