@@ -28,6 +28,8 @@
 #include <QToolButton>
 #include <QIcon>
 #include <QDebug>
+#include <QMessageBox>
+#include <QSqlError>
 
 
 void debugLayout(QString tab, QLayoutItem * item){
@@ -180,7 +182,8 @@ PartsTableView *PartsManagerView::createPartsTableView(QAbstractTableModel * tab
     //_partsTableView->setEditTriggers(QAbstractItemView::DoubleClicked | QAbstractItemView::EditKeyPressed);
     connect(_partsTableView->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
             this, SLOT(slotPartTableCurrentRowChanged(QModelIndex,QModelIndex)));
-    connect(_partsTableView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(slotEditPart()));    
+    connect(_partsTableView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(slotEditPart()));
+    connect(_partsTableView, SIGNAL(deletePressed()), this, SLOT(slotDeletePart()));
     return _partsTableView;
 }
 
@@ -283,6 +286,34 @@ void PartsManagerView::slotEditPart()
 
 void PartsManagerView::slotDeletePart()
 {
+    QModelIndexList selectedRows = _partsTableView->selectionModel()->selectedRows(PartsSqlTableModel::ColumnId);
+    if(selectedRows.size()==0)
+        return;
+    QMessageBox msgBox;
+    msgBox.setIcon(QMessageBox::Question);
+    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    msgBox.setDefaultButton(QMessageBox::Yes);
+    if(selectedRows.size()==1)
+        msgBox.setText("Do you really wish to delete the selected part?");
+    else
+        msgBox.setText("Do you really wish to delete the selected parts?");
+    if(msgBox.exec()!=QMessageBox::Yes)
+        return;
+
+    QModelIndex proxyIndex;
+    _partsModel->database().transaction();
+    foreach (proxyIndex, selectedRows) {
+        QModelIndex sourceIndex = _partsTableProxyModel->mapToSource(proxyIndex);
+        _partsModel->removeRow(sourceIndex.row());
+    }
+    bool res = _partsModel->submitAll();
+    if(res){
+        _partsModel->database().commit();
+    }
+    else{
+        qWarning()<<"Failed to delete parts. Reason:"<<_partsModel->database().lastError();
+        _partsModel->database().rollback();
+    }
 
 }
 

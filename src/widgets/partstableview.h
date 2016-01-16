@@ -14,12 +14,12 @@ public:
     explicit PartsTableView(QWidget *parent = 0);
     virtual void setModel(QAbstractItemModel *model);
 signals:
-    
-public slots:
+    void deletePressed();
 protected slots:
     void slotToggleTableColumn(bool checked);
     void slotHeaderContextMenu(QPoint point);
 protected:
+  void keyPressEvent(QKeyEvent * event);
   void startDrag(Qt::DropActions supportedActions);
   void setupHeaderContextMenu();
   QMenu * _tableHeaderContextMenu;

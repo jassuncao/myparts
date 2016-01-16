@@ -21,7 +21,6 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     partdialog.cpp \
     entities/entities.cpp \
-    widgets/customtreeview.cpp \
     dialogs/partcategorydialog.cpp \
     models/treeitem.cpp \
     widgets/booleanitemdelegate.cpp \
@@ -98,7 +97,6 @@ SOURCES += main.cpp\
 HEADERS  += mainwindow.h \
     entities/entities.h \
     partdialog.h \
-    widgets/customtreeview.h \
     dialogs/partcategorydialog.h \
     models/treeitem.h \
     widgets/booleanitemdelegate.h \

@@ -213,14 +213,27 @@ void EditorManagerView::slotDeleteItem(const QModelIndex &index)
     qDebug()<<"Deleting item "<<index;
     if(index.isValid()==false){
         return;
-    }    
+    }
+    QMessageBox msgBox;
+    msgBox.setIcon(QMessageBox::Question);
+    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    msgBox.setDefaultButton(QMessageBox::Yes);
+    msgBox.setText("Do you really wish to delete the selected item?");
+    if(msgBox.exec()!=QMessageBox::Yes)
+        return;
     //Resets the editor state
     _editorWidget->setCurrentModelIndex(QModelIndex());
 
     int row = index.row();
     _model->removeRow(row);
+    _model->database().transaction();
     if(_model->submitAll()){
         _navigatorWidget->setCurrentRow(row);
+        _model->database().commit();
+    }
+    else{
+        qWarning()<<"Failed to delete items. Reason:"<<_model->database().lastError();
+        _model->database().rollback();
     }
 }
 

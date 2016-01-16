@@ -3,6 +3,7 @@
 #include <QAction>
 #include <QMenu>
 #include <QTableView>
+#include <QKeyEvent>
 #include "partstableview.h"
 #include "qsortfiltersqlquerymodel.h"
 #include "models/partssqltablemodel.h"
@@ -112,4 +113,14 @@ void PartsTableView::startDrag(Qt::DropActions supportedActions)
            tableModel->select();
        }
    }
+}
+
+void PartsTableView::keyPressEvent(QKeyEvent * event)
+{
+    if(event->key()==Qt::Key_Delete){
+        emit deletePressed();
+    }
+    else{
+        QTableView::keyPressEvent(event);
+    }
 }
