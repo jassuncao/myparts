@@ -49,11 +49,24 @@
     <addaction name="separator"/>
     <addaction name="actionPreferences"/>
    </widget>
+   <widget class="QMenu" name="menuQuick_Add">
+    <property name="title">
+     <string>Quick Add</string>
+    </property>
+    <addaction name="separator"/>
+    <addaction name="actionResistor"/>
+   </widget>
    <addaction name="menuEdit"/>
+   <addaction name="menuQuick_Add"/>
   </widget>
   <action name="actionPreferences">
    <property name="text">
     <string>Preferences</string>
+   </property>
+  </action>
+  <action name="actionResistor">
+   <property name="text">
+    <string>Resistor</string>
    </property>
   </action>
  </widget>

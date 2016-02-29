@@ -25,6 +25,7 @@
 #include "models/storagetreemodel.h"
 #include "models/customtablemodel.h"
 #include "models/partstocktablemodel.h"
+#include "utils.h"
 
 
 inline static QVariant getColumnValue(QAbstractItemModel * model, int row, int column){
@@ -264,6 +265,7 @@ QSqlRecord PartDialog::copyAllData(const QModelIndex & index)
     return initialData;
 }
 
+/*
 int findDefaultValueRow(const QSqlQueryModel * model, int column)
 {
     QModelIndex start = model->index(0, column);
@@ -273,6 +275,7 @@ int findDefaultValueRow(const QSqlQueryModel * model, int column)
     qWarning("Default value not found");
     return -1;
 }
+*/
 
 void PartDialog::initCombos()
 {
@@ -284,7 +287,7 @@ void PartDialog::initCombos()
     _partConditionModel = new QSqlQueryModel();
     _partConditionModel->setQuery("SELECT id, value, defaultCondition FROM condition ORDER BY value ASC");
 
-    int row = findDefaultValueRow(_partConditionModel, 2);
+    int row = Utils::findDefaultValueRow(_partConditionModel, 2);
     _defaultCondition = _partConditionModel->index(row,0).data(Qt::EditRole);
 
     ui->partConditionCombo->setModel(_partConditionModel);
@@ -295,7 +298,7 @@ void PartDialog::initCombos()
     _partUnitsModel = new QSqlQueryModel();
     _partUnitsModel->setQuery("SELECT id, name, defaultUnit FROM part_unit ORDER BY name ASC");
 
-    row = findDefaultValueRow(_partUnitsModel, 2);
+    row = Utils::findDefaultValueRow(_partUnitsModel, 2);
     _defaultUnit = _partUnitsModel->index(row,0).data(Qt::EditRole);
 
     ui->partUnitCombo->setModel(_partUnitsModel);

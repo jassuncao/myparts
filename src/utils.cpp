@@ -1,6 +1,9 @@
 #include "utils.h"
 #include <QFileInfo>
 #include <QDebug>
+#include <QSqlQueryModel>
+
+namespace Utils {
 
 QString copyFileToDir(const QString &srcPath, const QDir & targetDir)
 {
@@ -36,4 +39,16 @@ QString copyFileToDir(const QString &srcPath, const QDir & targetDir)
         qWarning()<<"Failed to copy file "<<srcPath<<" to "<<targetPath;
         return QString();
     }
+}
+
+int findDefaultValueRow(const QAbstractItemModel *model, int column)
+{
+    QModelIndex start = model->index(0, column);
+    QModelIndexList res = model->match(start, Qt::EditRole, QVariant(1));
+    if(!res.isEmpty())
+        return res.first().row();
+    qWarning("Default value not found");
+    return -1;
+}
+
 }

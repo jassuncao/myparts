@@ -57,7 +57,7 @@ protected slots:
     void slotHideDetailsPane();
 
 private:
-    PartsTableView * createPartsTableView(QAbstractTableModel * tableModel);
+    PartsTableView * createPartsTableView(PartsSqlTableModel *tableModel);
     void duplicatePart(bool allData);
     NavigationSubWidget * _navWidget;
     PartsTableView * _partsTableView;

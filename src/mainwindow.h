@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+class ModelsProvider;
+
 namespace Ui {
 class MainWindow;
 }
@@ -18,10 +20,12 @@ protected:
     void closeEvent(QCloseEvent *event);
 private slots:    
     void slotEditPreferences();
+    void on_actionResistor_triggered();
+
 private:
     void readSettings();
     void writeSettings();
-
+    ModelsProvider * _modelsProvider;
     Ui::MainWindow *ui;
 };
 

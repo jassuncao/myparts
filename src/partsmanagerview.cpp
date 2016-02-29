@@ -8,10 +8,11 @@
 #include "models/storagetreemodel.h"
 #include "widgets/partsfilterwidget.h"
 #include "widgets/qactionpushbutton.h"
-#include "models/partssqltablemodel.h"
+#include "widgets/stockinlinedelegate.h"
 #include "partdialog.h"
 #include "dialogs/addstockdialog.h"
 #include "dialogs/removestockdialog.h"
+#include "models/partssqltablemodel.h"
 #include "models/partsquerybuilder.h"
 #include "models/categorytreemodel.h"
 #include "models/treeitem.h"
@@ -197,12 +198,13 @@ PartsManagerView::~PartsManagerView()
     }
 }
 
-PartsTableView *PartsManagerView::createPartsTableView(QAbstractTableModel * tableModel){
+PartsTableView *PartsManagerView::createPartsTableView(PartsSqlTableModel * tableModel){
     _partsTableView = new PartsTableView(this);
     _partsTableProxyModel->setSourceModel(tableModel);
     _partsTableView->setModel(_partsTableProxyModel);
+    _partsTableView->setItemDelegateForColumn(PartsSqlTableModel::ColumnActualStock, new StockInlineDelegate(tableModel, this));
     //To enable in the future to allow editing stocks in place
-    //_partsTableView->setEditTriggers(QAbstractItemView::DoubleClicked | QAbstractItemView::EditKeyPressed);
+    _partsTableView->setEditTriggers(QAbstractItemView::DoubleClicked | QAbstractItemView::EditKeyPressed | QAbstractItemView::AnyKeyPressed);
     connect(_partsTableView->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
             this, SLOT(slotPartTableCurrentRowChanged(QModelIndex,QModelIndex)));
     connect(_partsTableView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(slotEditPart()));
@@ -313,7 +315,7 @@ void PartsManagerView::slotAddPart()
 void PartsManagerView::slotEditPart()
 {
     QModelIndex index = _partsTableView->currentIndex();
-    if(!index.isValid())
+    if(!index.isValid() || index.column()==PartsSqlTableModel::ColumnActualStock)
         return;   
     PartDialog dlg(_partsModel, _categoriesTreeModel, _storageTreeModel, this);    
     dlg.editPart(_partsTableProxyModel->mapToSource(index));

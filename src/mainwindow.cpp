@@ -9,6 +9,8 @@
 #include "partsmanagerview.h"
 #include "distributorsmanagerview.h"
 #include "editormanagerview.h"
+#include "dialogs/quickaddresistordialog.h"
+#include "models/modelsprovider.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -16,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     readSettings();
+    _modelsProvider = new ModelsProvider(this);
     /*
     QVector<QVariant> headerData(3);
     headerData.append("Name");
@@ -96,4 +99,11 @@ void MainWindow::slotEditPreferences()
 {
     OptionsDialog dlg(this);
     dlg.exec();
+}
+
+void MainWindow::on_actionResistor_triggered()
+{
+    QuickAddResistorDialog * dlg = new QuickAddResistorDialog(_modelsProvider, this);
+    dlg->exec();
+    dlg->deleteLater();
 }

@@ -36,7 +36,7 @@ bool PackageTableModel::insertRowIntoTable(const QSqlRecord &values)
             //nothing to do
         }
         else{
-            QString finalFilename = copyFileToDir(fName, _targetDir);
+            QString finalFilename = Utils::copyFileToDir(fName, _targetDir);
             finalFilename = QString("packages:%1").arg(finalFilename);
             qDebug()<<"Final filename is "<<finalFilename;
             //We need to create a copy due to const
@@ -89,7 +89,7 @@ bool PackageTableModel::updateRowInTable(int row, const QSqlRecord &values)
                 //nothing to do
             }
             else{
-                QString finalFilename = copyFileToDir(fName, _targetDir);
+                QString finalFilename = Utils::copyFileToDir(fName, _targetDir);
                 finalFilename = QString("packages:%1").arg(finalFilename);
                 qDebug()<<"Final filename is "<<finalFilename;
                 //We need to create a copy due to const

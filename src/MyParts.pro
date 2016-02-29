@@ -36,7 +36,6 @@ SOURCES += main.cpp\
     dialogs/removestockdialog.cpp \
     widgets/stockactioncolumndelegate.cpp \
     widgets/qtreebox.cpp \
-    models/partconditionsqltablemodel.cpp \
     widgets/partstoragewidget.cpp \
     dialogs/quickaddstoragedialog.cpp \
     widgets/currencydelegate.cpp \
@@ -81,7 +80,6 @@ SOURCES += main.cpp\
     models/partssqltablemodel.cpp \
     widgets/gridwidget.cpp \
     models/partsquerybuilder.cpp \
-    models/packagetreemodel.cpp \
     models/packagetablemodel.cpp \
     editors/packageeditorwidget.cpp \
     packagemanagerwidget.cpp \
@@ -92,7 +90,13 @@ SOURCES += main.cpp\
     models/partstocktablemodel.cpp \
     models/stocktableformatproxymodel.cpp \
     widgets/elidinglabel.cpp \
-    models/partstableproxymodel.cpp
+    models/partstableproxymodel.cpp \
+    widgets/stockinlinedelegate.cpp \
+    dialogs/quickaddresistordialog.cpp \
+    widgets/colorbandcombobox.cpp \
+    models/modelsprovider.cpp \
+    models/partunitsreadonlymodel.cpp \
+    models/partconditionmodel.cpp
 
 HEADERS  += mainwindow.h \
     entities/entities.h \
@@ -112,7 +116,6 @@ HEADERS  += mainwindow.h \
     dialogs/removestockdialog.h \
     widgets/stockactioncolumndelegate.h \
     widgets/qtreebox.h \
-    models/partconditionsqltablemodel.h \
     widgets/partstoragewidget.h \
     dialogs/quickaddstoragedialog.h \
     widgets/currencydelegate.h \
@@ -158,7 +161,6 @@ HEADERS  += mainwindow.h \
     widgets/gridwidget.h \
     models/partsquerybuilder.h \
     models/packagetablemodel.h \
-    models/packagetreemodel.h \
     editors/packageeditorwidget.h \
     packagemanagerwidget.h \
     widgets/extendedtableview.h \
@@ -168,7 +170,13 @@ HEADERS  += mainwindow.h \
     models/partstocktablemodel.h \
     models/stocktableformatproxymodel.h \
     widgets/elidinglabel.h \
-    models/partstableproxymodel.h
+    models/partstableproxymodel.h \
+    widgets/stockinlinedelegate.h \
+    dialogs/quickaddresistordialog.h \
+    widgets/colorbandcombobox.h \
+    models/modelsprovider.h \
+    models/partunitsreadonlymodel.h \
+    models/partconditionmodel.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \
@@ -181,7 +189,8 @@ FORMS    += mainwindow.ui \
     testform1.ui \
     dialogs/attachmentselectiondialog.ui \
     testform2.ui \
-    optionsdialog.ui
+    optionsdialog.ui \
+    dialogs/quickaddresistordialog.ui
 
 RESOURCES += \
     resources.qrc
