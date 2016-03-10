@@ -3,6 +3,8 @@
 #include "widgets/parametervaluevalidator.h"
 #include "models/modelsprovider.h"
 #include "models/categorytreemodel.h"
+#include "models/storagetreemodel.h"
+#include "models/partconditionmodel.h"
 
 #include <QStyledItemDelegate>
 #include <QPainter>
@@ -23,26 +25,35 @@ QuickAddResistorDialog::QuickAddResistorDialog(ModelsProvider * modelsProvider, 
     QDialog(parent),
     ui(new Ui::QuickAddResistorDialog)
 {
+    ui->setupUi(this);
 
+    ui->resistorValueLineEdit->setValidator(new ParameterValueValidator(this));
+    ui->partCategoryComboBox->setModel(modelsProvider->partCategoryModel());        
     ui->partCategoryComboBox->setMinimumContentsLength(22);
     ui->partCategoryComboBox->setMaxVisibleItems(40);
-    ui->resistorValueLineEdit->setValidator(new ParameterValueValidator(this));
-    ui->partCategoryComboBox->setModel(modelsProvider->partCategoryModel());
 
-    ui->partStorageComboBox->setModel(storageModel);
-
+    ui->partStorageComboBox->setModel(modelsProvider->storageTreeModel());
     ui->partConditionComboBox->setModel(modelsProvider->partConditionModel());
+    ui->partConditionComboBox->setModelKeyColumn(PartConditionModel::ColumnId);
+    ui->partConditionComboBox->setModelColumn(PartConditionModel::ColumnValue);
+    int defaultConditionRow = modelsProvider->partConditionModel()->findDefaultValueRow();
+    if(defaultConditionRow>=0)
+        ui->partConditionComboBox->setCurrentIndex(defaultConditionRow);
 
+
+
+
+
+    /*
 
     _partConditionModel = new QSqlQueryModel();
     _partConditionModel->setQuery("SELECT id, value, defaultCondition FROM condition ORDER BY value ASC");
 
     int row = findDefaultValueRow(_partConditionModel, 2);
     _defaultCondition = _partConditionModel->index(row,0).data(Qt::EditRole);
+    */
 
-    ui->partConditionComboBox->setModel(_partConditionModel);
-    ui->partConditionComboBox->setModelKeyColumn(0);
-    ui->partConditionComboBox->setModelColumn(1);
+
 
     QStandardItemModel * digitsBandsModel = new QStandardItemModel(11,1);
     digitsBandsModel->setItem(0,0, newColorItem(tr("None"), QColor(Qt::transparent), Qt::Key_Backspace));
@@ -80,7 +91,6 @@ QuickAddResistorDialog::QuickAddResistorDialog(ModelsProvider * modelsProvider, 
     toleranceBandsModel->setItem(6,0, newColorItem(tr("Gold"), QColor("gold"), Qt::Key_J));
     toleranceBandsModel->setItem(7,0, newColorItem(tr("Silver"), QColor("silver"), Qt::Key_K));
 
-    ui->setupUi(this);
     ui->band1ComboBox->setModel(digitsBandsModel);
     ui->band2ComboBox->setModel(digitsBandsModel);
     ui->band3ComboBox->setModel(digitsBandsModel);

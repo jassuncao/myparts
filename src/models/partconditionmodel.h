@@ -6,16 +6,19 @@
 class PartConditionModel : public SimpleSqlTableModel
 {
 public:
-    enum ColumnsIndex {
-        ColumnId = 0,
+    enum ColumnsIndex {        
+        ColumnDefault,
         ColumnValue,
-        ColumnDefault
+        ColumnDescription,
+        ColumnId,
     };
 
-    explicit PartConditionModel(const QStringList &fieldNames, const QStringList &columnNames, QObject *parent = 0);
     void makeSelectedItemDefault(const int selectedRow);
     int findDefaultValueRow() const;
 
+    static PartConditionModel * createNew(QObject *parent);
+protected:
+    explicit PartConditionModel(const QStringList &fieldNames, const QStringList &columnNames, QObject *parent = 0);
 };
 
 #endif // PARTCONDITIONMODEL_H

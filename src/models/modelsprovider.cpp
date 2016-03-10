@@ -5,6 +5,8 @@
 #include "models/partstocktablemodel.h"
 #include "models/categorytreemodel.h"
 #include "models/customtablemodel.h"
+#include "models/partsquerybuilder.h"
+#include "models/partconditionmodel.h"
 #include <QSqlQueryModel>
 
 ModelsProvider::ModelsProvider(QObject *parent) : QObject(parent)
@@ -15,35 +17,36 @@ ModelsProvider::ModelsProvider(QObject *parent) : QObject(parent)
 
     _categoriesModel = new CategoryTreeModel(this);
     _storageModel = new StorageTreeModel(this);
+    _partConditionModel = PartConditionModel::createNew(this);
 
 }
 
-virtual ModelsProvider::~ModelsProvider()
+ModelsProvider::~ModelsProvider()
 {
     delete _partsQueryBuilder;
 }
 
-CategoryTreeModel partCategoryModel() const
+CategoryTreeModel * ModelsProvider::partCategoryModel() const
 {
     return _categoriesModel;
 }
 
-void ModelsProvider::initModels()
+StorageTreeModel * ModelsProvider::storageTreeModel() const
 {
-    setupPartConditionModel();
+    return _storageModel;
+}
+
+PartConditionModel * ModelsProvider::partConditionModel() const
+{
+    return _partConditionModel;
+}
+
+void ModelsProvider::initModels()
+{    
     _storageModel->select();
     _categoriesModel->select();
+    _partConditionModel->select();
 
 }
-
-void ModelsProvider::setupPartConditionModel()
-{
-    QStringList fieldNames;
-    QStringList columnNames;
-    fieldNames<<QLatin1String("defaultCondition")<<QLatin1String("value")<<QLatin1String("Description");
-    columnNames<<QString()<<tr("Name")<<tr("Description");
-    _partConditionModel = new SimpleSqlTableModel("condition", fieldNames, columnNames, QString(), this);
-}
-
 
 

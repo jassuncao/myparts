@@ -7,7 +7,7 @@ class CategoryTreeModel;
 class StorageTreeModel;
 class PartsSqlTableModel;
 class PartsQueryBuilder;
-class SimpleSqlTableModel;
+class PartConditionModel;
 
 class ModelsProvider : public QObject
 {
@@ -16,8 +16,9 @@ public:
     explicit ModelsProvider(QObject *parent = 0);
     virtual ~ModelsProvider();
     void initModels();
-    void setupPartConditionModel();
-    CategoryTreeModel partCategoryModel() const;
+    CategoryTreeModel * partCategoryModel() const;
+    StorageTreeModel * storageTreeModel() const;
+    PartConditionModel *partConditionModel() const;
 signals:
 
 public slots:
@@ -26,7 +27,7 @@ private:
     StorageTreeModel * _storageModel;
     PartsSqlTableModel * _partsModel;
     PartsQueryBuilder * _partsQueryBuilder;
-    SimpleSqlTableModel * _partConditionModel;
+    PartConditionModel * _partConditionModel;
 };
 
 #endif // MODELSPROVIDER_H

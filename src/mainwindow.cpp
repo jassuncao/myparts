@@ -19,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     readSettings();
     _modelsProvider = new ModelsProvider(this);
+    _modelsProvider->initModels();
     /*
     QVector<QVariant> headerData(3);
     headerData.append("Name");
@@ -97,7 +98,7 @@ void MainWindow::writeSettings()
 
 void MainWindow::slotEditPreferences()
 {
-    OptionsDialog dlg(this);
+    OptionsDialog dlg(_modelsProvider, this);
     dlg.exec();
 }
 

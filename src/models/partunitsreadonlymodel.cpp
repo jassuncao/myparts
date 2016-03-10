@@ -1,7 +1,7 @@
 #include "partunitsreadonlymodel.h"
 #include "../utils.h"
 
-PartUnitsReadOnlyModel::PartUnitsReadOnlyModel() :
+PartUnitsReadOnlyModel::PartUnitsReadOnlyModel(QObject *parent) :
     QSqlQueryModel(parent)
 {
     setQuery("SELECT id, name, defaultUnit FROM part_unit ORDER BY name ASC");

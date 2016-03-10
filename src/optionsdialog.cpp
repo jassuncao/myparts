@@ -2,17 +2,19 @@
 #include "ui_optionsdialog.h"
 #include "widgets/booleanitemdelegate.h"
 #include "models/customtablemodel.h"
+#include "models/partconditionmodel.h"
+#include "models/modelsprovider.h"
 #include "widgets/validatingitemdelegate.h"
 #include "constants.h"
 #include <QDebug>
 #include <QSettings>
 
 const int COLUMN_UNIT_DEFAULT = 0;
-const int COLUMN_CONDITION_DEFAULT = 0;
+//const int COLUMN_CONDITION_DEFAULT = 0;
 
-OptionsDialog::OptionsDialog(QWidget *parent) :
+OptionsDialog::OptionsDialog(ModelsProvider * provider, QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::OptionsDialog)
+    ui(new Ui::OptionsDialog), _modelsProvider(provider)
 {
     ui->setupUi(this);    
     ui->buttonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
@@ -70,18 +72,15 @@ void OptionsDialog::setupPartConditionModel()
 {
     BooleanItemDelegate * defaultValueDelegate = new BooleanItemDelegate(QPixmap(":icons/default"),QPixmap(), this);
 
-    QStringList fieldNames;
-    fieldNames<<QLatin1String("defaultCondition")<<QLatin1String("value")<<QLatin1String("Description");
-    QStringList columnNames;
-    columnNames<<QString()<<tr("Name")<<tr("Description");
-    _partConditionModel = new SimpleSqlTableModel("condition", fieldNames, columnNames, QString(), this);
+    //_partConditionModel = new SimpleSqlTableModel("condition", fieldNames, columnNames, QString(), this);
+    _partConditionModel = _modelsProvider->partConditionModel();
     ui->partConditionTableView->setModel(_partConditionModel);
-    ui->partConditionTableView->setItemDelegateForColumn(COLUMN_CONDITION_DEFAULT, defaultValueDelegate);
-    ui->partConditionTableView->setColumnWidth(COLUMN_CONDITION_DEFAULT, defaultValueDelegate->widthHint());
+    ui->partConditionTableView->setItemDelegateForColumn(PartConditionModel::ColumnDefault, defaultValueDelegate);
+    ui->partConditionTableView->setColumnWidth(PartConditionModel::ColumnDefault, defaultValueDelegate->widthHint());
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
     ui->partConditionTableView->horizontalHeader()->setSectionResizeMode(COLUMN_CONDITION_DEFAULT, QHeaderView::Fixed);
 #else
-    ui->partConditionTableView->horizontalHeader()->setResizeMode(COLUMN_CONDITION_DEFAULT, QHeaderView::Fixed);
+    ui->partConditionTableView->horizontalHeader()->setResizeMode(PartConditionModel::ColumnDefault, QHeaderView::Fixed);
 #endif
     _partConditionModel->select();
 }
@@ -305,14 +304,15 @@ void OptionsDialog::slotMakeCurrentConditionDefault()
     QModelIndex currentIndex = ui->partConditionTableView->currentIndex();
     if(!currentIndex.isValid())
         return;
-
-    makeSelectedItemDefault(_partConditionModel, currentIndex.row(), COLUMN_CONDITION_DEFAULT);
+    _partConditionModel->makeSelectedItemDefault(currentIndex.row());
+    //makeSelectedItemDefault(_partConditionModel, currentIndex.row(), COLUMN_CONDITION_DEFAULT);
 }
 
 void OptionsDialog::slotConditionDoubleClick(const QModelIndex &index)
 {
-    if(index.isValid() && index.column() == COLUMN_CONDITION_DEFAULT){
-        makeSelectedItemDefault(_partConditionModel, index.row(), COLUMN_CONDITION_DEFAULT);
+    if(index.isValid() && index.column() == PartConditionModel::ColumnDefault){
+        _partConditionModel->makeSelectedItemDefault(index.row());
+        //makeSelectedItemDefault(_partConditionModel, index.row(), COLUMN_CONDITION_DEFAULT);
     }
 }
 
