@@ -28,32 +28,21 @@ QuickAddResistorDialog::QuickAddResistorDialog(ModelsProvider * modelsProvider, 
     ui->setupUi(this);
 
     ui->resistorValueLineEdit->setValidator(new ParameterValueValidator(this));
+    ui->resistorPowerComboBox->setValidator(new ParameterValueValidator(this));
     ui->partCategoryComboBox->setModel(modelsProvider->partCategoryModel());        
     ui->partCategoryComboBox->setMinimumContentsLength(22);
-    ui->partCategoryComboBox->setMaxVisibleItems(40);
+    ui->partCategoryComboBox->setMaxVisibleItems(20);
 
     ui->partStorageComboBox->setModel(modelsProvider->storageTreeModel());
+    ui->partStorageComboBox->setMinimumContentsLength(22);
+    ui->partStorageComboBox->setMaxVisibleItems(20);
+
     ui->partConditionComboBox->setModel(modelsProvider->partConditionModel());
     ui->partConditionComboBox->setModelKeyColumn(PartConditionModel::ColumnId);
     ui->partConditionComboBox->setModelColumn(PartConditionModel::ColumnValue);
     int defaultConditionRow = modelsProvider->partConditionModel()->findDefaultValueRow();
-    if(defaultConditionRow>=0)
-        ui->partConditionComboBox->setCurrentIndex(defaultConditionRow);
-
-
-
-
-
-    /*
-
-    _partConditionModel = new QSqlQueryModel();
-    _partConditionModel->setQuery("SELECT id, value, defaultCondition FROM condition ORDER BY value ASC");
-
-    int row = findDefaultValueRow(_partConditionModel, 2);
-    _defaultCondition = _partConditionModel->index(row,0).data(Qt::EditRole);
-    */
-
-
+    ui->partConditionComboBox->setCurrentIndex(defaultConditionRow);
+    //if(defaultConditionRow>=0)
 
     QStandardItemModel * digitsBandsModel = new QStandardItemModel(11,1);
     digitsBandsModel->setItem(0,0, newColorItem(tr("None"), QColor(Qt::transparent), Qt::Key_Backspace));

@@ -78,7 +78,7 @@ void OptionsDialog::setupPartConditionModel()
     ui->partConditionTableView->setItemDelegateForColumn(PartConditionModel::ColumnDefault, defaultValueDelegate);
     ui->partConditionTableView->setColumnWidth(PartConditionModel::ColumnDefault, defaultValueDelegate->widthHint());
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
-    ui->partConditionTableView->horizontalHeader()->setSectionResizeMode(COLUMN_CONDITION_DEFAULT, QHeaderView::Fixed);
+    ui->partConditionTableView->horizontalHeader()->setSectionResizeMode(PartConditionModel::ColumnDefault, QHeaderView::Fixed);
 #else
     ui->partConditionTableView->horizontalHeader()->setResizeMode(PartConditionModel::ColumnDefault, QHeaderView::Fixed);
 #endif

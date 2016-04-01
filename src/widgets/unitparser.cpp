@@ -121,7 +121,7 @@ double UnitParser::parseUnit(const QString& input, bool * ok)
         }
      }
      QString aux(buff);
-     double value = aux.toDouble(ok);
+     double value = locale.toDouble(aux, ok);
 
      if(prefixIdx>=0){
          value*=SI_EXPONENTIALS[prefixIdx];

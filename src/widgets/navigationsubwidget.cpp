@@ -176,7 +176,11 @@ void TreeNavigator::setModel(TreeItemModel *model)
     }
     _model = model;
     _treeView->setModel(model);
+#if QT_VERSION >= 0x050000
+    _treeView->header()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
+#else
     _treeView->header()->setResizeMode(0, QHeaderView::ResizeToContents);
+#endif
     _treeView->header()->setStretchLastSection(false);
     connect(_treeView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
             this, SLOT(slotCurrentChanged(QModelIndex,QModelIndex)));

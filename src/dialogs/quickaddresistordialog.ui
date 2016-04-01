@@ -89,7 +89,7 @@
       </widget>
      </item>
      <item row="5" column="1">
-      <widget class="QComboBox" name="resistorPoweComboBox">
+      <widget class="QComboBox" name="resistorPowerComboBox">
        <property name="editable">
         <bool>true</bool>
        </property>
@@ -113,7 +113,7 @@
       </widget>
      </item>
      <item row="8" column="1">
-      <widget class="QComboBox" name="partStorageComboBox"/>
+      <widget class="TreeViewComboBox" name="partStorageComboBox"/>
      </item>
      <item row="9" column="0">
       <widget class="QLabel" name="label_6">
