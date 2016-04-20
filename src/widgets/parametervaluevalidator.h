@@ -11,6 +11,9 @@ public:
     ParameterValueValidator(QObject * parent=0);
     ~ParameterValueValidator();
     virtual QValidator::State validate(QString & input, int &) const;
+    void setUnit(const QString& unit);
+private:
+    QString _unit;
 };
 
 

@@ -11,12 +11,22 @@ ParameterValueValidator::~ParameterValueValidator()
 
 }
 
+void ParameterValueValidator::setUnit(const QString& unit)
+{
+    _unit = unit;
+}
+
 QValidator::State ParameterValueValidator::validate(QString & input, int &) const
 {
     bool ok=false;
     if(input.isEmpty())
         return QValidator::Intermediate;
-    UnitParser::parseUnit(input, &ok);
+    if(_unit.isEmpty()){
+        UnitParser::parseUnit(input, &ok);
+    }
+    else{
+        UnitParser::parseUnit(input, _unit, &ok);
+    }
     return ok ? QValidator::Acceptable : QValidator::Invalid;
 /*
     QByteArray buff;

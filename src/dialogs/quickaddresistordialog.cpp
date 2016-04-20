@@ -27,8 +27,10 @@ QuickAddResistorDialog::QuickAddResistorDialog(ModelsProvider * modelsProvider, 
 {
     ui->setupUi(this);
 
+    ParameterValueValidator* powerValidator = new ParameterValueValidator(this);
+    powerValidator->setUnit(QString("W"));
     ui->resistorValueLineEdit->setValidator(new ParameterValueValidator(this));
-    ui->resistorPowerComboBox->setValidator(new ParameterValueValidator(this));
+    ui->resistorPowerComboBox->setValidator(powerValidator);
     ui->partCategoryComboBox->setModel(modelsProvider->partCategoryModel());        
     ui->partCategoryComboBox->setMinimumContentsLength(22);
     ui->partCategoryComboBox->setMaxVisibleItems(20);

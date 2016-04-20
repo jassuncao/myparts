@@ -77,7 +77,7 @@ double UnitParser::parseUnit(const QString& input, bool * ok)
 #else
              buff.append(c.toAscii());
 #endif
-         }
+         }         
          else if(c.isLetter() && prefixIdx<0){
             prefixIdx = findSIPrefix(c.unicode());
             if(prefixIdx<0){//Invalid char found
@@ -126,6 +126,112 @@ double UnitParser::parseUnit(const QString& input, bool * ok)
      if(prefixIdx>=0){
          value*=SI_EXPONENTIALS[prefixIdx];
      }   
+     return value;
+}
+
+bool matchesUnit(const QString& input, int position, const QString& unit)
+{
+    QString aux = input.mid(position, unit.length());
+    return aux.startsWith(unit);
+}
+
+inline char to_char(QChar c){
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
+    return c.toLatin1();
+#else
+    return c.toAscii();
+#endif
+
+}
+
+//TODO: Handle expressions like 1/4
+double UnitParser::parseUnit(const QString& input, const QString& unit, bool * ok)
+{
+     QByteArray buff;
+     buff.reserve(input.length());
+     //QVarLengthArray<QChar, 16> charBuff(input.length());
+     int idx = 0;
+     int prefixIdx = -1;
+     QLocale locale;
+     QChar decimalPoint = locale.decimalPoint();
+     bool decimalPointFound = false;
+
+     int inputLen = input.length();
+     //Skip white spaces
+     while (idx < inputLen && input.at(idx).isSpace())
+         ++idx;
+
+     while(idx<inputLen){
+         const QChar c = input.at(idx);
+         if(c.isDigit()){
+             buff.append(to_char(c));
+         }
+         else if(c.isLetter()) {
+             if(prefixIdx>=0){
+                 //We already have the prefix so the only accepted input is the unit
+                 if(matchesUnit(input, idx, unit)){
+                     idx+=unit.length();
+                     break;
+                 }
+                 else{
+                     if(ok!=0)
+                         *ok=false;
+                     return 0;
+                 }
+             }
+             else{
+                 //We check if it is a valid SI prefix
+                 prefixIdx = findSIPrefix(c.unicode());
+                 if(prefixIdx>=0){
+                     //It is valid. Use it as decimal point if we didn't found one yet
+                     if(!decimalPointFound){
+                         decimalPointFound = true;
+                         buff.append(to_char(decimalPoint));
+                     }
+                 }
+                 else{
+                     //Not a valid SI prefix. Check if it matches the unit
+                     if(matchesUnit(input, idx, unit)){
+                         idx+=unit.length();
+                         break;
+                     }
+                     else{
+                         if(ok!=0)
+                             *ok=false;
+                         return 0;
+                     }
+                 }
+             }
+
+         }
+         else if(c==decimalPoint && !decimalPointFound){
+             decimalPointFound = true;
+             buff.append(to_char(c));
+         }
+         else{
+             //Found something else.
+             //Check if it is a white space in the next
+             break;
+         }
+         ++idx;
+     }
+
+     //Check if the remaining chars are white spaces
+     //Something else is considered invalid input
+     for (; idx < inputLen; ++idx) {
+        const QChar c = input.at(idx);
+        if (!c.isSpace()){
+            if(ok!=0)
+                *ok=false;
+            return 0;
+        }
+     }
+     QString aux(buff);
+     double value = locale.toDouble(aux, ok);
+
+     if(prefixIdx>=0){
+         value*=SI_EXPONENTIALS[prefixIdx];
+     }
      return value;
 }
 
