@@ -20,7 +20,7 @@ public:
 
    static QString format(double value);
    static QString format(double value, QChar unit);
-   static QString formatPercentage(double value, QChar unit);
+   static QString formatPercentage(double value, QChar unit=0);
 
 };
 

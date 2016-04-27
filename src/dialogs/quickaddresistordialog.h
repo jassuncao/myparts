@@ -19,7 +19,10 @@ public:
     explicit QuickAddResistorDialog(ModelsProvider *modelsProvider, QWidget *parent = 0);
     ~QuickAddResistorDialog();
 protected slots:
-    void slotChangeColor(int index);
+    void slotBandChanged(int);
+    void slotToleranceBandChanged(int);
+    void slotFiveBandToggled(bool checked);
+    void slotReset();
 private:
     Ui::QuickAddResistorDialog *ui;
 };

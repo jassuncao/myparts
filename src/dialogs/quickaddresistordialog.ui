@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>600</width>
-    <height>325</height>
+    <height>353</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -72,19 +72,12 @@
       </widget>
      </item>
      <item row="4" column="1">
-      <widget class="QLineEdit" name="resistorValueLineEdit">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-      </widget>
+      <widget class="QLineEdit" name="resistorValueLineEdit"/>
      </item>
      <item row="5" column="0">
       <widget class="QLabel" name="label_3">
        <property name="text">
-        <string>Power</string>
+        <string>Power:</string>
        </property>
       </widget>
      </item>
@@ -95,34 +88,34 @@
        </property>
       </widget>
      </item>
-     <item row="7" column="0">
+     <item row="8" column="0">
       <widget class="QLabel" name="label_4">
        <property name="text">
         <string>Category:</string>
        </property>
       </widget>
      </item>
-     <item row="7" column="1">
+     <item row="8" column="1">
       <widget class="TreeViewComboBox" name="partCategoryComboBox"/>
      </item>
-     <item row="8" column="0">
+     <item row="9" column="0">
       <widget class="QLabel" name="label_5">
        <property name="text">
         <string>Storage:</string>
        </property>
       </widget>
      </item>
-     <item row="8" column="1">
+     <item row="9" column="1">
       <widget class="TreeViewComboBox" name="partStorageComboBox"/>
      </item>
-     <item row="9" column="0">
+     <item row="10" column="0">
       <widget class="QLabel" name="label_6">
        <property name="text">
         <string>Condition:</string>
        </property>
       </widget>
      </item>
-     <item row="9" column="1">
+     <item row="10" column="1">
       <widget class="RelationalComboBox" name="partConditionComboBox"/>
      </item>
      <item row="1" column="0">
@@ -206,15 +199,25 @@
        </layout>
       </widget>
      </item>
-     <item row="6" column="1">
+     <item row="7" column="1">
       <widget class="QSpinBox" name="quantitySpinBox"/>
      </item>
-     <item row="6" column="0">
+     <item row="7" column="0">
       <widget class="QLabel" name="label_8">
        <property name="text">
         <string>Quantity:</string>
        </property>
       </widget>
+     </item>
+     <item row="6" column="0">
+      <widget class="QLabel" name="label_9">
+       <property name="text">
+        <string>Tolerance:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="1">
+      <widget class="QLineEdit" name="toleranceLineEdit"/>
      </item>
     </layout>
    </item>
@@ -275,8 +278,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>257</x>
-     <y>291</y>
+     <x>275</x>
+     <y>343</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -291,28 +294,12 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>325</x>
-     <y>291</y>
+     <x>343</x>
+     <y>343</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>
      <y>274</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>fiveBandRadioButton</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>band3ComboBox</receiver>
-   <slot>setVisible(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>258</x>
-     <y>24</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>358</x>
-     <y>80</y>
     </hint>
    </hints>
   </connection>

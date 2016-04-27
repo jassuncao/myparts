@@ -8,7 +8,8 @@ class ColorBandComboBox : public QComboBox
     Q_OBJECT
 public:
 
-    static const int ShortcutRole = Qt::UserRole+1;
+    static const int ValueRole = Qt::UserRole+1;
+    static const int ShortcutRole = Qt::UserRole+2;
 
     explicit ColorBandComboBox(QWidget *parent = 0);    
 protected:
