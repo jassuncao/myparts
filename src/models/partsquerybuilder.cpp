@@ -385,7 +385,6 @@ PartsQueryBuilder::PartsQueryBuilder() :
     _criterions[FilterByText] = new TextCriterion();
     _criterions[FilterByCategory] = new NodeCriterion("part.category");
     _criterions[FilterByStorage] = new NodeCriterion("part.storage");
-
 }
 
 PartsQueryBuilder::~PartsQueryBuilder()

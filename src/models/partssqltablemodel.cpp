@@ -34,6 +34,11 @@ PartsSqlTableModel::~PartsSqlTableModel()
 {
 }
 
+PartsQueryBuilder * PartsSqlTableModel::queryBuilder() const
+{
+    return _partsQueryBuilder;
+}
+
 void PartsSqlTableModel::setColumnName(int section, const QString & columnLabel)
 {
     setHeaderData(section, Qt::Horizontal, columnLabel, Qt::EditRole);

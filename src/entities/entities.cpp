@@ -1,4 +1,5 @@
 #include "entities.h"
+
 #include <dquest.h>
 
 namespace Entities {
@@ -159,14 +160,53 @@ DQSharedList SiPrefix::initialData() const
     return initialData;
 }
 
+#define TR(S) qApp->translate("Units",S)
 
 DQSharedList Unit::initialData() const
 {
-    DQList<Entities::Unit> initialData;
-    DQListWriter writer(&initialData);
-    writer << "Volt" <<  "V"
-           << "Ampere" << "A"
-           << "Ohm" << "R";
+    DQList<Entities::Unit> initialData;    
+
+    Entities::Unit voltage;
+    voltage.id.set(VOLTAGE);
+    voltage.name.set(TR("Voltage"));
+    voltage.symbol.set("V");
+    initialData.append(voltage);
+
+    Entities::Unit current;
+    current.id.set(CURRENT);
+    current.name.set(TR("Current"));
+    current.symbol.set("A");
+    initialData.append(current);
+
+    Entities::Unit resistance;
+    resistance.id.set(RESISTANCE);
+    resistance.name.set(TR("Resistance"));
+    resistance.symbol.set(QString(QChar(0x2126)));
+    initialData.append(resistance);
+
+    Entities::Unit capacitance;
+    capacitance.id.set(CAPACITANCE);
+    capacitance.name.set(TR("Capacitance"));
+    capacitance.symbol.set("F");
+    initialData.append(capacitance);
+
+    Entities::Unit power;
+    power.id.set(POWER);
+    power.name.set(TR("Power"));
+    power.symbol.set("W");
+    initialData.append(power);
+
+    Entities::Unit frequency;
+    frequency.id.set(FREQUENCY);
+    frequency.name.set(TR("Frequency"));
+    frequency.symbol.set("Hz");
+    initialData.append(frequency);
+
+    Entities::Unit tolerance;
+    tolerance.id.set(TOLERANCE);
+    tolerance.name.set(TR("Tolerance"));
+    tolerance.symbol.set("%");
+    initialData.append(tolerance);
 
     return initialData;
 }

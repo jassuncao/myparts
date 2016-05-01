@@ -19,8 +19,8 @@ public:
    const static QChar percentage;
 
    static QString format(double value);
-   static QString format(double value, QChar unit);
-   static QString formatPercentage(double value, QChar unit=0);
+   static QString format(double value, QString unit);
+   static QString formatPercentage(double value, QString unit=0);
 
 };
 

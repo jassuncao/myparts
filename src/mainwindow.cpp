@@ -31,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent) :
     EditorManagerView * manufacturersView = new EditorManagerView(new ManufacturerManagerHelper, this);
     EditorManagerView * packageView = new EditorManagerView(new PackageManagerHelper, this);    
 
-    ui->centralWidget->insertTab(0,new PartsManagerView(this), QIcon(QString::fromUtf8(":/largeIcons/page_parts")), tr("Parts"));
+    ui->centralWidget->insertTab(0,new PartsManagerView(_modelsProvider, this), QIcon(QString::fromUtf8(":/largeIcons/page_parts")), tr("Parts"));
     ui->centralWidget->setTabEnabled(0, true);
 
     ui->centralWidget->insertTab(1, distributorsView, QIcon(QString::fromUtf8(":/largeIcons/options_distributors")), tr("Distributors"));

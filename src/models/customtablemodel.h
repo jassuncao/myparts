@@ -237,6 +237,7 @@ public:
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     inline void setCurrentPartId(const QVariant & partId) { setCurrentForeignKey(partId); }
+    bool appendParameter(const QString& name, const double value, const int unitId);
 
     static PartParametersTableModel3 * createNew(QObject *parent);
 protected:

@@ -5,6 +5,16 @@
 
 namespace Entities {
 
+enum StandardUnit{
+    VOLTAGE=1,
+    CURRENT=2,
+    RESISTANCE=3,
+    CAPACITANCE=4,
+    POWER=5,
+    FREQUENCY=6,
+    TOLERANCE=7
+};
+
 class PartUnitEntity : public DQModel
 {
     DQ_MODEL

@@ -17,6 +17,7 @@
 #include "models/categorytreemodel.h"
 #include "models/treeitem.h"
 #include "models/partstableproxymodel.h"
+#include "models/modelsprovider.h"
 
 #include <QHBoxLayout>
 #include <QPushButton>
@@ -55,34 +56,41 @@ void debugLayout(QString tab, QLayoutItem * item){
     }
 }
 
-PartsManagerView::PartsManagerView(QWidget *parent)
-    : MiniSplitter(parent)      
+PartsManagerView::PartsManagerView(ModelsProvider * modelsProvider, QWidget *parent)
+    : MiniSplitter(parent),
+      _modelsProvider(modelsProvider)
 {
+    /*
     _partsQueryBuilder = new PartsQueryBuilder();
     _partsModel = new PartsSqlTableModel(_partsQueryBuilder, this);
     _partsModel->setEditStrategy(QSqlTableModel::OnManualSubmit);        
     connect(_partsModel, SIGNAL(beforeSubmit()), this, SLOT(slotBeforeSubmit()));
     connect(_partsModel, SIGNAL(afterSubmit()), this, SLOT(slotAfterSubmit()));
 
-    _partsTableProxyModel = new PartsTableProxyModel(this);
-
     _categoriesTreeModel = new CategoryTreeModel(this);
-    _categoriesTreeModel->select();    
+    _categoriesTreeModel->select();
 
     _storageTreeModel = new StorageTreeModel(this);
     _storageTreeModel->select();
+*/
+
+    _partsTableProxyModel = new PartsTableProxyModel(this);
+    PartsSqlTableModel * partsModel = _modelsProvider->partsModel();
+    _partsTableProxyModel->setSourceModel(partsModel);
 
     _navWidget = new NavigationSubWidget(this);    
 
     _categoryNavigator = new CategoryNavigator(_navWidget);
     _categoryNavigator->setObjectName("CategoryNavigator");
-    _categoryNavigator->setModel(_categoriesTreeModel);
+    _categoryNavigator->setModel(_modelsProvider->partCategoryModel());
+
     connect(_categoryNavigator, SIGNAL(selectionChanged(QList<int>)), this, SLOT(slotSelectedCategoryChanged(QList<int>)));
     _navWidget->addNavigator(_categoryNavigator);    
 
     _storageNavigator = new StorageNavigator(_navWidget);
     _storageNavigator->setObjectName("StorageNavigator");
-    _storageNavigator->setModel(_storageTreeModel);
+    _storageNavigator->setModel(_modelsProvider->partStorageModel());
+
     connect(_storageNavigator, SIGNAL(selectionChanged(QList<int>)), this, SLOT(slotSelectedStorageChanged(QList<int>)));
     _navWidget->addNavigator(_storageNavigator);
     _navWidget->setCurrentNavigator(0);
@@ -126,9 +134,10 @@ PartsManagerView::PartsManagerView(QWidget *parent)
     hLine->setFrameShadow(QFrame::Sunken);
 
     _partsFilterWidget = new PartsFilterWidget(this);
-    _partsFilterWidget->setPartsQueryBuilder(_partsQueryBuilder);
+    _partsFilterWidget->setPartsQueryBuilder(partsModel->queryBuilder());
 
-    _partsTableView = createPartsTableView(_partsModel);
+    _partsTableView = new PartsTableView(this);
+
     QVBoxLayout * centerLayout = new QVBoxLayout;
     centerLayout->setMargin(0);
     centerLayout->setSpacing(0);
@@ -142,7 +151,7 @@ PartsManagerView::PartsManagerView(QWidget *parent)
     centerPane->setLayout(centerLayout);
 
     _partDetailsView = new PartDetailsView(this);
-    _partDetailsView->setPartsModel(_partsModel);    
+    _partDetailsView->setPartsModel(partsModel);
 
     _hideDetailsPaneButton = new QToolButton;
     _hideDetailsPaneButton->setIcon(QIcon(QLatin1String(":/icons/splitbutton_closeright")));
@@ -174,10 +183,7 @@ PartsManagerView::PartsManagerView(QWidget *parent)
     connect(addPartButton, SIGNAL(clicked()), this, SLOT(slotAddPart()));
     connect(_deletePartButton, SIGNAL(clicked()), this, SLOT(slotDeletePart()));    
     connect(_partsFilterWidget, SIGNAL(filterChanged()), this, SLOT(slotFilterChanged()));    
-    connect(_partDetailsView, SIGNAL(editPartSelected()), this, SLOT(slotEditPart()));
-    connect(_categoriesTreeModel, SIGNAL(partsDropped(QVector<int>,TreeItem*)), this, SLOT(slotPartsDroppedInCategory(QVector<int>,TreeItem*)));
-    connect(_storageTreeModel, SIGNAL(partsDropped(QVector<int>,TreeItem*)), this, SLOT(slotPartsDroppedInStorage(QVector<int>,TreeItem*)));
-
+    connect(_partDetailsView, SIGNAL(editPartSelected()), this, SLOT(slotEditPart()));    
     connect(_hideDetailsPaneButton, SIGNAL(clicked(bool)), this, SLOT(slotHideDetailsPane()));
     connect(_showDetailsPaneButton, SIGNAL(clicked(bool)), this, SLOT(slotShowDetailsPane()));
 /*
@@ -189,27 +195,39 @@ PartsManagerView::PartsManagerView(QWidget *parent)
     */
     _navWidget->setMinimumWidth(_navWidget->minimumSizeHint().width());
     _navWidget->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+    initModels();
+    initPartsTableView();
 }
 
 PartsManagerView::~PartsManagerView()
-{
-    if(_partsQueryBuilder){
-        delete _partsQueryBuilder;        
-    }
+{    
 }
 
-PartsTableView *PartsManagerView::createPartsTableView(PartsSqlTableModel * tableModel){
-    _partsTableView = new PartsTableView(this);
-    _partsTableProxyModel->setSourceModel(tableModel);
+void PartsManagerView::initModels()
+{
+    /*
+    _categoryNavigator->setModel(_modelsProvider->partCategoryModel());
+    _storageNavigator->setModel(_modelsProvider->storageTreeModel());
+
+    PartsSqlTableModel * partsModel = _modelsProvider->partsModel();
+    _partsFilterWidget->setPartsQueryBuilder(partsModel->queryBuilder());
+    _partsTableProxyModel->setSourceModel(partsModel);
+    _partDetailsView->setPartsModel(partsModel);
+    */
+}
+
+
+
+void PartsManagerView::initPartsTableView(){
     _partsTableView->setModel(_partsTableProxyModel);
-    _partsTableView->setItemDelegateForColumn(PartsSqlTableModel::ColumnActualStock, new StockInlineDelegate(tableModel, this));
+    //_partsTableView->setItemDelegateForColumn(PartsSqlTableModel::ColumnActualStock, new StockInlineDelegate(tableModel, this));
     //To enable in the future to allow editing stocks in place
     _partsTableView->setEditTriggers(QAbstractItemView::DoubleClicked | QAbstractItemView::EditKeyPressed | QAbstractItemView::AnyKeyPressed);
     connect(_partsTableView->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
             this, SLOT(slotPartTableCurrentRowChanged(QModelIndex,QModelIndex)));
     connect(_partsTableView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(slotEditPart()));
-    connect(_partsTableView, SIGNAL(deletePressed()), this, SLOT(slotDeletePart()));
-    return _partsTableView;
+    connect(_partsTableView, SIGNAL(deletePressed()), this, SLOT(slotDeletePart()));    
 }
 
 void PartsManagerView::slotShowDetailsPane()
@@ -229,7 +247,8 @@ void PartsManagerView::slotBeforeSubmit()
     QModelIndex curr = _partsTableView->currentIndex();    
     if(curr.isValid()){
         QModelIndex sourceIndex = _partsTableProxyModel->mapToSource(curr);
-        _savedPartId = _partsModel->data(_partsModel->index(sourceIndex.row(), PartsSqlTableModel::ColumnId), Qt::EditRole);
+        _savedPartId = _partsTableProxyModel->sourceModel()->index(sourceIndex.row(), PartsSqlTableModel::ColumnId).data(Qt::EditRole);
+        //_savedPartId = _partsModel->data(_partsModel->index(sourceIndex.row(), PartsSqlTableModel::ColumnId), Qt::EditRole);
     }
 }
 
@@ -237,7 +256,8 @@ void PartsManagerView::slotAfterSubmit()
 {
     qDebug()<<"slotAfterSubmit";
     if(_savedPartId.isValid()){
-        QModelIndex newIndex = _partsModel->findIndex(_savedPartId);
+        PartsSqlTableModel* partsModel = static_cast<PartsSqlTableModel*>(_partsTableProxyModel->sourceModel());
+        QModelIndex newIndex = partsModel->findIndex(_savedPartId);
         QModelIndex proxyIndex = _partsTableProxyModel->mapFromSource(newIndex);
         _savedPartId = QVariant();
         _partsTableView->selectionModel()->setCurrentIndex(proxyIndex, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
@@ -255,8 +275,9 @@ void PartsManagerView::slotNavModeChanged(int mode)
 }
 
 void PartsManagerView::slotFilterChanged()
-{
-    _partsModel->select();    
+{    
+    _modelsProvider->partsModel()->select();
+    //_partsModel->select();
 }
 
 void PartsManagerView::slotSelectedCategoryChanged(const QList<int> selectedIds)
@@ -273,9 +294,12 @@ void PartsManagerView::slotSelectedCategoryChanged(const QList<int> selectedIds)
         mode = NodeCriterionValue::All;
     }
     NodeCriterionValue value(mode, selectedIds);
-    _partsQueryBuilder->setFilter(PartsQueryBuilder::FilterByCategory, QVariant::fromValue(value));
-    _partsQueryBuilder->setFilter(PartsQueryBuilder::FilterByStorage, QVariant::fromValue(NodeCriterionValue()));
-    slotFilterChanged();
+    PartsSqlTableModel* partsModel = static_cast<PartsSqlTableModel*>(_partsTableProxyModel->sourceModel());
+    PartsQueryBuilder * queryBuilder = partsModel->queryBuilder();
+    queryBuilder->setFilter(PartsQueryBuilder::FilterByCategory, QVariant::fromValue(value));
+    queryBuilder->setFilter(PartsQueryBuilder::FilterByStorage, QVariant::fromValue(NodeCriterionValue()));
+    partsModel->select();
+    //slotFilterChanged();
 }
 
 void PartsManagerView::slotSelectedStorageChanged(const QList<int> selectedIds)
@@ -292,9 +316,13 @@ void PartsManagerView::slotSelectedStorageChanged(const QList<int> selectedIds)
         mode = NodeCriterionValue::All;
     }
     NodeCriterionValue value(mode, selectedIds);
-    _partsQueryBuilder->setFilter(PartsQueryBuilder::FilterByStorage, QVariant::fromValue(value));
-    _partsQueryBuilder->setFilter(PartsQueryBuilder::FilterByCategory, QVariant::fromValue(NodeCriterionValue()));
-    slotFilterChanged();
+    PartsSqlTableModel* partsModel = static_cast<PartsSqlTableModel*>(_partsTableProxyModel->sourceModel());
+    PartsQueryBuilder * queryBuilder = partsModel->queryBuilder();
+
+    queryBuilder->setFilter(PartsQueryBuilder::FilterByStorage, QVariant::fromValue(value));
+    queryBuilder->setFilter(PartsQueryBuilder::FilterByCategory, QVariant::fromValue(NodeCriterionValue()));
+    partsModel->select();
+    //slotFilterChanged();
 }
 
 void PartsManagerView::slotPartTableCurrentRowChanged(const QModelIndex &current, const QModelIndex &previous)
@@ -306,7 +334,7 @@ void PartsManagerView::slotPartTableCurrentRowChanged(const QModelIndex &current
 
 void PartsManagerView::slotAddPart()
 {
-    PartDialog dlg(_partsModel, _categoriesTreeModel, _storageTreeModel, this);
+    PartDialog dlg(_modelsProvider, this);
     dlg.setCurrentCategory(_categoryNavigator->currentCategory());
     dlg.setCurrentStorage(_storageNavigator->currentStorage());
     dlg.addNewPart();
@@ -317,7 +345,7 @@ void PartsManagerView::slotEditPart()
     QModelIndex index = _partsTableView->currentIndex();
     if(!index.isValid() || index.column()==PartsSqlTableModel::ColumnActualStock)
         return;   
-    PartDialog dlg(_partsModel, _categoriesTreeModel, _storageTreeModel, this);    
+    PartDialog dlg(_modelsProvider, this);
     dlg.editPart(_partsTableProxyModel->mapToSource(index));
 }
 
@@ -338,18 +366,19 @@ void PartsManagerView::slotDeletePart()
         return;
 
     QModelIndex proxyIndex;
-    _partsModel->database().transaction();
+    PartsSqlTableModel* partsModel = static_cast<PartsSqlTableModel*>(_partsTableProxyModel->sourceModel());
+    partsModel->database().transaction();
     foreach (proxyIndex, selectedRows) {
         QModelIndex sourceIndex = _partsTableProxyModel->mapToSource(proxyIndex);
-        _partsModel->removeRow(sourceIndex.row());
+        partsModel->removeRow(sourceIndex.row());
     }
-    bool res = _partsModel->submitAll();
+    bool res = partsModel->submitAll();
     if(res){
-        _partsModel->database().commit();
+        partsModel->database().commit();
     }
     else{
-        qWarning()<<"Failed to delete parts. Reason:"<<_partsModel->database().lastError();
-        _partsModel->database().rollback();
+        qWarning()<<"Failed to delete parts. Reason:"<<partsModel->database().lastError();
+        partsModel->database().rollback();
     }
 
 }
@@ -369,19 +398,7 @@ void PartsManagerView::duplicatePart(bool allData)
     QModelIndex index = _partsTableView->currentIndex();
     if(!index.isValid())
         return;
-    PartDialog dlg(_partsModel, _categoriesTreeModel, _storageTreeModel, this);
+    PartDialog dlg(_modelsProvider, this);
     dlg.duplicatePart(_partsTableProxyModel->mapToSource(index), allData);
 }
 
-
-void PartsManagerView::slotPartsDroppedInCategory(QVector<int> parts, TreeItem* item)
-{
-    _partsModel->updatePartsCategory(parts, item->id());
-    _partsModel->select();
-}
-
-void PartsManagerView::slotPartsDroppedInStorage(QVector<int> parts, TreeItem* item)
-{
-    _partsModel->updatePartsStorage(parts, item->id());
-    _partsModel->select();
-}

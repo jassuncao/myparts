@@ -50,7 +50,7 @@ float epsilonEqual( double a, double b, double epsilon )
     return fabsf( a - b ) < epsilon;
 }
 
-QString UnitFormatter::format(const double value, QChar unit)
+QString UnitFormatter::format(const double value, QString unit)
 {
     QString result;
     ushort prefix;
@@ -59,10 +59,11 @@ QString UnitFormatter::format(const double value, QChar unit)
     if(value>0.999999999){
         double aux = value;
         int multiplier = 0;
-        while(aux>1000){
+        while(aux>=1000){
             ++multiplier;
             aux=aux/1000;
         }
+        qDebug("Value is %f",aux);
         prefix = BIG_PREFIXES[multiplier];
         out.setRealNumberPrecision(2);
         out.setNumberFlags(out.numberFlags() & ~QTextStream::ForcePoint);
@@ -93,7 +94,7 @@ QString UnitFormatter::format(const double value, QChar unit)
     return result;
 }
 
-QString UnitFormatter::formatPercentage(double value, QChar unit){
+QString UnitFormatter::formatPercentage(double value, QString unit){
     QString result;
     QTextStream out(&result);
     out.setRealNumberPrecision(4);

@@ -246,7 +246,7 @@ QString UnitParser::formatUnit(const double value, const QString & unit, const Q
     if(value>0.999999999){
         double aux = value;
         int multiplier = 0;
-        while(aux>1000){
+        while(aux>=1000){
             ++multiplier;
             aux=aux/1000;
         }

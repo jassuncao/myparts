@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Add Resistor Wizard</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -254,11 +254,6 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>ColorBandComboBox</class>
-   <extends>QComboBox</extends>
-   <header>widgets/colorbandcombobox.h</header>
-  </customwidget>
-  <customwidget>
    <class>TreeViewComboBox</class>
    <extends>QComboBox</extends>
    <header>widgets/treeviewcombobox.h</header>
@@ -268,25 +263,30 @@
    <extends>QComboBox</extends>
    <header>widgets/relationalcombobox.h</header>
   </customwidget>
+  <customwidget>
+   <class>ColorBandComboBox</class>
+   <extends>QComboBox</extends>
+   <header>widgets/colorbandcombobox.h</header>
+  </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>fourBandRadioButton</tabstop>
+  <tabstop>fiveBandRadioButton</tabstop>
+  <tabstop>band1ComboBox</tabstop>
+  <tabstop>band2ComboBox</tabstop>
+  <tabstop>band3ComboBox</tabstop>
+  <tabstop>multiplierBandComboBox</tabstop>
+  <tabstop>toleranceBandComboBox</tabstop>
+  <tabstop>resistorValueLineEdit</tabstop>
+  <tabstop>resistorPowerComboBox</tabstop>
+  <tabstop>toleranceLineEdit</tabstop>
+  <tabstop>quantitySpinBox</tabstop>
+  <tabstop>partCategoryComboBox</tabstop>
+  <tabstop>partStorageComboBox</tabstop>
+  <tabstop>partConditionComboBox</tabstop>
+ </tabstops>
  <resources/>
  <connections>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>accepted()</signal>
-   <receiver>QuickAddResistorDialog</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>275</x>
-     <y>343</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>157</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>

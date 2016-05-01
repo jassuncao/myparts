@@ -25,6 +25,8 @@
 #include "models/storagetreemodel.h"
 #include "models/customtablemodel.h"
 #include "models/partstocktablemodel.h"
+#include "models/modelsprovider.h"
+#include "models/categorytreemodel.h"
 #include "utils.h"
 
 
@@ -32,15 +34,15 @@ inline static QVariant getColumnValue(QAbstractItemModel * model, int row, int c
     return model->index(row, column).data(Qt::EditRole);
 }
 
-PartDialog::PartDialog(PartsSqlTableModel *model, TreeItemModel * categoryModel, TreeItemModel *storageModel, QWidget *parent) :
+PartDialog::PartDialog(ModelsProvider * modelsProvider, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::PartDialog),
-    _partsModel(model),
-    _categoryModel(categoryModel),
-    _storageModel(storageModel),
+    _modelsProvider(modelsProvider),
+    _partsModel(modelsProvider->partsModel()),
     _lastSelectedPackage(-1),
-    _addMode(false)
+    _addMode(false)  
 {
+
     ui->setupUi(this);
     ui->tabWidget->setCurrentIndex(0);
 
@@ -49,17 +51,17 @@ PartDialog::PartDialog(PartsSqlTableModel *model, TreeItemModel * categoryModel,
 
     ui->quickStorageButton->setVisible(false);//Not supported yet
     _partParamsModel = PartParametersTableModel3::createNew(this);
+    _partAttachmentModel = AttachmentTableModel3::createNewPartAttachmentModel(this);
     _partDistributorModel = PartDistributorTableModel2::createNew(this);
     _partManufacturerModel = PartManufacturerTableModel2::createNew(this);
-    _partAttachmentModel = AttachmentTableModel3::createNewPartAttachmentModel(this);
-    _partStockModel = PartStockTableModel::createNew(this);
+    _partStockModel = PartStockTableModel::createNew(this);    
 
     _nextActionCheckbox = new QCheckBox(this);
     ui->buttonBox->addButton(_nextActionCheckbox, QDialogButtonBox::HelpRole);
     initCombos();
 
     _mapper = new QDataWidgetMapper(this);
-    _mapper->setModel(_partsModel);
+    _mapper->setModel(_modelsProvider->partsModel());
     _mapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
 
     _mapper->addMapping(ui->partNameEdit, PartsSqlTableModel::ColumnName);
@@ -100,7 +102,11 @@ PartDialog::PartDialog(PartsSqlTableModel *model, TreeItemModel * categoryModel,
     else
         ui->priceSpinBox->setPrefix(currency);
 
-    ui->deleteParameterButton->setEnabled(false);    
+    ui->deleteParameterButton->setEnabled(false);
+    ui->deleteDistributorButton->setEnabled(false);
+    ui->deleteManufacturerButton->setEnabled(false);
+    ui->deleteAttachmentButton->setEnabled(false);
+    ui->viewAttachmentButton->setEnabled(false);
 
     connect(ui->partPackageCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(slotPackageChanged(int)));
     connect(ui->nonePackageRadioButton, SIGNAL(clicked()), this, SLOT(slotDeselectPackage()));
@@ -279,8 +285,8 @@ int findDefaultValueRow(const QSqlQueryModel * model, int column)
 
 void PartDialog::initCombos()
 {
-    ui->partCategoryCombo->setModel(_categoryModel);
-    ui->partStorageCombo->setModel(_storageModel);
+    ui->partCategoryCombo->setModel(_modelsProvider->partCategoryModel());
+    ui->partStorageCombo->setModel(_modelsProvider->partStorageModel());
     connect(ui->partCategoryCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(slotPartCategoryChanged(int)));
     connect(ui->partStorageCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(slotPartStorageChanged(int)));
 
@@ -614,8 +620,9 @@ void PartDialog::slotPartStorageChanged(int idx)
     QVariant value;
     QComboBox* combo = static_cast<QComboBox*>(sender());
     QModelIndex currIndex = combo->view()->currentIndex();
-    if(currIndex.isValid()){        
-        int storageId = _storageModel->getItemId(currIndex);
+    if(currIndex.isValid()){
+        TreeItemModel* model = static_cast<TreeItemModel*>(combo->model());
+        int storageId = model->getItemId(currIndex);
         qDebug()<<"Storage id is "<<storageId;
         value.setValue(storageId);
     }
@@ -631,7 +638,8 @@ void PartDialog::slotPartCategoryChanged(int idx)
     QComboBox* combo = static_cast<QComboBox*>(sender());
     QModelIndex currIndex = combo->view()->currentIndex();
     if(currIndex.isValid()){
-        int categoryId = _categoryModel->getItemId(currIndex);
+        TreeItemModel* model = static_cast<TreeItemModel*>(combo->model());
+        int categoryId = model->getItemId(currIndex);
         qDebug()<<"Category id is "<<categoryId;
         value.setValue(categoryId);
     }

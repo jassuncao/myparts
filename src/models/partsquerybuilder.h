@@ -84,7 +84,7 @@ public:
         DateFilterAfter
     };
 
-    PartsQueryBuilder();
+    explicit PartsQueryBuilder();
     ~PartsQueryBuilder();
 
     void setFilter(SupportedFilters type, const QVariant & value);    

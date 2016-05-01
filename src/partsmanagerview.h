@@ -27,12 +27,13 @@ class StorageNavigator;
 class CategoryTreeModel;
 class TreeItem;
 class PartsTableProxyModel;
+class ModelsProvider;
 
 class PartsManagerView : public Manhattan::MiniSplitter
 {
     Q_OBJECT
 public:
-    explicit PartsManagerView(QWidget *parent = 0);
+    explicit PartsManagerView(ModelsProvider * modelsProvider, QWidget *parent = 0);
     ~PartsManagerView();
 
 signals:
@@ -51,24 +52,32 @@ protected slots:
     void slotFilterChanged();
     void slotSelectedCategoryChanged(const QList<int> selectedIds);
     void slotSelectedStorageChanged(const QList<int> selectedIds);
+    /*
     void slotPartsDroppedInCategory(QVector<int> parts, TreeItem* item);
     void slotPartsDroppedInStorage(QVector<int> parts, TreeItem* item);
+    */
     void slotShowDetailsPane();
     void slotHideDetailsPane();
 
 private:
-    PartsTableView * createPartsTableView(PartsSqlTableModel *tableModel);
+    void initModels();
+    void initPartsTableView();
     void duplicatePart(bool allData);
+
     NavigationSubWidget * _navWidget;
     PartsTableView * _partsTableView;
     PartDetailsView * _partDetailsView;
-    PartsSqlTableModel * _partsModel;  
+    //PartsSqlTableModel * _partsModel;
+
+    /*
     CategoryTreeModel * _categoriesTreeModel;
     StorageTreeModel * _storageTreeModel;
+    PartsQueryBuilder * _partsQueryBuilder;
+    */
     PartsFilterWidget * _partsFilterWidget;
     QPushButton * _deletePartButton;
     QPushButton * _duplicatePartButton;
-    PartsQueryBuilder * _partsQueryBuilder;
+
     CategoryNavigator * _categoryNavigator;
     StorageNavigator * _storageNavigator;
     QVariant _savedPartId;
@@ -76,6 +85,7 @@ private:
     QToolButton * _showDetailsPaneButton;
     QToolButton * _hideDetailsPaneButton;
     QWidget * _detailsPane;
+    ModelsProvider * _modelsProvider;
 };
 
 #endif // PARTSMANAGERVIEW_H

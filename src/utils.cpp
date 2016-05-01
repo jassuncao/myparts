@@ -2,8 +2,21 @@
 #include <QFileInfo>
 #include <QDebug>
 #include <QSqlQueryModel>
+#include <QSqlQuery>
+#include <QSqlError>
 
 namespace Utils {
+
+StandardUnit::StandardUnit(const QString name, const QString symbol) :
+    _name(name),
+    _symbol(symbol)
+{ }
+
+StandardUnit::StandardUnit() :
+    _name(QString()),
+    _symbol(QString())
+{
+}
 
 QString copyFileToDir(const QString &srcPath, const QDir & targetDir)
 {
@@ -51,4 +64,42 @@ int findDefaultValueRow(const QAbstractItemModel *model, int column)
     return -1;
 }
 
+StandardUnit getStandardUnit(Entities::StandardUnit unit)
+{
+    QSqlQuery query("SELECT name, symbol FROM unit WHERE id=?");
+    query.bindValue(0, QVariant(unit));
+    if(query.exec()){
+        if(query.next()){
+            QString name = query.value(0).toString();
+            QString symbol = query.value(1).toString();
+            return StandardUnit(name, symbol);
+        }
+        else{
+            qWarning("Unit symbol not found for id %d",unit);
+        }
+    }
+    else{
+        qCritical()<<"Failed to execute query. Reason:"<<query.lastError();
+    }
+    return StandardUnit();
 }
+
+QString getStandardUnitSymbol(Entities::StandardUnit unit)
+{
+    QSqlQuery query("SELECT symbol FROM unit WHERE id=?");
+    query.bindValue(0, QVariant(unit));
+    if(query.exec()){
+        if(query.next()){
+            return query.value(0).toString();
+        }
+        else{
+            qWarning("Unit symbol not found for id %d",unit);
+        }
+    }
+    else{
+        qCritical()<<"Failed to execute query. Reason:"<<query.lastError();
+    }
+    return QString();
+}
+
+}//namespace

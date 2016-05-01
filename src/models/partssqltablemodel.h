@@ -36,7 +36,7 @@ public:
     static const int FAKE_COLUMNS_INDEX = ColumnPartUnit;
 
     explicit PartsSqlTableModel(PartsQueryBuilder * partsQueryBuilder, QObject *parent = 0);
-    ~PartsSqlTableModel();
+    ~PartsSqlTableModel();    
     int columnCount(const QModelIndex &index = QModelIndex()) const;
     QString selectStatement() const;
     bool insertRowIntoTable(const QSqlRecord &values);
@@ -53,7 +53,7 @@ public:
     void updatePartsStorage(QVector<int> parts, int storageId);
     void setSort(int column, Qt::SortOrder order);
     QModelIndex findIndex(QVariant partId);
-
+    PartsQueryBuilder * queryBuilder() const;
 signals:
     void beforeSubmit();
     void afterSubmit();

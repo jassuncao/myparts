@@ -103,7 +103,7 @@ EditorManagerView::EditorManagerView(const EditorManagerHelper *helper, QWidget 
     _navigatorWidget->setModel(_model);
     _navigatorWidget->setModelColumn(helper->itemLabelColumn());
     _editorWidget->setModel(_model);
-    _editorWidget->setCurrentModelIndex(QModelIndex());
+    _editorWidget->setCurrentModelIndex(QModelIndex());   
 
     connect(_navigatorWidget, SIGNAL(filterChanged(QString)), this, SLOT(slotFilterChanged(QString)));
     connect(_navigatorWidget, SIGNAL(itemSelected(QModelIndex)), this, SLOT(slotItemSelected(QModelIndex)), Qt::QueuedConnection);
@@ -121,7 +121,16 @@ EditorManagerView::~EditorManagerView()
 {
     delete _helper;
 }
-
+/*
+void EditorManagerView::setModel(QAbstractTableModel * model)
+{
+    _model = model;
+    _navigatorWidget->setModel(_model);
+    _navigatorWidget->setModelColumn(helper->itemLabelColumn());
+    _editorWidget->setModel(_model);
+    _editorWidget->setCurrentModelIndex(QModelIndex());
+}
+*/
 void EditorManagerView::slotAddItem()
 {
     if(_dirty){

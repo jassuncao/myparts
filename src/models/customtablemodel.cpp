@@ -556,6 +556,26 @@ QVariant PartParametersTableModel3::data(const QModelIndex &index, int role) con
     return var;
 }
 
+bool PartParametersTableModel3::appendParameter(const QString& name, const double value, const int unitId)
+{
+    int row = rowCount();
+    if(insertRow(row)){
+        bool ok = true;
+        QModelIndex idx = index(row,ColumnName);
+        ok = ok && setData(idx, name);
+
+        idx = index(row,ColumnValue);
+        ok = ok && setData(idx, value);
+
+        idx = index(row,ColumnUnit);
+        ok = ok && setData(idx, unitId);
+        return ok;
+    }
+    else{
+        return false;
+    }
+}
+
 PartParametersTableModel3 * PartParametersTableModel3::createNew(QObject * parent)
 {
     QStringList fieldNames;

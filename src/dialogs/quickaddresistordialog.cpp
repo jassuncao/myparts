@@ -5,7 +5,10 @@
 #include "models/categorytreemodel.h"
 #include "models/storagetreemodel.h"
 #include "models/partconditionmodel.h"
+#include "models/partssqltablemodel.h"
 #include "widgets/unitformatter.h"
+#include "widgets/unitparser.h"
+#include "utils.h"
 
 #include <QStyledItemDelegate>
 #include <QPainter>
@@ -14,6 +17,11 @@
 #include <QKeyEvent>
 #include <QStyle>
 #include <QPushButton>
+#include <QSettings>
+#include <QSqlQuery>
+#include <QSqlError>
+#include <QDebug>
+#include <QDateTime>
 
 
 static QStandardItem * newColorItem(const QString & name, const QColor & color, const QVariant & value, const int shortcutKey)
@@ -27,19 +35,34 @@ static QStandardItem * newColorItem(const QString & name, const QColor & color, 
 
 QuickAddResistorDialog::QuickAddResistorDialog(ModelsProvider * modelsProvider, QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::QuickAddResistorDialog)
+    ui(new Ui::QuickAddResistorDialog),
+    _partsModel(modelsProvider->partsModel())
 {
     ui->setupUi(this);
 
+    QSettings settings;
+    _resistorNameTemplate = settings.value("resistor_template", tr("Resistor %1 %2 (%3)")).toString();
+
+    _resistanceUnit = Utils::getStandardUnit(Entities::RESISTANCE);
+    _powerUnit = Utils::getStandardUnit(Entities::POWER);
+    _toleranceUnit = Utils::getStandardUnit(Entities::TOLERANCE);
+
+    _resistanceSymbol = Utils::getStandardUnitSymbol(Entities::RESISTANCE);
+    _powerSymbol = Utils::getStandardUnitSymbol(Entities::POWER);
+    _toleranceSymbol = Utils::getStandardUnitSymbol(Entities::TOLERANCE);
+
+    _partParams = PartParametersTableModel3::createNew(this);
+
+    ui->resistorValueLineEdit->setValidator(new ParameterValueValidator(this));
+
     ParameterValueValidator* powerValidator = new ParameterValueValidator(this);
     powerValidator->setUnit(QString("W"));
-    ui->resistorValueLineEdit->setValidator(new ParameterValueValidator(this));
     ui->resistorPowerComboBox->setValidator(powerValidator);
     ui->partCategoryComboBox->setModel(modelsProvider->partCategoryModel());        
     ui->partCategoryComboBox->setMinimumContentsLength(22);
     ui->partCategoryComboBox->setMaxVisibleItems(20);
 
-    ui->partStorageComboBox->setModel(modelsProvider->storageTreeModel());
+    ui->partStorageComboBox->setModel(modelsProvider->partStorageModel());
     ui->partStorageComboBox->setMinimumContentsLength(22);
     ui->partStorageComboBox->setMaxVisibleItems(20);
 
@@ -99,8 +122,10 @@ QuickAddResistorDialog::QuickAddResistorDialog(ModelsProvider * modelsProvider, 
     connect(ui->multiplierBandComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(slotBandChanged(int)));
     connect(ui->toleranceBandComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(slotToleranceBandChanged(int)));
     connect(ui->fiveBandRadioButton, SIGNAL(toggled(bool)), this, SLOT(slotFiveBandToggled(bool)));
+
     QPushButton * resetButton = ui->buttonBox->button(QDialogButtonBox::Reset);
     connect(resetButton, SIGNAL(clicked(bool)), this, SLOT(slotReset()));
+    connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(slotAddResistor()));
 }
 
 QuickAddResistorDialog::~QuickAddResistorDialog()
@@ -134,6 +159,117 @@ void QuickAddResistorDialog::slotReset()
     ui->quantitySpinBox->clear();
 }
 
+void QuickAddResistorDialog::slotAddResistor()
+{
+    bool resistanceValid;
+    QString resistanceStr = ui->resistorValueLineEdit->text();
+
+    double resistance = UnitParser::parseUnit(resistanceStr, _resistanceUnit.symbol(), &resistanceValid);
+    if(resistanceValid){
+        resistanceStr = UnitFormatter::format(resistance, _resistanceUnit.symbol());
+        _partParams->appendParameter(_resistanceUnit.name(),resistance,Entities::RESISTANCE);
+    }
+    else {
+        qWarning("Resistance value is invalid %s", qPrintable(resistanceStr));
+        //TODO: Show warning
+    }
+
+    QString powerStr = ui->resistorPowerComboBox->currentText();
+    bool powerValid;
+    double power = UnitParser::parseUnit(powerStr, _powerUnit.symbol(), &powerValid);
+    if(powerValid){
+        powerStr = UnitFormatter::format(power, _powerUnit.symbol());
+        _partParams->appendParameter(_powerUnit.name(), power, Entities::POWER);
+    }
+    else {
+        qWarning("Power value is invalid %s", qPrintable(powerStr));
+        //TODO: Show warning
+    }
+
+    QString toleranceStr = ui->toleranceLineEdit->text();
+    bool toleranceValid;
+    double tolerance = UnitParser::parseUnit(toleranceStr, _toleranceUnit.symbol(), &toleranceValid);
+    if(toleranceValid){
+        toleranceStr = UnitFormatter::format(tolerance, _toleranceUnit.symbol());
+        _partParams->appendParameter(_toleranceUnit.name(), tolerance, Entities::TOLERANCE);
+    }
+    else {
+        qWarning("Tolerance value is invalid %s", qPrintable(toleranceStr));
+        //TODO: Show warning
+    }
+
+    QVariant createDate = QVariant(QDateTime::currentDateTimeUtc().toTime_t());
+    QString partName = _resistorNameTemplate.arg(resistanceStr, powerStr, toleranceStr);
+    QVariant category = getSelectedCategory();
+    QVariant storage = getSelectedStorage();
+    QVariant condition = getSelectedCondition();
+    QVariant quantity = ui->quantitySpinBox->value();
+    QSqlRecord initialData = _partsModel->record();
+    qDebug()<<"Part cat "<<category;
+    qDebug()<<"Part storage "<<storage;
+    initialData.setValue(PartsSqlTableModel::ColumnName, partName);
+    initialData.setValue(PartsSqlTableModel::ColumnConditionId, condition);
+    initialData.setValue(PartsSqlTableModel::ColumnPartUnitId, 1);//XXX
+    initialData.setValue(PartsSqlTableModel::ColumnCategoryId, category);
+    initialData.setValue(PartsSqlTableModel::ColumnStorageId, storage);
+    initialData.setValue(PartsSqlTableModel::ColumnCreateDate, createDate);
+    initialData.setValue(PartsSqlTableModel::ColumnActualStock, quantity);
+
+    int newRow = _partsModel->rowCount();
+    bool success = _partsModel->insertRecord(newRow, initialData);
+    if(success) {
+        _partsModel->database().transaction();
+        if(_partsModel->submitAll()){
+            _partParams->setCurrentPartId(_partsModel->lastInsertedId());
+            _partParams->submitAll();
+            _partsModel->database().commit();
+        }
+        else{
+            qWarning()<<"Failed to add part: Reason: " << _partsModel->lastError();
+            _partsModel->database().rollback();
+        }
+        _partParams->setCurrentPartId(QVariant());
+        _partParams->select();
+    }
+    else {
+        qWarning("Failed to insert new part");
+    }
+
+}
+QVariant QuickAddResistorDialog::getSelectedCategory() const
+{
+    TreeItemModel* model = static_cast<TreeItemModel*>(ui->partCategoryComboBox->model());
+    QModelIndex currIndex = ui->partCategoryComboBox->view()->currentIndex();
+    int itemId;
+    if(currIndex.isValid()){
+        itemId = model->getItemId(currIndex);
+    }
+    else{
+        itemId = model->rootItemId();
+    }
+    qDebug()<<"Storage id is "<<itemId;
+    return QVariant(itemId);
+}
+
+QVariant QuickAddResistorDialog::getSelectedStorage() const
+{
+    TreeItemModel* model = static_cast<TreeItemModel*>(ui->partStorageComboBox->model());
+    QModelIndex currIndex = ui->partStorageComboBox->view()->currentIndex();
+    int itemId;
+    if(currIndex.isValid()){
+        itemId = model->getItemId(currIndex);
+    }
+    else{
+        itemId = model->rootItemId();
+    }
+    qDebug()<<"Storage id is "<<itemId;
+    return QVariant(itemId);
+}
+
+QVariant QuickAddResistorDialog::getSelectedCondition() const
+{
+    return ui->partConditionComboBox->currentKey();
+}
 
 static QVariant getBandValue(QComboBox * combo)
 {
@@ -167,7 +303,7 @@ void QuickAddResistorDialog::slotBandChanged(int)
     if(multiplierBandValue.isValid()){
         value = value * multiplierBandValue.toDouble();
     }
-    const QString resistance = UnitFormatter::format(value, UnitFormatter::ohmSymbol);
+    const QString resistance = UnitFormatter::format(value, _resistanceUnit.symbol());
     ui->resistorValueLineEdit->setText(resistance);
 }
 
@@ -175,7 +311,7 @@ void QuickAddResistorDialog::slotToleranceBandChanged(int)
 {
     QVariant toleranceBandValue = getBandValue(ui->toleranceBandComboBox);
     if(toleranceBandValue.isValid()){
-        const QString tolerance = UnitFormatter::formatPercentage(toleranceBandValue.toDouble(), QChar('%'));
+        const QString tolerance = UnitFormatter::formatPercentage(toleranceBandValue.toDouble(), _toleranceUnit.symbol());
         ui->toleranceLineEdit->setText(tolerance);
     }
 }

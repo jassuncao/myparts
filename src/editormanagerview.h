@@ -87,7 +87,7 @@ class EditorManagerView : public Manhattan::MiniSplitter
 public:
     explicit EditorManagerView(const EditorManagerHelper * helper, QWidget *parent = 0);
     ~EditorManagerView();
-    void setModel(QAbstractTableModel * model);
+   // void setModel(QAbstractTableModel * model);
 private slots:
     void slotAddItem();
     void slotDeleteItem(const QModelIndex &index);

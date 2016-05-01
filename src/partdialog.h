@@ -28,13 +28,14 @@ class PartManufacturerTableModel2;
 class PartDistributorTableModel2;
 class PartParametersTableModel3;
 class PartStockTableModel;
+class ModelsProvider;
 
 class PartDialog : public QDialog
 {
     Q_OBJECT
     
 public:
-    explicit PartDialog(PartsSqlTableModel *model, TreeItemModel *categoryModel, TreeItemModel* storageModel, /* bool addMode,*/ QWidget *parent = 0);
+    explicit PartDialog(ModelsProvider *modelsProvider, /* bool addMode,*/ QWidget *parent = 0);
     ~PartDialog();    
     int initialStock() const;
     double partPrice() const;
@@ -77,18 +78,18 @@ private:
     QModelIndex insertNewPart(QSqlRecord initialData);
 
     QCheckBox * _nextActionCheckbox;
-    Ui::PartDialog *ui;
+    Ui::PartDialog *ui;    
+    ModelsProvider * _modelsProvider;
     PartsSqlTableModel * _partsModel;
     PartParametersTableModel3 * _partParamsModel;
     PartDistributorTableModel2 * _partDistributorModel;
     PartManufacturerTableModel2 * _partManufacturerModel;
     AttachmentTableModel3 * _partAttachmentModel;
-    PartStockTableModel * _partStockModel;
-    TreeItemModel * _categoryModel;
-    TreeItemModel * _storageModel;
+    PartStockTableModel * _partStockModel; 
     QSqlQueryModel * _partConditionModel;
     QSqlQueryModel * _partUnitsModel;
     QSqlQueryModel * _packagesModel;
+
     QDataWidgetMapper * _mapper;
     QModelIndex _currentModelIndex;
     int _lastSelectedPackage;
