@@ -10,7 +10,7 @@
 
 //}
 
-ParameterValue::ParameterValue(double value, const QString & symbol) :
+ParameterValue::ParameterValue(const QVariant &value, const QString & symbol) :
     value(value), symbol(symbol)
 {}
 

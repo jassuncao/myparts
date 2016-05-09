@@ -68,7 +68,7 @@ public:
     void select();
     bool submitAll();
     void createRelation(const int column, const QString & tableName, const QString & indexField, const QString & displayField);
-    QAbstractListModel * relationModel(const int column) const;
+    virtual QAbstractListModel * relationModel(const int column) const;
     void cloneData();
 protected:
     virtual TableItem * createBlankItem() const;
@@ -228,9 +228,8 @@ class PartParametersTableModel3 : public SimpleSqlTableModel
     Q_OBJECT
 public:
     enum ColumnsIndex {
-        ColumnName,
-        ColumnValue,
-        ColumnUnit,
+        ColumnParameter,
+        ColumnValue,        
         ColumnDescription,
         HiddenColumnUnitSymbol,
     };

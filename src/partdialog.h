@@ -18,7 +18,6 @@ class TreeItemModel;
 class PartsSqlTableModel;
 class QCheckBox;
 class QAbstractButton;
-class PartParameterTableModel;
 class PartDistributorTableModel;
 class PartManufacturerTableModel;
 class AttachmentTableModel;
@@ -29,6 +28,7 @@ class PartDistributorTableModel2;
 class PartParametersTableModel3;
 class PartStockTableModel;
 class ModelsProvider;
+class PartParameterTableModel;
 
 class PartDialog : public QDialog
 {
@@ -81,7 +81,8 @@ private:
     Ui::PartDialog *ui;    
     ModelsProvider * _modelsProvider;
     PartsSqlTableModel * _partsModel;
-    PartParametersTableModel3 * _partParamsModel;
+    PartParameterTableModel * _partParamsModel;
+    //PartParametersTableModel3 * _partParamsModel;
     PartDistributorTableModel2 * _partDistributorModel;
     PartManufacturerTableModel2 * _partManufacturerModel;
     AttachmentTableModel3 * _partAttachmentModel;

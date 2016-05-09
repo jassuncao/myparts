@@ -4,6 +4,31 @@
 
 namespace Entities {
 
+#define TR_TYPE(S) qApp->translate("Datatypes",S)
+#define TR_UNIT(S) qApp->translate("Units",S)
+
+DQSharedList DatatypeEntity::initialData() const
+{
+    DQList<Entities::DatatypeEntity> initialData;
+
+    Entities::DatatypeEntity integerType;
+    integerType.id.set(INTEGER);
+    integerType.name.set(TR_TYPE("Integer"));
+    initialData.append(integerType);
+
+    Entities::DatatypeEntity decimalType;
+    decimalType.id.set(DECIMAL);
+    decimalType.name.set(TR_TYPE("Decimal"));
+    initialData.append(decimalType);
+
+    Entities::DatatypeEntity textType;
+    textType.id.set(TEXT);
+    textType.name.set(TR_TYPE("Text"));
+    initialData.append(textType);
+
+    return initialData;
+}
+
 DQSharedList PartUnitEntity::initialData() const
 {
     DQList<Entities::PartUnitEntity> initialUnits;
@@ -160,64 +185,71 @@ DQSharedList SiPrefix::initialData() const
     return initialData;
 }
 
-#define TR(S) qApp->translate("Units",S)
-
 DQSharedList Unit::initialData() const
 {
     DQList<Entities::Unit> initialData;    
 
-    Entities::Unit voltage;
-    voltage.id.set(VOLTAGE);
-    voltage.name.set(TR("Voltage"));
-    voltage.symbol.set("V");
-    initialData.append(voltage);
+    Entities::Unit volt;
+    volt.id.set(VOLT);
+    volt.name.set(TR_UNIT("Volts"));
+    volt.symbol.set("V");
+    volt.deletable.set(false);
+    initialData.append(volt);
 
-    Entities::Unit current;
-    current.id.set(CURRENT);
-    current.name.set(TR("Current"));
-    current.symbol.set("A");
-    initialData.append(current);
+    Entities::Unit ampere;
+    ampere.id.set(AMPERE);
+    ampere.name.set(TR_UNIT("Amperes"));
+    ampere.symbol.set("A");
+    ampere.deletable.set(false);
+    initialData.append(ampere);
 
-    Entities::Unit resistance;
-    resistance.id.set(RESISTANCE);
-    resistance.name.set(TR("Resistance"));
-    resistance.symbol.set(QString(QChar(0x2126)));
-    initialData.append(resistance);
+    Entities::Unit ohm;
+    ohm.id.set(OHM);
+    ohm.name.set(TR_UNIT("Ohms"));
+    ohm.symbol.set(QString(QChar(0x2126)));
+    ohm.deletable.set(false);
+    initialData.append(ohm);
 
-    Entities::Unit capacitance;
-    capacitance.id.set(CAPACITANCE);
-    capacitance.name.set(TR("Capacitance"));
-    capacitance.symbol.set("F");
-    initialData.append(capacitance);
+    Entities::Unit farad;
+    farad.id.set(FARAD);
+    farad.name.set(TR_UNIT("Farads"));
+    farad.symbol.set("F");
+    farad.deletable.set(false);
+    initialData.append(farad);
 
-    Entities::Unit power;
-    power.id.set(POWER);
-    power.name.set(TR("Power"));
-    power.symbol.set("W");
-    initialData.append(power);
+    Entities::Unit watt;
+    watt.id.set(WATT);
+    watt.name.set(TR_UNIT("Watts"));
+    watt.symbol.set("W");
+    watt.deletable.set(false);
+    initialData.append(watt);
 
-    Entities::Unit frequency;
-    frequency.id.set(FREQUENCY);
-    frequency.name.set(TR("Frequency"));
-    frequency.symbol.set("Hz");
-    initialData.append(frequency);
-
-    Entities::Unit tolerance;
-    tolerance.id.set(TOLERANCE);
-    tolerance.name.set(TR("Tolerance"));
-    tolerance.symbol.set("%");
-    initialData.append(tolerance);
+    Entities::Unit hertz;
+    hertz.id.set(HERTZ);
+    hertz.name.set(TR_UNIT("Hertz"));
+    hertz.symbol.set("Hz");
+    hertz.deletable.set(false);
+    initialData.append(hertz);
 
     return initialData;
 }
 
+DQSharedList ParameterEntity::initialData() const
+{
+    DQList<Entities::ParameterEntity> initialData;
+    DQListWriter writer(&initialData);
+    writer << "resistance" << "Resistance" << DECIMAL << false << OHM << "Resistance";
+    writer << "capacitance" << "Capacitance" << DECIMAL << false << FARAD << "Capacitance";
+    writer << "power_rating" << "Power Rating" << DECIMAL << false << WATT << "Power Rating";
+    return initialData;
+}
 
 DQSharedList PartParameterEntity::initialData() const
 {
     DQList<Entities::PartParameterEntity> initialData;
     DQListWriter writer(&initialData);
-    writer << "resistance" << 1000 << 3 << 1 <<  "Resistance " ;
-
+    writer << 1 << 1 << 1000 << "1k";
+    writer << 1 << 3 << 1 << "1W";
     return initialData;
 }
 

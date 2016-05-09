@@ -8,10 +8,11 @@ class ParameterValueValidator : public QValidator
 {
     Q_OBJECT
 public:
-    ParameterValueValidator(QObject * parent=0);
+    ParameterValueValidator(const QString& unit=QString(), QObject * parent=0);
     ~ParameterValueValidator();
     virtual QValidator::State validate(QString & input, int &) const;
     void setUnit(const QString& unit);
+    QString unit() const;
 private:
     QString _unit;
 };

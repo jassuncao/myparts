@@ -13,8 +13,6 @@ public:
      virtual QString displayText(const QVariant &value, const QLocale &locale) const;
      virtual void setModelData(QWidget *editor,QAbstractItemModel *model, const QModelIndex &index) const;
      virtual void setEditorData(QWidget *editor, const QModelIndex &index) const;
-private:
-     ParameterValueValidator * _validator;
 };
 
 

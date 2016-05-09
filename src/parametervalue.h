@@ -28,8 +28,8 @@ private:
 */
 
 struct ParameterValue {
-    explicit ParameterValue(double value=0, const QString & symbol=QString());
-    double value;
+    explicit ParameterValue(const QVariant& value=QVariant(0), const QString & symbol=QString());
+    QVariant value;
     QString symbol;
 };
 

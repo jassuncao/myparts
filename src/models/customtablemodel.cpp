@@ -536,14 +536,15 @@ PartDistributorTableModel2 * PartDistributorTableModel2::createNew(QObject * par
 PartParametersTableModel3::PartParametersTableModel3(const QStringList &fieldNames, const QStringList &columnNames, QObject *parent)
     : SimpleSqlTableModel("part_parameter", fieldNames, columnNames, "part", parent)
 {
-    createRelation(ColumnUnit, "unit", "id", "name");
-    createRelation(HiddenColumnUnitSymbol, "unit", "id", "symbol");
+    createRelation(ColumnParameter, "parameter", "id", "name");
+    //createRelation(HiddenColumnUnitSymbol, "unit", "id", "symbol");
 }
 
 QVariant PartParametersTableModel3::data(const QModelIndex &index, int role) const
 {
     QVariant var = SimpleSqlTableModel::data(index, role);
     if(role == Qt::DisplayRole && index.column()==ColumnValue && var.isValid() ){
+        /*
         const TableItem * item = _items.at(index.row());
         TableRelation * relation = _relations[HiddenColumnUnitSymbol];
         if(!relation->initialized())
@@ -551,13 +552,15 @@ QVariant PartParametersTableModel3::data(const QModelIndex &index, int role) con
 
         const QString & symbol = relation->displayValue(item->data(ColumnUnit)).toString();
         ParameterValue paramValue(var.toDouble(), symbol);
+        */
+        ParameterValue paramValue(var.toDouble(), QString("_"));
         var.setValue(paramValue);
     }
     return var;
 }
 
 bool PartParametersTableModel3::appendParameter(const QString& name, const double value, const int unitId)
-{
+{/*
     int row = rowCount();
     if(insertRow(row)){
         bool ok = true;
@@ -574,14 +577,16 @@ bool PartParametersTableModel3::appendParameter(const QString& name, const doubl
     else{
         return false;
     }
+    */
+    return false;
 }
 
 PartParametersTableModel3 * PartParametersTableModel3::createNew(QObject * parent)
 {
     QStringList fieldNames;
     QStringList columnNames;
-    fieldNames<<"name"<<"value"<<"unit"<<"description";
-    columnNames<<tr("Name")<<tr("Value")<<tr("Unit")<<tr("Description");
+    fieldNames<<"parameter"<<"numericValue"<<"textValue";
+    columnNames<<tr("Name")<<tr("Value")<<tr("Unit");
     return new PartParametersTableModel3(fieldNames, columnNames, parent);
 }
 

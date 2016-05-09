@@ -28,6 +28,7 @@ bool createTables(DQConnection & connection)
         return false;
     }
     connection.open(db); // Establish the connection to database. It will become the "default connection" shared by all DQModel    
+    connection.addModel<Entities::DatatypeEntity>();
     connection.addModel<Entities::PartUnitEntity>();
     connection.addModel<Entities::StorageEntity>();
     connection.addModel<Entities::CategoryEntity>();
@@ -38,6 +39,7 @@ bool createTables(DQConnection & connection)
     connection.addModel<Entities::SiPrefix>();
     connection.addModel<Entities::Unit>();
     connection.addModel<Entities::UnitPrefix>();
+    connection.addModel<Entities::ParameterEntity>();
     connection.addModel<Entities::PartParameterEntity>();
     connection.addModel<Entities::DistributorEntity>();
     connection.addModel<Entities::PackagingEntity>();

@@ -5,14 +5,28 @@
 
 namespace Entities {
 
+enum ParameterDatatypes {
+    INVALID = 0,
+    INTEGER = 1,
+    DECIMAL = 2,
+    TEXT = 3
+};
+
 enum StandardUnit{
-    VOLTAGE=1,
-    CURRENT=2,
-    RESISTANCE=3,
-    CAPACITANCE=4,
-    POWER=5,
-    FREQUENCY=6,
-    TOLERANCE=7
+    VOLT=1,
+    AMPERE=2,
+    OHM=3,
+    FARAD=4,
+    WATT=5,
+    HERTZ=6
+};
+
+class DatatypeEntity : public DQModel
+{
+    DQ_MODEL
+public:
+    DQField<QString> name;
+    DQSharedList initialData() const;
 };
 
 class PartUnitEntity : public DQModel
@@ -123,6 +137,7 @@ class Unit : public DQModel
 public:
     DQField<QString> name;
     DQField<QString> symbol;
+    DQField<bool> deletable;
     DQSharedList initialData() const;
 };
 
@@ -134,15 +149,27 @@ public:
     DQForeignKey<SiPrefix> siPrefix;
 };
 
+class ParameterEntity : public DQModel
+{
+    DQ_MODEL
+public:
+    DQField<QString> key;
+    DQField<QString> name;
+    DQForeignKey<DatatypeEntity> datatype;
+    DQField<bool> deletable;
+    DQForeignKey<Unit> unit;
+    DQField<QString> description;
+    DQSharedList initialData() const;
+};
+
 class PartParameterEntity : public DQModel
 {
     DQ_MODEL
 public:
-    DQField<QString> name;
-    DQField<QString> description;
-    DQField<double> value;
     DQForeignKey<PartEntity> part;
-    DQForeignKey<Unit> unit;
+    DQForeignKey<ParameterEntity> parameter;
+    DQField<double> numericValue;
+    DQField<QString> textValue;
     DQSharedList initialData() const;
 };
 
@@ -217,6 +244,11 @@ public:
 
 }  //namespace
 
+DQ_DECLARE_MODEL(Entities::DatatypeEntity,
+                     "datatype", // the table name.
+                     DQ_FIELD(name, DQUnique | DQNotNull)
+                     )
+
 DQ_DECLARE_MODEL(Entities::PartUnitEntity,
                      "part_unit", // the table name.
                      DQ_FIELD(name, DQUnique | DQNotNull),
@@ -289,8 +321,9 @@ DQ_DECLARE_MODEL(Entities::SiPrefix,
 
 DQ_DECLARE_MODEL(Entities::Unit,
                  "unit", // the table name.
-                 DQ_FIELD(name, DQNotNull),
-                 DQ_FIELD(symbol)
+                 DQ_FIELD(name, DQNotNull | DQUnique),
+                 DQ_FIELD(symbol),
+                 DQ_FIELD(deletable, DQNotNull)
                  )
 
 DQ_DECLARE_MODEL(Entities::UnitPrefix,
@@ -299,13 +332,22 @@ DQ_DECLARE_MODEL(Entities::UnitPrefix,
                  DQ_FIELD(siPrefix, DQNotNull | DQCascadeDelete)
                  )
 
+DQ_DECLARE_MODEL(Entities::ParameterEntity,
+                 "parameter", // the table name.
+                 DQ_FIELD(key, DQNotNull | DQUnique),
+                 DQ_FIELD(name, DQNotNull),
+                 DQ_FIELD(datatype, DQNotNull),
+                 DQ_FIELD(deletable, DQNotNull),
+                 DQ_FIELD(unit),
+                 DQ_FIELD(description)
+                 )
+
 DQ_DECLARE_MODEL(Entities::PartParameterEntity,
                  "part_parameter", // the table name.
-                 DQ_FIELD(name, DQNotNull),
-                 DQ_FIELD(value),
-                 DQ_FIELD(unit, DQNotNull),
                  DQ_FIELD(part, DQNotNull | DQCascadeDelete),
-                 DQ_FIELD(description)
+                 DQ_FIELD(parameter, DQNotNull),
+                 DQ_FIELD(numericValue),
+                 DQ_FIELD(textValue)
                  )
 
 DQ_DECLARE_MODEL(Entities::DistributorEntity,

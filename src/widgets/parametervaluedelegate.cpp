@@ -9,8 +9,7 @@
 
 ParameterValueDelegate::ParameterValueDelegate(QObject * parent) :
     QStyledItemDelegate(parent)
-{
-    _validator = new ParameterValueValidator(this);
+{    
 }
 
 ParameterValueDelegate::~ParameterValueDelegate()
@@ -18,46 +17,61 @@ ParameterValueDelegate::~ParameterValueDelegate()
 }
 
 QString ParameterValueDelegate::displayText(const QVariant &value, const QLocale &locale) const
-{
-    if(value.canConvert<ValueWithUnit>()) {
-        ValueWithUnit aux = value.value<ValueWithUnit>();
-        return UnitParser::formatUnit(aux.value(), aux.symbol(), locale);
-    }
+{   
     if(value.canConvert<ParameterValue>()){
         ParameterValue aux =  value.value<ParameterValue>();
-        return UnitParser::formatUnit(aux.value, aux.symbol, locale);
-    }
-    return UnitParser::formatUnit(value.toDouble(), 0, locale);
+        return UnitParser::formatUnit(aux.value.toReal(), aux.symbol, locale);
+    }    
+    return QStyledItemDelegate::displayText(value, locale);
 }
 
-QWidget * ParameterValueDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &, const QModelIndex &index) const
+
+QWidget * ParameterValueDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem & option, const QModelIndex &index) const
 {
     if (!index.isValid())
         return 0;
-   QLineEdit *le = new QLineEdit(parent);
-   le->setFrame(le->style()->styleHint(QStyle::SH_ItemView_DrawDelegateFrame, 0, le));
-   le->setValidator(_validator);
-   return le;
+    QVariant v = index.data(Qt::EditRole);
+    if(v.canConvert<ParameterValue>()){
+        ParameterValue paramValue = v.value<ParameterValue>();
+        QLineEdit *le = new QLineEdit(parent);
+        le->setFrame(le->style()->styleHint(QStyle::SH_ItemView_DrawDelegateFrame, 0, le));
+        le->setValidator(new ParameterValueValidator(paramValue.symbol, le));
+        return le;
+    }
+   return QStyledItemDelegate::createEditor(parent, option, index);
 }
 
 void ParameterValueDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
 {
+    if (!index.isValid())
+        return;
     QLineEdit* lineEdit = qobject_cast<QLineEdit*>(editor);
-    bool ok = false;
-    double value = UnitParser::parseUnit(lineEdit->text(), &ok);
-    if(ok){
-        bool res = model->setData(index,QVariant(value));
+    if(lineEdit && lineEdit->validator()){
+        const ParameterValueValidator * validator = qobject_cast<const ParameterValueValidator*>(lineEdit->validator());
+        if(validator){
+            bool ok = false;
+            double value = UnitParser::parseUnit(lineEdit->text(), validator->unit(), &ok);
+            if(ok){
+                model->setData(index,QVariant(value));
+            }
+            else{
+                //DO something, for example draw a red background
+            }
+            return;
+        }
     }
+    QStyledItemDelegate::setModelData(editor, model, index);
 }
 
 void ParameterValueDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
 {
     QVariant v = index.data(Qt::EditRole);
-    if(v.isValid()){
+    if(v.canConvert<ParameterValue>()){
+        ParameterValue paramValue = v.value<ParameterValue>();
         QLineEdit* lineEdit = qobject_cast<QLineEdit*>(editor);
-        lineEdit->setText(UnitParser::formatUnit(v.toDouble(),0, QLocale::system()));
+        lineEdit->setText(UnitParser::formatUnit(paramValue.value.toReal(), paramValue.symbol, QLocale::system()));
     }
     else{
-        qWarning()<<"setEditorData invalid ";
+        QStyledItemDelegate::setEditorData(editor, index);
     }
 }

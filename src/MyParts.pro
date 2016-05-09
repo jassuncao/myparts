@@ -96,7 +96,11 @@ SOURCES += main.cpp\
     widgets/colorbandcombobox.cpp \
     models/modelsprovider.cpp \
     models/partunitsreadonlymodel.cpp \
-    models/partconditionmodel.cpp
+    models/partconditionmodel.cpp \
+    models/partparametertablemodel.cpp \
+    models/parameter.cpp \
+    widgets/comboitemdelegate.cpp \
+    models/parametermodel.cpp
 
 HEADERS  += mainwindow.h \
     entities/entities.h \
@@ -176,7 +180,12 @@ HEADERS  += mainwindow.h \
     widgets/colorbandcombobox.h \
     models/modelsprovider.h \
     models/partunitsreadonlymodel.h \
-    models/partconditionmodel.h
+    models/partconditionmodel.h \
+    models/partparametertablemodel.h \
+    models/parameter.h \
+    widgets/comboitemdelegate.h \
+    models/modelwithforeignkey.h \
+    models/parametermodel.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \

@@ -12,6 +12,7 @@ class OptionsDialog;
 class SimpleSqlTableModel;
 class ModelsProvider;
 class PartConditionModel;
+class ParameterModel;
 
 class OptionsDialog : public QDialog
 {
@@ -42,10 +43,14 @@ private slots:
     void reject();
     void slotClosePartUnitEditor(QWidget *, QAbstractItemDelegate::EndEditHint hint = QAbstractItemDelegate::NoHint);
     void slotClosePartConditionEditor(QWidget *, QAbstractItemDelegate::EndEditHint hint = QAbstractItemDelegate::NoHint);
+    void slotAddParameter();
+    void slotDeleteParameter();
+    void slotParameterRowChanged(const QModelIndex &current, const QModelIndex &);
 private:
     void setupModels();
     void setupPartUnitsModel();
     void setupParamsUnitsModel();
+    void setupParametersModel();
     void setupPartConditionModel();
     void setupConnections();
     void setupGeneralSettings();
@@ -54,6 +59,7 @@ private:
     SimpleSqlTableModel * _partUnitsModel;
     SimpleSqlTableModel * _parameterUnitsModel;
     PartConditionModel * _partConditionModel;
+    ParameterModel * _parameterModel;
 };
 
 #endif // OPTIONSDIALOG_H

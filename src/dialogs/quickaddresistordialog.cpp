@@ -42,7 +42,7 @@ QuickAddResistorDialog::QuickAddResistorDialog(ModelsProvider * modelsProvider, 
 
     QSettings settings;
     _resistorNameTemplate = settings.value("resistor_template", tr("Resistor %1 %2 (%3)")).toString();
-
+/*
     _resistanceUnit = Utils::getStandardUnit(Entities::RESISTANCE);
     _powerUnit = Utils::getStandardUnit(Entities::POWER);
     _toleranceUnit = Utils::getStandardUnit(Entities::TOLERANCE);
@@ -50,14 +50,11 @@ QuickAddResistorDialog::QuickAddResistorDialog(ModelsProvider * modelsProvider, 
     _resistanceSymbol = Utils::getStandardUnitSymbol(Entities::RESISTANCE);
     _powerSymbol = Utils::getStandardUnitSymbol(Entities::POWER);
     _toleranceSymbol = Utils::getStandardUnitSymbol(Entities::TOLERANCE);
-
+*/
     _partParams = PartParametersTableModel3::createNew(this);
 
-    ui->resistorValueLineEdit->setValidator(new ParameterValueValidator(this));
-
-    ParameterValueValidator* powerValidator = new ParameterValueValidator(this);
-    powerValidator->setUnit(QString("W"));
-    ui->resistorPowerComboBox->setValidator(powerValidator);
+    ui->resistorValueLineEdit->setValidator(new ParameterValueValidator(QString("R"), this));
+    ui->resistorPowerComboBox->setValidator(new ParameterValueValidator(QString("W"), this));
     ui->partCategoryComboBox->setModel(modelsProvider->partCategoryModel());        
     ui->partCategoryComboBox->setMinimumContentsLength(22);
     ui->partCategoryComboBox->setMaxVisibleItems(20);
@@ -167,7 +164,7 @@ void QuickAddResistorDialog::slotAddResistor()
     double resistance = UnitParser::parseUnit(resistanceStr, _resistanceUnit.symbol(), &resistanceValid);
     if(resistanceValid){
         resistanceStr = UnitFormatter::format(resistance, _resistanceUnit.symbol());
-        _partParams->appendParameter(_resistanceUnit.name(),resistance,Entities::RESISTANCE);
+        //_partParams->appendParameter(_resistanceUnit.name(),resistance,Entities::RESISTANCE);
     }
     else {
         qWarning("Resistance value is invalid %s", qPrintable(resistanceStr));
@@ -179,7 +176,7 @@ void QuickAddResistorDialog::slotAddResistor()
     double power = UnitParser::parseUnit(powerStr, _powerUnit.symbol(), &powerValid);
     if(powerValid){
         powerStr = UnitFormatter::format(power, _powerUnit.symbol());
-        _partParams->appendParameter(_powerUnit.name(), power, Entities::POWER);
+        //_partParams->appendParameter(_powerUnit.name(), power, Entities::POWER);
     }
     else {
         qWarning("Power value is invalid %s", qPrintable(powerStr));
@@ -191,7 +188,7 @@ void QuickAddResistorDialog::slotAddResistor()
     double tolerance = UnitParser::parseUnit(toleranceStr, _toleranceUnit.symbol(), &toleranceValid);
     if(toleranceValid){
         toleranceStr = UnitFormatter::format(tolerance, _toleranceUnit.symbol());
-        _partParams->appendParameter(_toleranceUnit.name(), tolerance, Entities::TOLERANCE);
+        //_partParams->appendParameter(_toleranceUnit.name(), tolerance, Entities::TOLERANCE);
     }
     else {
         qWarning("Tolerance value is invalid %s", qPrintable(toleranceStr));

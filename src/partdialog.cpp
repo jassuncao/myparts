@@ -20,6 +20,7 @@
 #include "widgets/parametervaluedelegate.h"
 #include "widgets/currencydelegate.h"
 #include "widgets/validatingitemdelegate.h"
+#include "widgets/comboitemdelegate.h"
 #include "dialogs/attachmentselectiondialog.h"
 #include "models/partssqltablemodel.h"
 #include "models/storagetreemodel.h"
@@ -27,6 +28,7 @@
 #include "models/partstocktablemodel.h"
 #include "models/modelsprovider.h"
 #include "models/categorytreemodel.h"
+#include "models/partparametertablemodel.h"
 #include "utils.h"
 
 
@@ -50,7 +52,7 @@ PartDialog::PartDialog(ModelsProvider * modelsProvider, QWidget *parent) :
     ui->partCategoryCombo->setMaxVisibleItems(40);
 
     ui->quickStorageButton->setVisible(false);//Not supported yet
-    _partParamsModel = PartParametersTableModel3::createNew(this);
+    _partParamsModel = new PartParameterTableModel(this);
     _partAttachmentModel = AttachmentTableModel3::createNewPartAttachmentModel(this);
     _partDistributorModel = PartDistributorTableModel2::createNew(this);
     _partManufacturerModel = PartManufacturerTableModel2::createNew(this);
@@ -74,9 +76,9 @@ PartDialog::PartDialog(ModelsProvider * modelsProvider, QWidget *parent) :
     _mapper->addMapping(ui->partCommentText, PartsSqlTableModel::ColumnComment);
 
     ui->partParametersTableView->setModel(_partParamsModel);
-    ui->partParametersTableView->setItemDelegate(new CustomTableRelationDelegate(ui->partParametersTableView));
+    ui->partParametersTableView->setItemDelegate(new ComboItemDelegate(this));
     ui->partParametersTableView->setItemDelegateForColumn(PartParametersTableModel3::ColumnValue, new ParameterValueDelegate());
-    ui->partParametersTableView->setColumnWidth(PartParametersTableModel3::ColumnName, 180);
+    ui->partParametersTableView->setColumnWidth(PartParametersTableModel3::ColumnParameter, 180);
 
     ui->partDistributorsTableView->setModel(_partDistributorModel);
     ui->partDistributorsTableView->setItemDelegateForColumn(PartDistributorTableModel2::ColumnUnitPrice, new CurrencyDelegate(this));
@@ -204,22 +206,22 @@ int PartDialog::duplicatePart(const QModelIndex &index, bool allData)
         _partParamsModel->setCurrentPartId(partId);
         _partParamsModel->select();
         _partParamsModel->cloneData();
-        _partParamsModel->setCurrentForeignKey(invalidId);
+        _partParamsModel->setCurrentPartId(invalidId);
 
         _partDistributorModel->setCurrentPartId(partId);
         _partDistributorModel->select();
         _partDistributorModel->cloneData();
-        _partDistributorModel->setCurrentForeignKey(invalidId);
+        _partDistributorModel->setCurrentPartId(invalidId);
 
         _partManufacturerModel->setCurrentPartId(partId);
         _partManufacturerModel->select();
         _partManufacturerModel->cloneData();
-        _partManufacturerModel->setCurrentForeignKey(invalidId);
+        _partManufacturerModel->setCurrentPartId(invalidId);
 
         _partAttachmentModel->setCurrentForeignKey(partId);
         _partAttachmentModel->select();
         _partAttachmentModel->cloneData();
-        _partAttachmentModel->setCurrentForeignKey(invalidId);
+        _partAttachmentModel->setCurrentPartId(invalidId);
     }
     else{
         initialData = copySomeData(index);
@@ -518,7 +520,7 @@ void PartDialog::slotUsePackage(){
 void PartDialog::slotAddParameter(){    
     int rowCount = _partParamsModel->rowCount();
     if(_partParamsModel->insertRow(rowCount)){
-        QModelIndex index = _partParamsModel->index(rowCount,PartParametersTableModel3::ColumnName);
+        QModelIndex index = _partParamsModel->index(rowCount,PartParametersTableModel3::ColumnParameter);
         ui->partParametersTableView->setCurrentIndex(index);
         ui->partParametersTableView->edit(index);
     }    

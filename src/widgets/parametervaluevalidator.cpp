@@ -1,8 +1,8 @@
 #include "parametervaluevalidator.h"
 #include "unitparser.h"
 
-ParameterValueValidator::ParameterValueValidator(QObject *parent) :
-    QValidator(parent)
+ParameterValueValidator::ParameterValueValidator(const QString& unit, QObject *parent) :
+    QValidator(parent), _unit(unit)
 {
 }
 
@@ -14,6 +14,11 @@ ParameterValueValidator::~ParameterValueValidator()
 void ParameterValueValidator::setUnit(const QString& unit)
 {
     _unit = unit;
+}
+
+QString ParameterValueValidator::unit() const
+{
+    return _unit;
 }
 
 QValidator::State ParameterValueValidator::validate(QString & input, int &) const
