@@ -185,7 +185,8 @@ HEADERS  += mainwindow.h \
     models/parameter.h \
     widgets/comboitemdelegate.h \
     models/modelwithforeignkey.h \
-    models/parametermodel.h
+    models/parametermodel.h \
+    stacktrace.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \

@@ -16,11 +16,9 @@ const QChar UnitFormatter::capacitance('F');
 const QChar UnitFormatter::inductance('H');
 const QChar UnitFormatter::power('W');
 const QChar UnitFormatter::percentage('%');
-const QLocale currentLocale;
 
-static void removeTrailingZeros(QString & str)
-{
-    QChar decimalPoint = currentLocale.decimalPoint();
+static void removeTrailingZeros(QString & str, const QChar& decimalPoint)
+{    
     int idx = str.indexOf(decimalPoint);
     if(idx<0) return;
     int i=str.length()-1;
@@ -52,10 +50,11 @@ float epsilonEqual( double a, double b, double epsilon )
 
 QString UnitFormatter::format(const double value, QString unit)
 {
+    QLocale locale;
     QString result;
     ushort prefix;
     QTextStream out(&result);
-    out.setLocale(currentLocale);
+    out.setLocale(locale);
     if(value>0.999999999){
         double aux = value;
         int multiplier = 0;
@@ -63,7 +62,6 @@ QString UnitFormatter::format(const double value, QString unit)
             ++multiplier;
             aux=aux/1000;
         }
-        qDebug("Value is %f",aux);
         prefix = BIG_PREFIXES[multiplier];
         out.setRealNumberPrecision(2);
         out.setNumberFlags(out.numberFlags() & ~QTextStream::ForcePoint);
@@ -84,7 +82,7 @@ QString UnitFormatter::format(const double value, QString unit)
         out.setRealNumberNotation(QTextStream::FixedNotation);
         out<<aux;
     }
-    removeTrailingZeros(result);
+    removeTrailingZeros(result, locale.decimalPoint());
     if(prefix){
         out<<QChar(prefix);
     }

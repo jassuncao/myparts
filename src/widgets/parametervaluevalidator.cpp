@@ -1,16 +1,26 @@
 #include "parametervaluevalidator.h"
 #include "unitparser.h"
+#include <QLocale>
 
 ParameterValueValidator::ParameterValueValidator(const QString& unit, QObject *parent) :
-    QValidator(parent), _unit(unit)
+    QRegExpValidator(parent), _unit(unit)
 {
+    QLocale locale;
+    QString exp=QString("^-?\\d+([kKMGTPEZYmunpfazy\\x{03BC}]|\\%1)?\\d*[kKMGTPEZYmunpfazy\\x{03BC}]?").arg(locale.decimalPoint());
+    if(unit.isEmpty()){
+        exp.append('$');
+    }
+    else{
+        exp.append(unit).append("?$");
+    }
+    QRegExp regExp(exp, Qt::CaseSensitive, QRegExp::RegExp2);
+    setRegExp(regExp);
 }
 
 ParameterValueValidator::~ParameterValueValidator()
-{
+{}
 
-}
-
+/*
 void ParameterValueValidator::setUnit(const QString& unit)
 {
     _unit = unit;
@@ -33,22 +43,5 @@ QValidator::State ParameterValueValidator::validate(QString & input, int &) cons
         UnitParser::parseUnit(input, _unit, &ok);
     }
     return ok ? QValidator::Acceptable : QValidator::Invalid;
-/*
-    QByteArray buff;
-    buff.reserve(input.length());
-    for (int i = 0; i < input.length(); ++i) {
-          QChar c = input.at(i);
-          if(c.isLetter()){
-              if(!_allowedSISymbols.contains(c)){
-                  return QValidator::Invalid;
-              }
-              buff.append(locale().decimalPoint().toAscii());
-          }
-          else{
-             buff.append(c.toAscii());
-          }
-    }
-    QString text(buff);
-    return QDoubleValidator::validate(text, pos);
-    */
 }
+*/

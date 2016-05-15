@@ -4,6 +4,7 @@
 #include "customtablemodel.h"
 
 class QAbstractListModel;
+class TableItem;
 
 class ParameterModel : public SimpleSqlTableModel
 {
@@ -19,8 +20,10 @@ public:
     };
 
     static ParameterModel * createNew(QObject *parent);
+    QAbstractItemModel *relationModel(const int column) const;
 protected:
     explicit ParameterModel(const QStringList &fieldNames, const QStringList &columnNames, QObject *parent = 0);
+    TableItem * createBlankItem() const;
 
 };
 

@@ -241,6 +241,7 @@ DQSharedList ParameterEntity::initialData() const
     writer << "resistance" << "Resistance" << DECIMAL << false << OHM << "Resistance";
     writer << "capacitance" << "Capacitance" << DECIMAL << false << FARAD << "Capacitance";
     writer << "power_rating" << "Power Rating" << DECIMAL << false << WATT << "Power Rating";
+    writer << "resistance_tolerance" << "Resistance Tolerance" << TEXT << false << QVariant() << "Resistance Tolerance";
     return initialData;
 }
 

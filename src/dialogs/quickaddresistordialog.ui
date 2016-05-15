@@ -81,13 +81,6 @@
        </property>
       </widget>
      </item>
-     <item row="5" column="1">
-      <widget class="QComboBox" name="resistorPowerComboBox">
-       <property name="editable">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
      <item row="8" column="0">
       <widget class="QLabel" name="label_4">
        <property name="text">
@@ -219,6 +212,9 @@
      <item row="6" column="1">
       <widget class="QLineEdit" name="toleranceLineEdit"/>
      </item>
+     <item row="5" column="1">
+      <widget class="QLineEdit" name="resistorPowerRatingLineEdit"/>
+     </item>
     </layout>
    </item>
    <item>
@@ -278,7 +274,7 @@
   <tabstop>multiplierBandComboBox</tabstop>
   <tabstop>toleranceBandComboBox</tabstop>
   <tabstop>resistorValueLineEdit</tabstop>
-  <tabstop>resistorPowerComboBox</tabstop>
+  <tabstop>resistorPowerRatingLineEdit</tabstop>
   <tabstop>toleranceLineEdit</tabstop>
   <tabstop>quantitySpinBox</tabstop>
   <tabstop>partCategoryComboBox</tabstop>

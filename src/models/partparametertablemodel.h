@@ -34,8 +34,9 @@ public:
     void setCurrentPartId(const QVariant& partId);
     void cloneData();
     QAbstractListModel * relationModel(const int column) const;
+    bool appendParameter(int paramId, const QVariant& value);
 protected:
-    bool loadParameter();
+    bool loadParameters();
     virtual bool deleteItem(QVariant id);
     virtual bool saveItem(PartParameterItem* item);
     virtual bool loadItems();
@@ -48,7 +49,11 @@ private:
     QSqlQuery _insertQuery;
     QSqlQuery _updateQuery;
     QSqlQuery _deleteQuery;
+public:
+    static Parameter findParameter(const QString& key);
 };
+
+
 
 
 

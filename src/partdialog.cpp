@@ -29,6 +29,8 @@
 #include "models/modelsprovider.h"
 #include "models/categorytreemodel.h"
 #include "models/partparametertablemodel.h"
+#include "widgets/comboitemdelegate.h"
+
 #include "utils.h"
 
 
@@ -77,18 +79,18 @@ PartDialog::PartDialog(ModelsProvider * modelsProvider, QWidget *parent) :
 
     ui->partParametersTableView->setModel(_partParamsModel);
     ui->partParametersTableView->setItemDelegate(new ComboItemDelegate(this));
-    ui->partParametersTableView->setItemDelegateForColumn(PartParametersTableModel3::ColumnValue, new ParameterValueDelegate());
-    ui->partParametersTableView->setColumnWidth(PartParametersTableModel3::ColumnParameter, 180);
+    ui->partParametersTableView->setItemDelegateForColumn(PartParameterTableModel::ColumnParameterValue, new ParameterValueDelegate());
+    ui->partParametersTableView->setColumnWidth(PartParameterTableModel::ColumnParameter, 180);
 
     ui->partDistributorsTableView->setModel(_partDistributorModel);
     ui->partDistributorsTableView->setItemDelegateForColumn(PartDistributorTableModel2::ColumnUnitPrice, new CurrencyDelegate(this));
     ui->partDistributorsTableView->setItemDelegateForColumn(PartDistributorTableModel2::ColumnMinimumOrder, new ValidatingItemDelegate(new QIntValidator()));
-    ui->partDistributorsTableView->setItemDelegate(new CustomTableRelationDelegate(ui->partDistributorsTableView));
+    ui->partDistributorsTableView->setItemDelegate(new ComboItemDelegate(this));
     ui->partDistributorsTableView->setColumnWidth(PartDistributorTableModel2::ColumnDistributor, 180);
     ui->partDistributorsTableView->setColumnWidth(PartDistributorTableModel2::ColumnPartNumber, 180);
 
     ui->partManufacturerTableView->setModel(_partManufacturerModel);
-    ui->partManufacturerTableView->setItemDelegate(new CustomTableRelationDelegate(ui->partManufacturerTableView));  
+    ui->partManufacturerTableView->setItemDelegate(new ComboItemDelegate(this));
     ui->partManufacturerTableView->setColumnWidth(PartManufacturerTableModel2::ColumnManufacturer, 220);
     //ui->partManufacturerTableView->setColumnWidth(PartManufacturerTableModel2::ColumnPartNumber, 256);
 
@@ -251,12 +253,17 @@ QModelIndex PartDialog::insertNewPart(QSqlRecord initialData)
 
 QSqlRecord PartDialog::copySomeData(const QModelIndex & index)
 {
-    QSqlRecord initialData =_partsModel->record();
+    QVariant name = getColumnValue(_partsModel, index.row(), PartsSqlTableModel::ColumnName);
+    QVariant description = getColumnValue(_partsModel, index.row(), PartsSqlTableModel::ColumnDescription);
     QVariant storageId = getColumnValue(_partsModel, index.row(), PartsSqlTableModel::ColumnStorageId);
     QVariant categoryId = getColumnValue(_partsModel, index.row(), PartsSqlTableModel::ColumnCategoryId);
     QVariant partUnitId = getColumnValue(_partsModel, index.row(), PartsSqlTableModel::ColumnPartUnitId);
     QVariant packageId = getColumnValue(_partsModel, index.row(), PartsSqlTableModel::ColumnPackageId);
     QVariant conditionId = getColumnValue(_partsModel, index.row(), PartsSqlTableModel::ColumnConditionId);
+
+    QSqlRecord initialData =_partsModel->record();
+    initialData.setValue(PartsSqlTableModel::ColumnStorageId, name);
+    initialData.setValue(PartsSqlTableModel::ColumnStorageId, description);
     initialData.setValue(PartsSqlTableModel::ColumnStorageId, storageId);
     initialData.setValue(PartsSqlTableModel::ColumnCategoryId, categoryId);
     initialData.setValue(PartsSqlTableModel::ColumnPartUnitId, partUnitId);
@@ -272,18 +279,6 @@ QSqlRecord PartDialog::copyAllData(const QModelIndex & index)
     initialData.setNull(PartsSqlTableModel::ColumnActualStock);
     return initialData;
 }
-
-/*
-int findDefaultValueRow(const QSqlQueryModel * model, int column)
-{
-    QModelIndex start = model->index(0, column);
-    QModelIndexList res = model->match(start, Qt::EditRole, QVariant(1));
-    if(!res.isEmpty())
-        return res.first().row();
-    qWarning("Default value not found");
-    return -1;
-}
-*/
 
 void PartDialog::initCombos()
 {
@@ -520,7 +515,7 @@ void PartDialog::slotUsePackage(){
 void PartDialog::slotAddParameter(){    
     int rowCount = _partParamsModel->rowCount();
     if(_partParamsModel->insertRow(rowCount)){
-        QModelIndex index = _partParamsModel->index(rowCount,PartParametersTableModel3::ColumnParameter);
+        QModelIndex index = _partParamsModel->index(rowCount,PartParameterTableModel::ColumnParameter);
         ui->partParametersTableView->setCurrentIndex(index);
         ui->partParametersTableView->edit(index);
     }    

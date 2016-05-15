@@ -98,14 +98,7 @@ public:
     DQForeignKey<CategoryEntity> category;
     DQForeignKey<StorageEntity> storage;
     DQForeignKey<PackageEntity> package;
-    DQForeignKey<ConditionEntity> condition;
-
-    //Parameters
-    //StockHistory
-    //Manufacturers
-    //Distributors
-    //Images
-    //Attachments
+    DQForeignKey<ConditionEntity> condition;    
     DQSharedList initialData() const;
 };
 
@@ -336,7 +329,7 @@ DQ_DECLARE_MODEL(Entities::ParameterEntity,
                  "parameter", // the table name.
                  DQ_FIELD(key, DQNotNull | DQUnique),
                  DQ_FIELD(name, DQNotNull),
-                 DQ_FIELD(datatype, DQNotNull),
+                 DQ_FIELD(datatype),
                  DQ_FIELD(deletable, DQNotNull),
                  DQ_FIELD(unit),
                  DQ_FIELD(description)

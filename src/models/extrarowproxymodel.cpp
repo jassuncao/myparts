@@ -1,10 +1,8 @@
 #include "extrarowproxymodel.h"
 #include <QFont>
 
-ExtraRowProxyModel::ExtraRowProxyModel(QObject *parent) : QAbstractProxyModel(parent),
-    _valueColumn(0), _displayColumn(1)
-{    
-}
+ExtraRowProxyModel::ExtraRowProxyModel(QObject *parent) : QAbstractProxyModel(parent)
+{}
 
 ExtraRowProxyModel::~ExtraRowProxyModel()
 {
@@ -12,9 +10,7 @@ ExtraRowProxyModel::~ExtraRowProxyModel()
 
 void ExtraRowProxyModel::setEmptyDisplayText(const QString & displayText)
 {
-    _emptyDisplayText =  displayText;
-    QModelIndex topLeft = createIndex(0, _displayColumn);
-    emit dataChanged(topLeft, topLeft);
+    _emptyDisplayText =  displayText;    
 }
 
 int ExtraRowProxyModel::rowCount(const QModelIndex &parent) const
@@ -50,15 +46,13 @@ QVariant ExtraRowProxyModel::data(const QModelIndex &index, int role) const
   if (!index.isValid()) return QVariant();
 
   if (index.row() == 0) {
-      if (role == Qt::DisplayRole || role==Qt::EditRole){
-          if(index.column()==_displayColumn){
-            return _emptyDisplayText;
-          }
-          if(index.column()==_valueColumn){
-              return _emptyValue;
-          }
+      if(role == Qt::DisplayRole) {
+          return _emptyDisplayText;
       }
-      else if(role == Qt::FontRole && index.column()==_displayColumn){
+      else if(role == Qt::EditRole) {
+          return _emptyValue;
+      }
+      else if(role == Qt::FontRole){
           QFont boldFont;
           boldFont.setItalic(true);
           return boldFont;

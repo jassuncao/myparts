@@ -38,8 +38,8 @@ QVariant TableItem::data(int column) const
     return QVariant();
 }
 
-TableRelation::TableRelation(const QString & tableName, const QString & indexField, const QString & displayField) :
-    _tableName(tableName), _displayField(displayField), _indexField(indexField), _initialized(false)
+TableRelation::TableRelation(const QString & tableName, const QString & indexField, const QString & displayField, const bool nullable) :
+    _tableName(tableName), _displayField(displayField), _indexField(indexField), _initialized(false), _nullable(nullable)
 {   
     QString sqlText("SELECT %1, %2 FROM %3 ORDER BY %2");
     sqlText = sqlText.arg(_indexField, _displayField, _tableName);
@@ -59,6 +59,8 @@ QVariant TableRelation::displayValue(const QVariant foreignId) const
 
 bool TableRelation::validId(const QVariant foreignId) const
 {
+    if(foreignId.isNull() && _nullable)
+        return true;
     return _lookupDictionary.contains(foreignId.toInt());
 }
 
@@ -236,7 +238,6 @@ QVariant CustomTableModel::data(const QModelIndex &index, int role) const
     }
     if (role == Qt::DisplayRole || role == Qt::EditRole) {
         const TableItem * item = _items.at(index.row());
-
         if(role == Qt::DisplayRole && columnIsRelation(column)){
             TableRelation * relation = _relations[column];
             if(!relation->initialized())
@@ -276,14 +277,14 @@ TableItem * CustomTableModel::createBlankItem() const
 }
 
 
-void CustomTableModel::createRelation(const int column, const QString & tableName, const QString & indexField, const QString & displayField)
+void CustomTableModel::createRelation(const int column, const QString & tableName, const QString & indexField, const QString & displayField, const bool nullable)
 {
     if(_relations.size()<=column)
         _relations.resize(column+1);
-    _relations[column] = new TableRelation(tableName, indexField, displayField);
+    _relations[column] = new TableRelation(tableName, indexField, displayField, nullable);
 }
 
-QAbstractListModel * CustomTableModel::relationModel(const int column) const
+QAbstractItemModel * CustomTableModel::relationModel(const int column) const
 {
     if(columnIsRelation(column))
         return _relations[column]->model();
@@ -532,64 +533,4 @@ PartDistributorTableModel2 * PartDistributorTableModel2::createNew(QObject * par
     columnNames<<tr("Distributor")<<tr("Part Number")<<tr("Minimum Order")<<tr("Unit Price")<<tr("Packaging");
     return new PartDistributorTableModel2(fieldNames, columnNames, parent);
 }
-
-PartParametersTableModel3::PartParametersTableModel3(const QStringList &fieldNames, const QStringList &columnNames, QObject *parent)
-    : SimpleSqlTableModel("part_parameter", fieldNames, columnNames, "part", parent)
-{
-    createRelation(ColumnParameter, "parameter", "id", "name");
-    //createRelation(HiddenColumnUnitSymbol, "unit", "id", "symbol");
-}
-
-QVariant PartParametersTableModel3::data(const QModelIndex &index, int role) const
-{
-    QVariant var = SimpleSqlTableModel::data(index, role);
-    if(role == Qt::DisplayRole && index.column()==ColumnValue && var.isValid() ){
-        /*
-        const TableItem * item = _items.at(index.row());
-        TableRelation * relation = _relations[HiddenColumnUnitSymbol];
-        if(!relation->initialized())
-            relation->populateDictionary();
-
-        const QString & symbol = relation->displayValue(item->data(ColumnUnit)).toString();
-        ParameterValue paramValue(var.toDouble(), symbol);
-        */
-        ParameterValue paramValue(var.toDouble(), QString("_"));
-        var.setValue(paramValue);
-    }
-    return var;
-}
-
-bool PartParametersTableModel3::appendParameter(const QString& name, const double value, const int unitId)
-{/*
-    int row = rowCount();
-    if(insertRow(row)){
-        bool ok = true;
-        QModelIndex idx = index(row,ColumnName);
-        ok = ok && setData(idx, name);
-
-        idx = index(row,ColumnValue);
-        ok = ok && setData(idx, value);
-
-        idx = index(row,ColumnUnit);
-        ok = ok && setData(idx, unitId);
-        return ok;
-    }
-    else{
-        return false;
-    }
-    */
-    return false;
-}
-
-PartParametersTableModel3 * PartParametersTableModel3::createNew(QObject * parent)
-{
-    QStringList fieldNames;
-    QStringList columnNames;
-    fieldNames<<"parameter"<<"numericValue"<<"textValue";
-    columnNames<<tr("Name")<<tr("Value")<<tr("Unit");
-    return new PartParametersTableModel3(fieldNames, columnNames, parent);
-}
-
-
-
 

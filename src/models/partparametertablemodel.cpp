@@ -80,7 +80,6 @@ public:
         case Entities::DECIMAL:
         case Entities::INTEGER:
             return QVariant::fromValue(ParameterValue(_numericValue, _param.unitSymbol()));
-            //return _numericValue;
         default:
             return QVariant();
         }
@@ -159,7 +158,7 @@ PartParameterTableModel::PartParameterTableModel(QObject *parent) :
     _insertQuery.prepare(insertStmt);
     _updateQuery.prepare(updateStmt);
     _deleteQuery.prepare(deleteStmt);
-    loadParameter();
+    loadParameters();
 }
 
 PartParameterTableModel::~PartParameterTableModel()
@@ -183,7 +182,7 @@ void PartParameterTableModel::cloneData()
 }
 QAbstractListModel * PartParameterTableModel::relationModel(const int column) const
 {
-    if(column==ColumnParameter){
+    if(column==ColumnParameter){        
         return new ParametersListModel(_parameters.values());
     }
     return 0;
@@ -253,9 +252,9 @@ QVariant PartParameterTableModel::data(const QModelIndex &index, int role) const
     if(role == Qt::DisplayRole) {
         const PartParameterItem * item = _items.at(index.row());
         switch(index.column()){
-            case ColumnParameter:
+            case ColumnParameter:                
                 return item->param().name();
-            case ColumnParameterValue:
+            case ColumnParameterValue:                
                 return item->displayValue();
         }
     }
@@ -264,7 +263,7 @@ QVariant PartParameterTableModel::data(const QModelIndex &index, int role) const
         switch(index.column()){
             case ColumnParameter:
                 return item->param().id();
-            case ColumnParameterValue:
+            case ColumnParameterValue:                
                 return item->value();
         }
     }
@@ -385,7 +384,9 @@ bool PartParameterTableModel::saveItem(PartParameterItem* item)
     }
     else{        
         //Brand new item. Insert
-        qDebug()<<"Inserting new item ";       
+        qDebug("Inserting new part parameter (partId=%d, paramId=%d, numericValue=%f, textValue=%s",
+               _partId.toInt(), item->param().id(), item->numericValue().toDouble(), qPrintable(item->textValue().toString()));
+
         _insertQuery.bindValue(0,_partId);
         _insertQuery.bindValue(1,item->param().id());
         _insertQuery.bindValue(2,item->numericValue());
@@ -399,6 +400,20 @@ bool PartParameterTableModel::saveItem(PartParameterItem* item)
         qWarning()<<"Failed to execute insert query. Reason: "<<_insertQuery.lastError().driverText();
         return false;
     }
+}
+
+bool PartParameterTableModel::appendParameter(int paramId, const QVariant& value)
+{
+    int row = rowCount();
+    bool success = insertRow(row);
+    if(success){
+        QModelIndex paramIdx = index(row, ColumnParameter);
+        success= success && setData(paramIdx, paramId, Qt::EditRole);
+
+        QModelIndex paramValueIdx = index(row, ColumnParameterValue);
+        success= success && setData(paramValueIdx, value, Qt::EditRole);
+    }
+    return success;
 }
 
 bool PartParameterTableModel::loadItems()
@@ -427,7 +442,24 @@ bool PartParameterTableModel::loadItems()
     qWarning()<<"Failed to execute query. Reason "<<_selectQuery.lastError().driverText();
     return false;
 }
-bool PartParameterTableModel::loadParameter()
+
+static Parameter loadParameter(const QSqlQuery& query)
+{
+    QVariant id = query.value(0);
+    QVariant name = query.value(1);
+    QVariant datatype = query.value(2);
+    QVariant description = query.value(3);
+    QVariant symbol = query.value(4);
+    Parameter param;
+    param.setId(id.toInt());
+    param.setName(name.toString());
+    param.setDatatype(static_cast<Entities::ParameterDatatypes>(datatype.toInt()));
+    param.setDescription(description.toString());
+    param.setUnitSymbol(symbol.toString());
+    return param;
+}
+
+bool PartParameterTableModel::loadParameters()
 {
 
     qDebug()<<"loading parameters ";
@@ -438,17 +470,7 @@ bool PartParameterTableModel::loadParameter()
     if(query.exec()){
         while(query.next())
         {
-            QVariant id = query.value(0);
-            QVariant name = query.value(1);
-            QVariant datatype = query.value(2);
-            QVariant description = query.value(3);
-            QVariant symbol = query.value(4);
-            Parameter param;
-            param.setId(id.toInt());
-            param.setName(name.toString());
-            param.setDatatype(static_cast<Entities::ParameterDatatypes>(datatype.toInt()));
-            param.setDescription(description.toString());
-            param.setUnitSymbol(symbol.toString());
+            Parameter param = loadParameter(query);
             _parameters.insert(param.id(), param);
         }
         qDebug()<<"Loaded "<<_parameters.size()<<" parameters";
@@ -458,6 +480,20 @@ bool PartParameterTableModel::loadParameter()
        qWarning()<<"Failed to execute query. Reason "<<query.lastError().driverText();
        return false;
     }
+}
+
+Parameter PartParameterTableModel::findParameter(const QString& key)
+{
+    QSqlQuery query("SELECT p.id, p.name, p.datatype, p.description, u.symbol "
+                    "FROM parameter p "
+                    "LEFT JOIN unit u "
+                    "ON p.unit = u.id "
+                    "WHERE p.key=?");
+    query.bindValue(0, key);
+    if(query.exec() && query.next()){
+        return loadParameter(query);
+    }
+    return Parameter();
 }
 
 

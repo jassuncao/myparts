@@ -81,8 +81,7 @@ private:
     Ui::PartDialog *ui;    
     ModelsProvider * _modelsProvider;
     PartsSqlTableModel * _partsModel;
-    PartParameterTableModel * _partParamsModel;
-    //PartParametersTableModel3 * _partParamsModel;
+    PartParameterTableModel * _partParamsModel;    
     PartDistributorTableModel2 * _partDistributorModel;
     PartManufacturerTableModel2 * _partManufacturerModel;
     AttachmentTableModel3 * _partAttachmentModel;

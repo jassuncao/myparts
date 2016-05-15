@@ -3,12 +3,13 @@
 
 #include <QDialog>
 #include "utils.h"
+#include "models/parameter.h"
 
 class ColorQComboBox;
 class PartsSqlTableModel;
 class TreeItemModel;
 class ModelsProvider;
-class PartParametersTableModel3;
+class PartParameterTableModel;
 
 namespace Ui {
 class QuickAddResistorDialog;
@@ -33,14 +34,11 @@ private:
 
     Ui::QuickAddResistorDialog *ui;
     PartsSqlTableModel * _partsModel;
-    PartParametersTableModel3 * _partParams;
+    PartParameterTableModel * _partParams;
     QString _resistorNameTemplate;
-    Utils::StandardUnit _resistanceUnit;
-    Utils::StandardUnit _powerUnit;
-    Utils::StandardUnit _toleranceUnit;
-    QString _resistanceSymbol;
-    QString _powerSymbol;
-    QString _toleranceSymbol;
+    Parameter _resistanceParam;
+    Parameter _powerRatingParam;
+    Parameter _resistorToleranceParam;
 };
 
 #endif // QUICKADDRESISTORDIALOG_H

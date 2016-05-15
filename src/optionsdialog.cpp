@@ -77,8 +77,10 @@ void OptionsDialog::setupParametersModel()
 {
     _parameterModel = ParameterModel::createNew(this);
     ui->parametersTableView->setModel(_parameterModel);
-    ui->parametersTableView->setItemDelegate(new CustomTableRelationDelegate(this));
+    ui->parametersTableView->setItemDelegate(new ComboItemDelegate(this));
+    ui->parametersTableView->hideColumn(ParameterModel::ColumnKey);
     ui->parametersTableView->hideColumn(ParameterModel::ColumnDeletable);
+    ui->parametersTableView->hideColumn(ParameterModel::ColumnId);
     _parameterModel->select();
 }
 
@@ -131,6 +133,7 @@ void OptionsDialog::setupConnections()
     connect(ui->parametersTableView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)), this, SLOT(slotParameterRowChanged(QModelIndex,QModelIndex)));
     connect(ui->addParameterButton, SIGNAL(clicked(bool)), this, SLOT(slotAddParameter()));
     connect(ui->deleteParameterButton, SIGNAL(clicked(bool)), this, SLOT(slotDeleteParameter()));
+    connect(_parameterModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(slotDataChanged()));
     ui->deleteParameterButton->setEnabled(false);
 }
 
@@ -172,7 +175,6 @@ void OptionsDialog::slotClosePartConditionEditor(QWidget *, QAbstractItemDelegat
     }
 }
 
-
 void OptionsDialog::accept()
 {
     slotApplyChanges();
@@ -209,7 +211,6 @@ void OptionsDialog::slotMakeCurrentUnitDefault()
     QModelIndex currentIndex = ui->partUnitsTableView->currentIndex();
     if(!currentIndex.isValid())
         return;
-
     makeSelectedItemDefault(_partUnitsModel, currentIndex.row(), COLUMN_UNIT_DEFAULT);
 }
 
@@ -251,7 +252,6 @@ void OptionsDialog::slotApplyChanges()
         ui->buttonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
     }
 }
-
 
 void OptionsDialog::slotAddUnit()
 {
@@ -325,15 +325,13 @@ void OptionsDialog::slotMakeCurrentConditionDefault()
     QModelIndex currentIndex = ui->partConditionTableView->currentIndex();
     if(!currentIndex.isValid())
         return;
-    _partConditionModel->makeSelectedItemDefault(currentIndex.row());
-    //makeSelectedItemDefault(_partConditionModel, currentIndex.row(), COLUMN_CONDITION_DEFAULT);
+    _partConditionModel->makeSelectedItemDefault(currentIndex.row());    
 }
 
 void OptionsDialog::slotConditionDoubleClick(const QModelIndex &index)
 {
     if(index.isValid() && index.column() == PartConditionModel::ColumnDefault){
         _partConditionModel->makeSelectedItemDefault(index.row());
-        //makeSelectedItemDefault(_partConditionModel, index.row(), COLUMN_CONDITION_DEFAULT);
     }
 }
 
@@ -367,8 +365,5 @@ void OptionsDialog::slotParameterRowChanged(const QModelIndex &current, const QM
        QVariant deletable = _parameterModel->index(current.row(), ParameterModel::ColumnDeletable).data(Qt::EditRole);
        deleteEnabled = deletable.toBool() || deletable.isNull();
     }
-    ui->deleteConditionButton->setEnabled(deleteEnabled);
+    ui->deleteParameterButton->setEnabled(deleteEnabled);
 }
-
-
-

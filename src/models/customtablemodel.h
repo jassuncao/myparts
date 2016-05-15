@@ -10,6 +10,7 @@
 #include <QSqlQuery>
 #include <QStyledItemDelegate>
 #include <QComboBox>
+#include "modelwithforeignkey.h"
 
 class TableItem {
 public:
@@ -30,7 +31,7 @@ private:
 
 class TableRelation : public QAbstractListModel{
 public:
-    explicit TableRelation(const QString & tableName, const QString & indexField, const QString & displayField);
+    explicit TableRelation(const QString & tableName, const QString & indexField, const QString & displayField, const bool nullable=false);
     ~TableRelation();
     QVariant displayValue(const QVariant foreignId) const;
     bool validId(const QVariant foreignId) const;
@@ -47,10 +48,11 @@ private:
     QHash<int, QVariant> _lookupDictionary;
     QList<QPair<QString,int> > _items;
     QSqlQuery _selectQuery;
+    bool _nullable;
 };
 
 
-class CustomTableModel : public QAbstractTableModel
+class CustomTableModel : public QAbstractTableModel, public IModelWithForeignKey
 {
     Q_OBJECT
 public:
@@ -67,8 +69,8 @@ public:
     bool removeRows(int row, int count, const QModelIndex&);    
     void select();
     bool submitAll();
-    void createRelation(const int column, const QString & tableName, const QString & indexField, const QString & displayField);
-    virtual QAbstractListModel * relationModel(const int column) const;
+    void createRelation(const int column, const QString & tableName, const QString & indexField, const QString & displayField, const bool nullable=false);
+    virtual QAbstractItemModel *relationModel(const int column) const;
     void cloneData();
 protected:
     virtual TableItem * createBlankItem() const;
@@ -109,61 +111,6 @@ protected:
     int _sortColumn;
     Qt::SortOrder _order;
 };
-
-class CustomTableRelationDelegate : public QStyledItemDelegate
-{
-    Q_OBJECT
-public:
-    explicit CustomTableRelationDelegate(QObject *parent = 0)
-        : QStyledItemDelegate(parent)
-    {}
-
-    ~CustomTableRelationDelegate()
-    {}
-
-    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
-    {
-        const CustomTableModel *tableModel = qobject_cast<const CustomTableModel *>(index.model());
-        QAbstractListModel *childModel = tableModel ? tableModel->relationModel(index.column()) : 0;
-        if (!childModel)
-            return QStyledItemDelegate::createEditor(parent, option, index);
-
-        QComboBox *combo = new QComboBox(parent);
-        combo->setModel(childModel);
-        combo->installEventFilter(const_cast<CustomTableRelationDelegate *>(this));
-        return combo;
-    }
-
-    void setEditorData(QWidget *editor, const QModelIndex &index) const
-    {
-        const CustomTableModel *tableModel = qobject_cast<const CustomTableModel *>(index.model());
-        QComboBox *combo = qobject_cast<QComboBox *>(editor);
-        if (!tableModel || !combo) {
-            QStyledItemDelegate::setEditorData(editor, index);
-            return;
-        }
-        combo->setCurrentIndex(combo->findText(tableModel->data(index, Qt::DisplayRole).toString()));
-    }
-
-    void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
-    {
-        if (!index.isValid())
-            return;
-
-        CustomTableModel *tableModel = qobject_cast<CustomTableModel *>(model);
-        QAbstractListModel *childModel = tableModel ? tableModel->relationModel(index.column()) : 0;
-        QComboBox *combo = qobject_cast<QComboBox *>(editor);
-        if (!tableModel || !childModel || !combo) {
-            QStyledItemDelegate::setModelData(editor, model, index);
-            return;
-        }
-
-        int currentItem = combo->currentIndex();
-        QVariant value = childModel->data(childModel->index(currentItem), Qt::EditRole);
-        tableModel->setData(index, value, Qt::EditRole);
-    }
-};
-
 
 class AttachmentTableModel3 : public SimpleSqlTableModel
 {
@@ -221,26 +168,6 @@ public:
     static PartDistributorTableModel2 * createNew(QObject *parent);
 protected:
     explicit PartDistributorTableModel2(const QStringList & fieldNames, const QStringList & columnNames, QObject *parent = 0);
-};
-
-class PartParametersTableModel3 : public SimpleSqlTableModel
-{
-    Q_OBJECT
-public:
-    enum ColumnsIndex {
-        ColumnParameter,
-        ColumnValue,        
-        ColumnDescription,
-        HiddenColumnUnitSymbol,
-    };
-
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    inline void setCurrentPartId(const QVariant & partId) { setCurrentForeignKey(partId); }
-    bool appendParameter(const QString& name, const double value, const int unitId);
-
-    static PartParametersTableModel3 * createNew(QObject *parent);
-protected:
-    explicit PartParametersTableModel3(const QStringList & fieldNames, const QStringList & columnNames, QObject *parent = 0);
 };
 
 #endif // CUSTOMTABLEMODEL_H

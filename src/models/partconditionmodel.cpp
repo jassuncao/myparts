@@ -8,7 +8,7 @@ PartConditionModel::PartConditionModel(const QStringList & fieldNames, const QSt
 int PartConditionModel::findDefaultValueRow() const
 {
     QModelIndex start = index(0, PartConditionModel::ColumnDefault);
-    QModelIndexList res = match(start, Qt::EditRole, QVariant(true));
+    QModelIndexList res = match(start, Qt::EditRole, QVariant(1));
     if(!res.isEmpty())
         return res.first().row();
     qWarning("Default value not found");
