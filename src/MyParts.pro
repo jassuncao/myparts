@@ -100,7 +100,8 @@ SOURCES += main.cpp\
     models/partparametertablemodel.cpp \
     models/parameter.cpp \
     widgets/comboitemdelegate.cpp \
-    models/parametermodel.cpp
+    models/parametermodel.cpp \
+    models/databasehelper.cpp
 
 HEADERS  += mainwindow.h \
     entities/entities.h \
@@ -186,7 +187,8 @@ HEADERS  += mainwindow.h \
     widgets/comboitemdelegate.h \
     models/modelwithforeignkey.h \
     models/parametermodel.h \
-    stacktrace.h
+    stacktrace.h \
+    models/databasehelper.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \
