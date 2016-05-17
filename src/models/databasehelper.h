@@ -11,6 +11,8 @@ protected:
     bool runCreateScript(const char * script) const;
     bool createUnitTable() const;
     bool createPartUnitTable() const;
+    bool createCategoryTable() const;
+    bool createConditionTable() const;
 private:
     QSqlDatabase _db;
 };
