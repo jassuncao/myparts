@@ -12,6 +12,7 @@
 #include <QStyleFactory>
 #include <QStyle>
 #include <QDebug>
+#include "models/databasehelper.h"
 
 bool createTables(DQConnection & connection)
 {
@@ -88,7 +89,10 @@ int main(int argc, char *argv[])
         //listSomeData();
         //createSampleCategories();
     }
+
     connection.query().exec("PRAGMA foreign_keys = ON");
+    DatabaseHelper helper;
+    helper.createTables();
     QCoreApplication::setOrganizationName("joaoassuncao");
     QCoreApplication::setOrganizationDomain("joaoassuncao.com");
     QCoreApplication::setApplicationName("MyParts");
