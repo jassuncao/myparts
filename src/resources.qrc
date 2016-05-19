@@ -79,4 +79,8 @@
         <file alias="page_projects">images/table_32x32.png</file>
         <file alias="page_parameters">images/parameter_32x32.png</file>
     </qresource>
+    <qresource prefix="/scripts">
+        <file>SQLiteInit.sql</file>
+        <file>initialdata.sql</file>
+    </qresource>
 </RCC>

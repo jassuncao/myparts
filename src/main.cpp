@@ -92,7 +92,7 @@ int main(int argc, char *argv[])
 
     connection.query().exec("PRAGMA foreign_keys = ON");
     DatabaseHelper helper;
-    helper.createTables();
+    helper.createDatabase();
     QCoreApplication::setOrganizationName("joaoassuncao");
     QCoreApplication::setOrganizationDomain("joaoassuncao.com");
     QCoreApplication::setApplicationName("MyParts");

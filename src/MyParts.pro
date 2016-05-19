@@ -223,4 +223,6 @@ win32-g++: PRE_TARGETDEPS += $$PWD/../../build-qt-manhattan-style-Desktop_Qt_5_2
 
 #unix:!macx: LIBS += -lwwwidgets4
 
-DISTFILES +=
+DISTFILES += \
+    SQLiteInit.sql \
+    initialdata.sql
