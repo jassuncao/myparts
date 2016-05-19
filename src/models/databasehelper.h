@@ -10,8 +10,7 @@ class DatabaseHelper
 public:
     DatabaseHelper(QSqlDatabase db = QSqlDatabase());    
     bool createDatabase(void) const;
-protected:    
-
+    bool loadInitialData(void) const;
 private:
     bool execSqlStatement(const QString& queryStr) const;
     bool execSqlScript(QFile *file) const;

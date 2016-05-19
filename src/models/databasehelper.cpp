@@ -14,7 +14,15 @@ bool DatabaseHelper::createDatabase(void) const
 {
     QFile f(":/scripts/SQLiteInit.sql");
     if(!f.open(QIODevice::ReadOnly | QIODevice::Text))
-        qWarning() << "cannot open resource file";
+        qWarning() << "cannot open database initialization script";
+    return execSqlScript(&f);
+}
+
+bool DatabaseHelper::loadInitialData(void) const
+{
+    QFile f(":/scripts/initialdata.sql");
+    if(!f.open(QIODevice::ReadOnly | QIODevice::Text))
+        qWarning() << "cannot open initial data script";
     return execSqlScript(&f);
 }
 
@@ -24,13 +32,18 @@ bool DatabaseHelper::execSqlScript(QFile* file) const
     QString line;
     QString sqlStatement = "";
     bool ok = true;
+    int lineNumber = 0;
     while (!in.atEnd() && ok){
         line = in.readLine();
+        lineNumber++;
         if(line.startsWith('#') || line.isEmpty())
             continue;
         sqlStatement.append(line);
         if(sqlStatement.trimmed().endsWith(";")){
             ok = execSqlStatement(sqlStatement);
+            if(!ok){
+                qWarning()<< "Error at line "<<lineNumber;
+            }
             sqlStatement.clear();
         }
     }

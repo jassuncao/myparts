@@ -17,8 +17,8 @@
 bool createTables(DQConnection & connection)
 {
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    //db.setDatabaseName(":memory:");
-    db.setDatabaseName("myparts.sqlite");
+    db.setDatabaseName(":memory:");
+    //db.setDatabaseName("myparts.sqlite");
     if (!db.open()) {
         QMessageBox::critical(0, qApp->tr("Cannot open database"),
             qApp->tr("Unable to establish a database connection.\n"
@@ -49,6 +49,7 @@ bool createTables(DQConnection & connection)
     connection.addModel<Entities::PartManufacturerEntity>();
     connection.addModel<Entities::PartAttachmentEntity>();
     connection.addModel<Entities::PackageAttachmentEntity>();
+    /*
     if(connection.createTables()){
         DQIndex<Entities::CategoryEntity> lft_idx("lft_idx");
         DQIndex<Entities::CategoryEntity> rgt_idx("rgt_idx");
@@ -58,6 +59,10 @@ bool createTables(DQConnection & connection)
         connection.createIndex(rgt_idx);
         return true;
     }
+    */
+    DatabaseHelper helper(db.database());
+    helper.createDatabase();
+    helper.loadInitialData();
     return false;
 
 }
@@ -91,8 +96,7 @@ int main(int argc, char *argv[])
     }
 
     connection.query().exec("PRAGMA foreign_keys = ON");
-    DatabaseHelper helper;
-    helper.createDatabase();
+
     QCoreApplication::setOrganizationName("joaoassuncao");
     QCoreApplication::setOrganizationDomain("joaoassuncao.com");
     QCoreApplication::setApplicationName("MyParts");

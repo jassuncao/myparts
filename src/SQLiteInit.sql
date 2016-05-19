@@ -1,8 +1,8 @@
-CREATE TABLE version (
-    version TEXT NOT NULL UNIQUE
+CREATE TABLE db_version (
+    db_version TEXT NOT NULL UNIQUE
 );
 
-INSERT INTO version VALUES ('v1.0');
+INSERT INTO db_version VALUES ('v1.0');
 
 CREATE TABLE part_unit  (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
