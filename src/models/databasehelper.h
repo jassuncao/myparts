@@ -12,7 +12,7 @@ public:
     bool createDatabase(void) const;
     bool loadInitialData(void) const;
 private:
-    bool execSqlStatement(const QString& queryStr) const;
+    bool execSqlStatement(const QString& queryStr, const int lineNumber) const;
     bool execSqlScript(QFile *file) const;
     bool tableExists(const char * tableName) const;
     QSqlDatabase _db;

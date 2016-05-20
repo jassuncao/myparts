@@ -38,25 +38,22 @@ bool DatabaseHelper::execSqlScript(QFile* file) const
         lineNumber++;
         if(line.startsWith('#') || line.isEmpty())
             continue;
-        sqlStatement.append(line);
-        if(sqlStatement.trimmed().endsWith(";")){
-            ok = execSqlStatement(sqlStatement);
-            if(!ok){
-                qWarning()<< "Error at line "<<lineNumber;
-            }
+        sqlStatement.append(line.trimmed());
+        if(sqlStatement.endsWith(";")){
+            ok = execSqlStatement(sqlStatement, lineNumber);
             sqlStatement.clear();
         }
     }
     return ok;
 }
 
-bool DatabaseHelper::execSqlStatement(const QString& queryStr) const
+bool DatabaseHelper::execSqlStatement(const QString& queryStr, const int lineNumber) const
 {
     qDebug()<<"Executing SQL script:\n"<<queryStr;
-    QSqlQuery query(queryStr, _db);
-    bool res = query.exec();
+    QSqlQuery query(_db);
+    bool res = query.exec(queryStr);
     if(!res){
-        qWarning()<<"Failed to execute script. Reason:"<<query.lastError();
+        qWarning()<<"Failed to execute script at line "<< lineNumber<<". Reason:"<<query.lastError();
     }
     return res;
 }

@@ -3,6 +3,11 @@ INSERT INTO datatype (id, name) VALUES
 (2, 'decimal'),
 (3, 'text');
 
+INSERT INTO condition (value, description, defaultCondition) VALUES
+('New', 'Brand New', 1),
+('Used', 'Used', 0),
+('Damaged', 'Damaged', 0);
+
 INSERT INTO part_unit (name, abbreviation, defaultUnit) VALUES
 ('Pieces', 'pcs', 1),
 ('Centimeter', 'cm', 0),
@@ -49,3 +54,10 @@ INSERT INTO packaging (name) VALUES
 ('Cut Tape'),
 ('Tube'),
 ('Digi-Reel®');
+
+
+INSERT INTO parameter (key, name, datatype, deletable, unit, description) VALUES
+('resistance', 'Resistance', 2, 0, 3, 'Resistance'),
+('capacitance', 'Capacitance', 2, 0, 4, 'Capacitance'),
+('power_rating', 'Power Rating', 2, 0, 5, 'Power Rating'),
+('resistance_tolerance', 'Resistance Tolerance', 3, 0, NULL, 'Resistance Tolerance');
