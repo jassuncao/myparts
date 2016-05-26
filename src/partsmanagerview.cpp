@@ -302,6 +302,12 @@ void PartsManagerView::slotSelectedCategoryChanged(const QList<int> selectedIds)
     //slotFilterChanged();
 }
 
+QVariant PartsManagerView::selectedCategory() const
+{
+    return _categoryNavigator->currentCategory();
+}
+
+
 void PartsManagerView::slotSelectedStorageChanged(const QList<int> selectedIds)
 {
     NodeCriterionValue::Mode mode;
@@ -325,6 +331,11 @@ void PartsManagerView::slotSelectedStorageChanged(const QList<int> selectedIds)
     //slotFilterChanged();
 }
 
+QVariant PartsManagerView::selectedStorage() const
+{
+    return _storageNavigator->currentStorage();
+}
+
 void PartsManagerView::slotPartTableCurrentRowChanged(const QModelIndex &current, const QModelIndex &previous)
 {
     qDebug()<<"Current is "<<current<<" Previous is "<<previous;
@@ -335,8 +346,8 @@ void PartsManagerView::slotPartTableCurrentRowChanged(const QModelIndex &current
 void PartsManagerView::slotAddPart()
 {
     PartDialog dlg(_modelsProvider, this);
-    dlg.setCurrentCategory(_categoryNavigator->currentCategory());
-    dlg.setCurrentStorage(_storageNavigator->currentStorage());
+    dlg.setCurrentCategory(selectedCategory());
+    dlg.setCurrentStorage(selectedStorage());
     dlg.addNewPart();
 }
 

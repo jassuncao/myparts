@@ -35,10 +35,9 @@ class PartsManagerView : public Manhattan::MiniSplitter
 public:
     explicit PartsManagerView(ModelsProvider * modelsProvider, QWidget *parent = 0);
     ~PartsManagerView();
+    QVariant selectedCategory() const;
+    QVariant selectedStorage() const;
 
-signals:
-
-public slots:
 protected slots:
     void slotBeforeSubmit();
     void slotAfterSubmit();    

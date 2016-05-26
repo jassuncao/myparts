@@ -91,9 +91,9 @@ CREATE TABLE IF NOT EXISTS datatype  (
 
 CREATE TABLE IF NOT EXISTS parameter  (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    key TEXT NOT NULL UNIQUE,
+    key TEXT UNIQUE,
     name TEXT NOT NULL,
-    datatype INTEGER ,
+    datatype INTEGER NOT NULL,
     deletable BOOLEAN NOT NULL,
     unit INTEGER ,
     description TEXT ,

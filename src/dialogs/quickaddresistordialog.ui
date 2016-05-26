@@ -15,6 +15,9 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
+    <widget class="KMessageWidget" name="messageWidget" native="true"/>
+   </item>
+   <item>
     <layout class="QFormLayout" name="formLayout">
      <item row="0" column="0">
       <widget class="QLabel" name="label_7">
@@ -247,6 +250,7 @@
   <zorder>buttonBox</zorder>
   <zorder></zorder>
   <zorder>verticalSpacer</zorder>
+  <zorder>messageWidget</zorder>
  </widget>
  <customwidgets>
   <customwidget>
@@ -263,6 +267,12 @@
    <class>ColorBandComboBox</class>
    <extends>QComboBox</extends>
    <header>widgets/colorbandcombobox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KMessageWidget</class>
+   <extends>QWidget</extends>
+   <header>widgets/kmessagewidget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <tabstops>

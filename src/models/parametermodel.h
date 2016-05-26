@@ -24,7 +24,7 @@ public:
 protected:
     explicit ParameterModel(const QStringList &fieldNames, const QStringList &columnNames, QObject *parent = 0);
     TableItem * createBlankItem() const;
-
+    //QAbstractListModel* _datatypeRelationModel;
 };
 
 #endif // PARAMETERMODEL_H

@@ -4,6 +4,7 @@
 #include <QMainWindow>
 
 class ModelsProvider;
+class PartsManagerView;
 
 namespace Ui {
 class MainWindow;
@@ -27,6 +28,7 @@ private:
     void writeSettings();
     ModelsProvider * _modelsProvider;
     Ui::MainWindow *ui;
+    PartsManagerView* _partsManagerView;
 };
 
 #endif // MAINWINDOW_H

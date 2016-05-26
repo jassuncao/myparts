@@ -116,8 +116,8 @@ CustomTableModel::CustomTableModel(int maxColumns, QObject *parent)
 CustomTableModel::~CustomTableModel()
 {
     qDeleteAll(_items);
-    QVector<TableRelation*>::const_iterator begin = _relations.begin();
-    QVector<TableRelation*>::const_iterator end = _relations.end();
+    QVector<ModelRelation*>::const_iterator begin = _relations.begin();
+    QVector<ModelRelation*>::const_iterator end = _relations.end();
     while (begin != end) {
         if(*begin)
             delete *begin;
@@ -239,7 +239,7 @@ QVariant CustomTableModel::data(const QModelIndex &index, int role) const
     if (role == Qt::DisplayRole || role == Qt::EditRole) {
         const TableItem * item = _items.at(index.row());
         if(role == Qt::DisplayRole && columnIsRelation(column)){
-            TableRelation * relation = _relations[column];
+            ModelRelation * relation = _relations[column];
             if(!relation->initialized())
                 relation->populateDictionary();
             return relation->displayValue(item->data(column));
@@ -258,7 +258,7 @@ bool CustomTableModel::setData(const QModelIndex &index, const QVariant &value, 
         return false;
     }    
     if(columnIsRelation(index.column())){
-        TableRelation * relation = _relations[index.column()];
+        ModelRelation * relation = _relations[index.column()];
         if(!relation->initialized())
             relation->populateDictionary();
 
@@ -277,11 +277,18 @@ TableItem * CustomTableModel::createBlankItem() const
 }
 
 
-void CustomTableModel::createRelation(const int column, const QString & tableName, const QString & indexField, const QString & displayField, const bool nullable)
+//void CustomTableModel::createRelation(const int column, const QString & tableName, const QString & indexField, const QString & displayField, const bool nullable)
+//{
+//    if(_relations.size()<=column)
+//        _relations.resize(column+1);
+//    _relations[column] = new TableRelation(tableName, indexField, displayField, nullable);
+//}
+
+void CustomTableModel::registerRelation(const int column, ModelRelation * relation)
 {
     if(_relations.size()<=column)
         _relations.resize(column+1);
-    _relations[column] = new TableRelation(tableName, indexField, displayField, nullable);
+    _relations[column] = relation;
 }
 
 QAbstractItemModel * CustomTableModel::relationModel(const int column) const
@@ -505,7 +512,8 @@ AttachmentTableModel3 * AttachmentTableModel3::createNewPackageAttachmentModel(Q
 PartManufacturerTableModel2::PartManufacturerTableModel2(const QStringList &fieldNames, const QStringList &columnNames, QObject *parent)
     : SimpleSqlTableModel("part_manufacturer", fieldNames, columnNames, "part", parent)
 {
-    createRelation(ColumnManufacturer, "manufacturer", "id", "name");
+    registerRelation(ColumnManufacturer, new TableRelation("manufacturer", "id", "name"));
+    //createRelation(ColumnManufacturer, "manufacturer", "id", "name");
 }
 
 PartManufacturerTableModel2 * PartManufacturerTableModel2::createNew(QObject * parent)
@@ -521,8 +529,10 @@ PartManufacturerTableModel2 * PartManufacturerTableModel2::createNew(QObject * p
 PartDistributorTableModel2::PartDistributorTableModel2(const QStringList &fieldNames, const QStringList &columnNames, QObject *parent)
     : SimpleSqlTableModel("part_distributor", fieldNames, columnNames, "part", parent)
 {
-    createRelation(ColumnDistributor, "distributor", "id", "name");
-    createRelation(ColumnPackaging, "packaging", "id", "name");
+    registerRelation(ColumnDistributor, new TableRelation("distributor", "id", "name"));
+    registerRelation(ColumnPackaging, new TableRelation("packaging", "id", "name"));
+    //createRelation(ColumnDistributor, "distributor", "id", "name");
+    //createRelation(ColumnPackaging, "packaging", "id", "name");
 }
 
 PartDistributorTableModel2 * PartDistributorTableModel2::createNew(QObject * parent)

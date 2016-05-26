@@ -20,6 +20,8 @@ class QuickAddResistorDialog : public QDialog
     Q_OBJECT
 public:
     explicit QuickAddResistorDialog(ModelsProvider *modelsProvider, QWidget *parent = 0);
+    void setSelectedCategory(const QVariant & category);
+    void setSelectedStorage(const QVariant & storage);
     ~QuickAddResistorDialog();
 protected slots:
     void slotBandChanged(int);
@@ -27,10 +29,12 @@ protected slots:
     void slotFiveBandToggled(bool checked);
     void slotReset();
     void slotAddResistor();
+    void showError(const QString& errorMessage);
+    void showSuccess(const QString& successMessage);
 private:
-    QVariant getSelectedCategory() const;
-    QVariant getSelectedStorage() const;
-    QVariant getSelectedCondition() const;
+    QVariant selectedCategory() const;
+    QVariant selectedStorage() const;
+    QVariant selectedCondition() const;
 
     Ui::QuickAddResistorDialog *ui;
     PartsSqlTableModel * _partsModel;

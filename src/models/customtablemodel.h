@@ -29,13 +29,23 @@ private:
     bool _dirty;
 };
 
-class TableRelation : public QAbstractListModel{
+class ModelRelation {
+public:
+    virtual ~ModelRelation() {}
+    virtual QVariant displayValue(const QVariant foreignId) const = 0;
+    virtual bool validId(const QVariant foreignId) const = 0;
+    virtual bool initialized() const = 0;
+    virtual void populateDictionary() = 0;
+    virtual QAbstractListModel * model() = 0;
+};
+
+class TableRelation : public QAbstractListModel, public ModelRelation {
 public:
     explicit TableRelation(const QString & tableName, const QString & indexField, const QString & displayField, const bool nullable=false);
     ~TableRelation();
     QVariant displayValue(const QVariant foreignId) const;
     bool validId(const QVariant foreignId) const;
-    inline bool initialized() const { return _initialized; }
+    bool initialized() const { return _initialized; }
     QAbstractListModel * model();    
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role) const;
@@ -69,7 +79,7 @@ public:
     bool removeRows(int row, int count, const QModelIndex&);    
     void select();
     bool submitAll();
-    void createRelation(const int column, const QString & tableName, const QString & indexField, const QString & displayField, const bool nullable=false);
+    //void createRelation(const int column, const QString & tableName, const QString & indexField, const QString & displayField, const bool nullable=false);
     virtual QAbstractItemModel *relationModel(const int column) const;
     void cloneData();
 protected:
@@ -78,13 +88,14 @@ protected:
     virtual bool saveItem(TableItem* item) = 0;
     virtual bool loadItems(QList<TableItem*> & dest) = 0;
     virtual bool doInsertRow(int row, TableItem* item);
-    bool columnIsRelation(const int column) const;
+    virtual void registerRelation(const int column, ModelRelation * relation);
+    bool columnIsRelation(const int column) const;    
 
     const int _maxColumns;
     QList<TableItem*> _items;
     QList<QVariant> _deletedItems;
     QVector<QHash<int, QVariant> > _headers;
-    QVector<TableRelation*> _relations;
+    QVector<ModelRelation*> _relations;
 };
 
 class SimpleSqlTableModel : public CustomTableModel

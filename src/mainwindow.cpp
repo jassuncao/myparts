@@ -19,19 +19,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     readSettings();
     _modelsProvider = new ModelsProvider(this);
-    _modelsProvider->initModels();
-    /*
-    QVector<QVariant> headerData(3);
-    headerData.append("Name");
-    headerData.append("Description");
-    headerData.append("ID");
-    */
-
+    _modelsProvider->initModels();   
+    _partsManagerView = new PartsManagerView(_modelsProvider, this);
     EditorManagerView * distributorsView = new EditorManagerView(new DistributorManagerHelper, this);
     EditorManagerView * manufacturersView = new EditorManagerView(new ManufacturerManagerHelper, this);
     EditorManagerView * packageView = new EditorManagerView(new PackageManagerHelper, this);    
 
-    ui->centralWidget->insertTab(0,new PartsManagerView(_modelsProvider, this), QIcon(QString::fromUtf8(":/largeIcons/page_parts")), tr("Parts"));
+    ui->centralWidget->insertTab(0, _partsManagerView, QIcon(QString::fromUtf8(":/largeIcons/page_parts")), tr("Parts"));
     ui->centralWidget->setTabEnabled(0, true);
 
     ui->centralWidget->insertTab(1, distributorsView, QIcon(QString::fromUtf8(":/largeIcons/options_distributors")), tr("Distributors"));
@@ -105,6 +99,8 @@ void MainWindow::slotEditPreferences()
 void MainWindow::on_actionResistor_triggered()
 {
     QuickAddResistorDialog * dlg = new QuickAddResistorDialog(_modelsProvider, this);
+    dlg->setSelectedCategory(_partsManagerView->selectedCategory());
+    dlg->setSelectedStorage(_partsManagerView->selectedStorage());
     dlg->exec();
     dlg->deleteLater();
 }

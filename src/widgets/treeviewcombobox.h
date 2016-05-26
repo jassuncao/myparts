@@ -63,8 +63,7 @@ private:
     QModelIndex lastIndex(const QModelIndex &index);
 
     TreeViewComboBoxView *m_view;
-    bool m_skipNextHide;
-    
+    bool m_skipNextHide;    
 };
 
 #endif // TREEVIEWCOMBOBOX_H

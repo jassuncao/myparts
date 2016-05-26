@@ -1,6 +1,7 @@
 #include "utils.h"
 #include <QFileInfo>
 #include <QDebug>
+#include <QMessageBox>
 
 namespace Utils {
 
@@ -48,6 +49,11 @@ int findDefaultValueRow(const QAbstractItemModel *model, int column)
         return res.first().row();
     qWarning("Default value not found");
     return -1;
+}
+
+void reportDatabaseError(QWidget* parent, const QString &title, const QString& text, const QSqlError& sqlError)
+{
+    QMessageBox::critical(parent, title, text);
 }
 
 }//namespace

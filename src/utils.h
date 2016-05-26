@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <QDir>
+#include <QSqlError>
 #include "entities/entities.h"
 
 class QAbstractItemModel;
@@ -11,6 +12,7 @@ namespace Utils {
 
     QString copyFileToDir(const QString &srcPath, const QDir & targetDir);
     int findDefaultValueRow(const QAbstractItemModel *model, int column);
+    void reportDatabaseError(QWidget *parent, const QString &title, const QString &text, const QSqlError &sqlError);
 }
 
 

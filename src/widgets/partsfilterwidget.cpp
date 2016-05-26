@@ -196,7 +196,7 @@ FilterItemWidget * PartsFilterWidget::createPartManufacturerFilterItem()
 FilterItemWidget * PartsFilterWidget::createPartPackageFilterItem()
 {
     QSqlQueryModel * sourceModel = new QSqlQueryModel(this);
-    sourceModel->setQuery("SELECT id, name FROM part_package");
+    sourceModel->setQuery("SELECT id, name FROM package");
 
     ExtraRowProxyModel * proxyModel = new ExtraRowProxyModel(this);
     proxyModel->setEmptyDisplayText(tr("Any"));

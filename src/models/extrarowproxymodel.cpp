@@ -52,11 +52,13 @@ QVariant ExtraRowProxyModel::data(const QModelIndex &index, int role) const
       else if(role == Qt::EditRole) {
           return _emptyValue;
       }
+      /*
       else if(role == Qt::FontRole){
           QFont boldFont;
           boldFont.setItalic(true);
           return boldFont;
       }
+      */
       return QVariant();
   }
   /*
