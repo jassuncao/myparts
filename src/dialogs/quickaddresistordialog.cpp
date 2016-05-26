@@ -155,8 +155,10 @@ void QuickAddResistorDialog::slotReset()
 }
 
 void QuickAddResistorDialog::slotAddResistor()
-{   bool resistanceValid;
-    bool powerValid;
+{   bool resistanceValid=false;
+    bool powerValid=false;
+    double resistance;
+    double power;
 
     QString resistanceStr = ui->resistorValueLineEdit->text();
     QString powerStr = ui->resistorPowerRatingLineEdit->text();
@@ -168,7 +170,7 @@ void QuickAddResistorDialog::slotAddResistor()
         return;
     }
 
-    double resistance = UnitParser::parseUnit(resistanceStr, _resistanceParam.unitSymbol(), &resistanceValid);
+    resistance = UnitParser::parseUnit(resistanceStr, _resistanceParam.unitSymbol(), &resistanceValid);
     if(resistanceValid){
         resistanceStr = UnitFormatter::format(resistance, _resistanceParam.unitSymbol());        
     }
@@ -179,16 +181,18 @@ void QuickAddResistorDialog::slotAddResistor()
         return;
     }    
 
-    double power = UnitParser::parseUnit(powerStr, _powerRatingParam.unitSymbol(), &powerValid);
-    if(powerValid){
-        powerStr = UnitFormatter::format(power, _powerRatingParam.unitSymbol());        
+    if(!powerStr.isEmpty()){
+        power = UnitParser::parseUnit(powerStr, _powerRatingParam.unitSymbol(), &powerValid);
+        if(powerValid){
+            powerStr = UnitFormatter::format(power, _powerRatingParam.unitSymbol());
+        }
+        else {
+            qWarning("Power rating value is invalid %s", qPrintable(powerStr));
+            showError(tr("MyParts failed to recognize the power rating value."));
+            ui->resistorPowerRatingLineEdit->setFocus();
+            return;
+        }
     }
-    else {
-        qWarning("Power rating value is invalid %s", qPrintable(powerStr));
-        showError(tr("MyParts failed to recognize the power rating value."));
-        ui->resistorPowerRatingLineEdit->setFocus();
-        return;
-    }    
 
     if(resistanceValid){
         _partParams->appendParameter(_resistanceParam.id(), resistance);
@@ -355,5 +359,5 @@ void QuickAddResistorDialog::showSuccess(const QString& successMessage)
     ui->messageWidget->setText(successMessage);
     ui->messageWidget->setMessageType(KMessageWidget::Positive);
     ui->messageWidget->animatedShow();
-    QTimer::singleShot(5000, ui->messageWidget, SLOT(animatedHide()));
+    QTimer::singleShot(2000, ui->messageWidget, SLOT(animatedHide()));
 }

@@ -1,4 +1,4 @@
-INSERT INTO datatype (id, name) VALUES
+﻿INSERT INTO datatype (id, name) VALUES
 (1, 'integer'),
 (2, 'decimal'),
 (3, 'text');
