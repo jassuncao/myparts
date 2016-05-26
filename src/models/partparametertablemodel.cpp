@@ -50,12 +50,12 @@ public:
     QVariant displayValue() const {
         switch(_param.datatype()){
 
-        case Entities::DECIMAL:
+        case Parameter::DECIMAL:
             if(_numericValue.isValid() && _numericValue.canConvert(QVariant::Double)){
                 return UnitFormatter::format(_numericValue.toDouble(), _param.unitSymbol());
             }
             return QVariant();
-        case Entities::INTEGER:
+        case Parameter::INTEGER:
             if(_numericValue.isValid() && _numericValue.canConvert(QVariant::Double)){
                 return UnitFormatter::format(qRound(_numericValue.toDouble()), _param.unitSymbol());
             }
@@ -75,10 +75,10 @@ public:
 
     QVariant value() const {
         switch(_param.datatype()){
-        case Entities::TEXT:
+        case Parameter::TEXT:
             return _textValue;
-        case Entities::DECIMAL:
-        case Entities::INTEGER:
+        case Parameter::DECIMAL:
+        case Parameter::INTEGER:
             return QVariant::fromValue(ParameterValue(_numericValue, _param.unitSymbol()));
         default:
             return QVariant();
@@ -89,17 +89,17 @@ public:
         bool ok;
         qreal tmp;
         switch(_param.datatype()){
-        case Entities::TEXT:
+        case Parameter::TEXT:
             _textValue = value.toString();
             ok = true;
             break;
-        case Entities::DECIMAL:
+        case Parameter::DECIMAL:
             tmp = value.toReal(&ok);
             if(ok){
                 _numericValue = tmp;                
             }
             break;
-        case Entities::INTEGER:
+        case Parameter::INTEGER:
             tmp = qRound(value.toReal(&ok));
             if(ok){
                 _numericValue = tmp;
@@ -453,7 +453,7 @@ static Parameter loadParameter(const QSqlQuery& query)
     Parameter param;
     param.setId(id.toInt());
     param.setName(name.toString());
-    param.setDatatype(static_cast<Entities::ParameterDatatypes>(datatype.toInt()));
+    param.setDatatype(static_cast<Parameter::ParameterDatatypes>(datatype.toInt()));
     param.setDescription(description.toString());
     param.setUnitSymbol(symbol.toString());
     return param;

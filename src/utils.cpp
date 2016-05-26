@@ -2,6 +2,7 @@
 #include <QFileInfo>
 #include <QDebug>
 #include <QMessageBox>
+#include <QModelIndex>
 
 namespace Utils {
 

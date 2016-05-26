@@ -1,17 +1,18 @@
 #include "parameter.h"
+#include <QString>
 
 struct ParameterData : public QSharedData
 {
     int id;
     QString name;
-    Entities::ParameterDatatypes datatype;
+    Parameter::ParameterDatatypes datatype;
     QString symbol;
     QString description;
 
     ParameterData() :
         id(-1),
         name(),
-        datatype(Entities::INVALID),
+        datatype(Parameter::INVALID),
         symbol(),
         description()
     {
@@ -41,7 +42,7 @@ Parameter::~Parameter()
 
 bool Parameter::valid() const
 {
-    return d->id!=-1 && d->datatype != Entities::INVALID;
+    return d->id!=-1 && d->datatype != Parameter::INVALID;
 }
 
 int Parameter::id() const
@@ -64,12 +65,12 @@ void Parameter::setName(const QString & name)
     d->name = name;
 }
 
-Entities::ParameterDatatypes Parameter::datatype() const
+Parameter::ParameterDatatypes Parameter::datatype() const
 {
     return d->datatype;
 }
 
-void Parameter::setDatatype(Entities::ParameterDatatypes datatype)
+void Parameter::setDatatype(Parameter::ParameterDatatypes datatype)
 {
     d->datatype = datatype;
 }

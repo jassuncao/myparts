@@ -9,6 +9,12 @@ struct ParameterData;
 class Parameter
 {
 public:
+    enum ParameterDatatypes {
+        INVALID = 0,
+        INTEGER = 1,
+        DECIMAL = 2,
+        TEXT = 3
+    };
     Parameter();
     Parameter(const Parameter &);
     Parameter &operator=(const Parameter &);
@@ -18,8 +24,8 @@ public:
     void setId(int id);
     QString name() const;
     void setName(const QString & name);
-    Entities::ParameterDatatypes datatype() const;
-    void setDatatype(Entities::ParameterDatatypes datatype);
+    ParameterDatatypes datatype() const;
+    void setDatatype(ParameterDatatypes datatype);
     QString unitSymbol() const;
     void setUnitSymbol(const QString & symbol);
     QString description() const;

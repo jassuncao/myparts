@@ -61,6 +61,7 @@ NodeCriterionValue::~NodeCriterionValue()
 class Criterion
 {
 public:
+    virtual ~Criterion() {}
     virtual QString clause() const = 0;
     virtual QString joinClause() const;
     virtual void setValue(const QVariant & value) = 0;

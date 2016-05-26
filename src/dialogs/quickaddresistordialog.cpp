@@ -24,6 +24,7 @@
 #include <QDebug>
 #include <QDateTime>
 #include <QMessageBox>
+#include <QTimer>
 
 
 static QStandardItem * newColorItem(const QString & name, const QColor & color, const QVariant & value, const int shortcutKey)
