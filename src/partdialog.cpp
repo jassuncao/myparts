@@ -79,12 +79,12 @@ PartDialog::PartDialog(ModelsProvider * modelsProvider, QWidget *parent) :
 
     ui->partParametersTableView->setModel(_partParamsModel);
     ui->partParametersTableView->setItemDelegate(new ComboItemDelegate(this));
-    ui->partParametersTableView->setItemDelegateForColumn(PartParameterTableModel::ColumnParameterValue, new ParameterValueDelegate());
+    ui->partParametersTableView->setItemDelegateForColumn(PartParameterTableModel::ColumnParameterValue, new ParameterValueDelegate(this));
     ui->partParametersTableView->setColumnWidth(PartParameterTableModel::ColumnParameter, 180);
 
     ui->partDistributorsTableView->setModel(_partDistributorModel);
     ui->partDistributorsTableView->setItemDelegateForColumn(PartDistributorTableModel2::ColumnUnitPrice, new CurrencyDelegate(this));
-    ui->partDistributorsTableView->setItemDelegateForColumn(PartDistributorTableModel2::ColumnMinimumOrder, new ValidatingItemDelegate(new QIntValidator()));
+    //ui->partDistributorsTableView->setItemDelegateForColumn(PartDistributorTableModel2::ColumnMinimumOrder, new ValidatingItemDelegate(new QIntValidator(), this));
     ui->partDistributorsTableView->setItemDelegate(new ComboItemDelegate(this));
     ui->partDistributorsTableView->setColumnWidth(PartDistributorTableModel2::ColumnDistributor, 180);
     ui->partDistributorsTableView->setColumnWidth(PartDistributorTableModel2::ColumnPartNumber, 180);
@@ -147,6 +147,7 @@ void PartDialog::setCurrentStorage(const QVariant & storage)
 
 int PartDialog::exec()
 {
+    ui->partNameEdit->setFocus();
     return QDialog::exec();
 }
 
@@ -287,7 +288,7 @@ void PartDialog::initCombos()
     connect(ui->partCategoryCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(slotPartCategoryChanged(int)));
     connect(ui->partStorageCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(slotPartStorageChanged(int)));
 
-    _partConditionModel = new QSqlQueryModel();
+    _partConditionModel = new QSqlQueryModel(this);
     _partConditionModel->setQuery("SELECT id, value, defaultCondition FROM condition ORDER BY value ASC");
 
     int row = Utils::findDefaultValueRow(_partConditionModel, 2);
@@ -298,7 +299,7 @@ void PartDialog::initCombos()
     ui->partConditionCombo->setModelColumn(1);        
 
 
-    _partUnitsModel = new QSqlQueryModel();
+    _partUnitsModel = new QSqlQueryModel(this);
     _partUnitsModel->setQuery("SELECT id, name, defaultUnit FROM part_unit ORDER BY name ASC");
 
     row = Utils::findDefaultValueRow(_partUnitsModel, 2);
@@ -309,7 +310,7 @@ void PartDialog::initCombos()
     ui->partUnitCombo->setModelColumn(1);
 
 
-    _packagesModel = new QSqlQueryModel();
+    _packagesModel = new QSqlQueryModel(this);
     _packagesModel->setQuery("SELECT id, name FROM package ORDER BY name ASC");
     ui->partPackageCombo->setModel(_packagesModel);
     ui->partPackageCombo->setModelKeyColumn(0);

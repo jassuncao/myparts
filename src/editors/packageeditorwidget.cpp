@@ -23,7 +23,7 @@
 #include <QDesktopServices>
 
 PackageEditorWidget::PackageEditorWidget(QWidget *parent) :
-    AbstractEditor(parent)
+    AbstractEditor(parent), _model(0)
 {
     //Info groupbox START
     _nameLineEdit = new QLineEdit;

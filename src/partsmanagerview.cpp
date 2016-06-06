@@ -221,7 +221,7 @@ void PartsManagerView::initModels()
 
 void PartsManagerView::initPartsTableView(){
     _partsTableView->setModel(_partsTableProxyModel);
-    //_partsTableView->setItemDelegateForColumn(PartsSqlTableModel::ColumnActualStock, new StockInlineDelegate(tableModel, this));
+    _partsTableView->setItemDelegateForColumn(PartsSqlTableModel::ColumnActualStock, new StockInlineDelegate(this));
     //To enable in the future to allow editing stocks in place
     _partsTableView->setEditTriggers(QAbstractItemView::DoubleClicked | QAbstractItemView::EditKeyPressed | QAbstractItemView::AnyKeyPressed);
     connect(_partsTableView->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),

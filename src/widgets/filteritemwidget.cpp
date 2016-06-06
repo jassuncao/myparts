@@ -97,7 +97,7 @@ void MyQComboBox::hidePopup()
 }
 
 FilterItemWidget::FilterItemWidget(const QString & labelText, const int filterTag, bool removableItem, QWidget *parent)
-    : QWidget(parent), _filterTag(filterTag), _deleteBtn(0)
+    : QWidget(parent), _filterTag(filterTag), _deleteBtn(0), _valueColumn(-1), _valueRole(Qt::EditRole)
 {    
     QLabel * label = new QLabel(labelText);
     _comboBox = new QComboBox;    
@@ -191,8 +191,10 @@ void FilterItemWidget::clear()
 
 void FilterItemWidget::slotCurrentIndexChanged(int row)
 {
+    if(_valueColumn<0)
+        return;
     QAbstractItemModel * model = _comboBox->model();
     QModelIndex index = model->index(row, _valueColumn);
-    const QVariant & value = model->data(index, _valueRole);
+    const QVariant value = model->data(index, _valueRole);
     emit valueChanged(_filterTag, value);
 }

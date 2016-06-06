@@ -7,15 +7,13 @@
 #include "models/partstocktablemodel.h"
 #include "models/partssqltablemodel.h"
 
-StockInlineDelegate::StockInlineDelegate(PartsSqlTableModel * partsModel, QObject * parent) :
+StockInlineDelegate::StockInlineDelegate(QObject * parent) :
     QStyledItemDelegate(parent)
 {
-    _partStockTableModel = PartStockTableModel::createNew(0);
 }
 
 StockInlineDelegate::~StockInlineDelegate()
 {
-    delete _partStockTableModel;
 }
 
 QWidget * StockInlineDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &, const QModelIndex &index) const
@@ -30,17 +28,9 @@ QWidget * StockInlineDelegate::createEditor(QWidget *parent, const QStyleOptionV
 void StockInlineDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
 {
     QSpinBox* lineEdit = qobject_cast<QSpinBox*>(editor);
-    int oldValue = index.data(Qt::EditRole).toInt();
     int newValue = lineEdit->value();
-    int diff = newValue - oldValue;
-
-    QModelIndex partIdIndex = model->index(index.row(), PartsSqlTableModel::ColumnId);
-    _partStockTableModel->setCurrentPartId(partIdIndex.data(Qt::EditRole));
-    _partStockTableModel->appendRow(diff, QVariant(), QString());
-    if(_partStockTableModel->submitAll()){
-        model->setData(index,QVariant(newValue));
-        model->submit();
-    }
+    model->setData(index, newValue, PartsSqlTableModel::SET_STOCK_ROLE);
+    model->submit();
 }
 
 void StockInlineDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const

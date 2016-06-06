@@ -544,3 +544,11 @@ PartDistributorTableModel2 * PartDistributorTableModel2::createNew(QObject * par
     return new PartDistributorTableModel2(fieldNames, columnNames, parent);
 }
 
+TableItem * PartDistributorTableModel2::createBlankItem() const
+{
+    TableItem * item = SimpleSqlTableModel::createBlankItem();
+    item->setData(ColumnMinimumOrder, QVariant(0.0));
+    item->setData(ColumnUnitPrice, QVariant(0.0));
+    return item;
+}
+

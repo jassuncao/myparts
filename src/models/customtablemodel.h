@@ -179,6 +179,7 @@ public:
     static PartDistributorTableModel2 * createNew(QObject *parent);
 protected:
     explicit PartDistributorTableModel2(const QStringList & fieldNames, const QStringList & columnNames, QObject *parent = 0);
+    TableItem * createBlankItem() const;
 };
 
 #endif // CUSTOMTABLEMODEL_H

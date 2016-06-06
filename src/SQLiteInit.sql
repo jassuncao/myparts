@@ -128,7 +128,7 @@ CREATE TABLE IF NOT EXISTS part_distributor  (
     part INTEGER NOT NULL,
     distributor INTEGER NOT NULL,
     partNumber TEXT ,
-    minimumOrder INTEGER ,
+    minimumOrder DOUBLE ,
     unitPrice DOUBLE ,
     packaging INTEGER ,
     FOREIGN KEY(part) REFERENCES part(id) ON DELETE CASCADE,

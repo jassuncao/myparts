@@ -1,6 +1,7 @@
 #include "currencydelegate.h"
 #include "constants.h"
 #include <QSettings>
+#include <QLineEdit>
 
 CurrencyDelegate::CurrencyDelegate(QObject *parent) :
     QStyledItemDelegate(parent), _horizontalAlignment(Qt::AlignRight)
@@ -23,4 +24,17 @@ void CurrencyDelegate::initStyleOption(QStyleOptionViewItem *option, const QMode
 {
     QStyledItemDelegate::initStyleOption(option, index);
     option->displayAlignment = option->displayAlignment | _horizontalAlignment;
+}
+
+void CurrencyDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
+{
+    QStyledItemDelegate::setModelData(editor, model, index);
+    /*
+    QLineEdit* lineEdit = qobject_cast<QLineEdit*>(editor);
+    const QString & text = lineEdit->text();
+    bool ok;
+    double value = text.toDouble(&ok);
+    if(ok)
+        model->setData(index, value, Qt::EditRole);
+        */
 }
