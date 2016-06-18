@@ -105,19 +105,6 @@ QVariant PartsSqlTableModel::data(const QModelIndex &idx, int role) const
     return value;
 }
 
-bool PartsSqlTableModel::setData(const QModelIndex &index, const QVariant &value, int role)
-{
-    if(role==SET_STOCK_ROLE && index.column()==ColumnActualStock){
-        QVariant partId = PartsSqlTableModel::index(index.row(), ColumnId).data(Qt::EditRole);
-        int oldValue = index.data(Qt::EditRole).toInt();
-        int newValue = value.toInt();
-        int stockChange = newValue - oldValue;
-        insertStockChange(partId, stockChange);
-        role = Qt::EditRole;
-    }
-    return QSqlTableModel::setData(index, value, role);
-}
-
 Qt::ItemFlags PartsSqlTableModel::flags(const QModelIndex &index) const
 {
     Qt::ItemFlags flags = QSqlTableModel::flags(index);
@@ -207,18 +194,6 @@ void PartsSqlTableModel::updatePartsStorage(QVector<int> parts, int storageId)
         query.exec();
     }
     database().commit();
-}
-
-bool PartsSqlTableModel::insertStockChange(const QVariant& partId, const QVariant & stockChange)
-{
-    QSqlQuery query(database());
-    database().transaction();
-    query.prepare("INSERT INTO stock_change (change, dateTime, part) "
-                  "VALUES(?,?,?)");
-    query.bindValue(0, stockChange);
-    query.bindValue(1, QDateTime::currentDateTimeUtc().toTime_t());
-    query.bindValue(2, partId);
-    return query.exec();
 }
 
 QModelIndex PartsSqlTableModel::findIndex(QVariant partId)

@@ -32,8 +32,7 @@ public:
         LAST_COLUMN
     };
 
-    static const int VISIBILITY_COLUMN_ROLE = Qt::UserRole+1;
-    static const int SET_STOCK_ROLE = Qt::UserRole+2;
+    static const int VISIBILITY_COLUMN_ROLE = Qt::UserRole+1;    
     static const int FAKE_COLUMNS_INDEX = ColumnPartUnit;
 
     explicit PartsSqlTableModel(PartsQueryBuilder * partsQueryBuilder, QObject *parent = 0);
@@ -42,8 +41,7 @@ public:
     QString selectStatement() const;
     bool insertRowIntoTable(const QSqlRecord &values);
     bool updateRowInTable(int row, const QSqlRecord &values);
-    QVariant data(const QModelIndex &idx, int role = Qt::DisplayRole) const;
-    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
+    QVariant data(const QModelIndex &idx, int role = Qt::DisplayRole) const;    
     Qt::ItemFlags flags(const QModelIndex &index) const;
     QStringList mimeTypes() const;
     QMimeData *mimeData(const QModelIndexList &indexes) const;
@@ -52,8 +50,7 @@ public:
     bool updatePartAvgPrice(const QModelIndex &currentIndex, double partPrice);
     bool updatePartStock(const QModelIndex & currentIndex, int stockChange);
     void updatePartsCategory(QVector<int> parts, int categoryId);
-    void updatePartsStorage(QVector<int> parts, int storageId);
-    bool insertStockChange(const QVariant& partId, const QVariant & stockChange);
+    void updatePartsStorage(QVector<int> parts, int storageId);    
     void setSort(int column, Qt::SortOrder order);
     QModelIndex findIndex(QVariant partId);
     PartsQueryBuilder * queryBuilder() const;
