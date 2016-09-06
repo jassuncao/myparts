@@ -10,11 +10,7 @@ class ParameterValueValidator : public QRegExpValidator
 public:
     ParameterValueValidator(const QString& unit=QString(), QObject * parent=0);
     ~ParameterValueValidator();
-/*
-    virtual QValidator::State validate(QString & input, int &) const;
-    void setUnit(const QString& unit);
-    QString unit() const;
-    */
+    virtual QValidator::State validate(QString& input, int& pos) const;
 private:
     QString _unit;
 };

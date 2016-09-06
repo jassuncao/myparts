@@ -20,28 +20,12 @@ ParameterValueValidator::ParameterValueValidator(const QString& unit, QObject *p
 ParameterValueValidator::~ParameterValueValidator()
 {}
 
-/*
-void ParameterValueValidator::setUnit(const QString& unit)
+QValidator::State ParameterValueValidator::validate(QString& input, int& pos) const
 {
-    _unit = unit;
-}
-
-QString ParameterValueValidator::unit() const
-{
-    return _unit;
-}
-
-QValidator::State ParameterValueValidator::validate(QString & input, int &) const
-{
-    bool ok=false;
-    if(input.isEmpty())
-        return QValidator::Intermediate;
-    if(_unit.isEmpty()){
-        UnitParser::parseUnit(input, &ok);
+    QValidator::State res = QRegExpValidator::validate(input, pos);
+    if(res==QValidator::Invalid){
+        input.replace(_unit.toLower(), _unit);
+        res = QRegExpValidator::validate(input, pos);
     }
-    else{
-        UnitParser::parseUnit(input, _unit, &ok);
-    }
-    return ok ? QValidator::Acceptable : QValidator::Invalid;
+    return res;
 }
-*/
