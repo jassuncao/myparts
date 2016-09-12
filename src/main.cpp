@@ -68,8 +68,8 @@
 //}
 
 bool initDatabase(QSqlDatabase& db){
-    db.setDatabaseName(":memory:");
-    //db.setDatabaseName("myparts.sqlite");
+    //db.setDatabaseName(":memory:");
+    db.setDatabaseName("myparts.sqlite");
     if (!db.open()) {
         QMessageBox::critical(0, qApp->tr("Cannot open database"),
             qApp->tr("Unable to establish a database connection.\n"

@@ -223,7 +223,7 @@ void PartsManagerView::initPartsTableView(){
     //_partsTableView->setModel(_modelsProvider->partsModel());    
     _partsTableView->setModel(_partsTableProxyModel);
     QSqlDatabase db = _modelsProvider->partsModel()->database();
-    _partsTableView->setItemDelegateForColumn(PartsSqlTableModel::ColumnActualStock, new StockInlineDelegate(db, this));
+    _partsTableView->setItemDelegateForColumn(PartsSqlTableModel::ColumnActualStock, new StockInlineDelegate(this));
     _partsTableView->setEditTriggers(QAbstractItemView::DoubleClicked | QAbstractItemView::EditKeyPressed | QAbstractItemView::AnyKeyPressed);
     connect(_partsTableView->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
             this, SLOT(slotPartTableCurrentRowChanged(QModelIndex,QModelIndex)));

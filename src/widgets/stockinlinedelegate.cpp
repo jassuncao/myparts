@@ -6,11 +6,13 @@
 #include <QMessageBox>
 #include "models/partstocktablemodel.h"
 #include "models/partssqltablemodel.h"
+#include <QIdentityProxyModel>
 #include <QSqlQuery>
+#include <QDateTime>
+#include <QSqlDatabase>
 
-StockInlineDelegate::StockInlineDelegate(QSqlDatabase & database, QObject * parent) :
-    QStyledItemDelegate(parent),
-    _database(database)
+StockInlineDelegate::StockInlineDelegate(QObject * parent) :
+    QStyledItemDelegate(parent)
 {
 }
 
@@ -30,22 +32,19 @@ QWidget * StockInlineDelegate::createEditor(QWidget *parent, const QStyleOptionV
 void StockInlineDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
 {
     QSpinBox* lineEdit = qobject_cast<QSpinBox*>(editor);
-    int newValue = lineEdit->value();    
-    int oldValue = index.data(Qt::EditRole).toInt();
-    int stockChange = newValue - oldValue;
-    QVariant partId = model->index(index.row(), PartsSqlTableModel::ColumnId).data(Qt::EditRole);
-    model->setData(index, newValue);
-    _database.transaction();
-    bool res = model->submit();
-    if(res){
-        res = insertStockChange(partId, stockChange);
+    int newValue = lineEdit->value();        
+    PartsSqlTableModel* partsModel = dynamic_cast<PartsSqlTableModel*>(model);
+    if(!partsModel){
+        QIdentityProxyModel* proxyModel = dynamic_cast<QIdentityProxyModel*>(model);
+        if(proxyModel){
+            partsModel = dynamic_cast<PartsSqlTableModel*>(proxyModel->sourceModel());
+        }
     }
-
-    if(res){
-        _database.commit();
+    if(partsModel){
+        partsModel->setPartStock(index, newValue);
     }
     else{
-        _database.rollback();
+        //XXX: Handle
     }
 }
 
@@ -59,15 +58,4 @@ void StockInlineDelegate::setEditorData(QWidget *editor, const QModelIndex &inde
     else{
         qWarning()<<"setEditorData invalid ";
     }
-}
-
-bool StockInlineDelegate::insertStockChange(const QVariant& partId, const QVariant & stockChange)
-{
-    QSqlQuery query(_database);
-    query.prepare("INSERT INTO stock_change (change, dateTime, part) "
-                  "VALUES(?,?,?)");
-    query.bindValue(0, stockChange);
-    query.bindValue(1, QDateTime::currentDateTimeUtc().toTime_t());
-    query.bindValue(2, partId);
-    return query.exec();
 }

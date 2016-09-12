@@ -49,6 +49,9 @@ public:
     inline QVariant lastInsertedId() const {return _lastInsertedId;}  
     bool updatePartAvgPrice(const QModelIndex &currentIndex, double partPrice);
     bool updatePartStock(const QModelIndex & currentIndex, int stockChange);
+
+    //Sets the part stock and logs an empty entry in stock_change.
+    bool setPartStock(const QModelIndex & currentIndex, int newStockValue);
     void updatePartsCategory(QVector<int> parts, int categoryId);
     void updatePartsStorage(QVector<int> parts, int storageId);    
     void setSort(int column, Qt::SortOrder order);

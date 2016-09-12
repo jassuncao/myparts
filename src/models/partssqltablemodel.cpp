@@ -168,6 +168,35 @@ bool PartsSqlTableModel::updatePartStock(const QModelIndex & currentIndex, int s
     return setData(colIndex, currentStock, Qt::EditRole);
 }
 
+bool PartsSqlTableModel::setPartStock(const QModelIndex & currentIndex, int newStockValue)
+{
+    QVariant partId = index(currentIndex.row(), PartsSqlTableModel::ColumnId).data(Qt::EditRole);
+    const QModelIndex stockModelIndex = index(currentIndex.row(), PartsSqlTableModel::ColumnActualStock);
+    QVariant oldValue = stockModelIndex.data(Qt::EditRole);
+    int stockChange = newStockValue - oldValue.toInt();
+
+    setData(stockModelIndex, newStockValue);
+    database().transaction();
+    bool res = submit();
+    if(res){
+        QSqlQuery query(database());
+        query.prepare("INSERT INTO stock_change (change, dateTime, part) "
+                      "VALUES(?,?,?)");
+        query.bindValue(0, stockChange);
+        query.bindValue(1, QDateTime::currentDateTimeUtc().toTime_t());
+        query.bindValue(2, partId);
+        res = query.exec();
+    }
+
+    if(res){
+        database().commit();
+    }
+    else{
+        database().rollback();
+    }
+    return res;
+}
+
 void PartsSqlTableModel::updatePartsCategory(QVector<int> parts, int categoryId)
 {
     QSqlQuery query(database());
