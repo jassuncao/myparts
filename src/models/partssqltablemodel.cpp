@@ -173,19 +173,21 @@ bool PartsSqlTableModel::setPartStock(const QModelIndex & currentIndex, int newS
     QVariant partId = index(currentIndex.row(), PartsSqlTableModel::ColumnId).data(Qt::EditRole);
     const QModelIndex stockModelIndex = index(currentIndex.row(), PartsSqlTableModel::ColumnActualStock);
     QVariant oldValue = stockModelIndex.data(Qt::EditRole);
-    int stockChange = newStockValue - oldValue.toInt();
+    int stockChange = newStockValue - oldValue.toInt();    
 
-    setData(stockModelIndex, newStockValue);
     database().transaction();
-    bool res = submit();
+
+    QSqlQuery query(database());
+    query.prepare("INSERT INTO stock_change (change, dateTime, part) "
+                  "VALUES(?,?,?)");
+    query.bindValue(0, stockChange);
+    query.bindValue(1, QDateTime::currentDateTimeUtc().toTime_t());
+    query.bindValue(2, partId);
+    bool res = query.exec();
+
     if(res){
-        QSqlQuery query(database());
-        query.prepare("INSERT INTO stock_change (change, dateTime, part) "
-                      "VALUES(?,?,?)");
-        query.bindValue(0, stockChange);
-        query.bindValue(1, QDateTime::currentDateTimeUtc().toTime_t());
-        query.bindValue(2, partId);
-        res = query.exec();
+        setData(stockModelIndex, newStockValue);
+        res = submitAll();
     }
 
     if(res){

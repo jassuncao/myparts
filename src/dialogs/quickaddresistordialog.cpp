@@ -7,6 +7,7 @@
 #include "models/partconditionmodel.h"
 #include "models/partssqltablemodel.h"
 #include "models/partparametertablemodel.h"
+#include "models/partstocktablemodel.h"
 #include "widgets/unitformatter.h"
 #include "widgets/unitparser.h"
 #include "utils.h"
@@ -51,6 +52,7 @@ QuickAddResistorDialog::QuickAddResistorDialog(ModelsProvider * modelsProvider, 
     _powerRatingParam = PartParameterTableModel::findParameter("power_rating");
     _resistorToleranceParam = PartParameterTableModel::findParameter("resistance_tolerance");
     _partParams = new PartParameterTableModel(this);
+    _partStockModel = PartStockTableModel::createNew(this);
 
     ui->resistorValueLineEdit->setValidator(new ParameterValueValidator(_resistanceParam.unitSymbol(), this));
     ui->resistorPowerRatingLineEdit->setValidator(new ParameterValueValidator(_powerRatingParam.unitSymbol(), this));
@@ -210,7 +212,7 @@ void QuickAddResistorDialog::slotAddResistor()
     QVariant category = selectedCategory();
     QVariant storage = selectedStorage();
     QVariant condition = selectedCondition();
-    QVariant quantity = ui->quantitySpinBox->value();
+    int quantity = ui->quantitySpinBox->value();
     QSqlRecord initialData = _partsModel->record();
 
     initialData.setValue(PartsSqlTableModel::ColumnName, partName);
@@ -219,15 +221,20 @@ void QuickAddResistorDialog::slotAddResistor()
     initialData.setValue(PartsSqlTableModel::ColumnCategoryId, category);
     initialData.setValue(PartsSqlTableModel::ColumnStorageId, storage);
     initialData.setValue(PartsSqlTableModel::ColumnCreateDate, createDate);
-    initialData.setValue(PartsSqlTableModel::ColumnActualStock, quantity);
+    initialData.setValue(PartsSqlTableModel::ColumnActualStock, quantity);        
 
     int newRow = _partsModel->rowCount();
     bool success = _partsModel->insertRecord(newRow, initialData);
     if(success) {
         _partsModel->database().transaction();
-        if(_partsModel->submitAll()){
-            _partParams->setCurrentPartId(_partsModel->lastInsertedId());
+        if(_partsModel->submitAll()){            
+            _partParams->setCurrentPartId(_partsModel->lastInsertedId());            
             _partParams->submitAll();
+            if(quantity != 0){
+                _partStockModel->appendRow(quantity, QVariant(), QString());
+                _partStockModel->setCurrentPartId(_partsModel->lastInsertedId());
+                _partStockModel->submitAll();
+            }
             _partsModel->database().commit();
             showSuccess(tr("Resistor saved!"));
             slotReset();

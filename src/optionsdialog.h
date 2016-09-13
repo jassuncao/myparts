@@ -13,6 +13,7 @@ class SimpleSqlTableModel;
 class ModelsProvider;
 class PartConditionModel;
 class ParameterModel;
+class ParameterUnitModel;
 
 class OptionsDialog : public QDialog
 {
@@ -57,7 +58,7 @@ private:
     Ui::OptionsDialog *ui;
     ModelsProvider * _modelsProvider;
     SimpleSqlTableModel * _partUnitsModel;
-    SimpleSqlTableModel * _parameterUnitsModel;
+    ParameterUnitModel * _parameterUnitsModel;
     PartConditionModel * _partConditionModel;
     ParameterModel * _parameterModel;
 };

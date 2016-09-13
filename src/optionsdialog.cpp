@@ -5,6 +5,7 @@
 #include "models/partconditionmodel.h"
 #include "models/modelsprovider.h"
 #include "models/parametermodel.h"
+#include "models/parameterunitmodel.h"
 #include "entities/entities.h"
 #include "widgets/validatingitemdelegate.h"
 #include "widgets/comboitemdelegate.h"
@@ -64,12 +65,10 @@ void OptionsDialog::setupPartUnitsModel()
 
 void OptionsDialog::setupParamsUnitsModel()
 {
-    QStringList fieldNames;
-    fieldNames<<QLatin1String("name")<<QLatin1String("symbol");
-    QStringList columnNames;
-    columnNames<<tr("Name")<<tr("Symbol");
-    _parameterUnitsModel = new SimpleSqlTableModel("unit", fieldNames, columnNames, QString(), this);
+
+    _parameterUnitsModel = ParameterUnitModel::createNew(this);
     ui->paramUnitsTableView->setModel(_parameterUnitsModel);
+    ui->paramUnitsTableView->hideColumn(ParameterUnitModel::ColumnDeletable);
     _parameterUnitsModel->select();
 }
 
@@ -250,6 +249,8 @@ void OptionsDialog::slotApplyChanges()
     res = res && _parameterModel->submitAll();
     if(res){
         ui->buttonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
+    }
+    else{
     }
 }
 

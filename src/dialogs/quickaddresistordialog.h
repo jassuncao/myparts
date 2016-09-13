@@ -10,6 +10,7 @@ class PartsSqlTableModel;
 class TreeItemModel;
 class ModelsProvider;
 class PartParameterTableModel;
+class PartStockTableModel;
 
 namespace Ui {
 class QuickAddResistorDialog;
@@ -39,6 +40,7 @@ private:
     Ui::QuickAddResistorDialog *ui;
     PartsSqlTableModel * _partsModel;
     PartParameterTableModel * _partParams;
+    PartStockTableModel * _partStockModel;
     QString _resistorNameTemplate;
     Parameter _resistanceParam;
     Parameter _powerRatingParam;

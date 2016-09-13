@@ -102,7 +102,8 @@ SOURCES += main.cpp\
     widgets/comboitemdelegate.cpp \
     models/parametermodel.cpp \
     models/databasehelper.cpp \
-    widgets/kmessagewidget.cpp
+    widgets/kmessagewidget.cpp \
+    models/parameterunitmodel.cpp
 
 HEADERS  += mainwindow.h \
     entities/entities.h \
@@ -190,7 +191,8 @@ HEADERS  += mainwindow.h \
     models/parametermodel.h \
     stacktrace.h \
     models/databasehelper.h \
-    widgets/kmessagewidget.h
+    widgets/kmessagewidget.h \
+    models/parameterunitmodel.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \
