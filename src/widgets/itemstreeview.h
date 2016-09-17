@@ -3,7 +3,6 @@
 
 #include <QTreeView>
 #include <QStyledItemDelegate>
-#include "navigationtreeview.h"
 
 class OpenDocumentsDelegate;
 

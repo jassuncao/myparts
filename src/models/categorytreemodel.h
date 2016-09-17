@@ -1,13 +1,7 @@
 #ifndef CATEGORYTREEMODEL2_H
 #define CATEGORYTREEMODEL2_H
 
-#include <QAbstractItemModel>
-#include <QModelIndex>
-#include <QIcon>
-#include <QQueue>
-#include <QVector>
 #include "treeitemmodel.h"
-#include "treeitemmodelpersistence.h"
 
 class TreeItem;
 

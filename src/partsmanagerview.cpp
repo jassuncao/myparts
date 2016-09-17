@@ -1,5 +1,4 @@
 #include "partsmanagerview.h"
-#include "minisplitter.h"
 #include "styledbar.h"
 #include "partdetailsview.h"
 #include "widgets/currencydelegate.h"
@@ -9,6 +8,7 @@
 #include "widgets/partsfilterwidget.h"
 #include "widgets/qactionpushbutton.h"
 #include "widgets/stockinlinedelegate.h"
+#include "widgets/navigationsubwidget.h"
 #include "partdialog.h"
 #include "dialogs/addstockdialog.h"
 #include "dialogs/removestockdialog.h"
@@ -221,8 +221,7 @@ void PartsManagerView::initModels()
 
 void PartsManagerView::initPartsTableView(){
     //_partsTableView->setModel(_modelsProvider->partsModel());    
-    _partsTableView->setModel(_partsTableProxyModel);
-    QSqlDatabase db = _modelsProvider->partsModel()->database();
+    _partsTableView->setModel(_partsTableProxyModel);    
     _partsTableView->setItemDelegateForColumn(PartsSqlTableModel::ColumnActualStock, new StockInlineDelegate(this));
     _partsTableView->setEditTriggers(QAbstractItemView::DoubleClicked | QAbstractItemView::EditKeyPressed | QAbstractItemView::AnyKeyPressed);
     connect(_partsTableView->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
@@ -337,7 +336,7 @@ QVariant PartsManagerView::selectedStorage() const
     return _storageNavigator->currentStorage();
 }
 
-void PartsManagerView::slotPartTableCurrentRowChanged(const QModelIndex &current, const QModelIndex &previous)
+void PartsManagerView::slotPartTableCurrentRowChanged(const QModelIndex &current, const QModelIndex &)
 {
     _partDetailsView->setCurrentIndex(_partsTableProxyModel->mapToSource(current));
 }

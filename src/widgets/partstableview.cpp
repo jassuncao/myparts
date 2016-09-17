@@ -5,7 +5,6 @@
 #include <QTableView>
 #include <QKeyEvent>
 #include "partstableview.h"
-#include "qsortfiltersqlquerymodel.h"
 #include "models/partssqltablemodel.h"
 #include "datetimedelegate.h"
 #include "currencydelegate.h"
@@ -109,8 +108,10 @@ void PartsTableView::startDrag(Qt::DropActions supportedActions)
        //qDebug("Action = %d", action);
        if (action == Qt::MoveAction)
        {
-           QSortFilterSqlQueryModel * tableModel = static_cast<QSortFilterSqlQueryModel*>(model());
-           tableModel->select();
+           //model()->reset();
+           //QSqlQueryModel * tableModel = static_cast<QSqlQueryModel*>(model());
+           //tableModel->reset();
+          // tableModel->select();
        }
    }
 }

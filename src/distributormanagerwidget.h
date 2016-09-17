@@ -6,11 +6,6 @@
 
 class QListView;
 class QSearchLineEdit;
-class QLineEdit;
-class QTextEdit;
-class QTableView;
-class QAction;
-class QDialogButtonBox;
 class QSqlTableModel;
 class DistributorDetailsWidget;
 

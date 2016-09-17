@@ -8,14 +8,10 @@
 
 class QLineEdit;
 class QTextEdit;
-class QLabel;
-class QTableView;
 class QDialogButtonBox;
-class QPushButton;
 class QAbstractItemModel;
 class QModelIndex;
 class QDataWidgetMapper;
-class QToolButton;
 class QPushButton;
 
 class DistributorDetailsWidget : public QWidget

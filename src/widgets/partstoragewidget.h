@@ -8,7 +8,6 @@ class QPushButton;
 class QSqlTableModel;
 class QDialogButtonBox;
 class QTableView;
-class QSqlRecord;
 
 class PartStorageWidget : public QWidget
 {

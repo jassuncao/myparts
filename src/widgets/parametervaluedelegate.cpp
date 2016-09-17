@@ -10,7 +10,7 @@
 
 ParameterValueDelegate::ParameterValueDelegate(QObject * parent) :
     QStyledItemDelegate(parent)
-{    
+{
 }
 
 ParameterValueDelegate::~ParameterValueDelegate()
@@ -28,35 +28,16 @@ QString ParameterValueDelegate::displayText(const QVariant &value, const QLocale
 }
 
 
-/*
- * ^-?\d+([kKMGTPEZYmunpfazy\x{03BC}]|\.|\,)?\d*(?!\1)[kKMGTPEZYmunpfazy\x{03BC}]?W?$
- */
 QWidget * ParameterValueDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem & option, const QModelIndex &index) const
 {
     if (!index.isValid())
-        return 0;
-    qDebug("Creating ParameterValue editor");
+        return 0;    
     QVariant v = index.data(Qt::EditRole);
-    if(v.canConvert<ParameterValue>()){
-        QLocale locale;
-        QChar decimalPoint = locale.decimalPoint();
+    if(v.canConvert<ParameterValue>()){                
         ParameterValue paramValue = v.value<ParameterValue>();
         QLineEdit *le = new QLineEdit(parent);                
         le->setFrame(le->style()->styleHint(QStyle::SH_ItemView_DrawDelegateFrame, 0, le));
-        le->setProperty("unitSymbol", paramValue.symbol);
-        /*
-        QString exp=QString("^-?\\d+([kKMGTPEZYmunpfazy\\x{03BC}]|\\%1)?\\d*[kKMGTPEZYmunpfazy\\x{03BC}]?").arg(decimalPoint);
-        if(paramValue.symbol.isEmpty()){
-            exp.append('$');
-        }
-        else{
-            exp.append(paramValue.symbol).append("?$");
-        }
-        QRegExp regExp(exp, Qt::CaseSensitive, QRegExp::RegExp2);
-        //qDebug()<<"Regex: "<<exp<<" is valid? "<<regExp.isValid();;
-        QRegExpValidator * validator = new QRegExpValidator(regExp, parent);
-        le->setValidator(validator);
-        */
+        le->setProperty("unitSymbol", paramValue.symbol);        
         le->setValidator(new ParameterValueValidator(paramValue.symbol, parent));
         return le;
     }

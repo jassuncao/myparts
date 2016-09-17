@@ -1,6 +1,7 @@
 #ifndef UNITPARSER_H
 #define UNITPARSER_H
-#include <qstring.h>
+
+#include <QString>
 
 class QLocale;
 

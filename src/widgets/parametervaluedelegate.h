@@ -2,7 +2,6 @@
 #define PARAMETERVALUEDELEGATE_H
 
 #include <QStyledItemDelegate>
-class ParameterValueValidator;
 
 class ParameterValueDelegate : public QStyledItemDelegate {
     Q_OBJECT

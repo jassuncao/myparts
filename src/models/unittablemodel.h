@@ -15,7 +15,7 @@ public:
         ColumnPrefixes
     };
     static const int FAKE_COLUMNS_INDEX = ColumnPrefixes;
-    UnitTableModel(QObject *parent = 0, QSqlDatabase db = QSqlDatabase());
+    //UnitTableModel(QObject *parent = 0, QSqlDatabase db = QSqlDatabase());
     ~UnitTableModel();
     virtual QString selectStatement() const;
     virtual QVariant data(const QModelIndex &idx, int role = Qt::DisplayRole) const;

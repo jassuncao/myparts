@@ -84,13 +84,6 @@ void PartsFilterWidget::setPartsQueryBuilder(PartsQueryBuilder * partsQueryBuild
     _partsQueryBuilder = partsQueryBuilder;
 }
 
-/*
-void PartsFilterWidget::setPartsModel(PartsSqlTableModel* tableModel)
-{
-    _tableModel = tableModel;
-}
-*/
-
 QMenu * PartsFilterWidget::createFilterMoreMenu()
 {
     QMenu * menu = new QMenu(this);

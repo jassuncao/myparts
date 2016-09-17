@@ -4,7 +4,6 @@
 #include <QString>
 #include <QDir>
 #include <QSqlError>
-#include "entities/entities.h"
 
 class QAbstractItemModel;
 

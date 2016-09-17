@@ -2,9 +2,6 @@
 #define STOCKINLINEDELEGATE_H
 
 #include <QStyledItemDelegate>
-#include <QSqlDatabase>
-
-class PartsSqlTableModel;
 
 class StockInlineDelegate : public QStyledItemDelegate {
     Q_OBJECT

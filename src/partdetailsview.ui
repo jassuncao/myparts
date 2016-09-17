@@ -2,6 +2,20 @@
 <ui version="4.0">
  <class>PartDetailsView</class>
  <widget class="QWidget" name="PartDetailsView">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>292</width>
+    <height>547</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
@@ -33,11 +47,20 @@
       <string notr="true">background-color: rgb(255, 255, 255);</string>
      </property>
      <layout class="QGridLayout" name="gridLayout" columnstretch="1,0">
+      <property name="sizeConstraint">
+       <enum>QLayout::SetMinimumSize</enum>
+      </property>
       <item row="0" column="0">
-       <widget class="QLabel" name="partNameLabel">
+       <widget class="ElidingLabel" name="partNameLabel">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="font">
          <font>
-          <pointsize>16</pointsize>
+          <pointsize>14</pointsize>
          </font>
         </property>
         <property name="text">
@@ -46,15 +69,18 @@
         <property name="textFormat">
          <enum>Qt::PlainText</enum>
         </property>
-        <property name="wordWrap">
-         <bool>true</bool>
-        </property>
        </widget>
       </item>
       <item row="0" column="1">
        <widget class="QDialogButtonBox" name="partActionsButtonBox">
         <property name="enabled">
          <bool>true</bool>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
         </property>
         <property name="standardButtons">
          <set>QDialogButtonBox::NoButton</set>

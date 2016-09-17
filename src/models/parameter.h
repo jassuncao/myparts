@@ -2,7 +2,6 @@
 #define PARAMETER_H
 
 #include <QSharedDataPointer>
-#include "entities/entities.h"
 
 struct ParameterData;
 

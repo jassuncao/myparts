@@ -7,7 +7,6 @@
 #include <QDir>
 
 class QLineEdit;
-class QLabel;
 class QTableView;
 class QDialogButtonBox;
 class QPushButton;

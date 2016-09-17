@@ -9,23 +9,14 @@ namespace Ui {
 class PartDialog;
 }
 
-class QSqlRelationalTableModel;
-class QSqlTableModel;
 class QSqlQueryModel;
 class QModelIndex;
 class QDataWidgetMapper;
-class TreeItemModel;
 class PartsSqlTableModel;
 class QCheckBox;
-class QAbstractButton;
-class PartDistributorTableModel;
-class PartManufacturerTableModel;
-class AttachmentTableModel;
 class AttachmentTableModel3;
-class PartParameterTableModel2;
 class PartManufacturerTableModel2;
 class PartDistributorTableModel2;
-class PartParametersTableModel3;
 class PartStockTableModel;
 class ModelsProvider;
 class PartParameterTableModel;

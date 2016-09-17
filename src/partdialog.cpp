@@ -16,7 +16,6 @@
 #include <QDialogButtonBox>
 #include <QDesktopServices>
 
-#include "dialogs/quickaddstoragedialog.h"
 #include "widgets/parametervaluedelegate.h"
 #include "widgets/currencydelegate.h"
 #include "widgets/validatingitemdelegate.h"
@@ -29,7 +28,6 @@
 #include "models/modelsprovider.h"
 #include "models/categorytreemodel.h"
 #include "models/partparametertablemodel.h"
-#include "widgets/comboitemdelegate.h"
 
 #include "utils.h"
 
@@ -335,7 +333,7 @@ double PartDialog::partPrice() const
     return price;
 }
 
-void setIndexForFkey(QComboBox * combo, QVariant fkey){
+static void setIndexForFkey(QComboBox * combo, QVariant fkey){
     int comboIdx = -1;
     if(!fkey.isNull() ){
         QModelIndex start = combo->model()->index(0,0);

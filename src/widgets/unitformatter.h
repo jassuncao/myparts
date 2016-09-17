@@ -1,8 +1,8 @@
 #ifndef UNITFORMATTER_H
 #define UNITFORMATTER_H
 
-#include <qchar.h>
-#include <qstring.h>
+#include <QString>
+#include <QChar>
 
 class UnitFormatter
 {
@@ -10,7 +10,7 @@ public:
     UnitFormatter();
     ~UnitFormatter();
 
-    const static ushort ohmSymbol = 0x2126;
+   const static ushort ohmSymbol = 0x2126;
    const static ushort microSymbol = 0x03BC;
    const static QChar resistance;
    const static QChar capacitance;

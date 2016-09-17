@@ -4,7 +4,6 @@
 #include "minisplitter.h"
 #include <QModelIndex>
 #include <QSqlRecord>
-#include "widgets/navigationsubwidget.h"
 
 namespace Manhattan {
     class StyledBar;
@@ -41,7 +40,7 @@ public:
 protected slots:
     void slotBeforeSubmit();
     void slotAfterSubmit();    
-    void slotPartTableCurrentRowChanged(const QModelIndex &current, const QModelIndex &previous);
+    void slotPartTableCurrentRowChanged(const QModelIndex &current, const QModelIndex &);
     void slotAddPart();
     void slotEditPart();
     void slotDeletePart();

@@ -6,15 +6,9 @@
 
 class QListView;
 class QSearchLineEdit;
-class QLineEdit;
-class QTextEdit;
-class QTableView;
-class QAction;
-class QGraphicsView;
 class QDialogButtonBox;
 class QSqlTableModel;
 class PackageDetailsWidget;
-class PackageAttachmentTableModel;
 
 
 class PackageManagerWidget : public QWidget

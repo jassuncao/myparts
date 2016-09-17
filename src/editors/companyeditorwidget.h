@@ -8,7 +8,6 @@
 
 class QLineEdit;
 class QTextEdit;
-class QLabel;
 class QAbstractItemModel;
 class QModelIndex;
 class QDataWidgetMapper;

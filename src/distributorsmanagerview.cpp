@@ -4,7 +4,6 @@
 #include "widgets/listnavigatorwidget.h"
 #include "widgets/qsearchlineedit.h"
 #include "styledbar.h"
-#include "minisplitter.h"
 #include <QHBoxLayout>
 #include <QListView>
 #include <QToolBar>

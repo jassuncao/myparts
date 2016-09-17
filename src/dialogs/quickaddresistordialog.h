@@ -2,12 +2,11 @@
 #define QUICKADDRESISTORDIALOG_H
 
 #include <QDialog>
-#include "utils.h"
 #include "models/parameter.h"
 
-class ColorQComboBox;
+//class ColorQComboBox;
 class PartsSqlTableModel;
-class TreeItemModel;
+//class TreeItemModel;
 class ModelsProvider;
 class PartParameterTableModel;
 class PartStockTableModel;

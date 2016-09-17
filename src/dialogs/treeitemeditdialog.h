@@ -6,7 +6,6 @@
 class QLineEdit;
 class QPlainTextEdit;
 class QFormLayout;
-class QAbstractItemModel;
 
 class TreeItemEditDialog : public QDialog
 {

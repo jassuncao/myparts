@@ -26,6 +26,7 @@
 #include <QDateTime>
 #include <QMessageBox>
 #include <QTimer>
+#include <QSqlRecord>
 
 
 static QStandardItem * newColorItem(const QString & name, const QColor & color, const QVariant & value, const int shortcutKey)
@@ -265,7 +266,6 @@ QVariant QuickAddResistorDialog::selectedCategory() const
     else{
         itemId = model->rootItemId();
     }
-    qDebug()<<"Storage id is "<<itemId;
     return QVariant(itemId);
 }
 
@@ -291,7 +291,6 @@ QVariant QuickAddResistorDialog::selectedStorage() const
     else{
         itemId = model->rootItemId();
     }
-    qDebug()<<"Storage id is "<<itemId;
     return QVariant(itemId);
 }
 

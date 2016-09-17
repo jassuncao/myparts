@@ -1,6 +1,7 @@
 #include "categorytreemodel.h"
 #include "treeitem.h"
-#include "models/treemodelmimedata.h"
+#include "treemodelmimedata.h"
+#include "treeitemmodelpersistence.h"
 #include <QVector>
 #include <QMimeData>
 #include <QSqlRecord>

@@ -2,7 +2,6 @@
 #define COMPANYMANAGERVIEW_H
 
 #include "minisplitter.h"
-#include "editors/abstracteditor.h"
 #include <QModelIndex>
 #include <QWidget>
 #include <QLabel>
@@ -19,6 +18,7 @@ class QSqlTableModel;
 class QStackedLayout;
 class QDialogButtonBox;
 class QPushButton;
+class AbstractEditor;
 
 class EditorManagerHelper : public QObject
 {

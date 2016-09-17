@@ -7,13 +7,13 @@
 #include <QStringList>
 
 
-UnitTableModel::UnitTableModel(QObject *parent, QSqlDatabase db) :
-    QSqlTableModel(parent, db)
-{
-    setTable("unit");
-    _deletePrefixAssociationQuery.prepare("DELETE FROM unit_prefix WHERE unit_prefix.unit=?");
-    _insertPrefixAssociationQuery.prepare("INSERT OR IGNORE INTO unit_prefix (unit, siPrefix) VALUES(?,?)");
-}
+//UnitTableModel::UnitTableModel(QObject *parent, QSqlDatabase db) :
+//    QSqlTableModel(parent, db)
+//{
+//    setTable("unit");
+//    _deletePrefixAssociationQuery.prepare("DELETE FROM unit_prefix WHERE unit_prefix.unit=?");
+//    _insertPrefixAssociationQuery.prepare("INSERT OR IGNORE INTO unit_prefix (unit, siPrefix) VALUES(?,?)");
+//}
 
 UnitTableModel::~UnitTableModel()
 {

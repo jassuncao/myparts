@@ -20,13 +20,10 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     partdialog.cpp \
-    entities/entities.cpp \
     dialogs/partcategorydialog.cpp \
     models/treeitem.cpp \
     widgets/booleanitemdelegate.cpp \
-    models/partunitssqltablemodel.cpp \
     optionsdialog.cpp \
-    qsortfiltersqlquerymodel.cpp \
     widgets/qsearchlineedit.cpp \
     partmimedata.cpp \
     widgets/partstableview.cpp \
@@ -37,7 +34,6 @@ SOURCES += main.cpp\
     widgets/stockactioncolumndelegate.cpp \
     widgets/qtreebox.cpp \
     widgets/partstoragewidget.cpp \
-    dialogs/quickaddstoragedialog.cpp \
     widgets/currencydelegate.cpp \
     models/treeitemmodel.cpp \
     models/storagetreemodel.cpp \
@@ -95,7 +91,6 @@ SOURCES += main.cpp\
     dialogs/quickaddresistordialog.cpp \
     widgets/colorbandcombobox.cpp \
     models/modelsprovider.cpp \
-    models/partunitsreadonlymodel.cpp \
     models/partconditionmodel.cpp \
     models/partparametertablemodel.cpp \
     models/parameter.cpp \
@@ -106,14 +101,11 @@ SOURCES += main.cpp\
     models/parameterunitmodel.cpp
 
 HEADERS  += mainwindow.h \
-    entities/entities.h \
     partdialog.h \
     dialogs/partcategorydialog.h \
     models/treeitem.h \
     widgets/booleanitemdelegate.h \
-    models/partunitssqltablemodel.h \
     optionsdialog.h \
-    qsortfiltersqlquerymodel.h \
     widgets/qsearchlineedit.h \
     partmimedata.h \
     widgets/partstableview.h \
@@ -124,7 +116,6 @@ HEADERS  += mainwindow.h \
     widgets/stockactioncolumndelegate.h \
     widgets/qtreebox.h \
     widgets/partstoragewidget.h \
-    dialogs/quickaddstoragedialog.h \
     widgets/currencydelegate.h \
     models/treeitemmodel.h \
     models/storagetreemodel.h \
@@ -182,7 +173,6 @@ HEADERS  += mainwindow.h \
     dialogs/quickaddresistordialog.h \
     widgets/colorbandcombobox.h \
     models/modelsprovider.h \
-    models/partunitsreadonlymodel.h \
     models/partconditionmodel.h \
     models/partparametertablemodel.h \
     models/parameter.h \

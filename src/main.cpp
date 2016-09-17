@@ -4,8 +4,6 @@
 #include <QtGui>
 #include <QDir>
 #include <QMessageBox>
-//#include <dquest.h>
-#include "entities/entities.h"
 //#include <QWindowsXPStyle>
 #include "manhattanstyle.h"
 #include "stylehelper.h"
@@ -13,59 +11,6 @@
 #include <QStyle>
 #include <QDebug>
 #include "models/databasehelper.h"
-
-//bool createTables(DQConnection & connection)
-//{
-//    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-//    db.setDatabaseName(":memory:");
-//    //db.setDatabaseName("myparts.sqlite");
-//    if (!db.open()) {
-//        QMessageBox::critical(0, qApp->tr("Cannot open database"),
-//            qApp->tr("Unable to establish a database connection.\n"
-//                     "This example needs SQLite support. Please read "
-//                     "the Qt SQL driver documentation for information how "
-//                     "to build it.\n\n"
-//                     "Click Cancel to exit."), QMessageBox::Cancel);
-//        return false;
-//    }
-//    connection.open(db); // Establish the connection to database. It will become the "default connection" shared by all DQModel
-//    connection.addModel<Entities::DatatypeEntity>();
-//    connection.addModel<Entities::PartUnitEntity>();
-//    connection.addModel<Entities::StorageEntity>();
-//    connection.addModel<Entities::CategoryEntity>();
-//    connection.addModel<Entities::ConditionEntity>();
-//    connection.addModel<Entities::PackageEntity>();
-//    connection.addModel<Entities::PartEntity>();
-//    connection.addModel<Entities::StockChangeEntity>();
-//    connection.addModel<Entities::SiPrefix>();
-//    connection.addModel<Entities::Unit>();
-//    connection.addModel<Entities::UnitPrefix>();
-//    connection.addModel<Entities::ParameterEntity>();
-//    connection.addModel<Entities::PartParameterEntity>();
-//    connection.addModel<Entities::DistributorEntity>();
-//    connection.addModel<Entities::PackagingEntity>();
-//    connection.addModel<Entities::PartDistributorEntity>();
-//    connection.addModel<Entities::ManufacturerEntity>();
-//    connection.addModel<Entities::PartManufacturerEntity>();
-//    connection.addModel<Entities::PartAttachmentEntity>();
-//    connection.addModel<Entities::PackageAttachmentEntity>();
-//    /*
-//    if(connection.createTables()){
-//        DQIndex<Entities::CategoryEntity> lft_idx("lft_idx");
-//        DQIndex<Entities::CategoryEntity> rgt_idx("rgt_idx");
-//        lft_idx<<"lft";
-//        rgt_idx<<"rgt";
-//        connection.createIndex(lft_idx);
-//        connection.createIndex(rgt_idx);
-//        return true;
-//    }
-//    */
-//    DatabaseHelper helper(db.database());
-//    helper.createDatabase();
-//    helper.loadInitialData();
-//    return false;
-
-//}
 
 bool initDatabase(QSqlDatabase& db){
     //db.setDatabaseName(":memory:");
@@ -104,18 +49,7 @@ int main(int argc, char *argv[])
         qDebug()<<"Style: "<< keys.at(i);
     }
 
-    QApplication a(argc, argv);
-    /*
-    DQConnection connection;
-    if(createTables(connection)){
-
-        //createSomeData();
-        //listSomeData();
-        //createSampleCategories();
-    }
-
-    connection.query().exec("PRAGMA foreign_keys = ON");
-    */
+    QApplication a(argc, argv);   
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     initDatabase(db);
 
@@ -123,8 +57,9 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationDomain("joaoassuncao.com");
     QCoreApplication::setApplicationName("MyParts");
     //TODO: Fetch values from settings
-    QLocale curLocale(QLocale("pt_PT"));
-    QLocale::setDefault(curLocale);
+    //QLocale curLocale(QLocale("pt_PT"));
+    //QLocale::setDefault(curLocale);
+
     QDir::addSearchPath("packages", "/home/jassuncao/MyProjects/myparts/images/packages");
     QDir::addSearchPath("attachments", "/home/jassuncao/MyProjects/myparts/attachments");
     QDir::addSearchPath("tmp","/home/jassuncao/MyProjects/myparts/images/tmp");
@@ -143,9 +78,7 @@ int main(int argc, char *argv[])
     w.show();
     int res = a.exec();    
     db.close();;
-    //connection.close();
     return res;
-    //*/
 }
 
 

@@ -5,15 +5,7 @@
 * Handle PartDialog "next action" checkbox. -> Need to intercept the accept slot();
 * Duplicate part
 * Support Distributors
-
-Ideia:
- O dialogo de quick add de resistência pode apresentar um botão de pick que abre um dialogo onde é possivel escolher as bandas ou introduzir os digitos
-
-
-* Doing: O storage também deve ser mantido numa estrutura hierarquica.
-    - Estou a implementar o DAO
-* Todo: Na janela principal seria interessante mudar entra a vista de categorias e uma vista de storage
-
+* Quick add resistor wizard
 
 Icons used:
 

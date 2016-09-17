@@ -1,6 +1,6 @@
 #include "distributordetailswidget.h"
-#include "qsqltablemodel.h"
-#include "qsqlerror.h"
+#include <QSqlTableModel>
+#include <QSqlError>
 #include <QLineEdit>
 #include <QFormLayout>
 #include <QDialogButtonBox>

@@ -1,6 +1,5 @@
 #include "distributormanagerwidget.h"
 #include "distributordetailswidget.h"
-#include <qsqltablemodel.h>
 #include "widgets/qsearchlineedit.h"
 #include <QToolBar>
 #include <QVBoxLayout>

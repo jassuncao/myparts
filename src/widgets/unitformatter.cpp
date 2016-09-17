@@ -1,6 +1,6 @@
 #include "unitformatter.h"
-#include "qtextstream.h"
-#include "qdebug.h"
+#include <QTextStream>
+#include <QDebug>
 #include <math.h>
 
 static const ushort BIG_PREFIXES[] = {0,'k','M','G','T','P','E','Z','Y'};

@@ -12,8 +12,6 @@ class FilterItemWidget;
 class QSearchLineEdit;
 class QPushButton;
 class QMenu;
-class FilterBuilder;
-class PartsSqlTableModel;
 class PartsQueryBuilder;
 
 class QFilterItemAction : public QAction {

@@ -6,7 +6,6 @@
 #include "models/modelsprovider.h"
 #include "models/parametermodel.h"
 #include "models/parameterunitmodel.h"
-#include "entities/entities.h"
 #include "widgets/validatingitemdelegate.h"
 #include "widgets/comboitemdelegate.h"
 #include "constants.h"

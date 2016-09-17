@@ -6,7 +6,6 @@
 #include <QKeyEvent>
 #include <QAbstractItemModel>
 #include <QFormLayout>
-#include <QLabel>
 #include <QLineEdit>
 #include <QAbstractItemView>
 #include <QPushButton>
