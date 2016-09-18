@@ -27,6 +27,7 @@ class CategoryTreeModel;
 class TreeItem;
 class PartsTableProxyModel;
 class ModelsProvider;
+class QSettings;
 
 class PartsManagerView : public Manhattan::MiniSplitter
 {
@@ -36,6 +37,8 @@ public:
     ~PartsManagerView();
     QVariant selectedCategory() const;
     QVariant selectedStorage() const;
+    void writeSettings(QSettings& settings) const;
+    void readSettings(QSettings& settings);
 
 protected slots:
     void slotBeforeSubmit();

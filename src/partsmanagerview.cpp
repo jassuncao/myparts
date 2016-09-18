@@ -32,6 +32,7 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QSqlError>
+#include <QSettings>
 
 
 void debugLayout(QString tab, QLayoutItem * item){
@@ -229,6 +230,21 @@ void PartsManagerView::initPartsTableView(){
     connect(_partsTableView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(slotEditPart()));
     connect(_partsTableView, SIGNAL(deletePressed()), this, SLOT(slotDeletePart()));    
 }
+
+void PartsManagerView::writeSettings(QSettings& settings) const
+{
+
+    settings.setValue("parts/splitterSizes", saveState());
+}
+
+void PartsManagerView::readSettings(QSettings& settings)
+{
+    QVariant var = settings.value("parts/splitterSizes");
+    if(var.isValid()){
+        restoreState(var.toByteArray());
+    }
+}
+
 
 void PartsManagerView::slotShowDetailsPane()
 {

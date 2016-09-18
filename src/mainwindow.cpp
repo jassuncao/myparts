@@ -16,8 +16,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    ui->setupUi(this);
-    readSettings();
+    ui->setupUi(this);    
     _modelsProvider = new ModelsProvider(this);
     _modelsProvider->initModels();   
     _partsManagerView = new PartsManagerView(_modelsProvider, this);
@@ -61,6 +60,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->tabWidget->addTab(distributorManager, QIcon(":/icons/distributor"), tr("Distributors"));
 */
     connect(ui->actionPreferences, SIGNAL(triggered()), this, SLOT(slotEditPreferences()));
+    readSettings();
 }
 
 MainWindow::~MainWindow()
@@ -79,6 +79,7 @@ void MainWindow::readSettings()
      QSettings settings;
      QPoint pos = settings.value("pos", QPoint(200, 200)).toPoint();
      QSize size = settings.value("size", QSize(400, 400)).toSize();
+     _partsManagerView->readSettings(settings);
      resize(size);
      move(pos);
 }
@@ -88,6 +89,7 @@ void MainWindow::writeSettings()
      QSettings settings;
      settings.setValue("pos", pos());
      settings.setValue("size", size());
+     _partsManagerView->writeSettings(settings);
 }
 
 void MainWindow::slotEditPreferences()
