@@ -7,7 +7,7 @@
 //class ColorQComboBox;
 class PartsSqlTableModel;
 //class TreeItemModel;
-class ModelsProvider;
+class ModelsRepository;
 class PartParameterTableModel;
 class PartStockTableModel;
 
@@ -19,7 +19,7 @@ class QuickAddResistorDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit QuickAddResistorDialog(ModelsProvider *modelsProvider, QWidget *parent = 0);
+    explicit QuickAddResistorDialog(ModelsRepository *modelsProvider, QWidget *parent = 0);
     void setSelectedCategory(const QVariant & category);
     void setSelectedStorage(const QVariant & storage);
     ~QuickAddResistorDialog();

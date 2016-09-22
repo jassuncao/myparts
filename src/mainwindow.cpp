@@ -10,14 +10,14 @@
 #include "distributorsmanagerview.h"
 #include "editormanagerview.h"
 #include "dialogs/quickaddresistordialog.h"
-#include "models/modelsprovider.h"
+#include "models/modelsrepository.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);    
-    _modelsProvider = new ModelsProvider(this);
+    _modelsProvider = new ModelsRepository(this);
     _modelsProvider->initModels();   
     _partsManagerView = new PartsManagerView(_modelsProvider, this);
     EditorManagerView * distributorsView = new EditorManagerView(new DistributorManagerHelper, this);

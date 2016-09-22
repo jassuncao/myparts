@@ -10,7 +10,7 @@ class OptionsDialog;
 }
 
 class SimpleSqlTableModel;
-class ModelsProvider;
+class ModelsRepository;
 class PartConditionModel;
 class ParameterModel;
 class ParameterUnitModel;
@@ -20,7 +20,7 @@ class OptionsDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit OptionsDialog(ModelsProvider * provider, QWidget *parent = 0);
+    explicit OptionsDialog(ModelsRepository * provider, QWidget *parent = 0);
     ~OptionsDialog();
 
 private slots:
@@ -56,7 +56,7 @@ private:
     void setupConnections();
     void setupGeneralSettings();
     Ui::OptionsDialog *ui;
-    ModelsProvider * _modelsProvider;
+    ModelsRepository * _modelsProvider;
     SimpleSqlTableModel * _partUnitsModel;
     ParameterUnitModel * _parameterUnitsModel;
     PartConditionModel * _partConditionModel;

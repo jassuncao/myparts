@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 
-class ModelsProvider;
+class ModelsRepository;
 class PartsManagerView;
 
 namespace Ui {
@@ -26,7 +26,7 @@ private slots:
 private:
     void readSettings();
     void writeSettings();
-    ModelsProvider * _modelsProvider;
+    ModelsRepository * _modelsProvider;
     Ui::MainWindow *ui;
     PartsManagerView* _partsManagerView;
 };

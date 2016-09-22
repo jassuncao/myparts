@@ -13,6 +13,7 @@ class QSearchLineEdit;
 class QPushButton;
 class QMenu;
 class PartsQueryBuilder;
+class ModelsRepository;
 
 class QFilterItemAction : public QAction {
     Q_OBJECT
@@ -32,7 +33,7 @@ class PartsFilterWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit PartsFilterWidget(QWidget *parent = 0);
+    explicit PartsFilterWidget(ModelsRepository * modelsRepository, QWidget *parent = 0);
     ~PartsFilterWidget();
     void setPartsQueryBuilder(PartsQueryBuilder * partsQueryBuilder);
 signals:
@@ -61,6 +62,7 @@ private:
     QPushButton * _moreButton;
     QHash<int, FilterItemWidget*> _activeFilterItems;
     PartsQueryBuilder * _partsQueryBuilder;
+    const ModelsRepository * _modelsRepository;
 };
 
 #endif // PARTSFILTERWIDGET_H

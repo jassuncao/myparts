@@ -16,7 +16,7 @@
 const int COLUMN_UNIT_DEFAULT = 0;
 //const int COLUMN_CONDITION_DEFAULT = 0;
 
-OptionsDialog::OptionsDialog(ModelsProvider * provider, QWidget *parent) :
+OptionsDialog::OptionsDialog(ModelsRepository * provider, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::OptionsDialog), _modelsProvider(provider)
 {

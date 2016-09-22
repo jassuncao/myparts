@@ -18,7 +18,7 @@ class AttachmentTableModel3;
 class PartManufacturerTableModel2;
 class PartDistributorTableModel2;
 class PartStockTableModel;
-class ModelsProvider;
+class ModelsRepository;
 class PartParameterTableModel;
 
 class PartDialog : public QDialog
@@ -26,7 +26,7 @@ class PartDialog : public QDialog
     Q_OBJECT
     
 public:
-    explicit PartDialog(ModelsProvider *modelsProvider, /* bool addMode,*/ QWidget *parent = 0);
+    explicit PartDialog(ModelsRepository *modelsProvider, /* bool addMode,*/ QWidget *parent = 0);
     ~PartDialog();    
     int initialStock() const;
     double partPrice() const;
@@ -70,7 +70,7 @@ private:
 
     QCheckBox * _nextActionCheckbox;
     Ui::PartDialog *ui;    
-    ModelsProvider * _modelsProvider;
+    ModelsRepository * _modelsProvider;
     PartsSqlTableModel * _partsModel;
     PartParameterTableModel * _partParamsModel;    
     PartDistributorTableModel2 * _partDistributorModel;

@@ -1,5 +1,5 @@
 #include "parametermodel.h"
-#include "extrarowproxymodel.h"
+#include "proxymodelnoneentry.h"
 #include <QAbstractListModel>
 #include <QPair>
 
@@ -103,7 +103,7 @@ QAbstractItemModel * ParameterModel::relationModel(const int column) const
 {    
     QAbstractItemModel * listModel = SimpleSqlTableModel::relationModel(column);
     if(column==ColumnUnit){
-         ExtraRowProxyModel * proxyModel = new ExtraRowProxyModel(listModel);
+         ProxyModelNoneEntry * proxyModel = new ProxyModelNoneEntry(QString(), QVariant(), listModel);
          proxyModel->setSourceModel(listModel);
          return proxyModel;
     }

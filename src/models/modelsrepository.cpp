@@ -1,4 +1,4 @@
-#include "modelsprovider.h"
+#include "modelsrepository.h"
 #include "models/partssqltablemodel.h"
 #include "models/storagetreemodel.h"
 #include "models/customtablemodel.h"
@@ -10,7 +10,7 @@
 #include "models/treeitem.h"
 #include <QSqlQueryModel>
 
-ModelsProvider::ModelsProvider(QObject *parent) : QObject(parent)
+ModelsRepository::ModelsRepository(QObject *parent) : QObject(parent)
 {
     _partsQueryBuilder = new PartsQueryBuilder();
     _partsModel = new PartsSqlTableModel(_partsQueryBuilder, this);
@@ -19,6 +19,7 @@ ModelsProvider::ModelsProvider(QObject *parent) : QObject(parent)
     _categoriesModel = new CategoryTreeModel(this);
     _storageModel = new StorageTreeModel(this);
     _partConditionModel = PartConditionModel::createNew(this);
+    _partConditionModel->setObjectName("Part condition model");
     _partDistributorModel = PartDistributorTableModel2::createNew(this);
     _partManufacturerModel = PartManufacturerTableModel2::createNew(this);
 
@@ -26,32 +27,32 @@ ModelsProvider::ModelsProvider(QObject *parent) : QObject(parent)
     connect(_storageModel, SIGNAL(partsDropped(QVector<int>,TreeItem*)), this, SLOT(slotPartsDroppedInStorage(QVector<int>,TreeItem*)));
 }
 
-ModelsProvider::~ModelsProvider()
+ModelsRepository::~ModelsRepository()
 {    
     delete _partsQueryBuilder;
 }
 
-CategoryTreeModel * ModelsProvider::partCategoryModel() const
+CategoryTreeModel * ModelsRepository::partCategoryModel() const
 {
     return _categoriesModel;
 }
 
-StorageTreeModel * ModelsProvider::partStorageModel() const
+StorageTreeModel * ModelsRepository::partStorageModel() const
 {
     return _storageModel;
 }
 
-PartConditionModel * ModelsProvider::partConditionModel() const
+PartConditionModel * ModelsRepository::partConditionModel() const
 {
     return _partConditionModel;
 }
 
-PartsSqlTableModel * ModelsProvider::partsModel() const
+PartsSqlTableModel * ModelsRepository::partsModel() const
 {
     return _partsModel;
 }
 
-void ModelsProvider::initModels()
+void ModelsRepository::initModels()
 {    
     _storageModel->select();
     _categoriesModel->select();
@@ -61,13 +62,13 @@ void ModelsProvider::initModels()
 }
 
 
-void ModelsProvider::slotPartsDroppedInCategory(QVector<int> parts, TreeItem* item)
+void ModelsRepository::slotPartsDroppedInCategory(QVector<int> parts, TreeItem* item)
 {
     _partsModel->updatePartsCategory(parts, item->id());
     _partsModel->select();
 }
 
-void ModelsProvider::slotPartsDroppedInStorage(QVector<int> parts, TreeItem* item)
+void ModelsRepository::slotPartsDroppedInStorage(QVector<int> parts, TreeItem* item)
 {
     _partsModel->updatePartsStorage(parts, item->id());
     _partsModel->select();

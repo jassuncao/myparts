@@ -38,7 +38,7 @@ static QStandardItem * newColorItem(const QString & name, const QColor & color, 
     return item;
 }
 
-QuickAddResistorDialog::QuickAddResistorDialog(ModelsProvider * modelsProvider, QWidget *parent) :
+QuickAddResistorDialog::QuickAddResistorDialog(ModelsRepository * modelsProvider, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::QuickAddResistorDialog),
     _partsModel(modelsProvider->partsModel())

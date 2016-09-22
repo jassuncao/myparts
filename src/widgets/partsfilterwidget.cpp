@@ -2,9 +2,11 @@
 #include "widgets/flowlayout.h"
 #include "widgets/qsearchlineedit.h"
 #include "widgets/filteritemwidget.h"
-#include "models/extrarowproxymodel.h"
+#include "models/proxymodelnoneentry.h"
 #include "models/partssqltablemodel.h"
 #include "models/partsquerybuilder.h"
+#include "models/modelsrepository.h"
+#include "models/partconditionmodel.h"
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -16,6 +18,8 @@
 #include <QComboBox>
 #include <QDebug>
 #include <QAbstractItemModel>
+
+
 
 
 QFilterItemAction::QFilterItemAction(const QString &text, const int filterTag, QObject* parent) :
@@ -33,7 +37,8 @@ void QFilterItemAction::slotToggled(bool b)
         emit unchecked(_filterTag);
 }
 
-PartsFilterWidget::PartsFilterWidget(QWidget *parent) : QWidget(parent)
+PartsFilterWidget::PartsFilterWidget(ModelsRepository *modelsRepository, QWidget *parent) : QWidget(parent),
+    _modelsRepository(modelsRepository)
 {
     _fixedItemsLayout = new QHBoxLayout;
     _fixedItemsLayout->setMargin(0);
@@ -140,17 +145,18 @@ FilterItemWidget * PartsFilterWidget::createStockFilterItem()
 
 FilterItemWidget * PartsFilterWidget::createPartConditionFilterItem()
 {
-    QSqlQueryModel * conditionModel = new QSqlQueryModel(this);
-    conditionModel->setQuery("SELECT id, value FROM condition");
+    //QSqlQueryModel * conditionModel = new QSqlQueryModel(this);
+    //conditionModel->setQuery("SELECT id, value FROM condition");
 
-    ExtraRowProxyModel * conditionProxyModel = new ExtraRowProxyModel(this);
-    conditionProxyModel->setEmptyDisplayText(tr("Any"));
-    conditionProxyModel->setSourceModel(conditionModel);
+    QAbstractItemModel * source = _modelsRepository->partConditionModel();
+
+    ProxyModelNoneEntry * proxyModel = new ProxyModelNoneEntry(tr("Any"), QVariant(), this);
+    proxyModel->setSourceModel(source);
 
     FilterItemWidget * item  = new FilterItemWidget(tr("Condition:"), PartsQueryBuilder::FilterByCondition, false, this);
-    item->setOptionsModel(conditionProxyModel);
-    item->setDisplayColumn(1);
-    item->setValueColumn(0, Qt::EditRole);
+    item->setOptionsModel(proxyModel);
+    item->setDisplayColumn(PartConditionModel::ColumnValue);
+    item->setValueColumn(PartConditionModel::ColumnId, Qt::EditRole);
     return item;
 }
 
@@ -159,8 +165,7 @@ FilterItemWidget * PartsFilterWidget::createPartDistributorFilterItem()
     QSqlQueryModel * sourceModel = new QSqlQueryModel(this);
     sourceModel->setQuery("SELECT id, name FROM distributor");
 
-    ExtraRowProxyModel * proxyModel = new ExtraRowProxyModel(this);
-    proxyModel->setEmptyDisplayText(tr("Any"));
+    ProxyModelNoneEntry * proxyModel = new ProxyModelNoneEntry(tr("Any"), QVariant(), this);
     proxyModel->setSourceModel(sourceModel);
 
     FilterItemWidget * item  = new FilterItemWidget(tr("Distributor:"), PartsQueryBuilder::FilterByDistributor, true, this);
@@ -175,8 +180,7 @@ FilterItemWidget * PartsFilterWidget::createPartManufacturerFilterItem()
     QSqlQueryModel * sourceModel = new QSqlQueryModel(this);
     sourceModel->setQuery("SELECT id, name FROM manufacturer");
 
-    ExtraRowProxyModel * proxyModel = new ExtraRowProxyModel(this);
-    proxyModel->setEmptyDisplayText(tr("Any"));
+    ProxyModelNoneEntry * proxyModel = new ProxyModelNoneEntry(tr("Any"), QVariant(), this);
     proxyModel->setSourceModel(sourceModel);
 
     FilterItemWidget * item  = new FilterItemWidget(tr("Manufacturer:"), PartsQueryBuilder::FilterByManufacturer, true, this);
@@ -191,8 +195,7 @@ FilterItemWidget * PartsFilterWidget::createPartPackageFilterItem()
     QSqlQueryModel * sourceModel = new QSqlQueryModel(this);
     sourceModel->setQuery("SELECT id, name FROM package");
 
-    ExtraRowProxyModel * proxyModel = new ExtraRowProxyModel(this);
-    proxyModel->setEmptyDisplayText(tr("Any"));
+    ProxyModelNoneEntry * proxyModel = new ProxyModelNoneEntry(tr("Any"), QVariant(), this);
     proxyModel->setSourceModel(sourceModel);
 
     FilterItemWidget * item  = new FilterItemWidget(tr("Package:"), PartsQueryBuilder::FilterByPackage, true, this);

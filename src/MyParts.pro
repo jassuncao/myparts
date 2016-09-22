@@ -72,7 +72,6 @@ SOURCES += main.cpp\
     widgets/filteritemwidget.cpp \
     widgets/partsfilterwidget.cpp \
     widgets/qactionpushbutton.cpp \
-    models/extrarowproxymodel.cpp \
     models/partssqltablemodel.cpp \
     widgets/gridwidget.cpp \
     models/partsquerybuilder.cpp \
@@ -90,7 +89,6 @@ SOURCES += main.cpp\
     widgets/stockinlinedelegate.cpp \
     dialogs/quickaddresistordialog.cpp \
     widgets/colorbandcombobox.cpp \
-    models/modelsprovider.cpp \
     models/partconditionmodel.cpp \
     models/partparametertablemodel.cpp \
     models/parameter.cpp \
@@ -98,7 +96,9 @@ SOURCES += main.cpp\
     models/parametermodel.cpp \
     models/databasehelper.cpp \
     widgets/kmessagewidget.cpp \
-    models/parameterunitmodel.cpp
+    models/parameterunitmodel.cpp \
+    models/modelsrepository.cpp \
+    models/proxymodelnoneentry.cpp
 
 HEADERS  += mainwindow.h \
     partdialog.h \
@@ -154,7 +154,6 @@ HEADERS  += mainwindow.h \
     widgets/filteritemwidget.h \
     widgets/partsfilterwidget.h \
     widgets/qactionpushbutton.h \
-    models/extrarowproxymodel.h \
     models/partssqltablemodel.h \
     widgets/gridwidget.h \
     models/partsquerybuilder.h \
@@ -172,7 +171,6 @@ HEADERS  += mainwindow.h \
     widgets/stockinlinedelegate.h \
     dialogs/quickaddresistordialog.h \
     widgets/colorbandcombobox.h \
-    models/modelsprovider.h \
     models/partconditionmodel.h \
     models/partparametertablemodel.h \
     models/parameter.h \
@@ -182,7 +180,9 @@ HEADERS  += mainwindow.h \
     stacktrace.h \
     models/databasehelper.h \
     widgets/kmessagewidget.h \
-    models/parameterunitmodel.h
+    models/parameterunitmodel.h \
+    models/modelsrepository.h \
+    models/proxymodelnoneentry.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \

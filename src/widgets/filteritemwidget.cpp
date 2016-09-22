@@ -14,6 +14,7 @@
 #include <QDesktopWidget>
 #include <QMenu>
 #include <QWidgetAction>
+#include <QDebug>
 
 #if defined(Q_WS_X11)
 #include <private/qkde_p.h>
@@ -192,8 +193,8 @@ void FilterItemWidget::slotCurrentIndexChanged(int row)
 {
     if(_valueColumn<0)
         return;
-    QAbstractItemModel * model = _comboBox->model();
-    QModelIndex index = model->index(row, _valueColumn);
+    QAbstractItemModel * model = _comboBox->model();   
+    QModelIndex index = model->index(row, _valueColumn);    
     const QVariant value = model->data(index, _valueRole);
     emit valueChanged(_filterTag, value);
 }

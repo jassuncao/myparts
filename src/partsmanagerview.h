@@ -26,14 +26,14 @@ class StorageNavigator;
 class CategoryTreeModel;
 class TreeItem;
 class PartsTableProxyModel;
-class ModelsProvider;
+class ModelsRepository;
 class QSettings;
 
 class PartsManagerView : public Manhattan::MiniSplitter
 {
     Q_OBJECT
 public:
-    explicit PartsManagerView(ModelsProvider * modelsProvider, QWidget *parent = 0);
+    explicit PartsManagerView(ModelsRepository * modelsProvider, QWidget *parent = 0);
     ~PartsManagerView();
     QVariant selectedCategory() const;
     QVariant selectedStorage() const;
@@ -86,7 +86,7 @@ private:
     QToolButton * _showDetailsPaneButton;
     QToolButton * _hideDetailsPaneButton;
     QWidget * _detailsPane;
-    ModelsProvider * _modelsProvider;
+    ModelsRepository * _modelsRepository;
 };
 
 #endif // PARTSMANAGERVIEW_H

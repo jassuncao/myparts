@@ -13,12 +13,12 @@ class TreeItem;
 class PartDistributorTableModel2;
 class PartManufacturerTableModel2;
 
-class ModelsProvider : public QObject
+class ModelsRepository : public QObject
 {
     Q_OBJECT
 public:
-    explicit ModelsProvider(QObject *parent = 0);
-    virtual ~ModelsProvider();
+    explicit ModelsRepository(QObject *parent = 0);
+    virtual ~ModelsRepository();
     void initModels();
     CategoryTreeModel * partCategoryModel() const;
     StorageTreeModel * partStorageModel() const;

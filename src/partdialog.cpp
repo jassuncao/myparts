@@ -36,7 +36,7 @@ inline static QVariant getColumnValue(QAbstractItemModel * model, int row, int c
     return model->index(row, column).data(Qt::EditRole);
 }
 
-PartDialog::PartDialog(ModelsProvider * modelsProvider, QWidget *parent) :
+PartDialog::PartDialog(ModelsRepository * modelsProvider, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::PartDialog),
     _modelsProvider(modelsProvider),
