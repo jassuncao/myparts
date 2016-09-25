@@ -20,9 +20,9 @@ MainWindow::MainWindow(QWidget *parent) :
     _modelsProvider = new ModelsRepository(this);
     _modelsProvider->initModels();   
     _partsManagerView = new PartsManagerView(_modelsProvider, this);
-    EditorManagerView * distributorsView = new EditorManagerView(new DistributorManagerHelper, this);
-    EditorManagerView * manufacturersView = new EditorManagerView(new ManufacturerManagerHelper, this);
-    EditorManagerView * packageView = new EditorManagerView(new PackageManagerHelper, this);    
+    EditorManagerView * distributorsView = new EditorManagerView(new DistributorManagerHelper, _modelsProvider->distributorModel(), this);
+    EditorManagerView * manufacturersView = new EditorManagerView(new ManufacturerManagerHelper, _modelsProvider->manufacturerModel(), this);
+    EditorManagerView * packageView = new EditorManagerView(new PackageManagerHelper, _modelsProvider->packageModel(), this);
 
     ui->centralWidget->insertTab(0, _partsManagerView, QIcon(QString::fromUtf8(":/largeIcons/page_parts")), tr("Parts"));
     ui->centralWidget->setTabEnabled(0, true);

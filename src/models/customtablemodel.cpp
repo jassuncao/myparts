@@ -315,7 +315,7 @@ void CustomTableModel::cloneData()
 
 
 SimpleSqlTableModel::SimpleSqlTableModel(const QString &tableName, const QStringList & fieldNames, const QStringList &columnNames, const QString & foreignKeyField, QObject *parent) :
-    CustomTableModel(fieldNames.size()+1, parent), _tableName(tableName), _fieldNames(fieldNames), _foreignKeyField(foreignKeyField), _sortColumn(-1)
+    CustomTableModel(fieldNames.size(), parent), _tableName(tableName), _fieldNames(fieldNames), _foreignKeyField(foreignKeyField), _sortColumn(-1)
 {
     QString fieldList = fieldNames.join(", ");
 

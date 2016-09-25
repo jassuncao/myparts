@@ -8,6 +8,7 @@
 #include "models/partsquerybuilder.h"
 #include "models/partconditionmodel.h"
 #include "models/treeitem.h"
+#include "models/basicentitytablemodel.h"
 #include <QSqlQueryModel>
 
 ModelsRepository::ModelsRepository(QObject *parent) : QObject(parent)
@@ -22,6 +23,15 @@ ModelsRepository::ModelsRepository(QObject *parent) : QObject(parent)
     _partConditionModel->setObjectName("Part condition model");
     _partDistributorModel = PartDistributorTableModel2::createNew(this);
     _partManufacturerModel = PartManufacturerTableModel2::createNew(this);
+
+    _distributorModel = new CompanyTableModel(this);
+    _distributorModel->setTable("distributor");
+
+    _manufacturerModel = new CompanyTableModel(this);
+    _manufacturerModel->setTable("manufacturer");
+
+    _packageModel = new PackageTableModel(this);
+    _packageModel->setTable("package");
 
     connect(_categoriesModel, SIGNAL(partsDropped(QVector<int>,TreeItem*)), this, SLOT(slotPartsDroppedInCategory(QVector<int>,TreeItem*)));
     connect(_storageModel, SIGNAL(partsDropped(QVector<int>,TreeItem*)), this, SLOT(slotPartsDroppedInStorage(QVector<int>,TreeItem*)));
@@ -50,6 +60,21 @@ PartConditionModel * ModelsRepository::partConditionModel() const
 PartsSqlTableModel * ModelsRepository::partsModel() const
 {
     return _partsModel;
+}
+
+CompanyTableModel* ModelsRepository::distributorModel() const
+{
+    return _distributorModel;
+}
+
+CompanyTableModel* ModelsRepository::manufacturerModel() const
+{
+    return _manufacturerModel;
+}
+
+PackageTableModel * ModelsRepository::packageModel() const
+{
+    return _packageModel;
 }
 
 void ModelsRepository::initModels()

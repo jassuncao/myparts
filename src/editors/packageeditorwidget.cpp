@@ -1,7 +1,7 @@
 #include "packageeditorwidget.h"
 #include "dialogs/attachmentselectiondialog.h"
 #include "models/customtablemodel.h"
-#include "models/packagetablemodel.h"
+#include "models/basicentitytablemodel.h"
 #include <QDebug>
 #include <QToolButton>
 #include <QLineEdit>

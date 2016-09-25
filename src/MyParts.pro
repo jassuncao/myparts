@@ -41,7 +41,6 @@ SOURCES += main.cpp\
     models/treemodelmimedata.cpp \
     partdetailsview.cpp \
     storagemanagerform.cpp \
-    packagedetailswidget.cpp \
     widgets/qtabwidget2.cpp \
     models/unittablemodel.cpp \
     widgets/parametervaluevalidator.cpp \
@@ -49,8 +48,6 @@ SOURCES += main.cpp\
     widgets/unitformatter.cpp \
     widgets/parametervaluedelegate.cpp \
     widgets/relationalcombobox.cpp \
-    distributormanagerwidget.cpp \
-    distributordetailswidget.cpp \
     utils.cpp \
     dialogs/attachmentselectiondialog.cpp \
     valuewithunit.cpp \
@@ -61,7 +58,6 @@ SOURCES += main.cpp\
     widgets/navigationsubwidget.cpp \
     partsmanagerview.cpp \
     widgets/navigationtreeview.cpp \
-    distributorsmanagerview.cpp \
     widgets/itemstreeview.cpp \
     widgets/listnavigatorwidget.cpp \
     editors/companyeditorwidget.cpp \
@@ -75,9 +71,7 @@ SOURCES += main.cpp\
     models/partssqltablemodel.cpp \
     widgets/gridwidget.cpp \
     models/partsquerybuilder.cpp \
-    models/packagetablemodel.cpp \
     editors/packageeditorwidget.cpp \
-    packagemanagerwidget.cpp \
     widgets/extendedtableview.cpp \
     models/treeitemmodelpersistence.cpp \
     dialogs/treeitemeditdialog.cpp \
@@ -98,7 +92,8 @@ SOURCES += main.cpp\
     widgets/kmessagewidget.cpp \
     models/parameterunitmodel.cpp \
     models/modelsrepository.cpp \
-    models/proxymodelnoneentry.cpp
+    models/proxymodelnoneentry.cpp \
+    models/basicentitytablemodel.cpp
 
 HEADERS  += mainwindow.h \
     partdialog.h \
@@ -123,15 +118,12 @@ HEADERS  += mainwindow.h \
     models/treemodelmimedata.h \
     partdetailsview.h \
     storagemanagerform.h \
-    packagedetailswidget.h \
     widgets/qtabwidget2.h \
     models/unittablemodel.h \
     widgets/parametervaluevalidator.h \
     widgets/unitparser.h \
     widgets/parametervaluedelegate.h \
     widgets/relationalcombobox.h \
-    distributormanagerwidget.h \
-    distributordetailswidget.h \
     utils.h \
     dialogs/attachmentselectiondialog.h \
     valuewithunit.h \
@@ -143,7 +135,6 @@ HEADERS  += mainwindow.h \
     widgets/navigationsubwidget.h \
     partsmanagerview.h \
     widgets/navigationtreeview.h \
-    distributorsmanagerview.h \
     widgets/itemstreeview.h \
     widgets/listnavigatorwidget.h \
     editors/companyeditorwidget.h \
@@ -157,9 +148,7 @@ HEADERS  += mainwindow.h \
     models/partssqltablemodel.h \
     widgets/gridwidget.h \
     models/partsquerybuilder.h \
-    models/packagetablemodel.h \
     editors/packageeditorwidget.h \
-    packagemanagerwidget.h \
     widgets/extendedtableview.h \
     models/treeitemmodelpersistence.h \
     dialogs/treeitemeditdialog.h \
@@ -182,7 +171,8 @@ HEADERS  += mainwindow.h \
     widgets/kmessagewidget.h \
     models/parameterunitmodel.h \
     models/modelsrepository.h \
-    models/proxymodelnoneentry.h
+    models/proxymodelnoneentry.h \
+    models/basicentitytablemodel.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \

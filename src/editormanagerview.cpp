@@ -24,7 +24,7 @@
 
 QWidget* DistributorManagerHelper::createNoDataWidget() const
 {
-    QLabel * l = new QLabel(tr("Select a distributor"));
+    QLabel * l = new QLabel(QCoreApplication::translate("DistributorManagerHelper", "Select a distributor"));
     l->setAlignment(Qt::AlignCenter);
     return l;
 }
@@ -35,7 +35,7 @@ AbstractEditor* DistributorManagerHelper::createEditor() const {
 
 QWidget* ManufacturerManagerHelper::createNoDataWidget() const
 {
-    QLabel * l = new QLabel(tr("Select a manufacturer"));
+    QLabel * l = new QLabel(QCoreApplication::translate("ManufacturerManagerHelper", "Select a manufacturer"));
     l->setAlignment(Qt::AlignCenter);
     return l;
 }
@@ -46,7 +46,7 @@ AbstractEditor* ManufacturerManagerHelper::createEditor() const {
 
 QWidget* PackageManagerHelper::createNoDataWidget() const
 {
-    QLabel * l = new QLabel(tr("Select a package"));
+    QLabel * l = new QLabel(QCoreApplication::translate("PackageManagerHelper", "Select a package"));
     l->setAlignment(Qt::AlignCenter);
     return l;
 }
@@ -56,8 +56,8 @@ AbstractEditor* PackageManagerHelper::createEditor() const {
 }
 
 
-EditorManagerView::EditorManagerView(const EditorManagerHelper *helper, QWidget *parent)
-    : Manhattan::MiniSplitter(parent), _helper(helper), _dirty(false)
+EditorManagerView::EditorManagerView(const EditorManagerHelper *helper, BasicEntityTableModel *model, QWidget *parent)
+    : Manhattan::MiniSplitter(parent), _helper(helper), _model(model), _dirty(false)
 {
     _navigatorWidget = new ListNavigatorWidget(_helper->mainTitle());
     _editorWidget = _helper->createEditor();
@@ -94,14 +94,10 @@ EditorManagerView::EditorManagerView(const EditorManagerHelper *helper, QWidget 
     setStretchFactor(0, 0);
     setStretchFactor(1, 1);
 
-    _model = new QSqlTableModel(this);
-    _model->setTable(helper->tableName());
-    _model->setSort(helper->itemLabelColumn(), Qt::AscendingOrder);
-    _model->setEditStrategy(QSqlTableModel::OnManualSubmit);
     _model->select();
 
     _navigatorWidget->setModel(_model);
-    _navigatorWidget->setModelColumn(helper->itemLabelColumn());
+    _navigatorWidget->setModelColumn(model->getNameColumn());
     _editorWidget->setModel(_model);
     _editorWidget->setCurrentModelIndex(QModelIndex());   
 
@@ -110,7 +106,7 @@ EditorManagerView::EditorManagerView(const EditorManagerHelper *helper, QWidget 
     connect(_navigatorWidget, SIGNAL(addNewItem()), this, SLOT(slotAddItem()));
     connect(_navigatorWidget, SIGNAL(deleteItem(QModelIndex)), this, SLOT(slotDeleteItem(QModelIndex)));
     connect(_editorWidget, SIGNAL(contentChanged()), this, SLOT(slotContentChanged()));
-    connect(_model, SIGNAL(primeInsert(int,QSqlRecord&)), this, SLOT(slotPrimeInsert(int,QSqlRecord&)));
+    //connect(_model, SIGNAL(primeInsert(int,QSqlRecord&)), this, SLOT(slotPrimeInsert(int,QSqlRecord&)));
 
     connect(_buttonBox, SIGNAL(accepted()), this, SLOT(slotAccept()));
     connect(_buttonBox, SIGNAL(rejected()), this, SLOT(slotReject()));
@@ -150,10 +146,12 @@ void EditorManagerView::slotAddItem()
     }
 }
 
+/*
 void EditorManagerView::slotPrimeInsert(int, QSqlRecord &record)
 {
     record.setValue(_helper->itemIDColumn(), QVariant());
 }
+*/
 
 void EditorManagerView::restoreCurrentIndex(const QModelIndex & index)
 {
@@ -185,7 +183,7 @@ void EditorManagerView::slotItemSelected(const QModelIndex &index)
         }
     }
 
-    QModelIndex rootIndex = _model->index(index.row(), _helper->itemIDColumn());
+    QModelIndex rootIndex = _model->rootIndex(index.row());
     _editorWidget->setCurrentModelIndex(rootIndex);
     if(rootIndex.isValid()==false){        
         _stackedLayout->setCurrentIndex(0);
@@ -248,13 +246,7 @@ void EditorManagerView::slotDeleteItem(const QModelIndex &index)
 
 void EditorManagerView::slotFilterChanged(const QString &filterText)
 {
-    if(!filterText.isEmpty()){
-        _model->setFilter(_helper->createFilterExpression(filterText));
-    }
-    else{
-        _model->setFilter(QString::null);
-        _model->select();
-    }
+    _model->setTextFilter(filterText);
 }
 
 void EditorManagerView::slotAccept()
@@ -327,7 +319,7 @@ int EditorManagerView::findRowNumber(QVariant idValue)
     bool dataAvailable = true;
     while(dataAvailable){
         for(; row<_model->rowCount(); ++row){
-            const QModelIndex & idx = _model->index(row, _helper->itemIDColumn());
+            const QModelIndex & idx = _model->rootIndex(row);
             QVariant id = _model->data(idx);
             if(id==idValue)
                 return row;

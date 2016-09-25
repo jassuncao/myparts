@@ -7,6 +7,7 @@
 #include "models/partsquerybuilder.h"
 #include "models/modelsrepository.h"
 #include "models/partconditionmodel.h"
+#include "models/basicentitytablemodel.h"
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -144,10 +145,7 @@ FilterItemWidget * PartsFilterWidget::createStockFilterItem()
 }
 
 FilterItemWidget * PartsFilterWidget::createPartConditionFilterItem()
-{
-    //QSqlQueryModel * conditionModel = new QSqlQueryModel(this);
-    //conditionModel->setQuery("SELECT id, value FROM condition");
-
+{  
     QAbstractItemModel * source = _modelsRepository->partConditionModel();
 
     ProxyModelNoneEntry * proxyModel = new ProxyModelNoneEntry(tr("Any"), QVariant(), this);
@@ -162,46 +160,43 @@ FilterItemWidget * PartsFilterWidget::createPartConditionFilterItem()
 
 FilterItemWidget * PartsFilterWidget::createPartDistributorFilterItem()
 {
-    QSqlQueryModel * sourceModel = new QSqlQueryModel(this);
-    sourceModel->setQuery("SELECT id, name FROM distributor");
+    QAbstractTableModel * sourceModel = _modelsRepository->distributorModel();
 
     ProxyModelNoneEntry * proxyModel = new ProxyModelNoneEntry(tr("Any"), QVariant(), this);
     proxyModel->setSourceModel(sourceModel);
 
     FilterItemWidget * item  = new FilterItemWidget(tr("Distributor:"), PartsQueryBuilder::FilterByDistributor, true, this);
     item->setOptionsModel(proxyModel);
-    item->setDisplayColumn(1);
-    item->setValueColumn(0, Qt::EditRole);
+    item->setDisplayColumn(CompanyTableModel::ColumnName);
+    item->setValueColumn(CompanyTableModel::ColumnId, Qt::EditRole);
     return item;
 }
 
 FilterItemWidget * PartsFilterWidget::createPartManufacturerFilterItem()
 {
-    QSqlQueryModel * sourceModel = new QSqlQueryModel(this);
-    sourceModel->setQuery("SELECT id, name FROM manufacturer");
+    QAbstractTableModel * sourceModel = _modelsRepository->manufacturerModel();
 
     ProxyModelNoneEntry * proxyModel = new ProxyModelNoneEntry(tr("Any"), QVariant(), this);
     proxyModel->setSourceModel(sourceModel);
 
     FilterItemWidget * item  = new FilterItemWidget(tr("Manufacturer:"), PartsQueryBuilder::FilterByManufacturer, true, this);
     item->setOptionsModel(proxyModel);
-    item->setDisplayColumn(1);
-    item->setValueColumn(0, Qt::EditRole);
+    item->setDisplayColumn(CompanyTableModel::ColumnName);
+    item->setValueColumn(CompanyTableModel::ColumnId, Qt::EditRole);
     return item;
 }
 
 FilterItemWidget * PartsFilterWidget::createPartPackageFilterItem()
 {
-    QSqlQueryModel * sourceModel = new QSqlQueryModel(this);
-    sourceModel->setQuery("SELECT id, name FROM package");
+    QAbstractTableModel * sourceModel = _modelsRepository->packageModel();
 
     ProxyModelNoneEntry * proxyModel = new ProxyModelNoneEntry(tr("Any"), QVariant(), this);
     proxyModel->setSourceModel(sourceModel);
 
     FilterItemWidget * item  = new FilterItemWidget(tr("Package:"), PartsQueryBuilder::FilterByPackage, true, this);
     item->setOptionsModel(proxyModel);
-    item->setDisplayColumn(1);
-    item->setValueColumn(0, Qt::EditRole);
+    item->setDisplayColumn(PackageTableModel::ColumnName);
+    item->setValueColumn(PackageTableModel::ColumnId, Qt::EditRole);
     return item;
 }
 
@@ -279,6 +274,3 @@ void PartsFilterWidget::slotTextFilterItemChanged()
     const QString & text = _textFilterItem->text();
     slotFilterItemValueChange(PartsQueryBuilder::FilterByText, text);
 }
-
-
-

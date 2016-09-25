@@ -12,6 +12,8 @@ class PartConditionModel;
 class TreeItem;
 class PartDistributorTableModel2;
 class PartManufacturerTableModel2;
+class CompanyTableModel;
+class PackageTableModel;
 
 class ModelsRepository : public QObject
 {
@@ -22,8 +24,11 @@ public:
     void initModels();
     CategoryTreeModel * partCategoryModel() const;
     StorageTreeModel * partStorageModel() const;
-    PartConditionModel *partConditionModel() const;
-    PartsSqlTableModel *partsModel() const;
+    PartConditionModel * partConditionModel() const;
+    PartsSqlTableModel * partsModel() const;
+    CompanyTableModel * distributorModel() const;
+    CompanyTableModel * manufacturerModel() const;
+    PackageTableModel * packageModel() const;
 signals:
 
 private slots:
@@ -37,6 +42,9 @@ private:
     PartConditionModel * _partConditionModel;
     PartDistributorTableModel2 * _partDistributorModel;
     PartManufacturerTableModel2 * _partManufacturerModel;
+    CompanyTableModel * _distributorModel;
+    CompanyTableModel * _manufacturerModel;
+    PackageTableModel * _packageModel;
 };
 
 #endif // MODELSPROVIDER_H
