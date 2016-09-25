@@ -69,10 +69,10 @@ void ListNavigatorWidget::setModel(QAbstractItemModel *model)
 
 void ListNavigatorWidget::setModelColumn(int column)
 {
-   _listView->setModelColumn(column);
+   _listView->setModelColumn(column);   
 }
 
-/*
+
 void ListNavigatorWidget::setCurrentIndex(const QModelIndex &index)
 {
     if(index.isValid()){
@@ -81,7 +81,7 @@ void ListNavigatorWidget::setCurrentIndex(const QModelIndex &index)
     }
     _listView->setCurrentIndex(index);
 }
-*/
+
 
 void ListNavigatorWidget::setCurrentRow(int row)
 {

@@ -21,6 +21,12 @@
 #include <QStackedLayout>
 #include <QDialogButtonBox>
 #include <QMessageBox>
+#include <QSortFilterProxyModel>
+
+EditorManagerHelper::~EditorManagerHelper()
+{
+
+}
 
 QWidget* DistributorManagerHelper::createNoDataWidget() const
 {
@@ -96,10 +102,15 @@ EditorManagerView::EditorManagerView(const EditorManagerHelper *helper, BasicEnt
 
     _model->select();
 
-    _navigatorWidget->setModel(_model);
+    _filterProxyModel = new QSortFilterProxyModel(this);
+    _filterProxyModel->setSourceModel(_model);
+    _filterProxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
+    _filterProxyModel->setFilterKeyColumn(model->getNameColumn());
+    _navigatorWidget->setModel(_filterProxyModel);
+
     _navigatorWidget->setModelColumn(model->getNameColumn());
     _editorWidget->setModel(_model);
-    _editorWidget->setCurrentModelIndex(QModelIndex());   
+    _editorWidget->setCurrentIndex(-1);
 
     connect(_navigatorWidget, SIGNAL(filterChanged(QString)), this, SLOT(slotFilterChanged(QString)));
     connect(_navigatorWidget, SIGNAL(itemSelected(QModelIndex)), this, SLOT(slotItemSelected(QModelIndex)), Qt::QueuedConnection);
@@ -146,17 +157,10 @@ void EditorManagerView::slotAddItem()
     }
 }
 
-/*
-void EditorManagerView::slotPrimeInsert(int, QSqlRecord &record)
-{
-    record.setValue(_helper->itemIDColumn(), QVariant());
-}
-*/
-
-void EditorManagerView::restoreCurrentIndex(const QModelIndex & index)
+void EditorManagerView::restoreCurrentIndex(int row)
 {
     bool oldState =_navigatorWidget->blockSignals(true);
-    _navigatorWidget->setCurrentRow(index.row());
+    _navigatorWidget->setCurrentRow(row);
     _navigatorWidget->blockSignals(oldState);
 }
 
@@ -178,20 +182,19 @@ void EditorManagerView::slotItemSelected(const QModelIndex &index)
             slotReject();
         }
         else{
-            restoreCurrentIndex(_editorWidget->currentModelIndex());
+            restoreCurrentIndex(_editorWidget->currentIndex());
             return;
         }
     }
-
-    QModelIndex rootIndex = _model->rootIndex(index.row());
-    _editorWidget->setCurrentModelIndex(rootIndex);
-    if(rootIndex.isValid()==false){        
+    QModelIndex sourceIndex = _filterProxyModel->mapToSource(index);
+    _editorWidget->setCurrentIndex(sourceIndex.row());
+    if(sourceIndex.isValid()==false){
         _stackedLayout->setCurrentIndex(0);
         return;
     }
     _stackedLayout->setCurrentIndex(1);
     //A brand new row is set with an invalid ID
-    if(rootIndex.data(Qt::EditRole).isValid()){
+    if(sourceIndex.data(Qt::EditRole).isValid()){
         //Editing an existing element
         _saveButton->setText(_helper->saveChangesButtonText());
         _saveButton->setEnabled(false);
@@ -211,14 +214,15 @@ void EditorManagerView::slotItemSelected(const QModelIndex &index)
 
 void EditorManagerView::slotDelete()
 {
-    slotDeleteItem(_editorWidget->currentModelIndex());
+    deleteRow(_editorWidget->currentIndex());
 }
 
-void EditorManagerView::slotDeleteItem(const QModelIndex &index)
+
+void EditorManagerView::deleteRow(int row)
 {
     _dirty = false;
-    qDebug()<<"Deleting item "<<index;
-    if(index.isValid()==false){
+    qDebug()<<"Deleting row "<<row;
+    if(row < 0){
         return;
     }
     QMessageBox msgBox;
@@ -229,13 +233,12 @@ void EditorManagerView::slotDeleteItem(const QModelIndex &index)
     if(msgBox.exec()!=QMessageBox::Yes)
         return;
     //Resets the editor state
-    _editorWidget->setCurrentModelIndex(QModelIndex());
+    _editorWidget->setCurrentIndex(-1);
 
-    int row = index.row();
     _model->removeRow(row);
     _model->database().transaction();
     if(_model->submitAll()){
-        _navigatorWidget->setCurrentRow(row);
+        _navigatorWidget->setCurrentRow(row - 1);
         _model->database().commit();
     }
     else{
@@ -244,9 +247,16 @@ void EditorManagerView::slotDeleteItem(const QModelIndex &index)
     }
 }
 
+void EditorManagerView::slotDeleteItem(const QModelIndex & index)
+{
+    if(index.isValid()){
+        deleteRow(index.row());
+    }
+}
+
 void EditorManagerView::slotFilterChanged(const QString &filterText)
 {
-    _model->setTextFilter(filterText);
+    _filterProxyModel->setFilterFixedString(filterText);
 }
 
 void EditorManagerView::slotAccept()
@@ -258,8 +268,11 @@ void EditorManagerView::slotAccept()
     /* submitAll resets the model making the indexes invalid.
      * We iterate over the records to find the row matching the current id
      */
-    int row = findRowNumber(elementId);
-    _navigatorWidget->setCurrentRow(row);
+    const QModelIndex newIndex = _model->findIndexOfKeyValue(elementId);
+    //int row = findRowNumber(elementId);
+    //_navigatorWidget->setCurrentRow(row);
+    const QModelIndex proxyIndex = _filterProxyModel->mapFromSource(newIndex);
+    _navigatorWidget->setCurrentIndex(proxyIndex);
 }
 
 /**
@@ -274,7 +287,7 @@ QVariant EditorManagerView::commitChanges()
 
     _editorWidget->submit();
     //We assume the editor widget is set with a QModelIndex made of (row,Id Column)
-    id = _editorWidget->currentModelIndex().data(Qt::EditRole);
+    id = _model->keyValue(_editorWidget->currentIndex());
     if(id.isValid()){
         success=_model->submitAll();
     }
@@ -296,7 +309,7 @@ QVariant EditorManagerView::commitChanges()
 
 void EditorManagerView::slotReject()
 {    
-    int row = _editorWidget->currentModelIndex().row();
+    int row = _editorWidget->currentIndex();
     _model->revertRow(row);
     _editorWidget->revert();
     _dirty = false;
@@ -313,22 +326,22 @@ void EditorManagerView::slotContentChanged()
     }
 }
 
-int EditorManagerView::findRowNumber(QVariant idValue)
-{
-    int row = 0;
-    bool dataAvailable = true;
-    while(dataAvailable){
-        for(; row<_model->rowCount(); ++row){
-            const QModelIndex & idx = _model->rootIndex(row);
-            QVariant id = _model->data(idx);
-            if(id==idValue)
-                return row;
-        }
-        dataAvailable = _model->canFetchMore();
-        if(dataAvailable){
-            _model->fetchMore();
-        }
-    }
-    return -1;
-}
+//int EditorManagerView::findRowNumber(QVariant idValue)
+//{
+//    int row = 0;
+//    bool dataAvailable = true;
+//    while(dataAvailable){
+//        for(; row<_model->rowCount(); ++row){
+//            const QModelIndex & idx = _model->rootIndex(row);
+//            QVariant id = _model->data(idx);
+//            if(id==idValue)
+//                return row;
+//        }
+//        dataAvailable = _model->canFetchMore();
+//        if(dataAvailable){
+//            _model->fetchMore();
+//        }
+//    }
+//    return -1;
+//}
 

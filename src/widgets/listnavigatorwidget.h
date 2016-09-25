@@ -17,7 +17,7 @@ public:
     QString filterText() const;
     void setModel(QAbstractItemModel *model);
     void setModelColumn(int column);
-    //void setCurrentIndex(const QModelIndex &index);
+    void setCurrentIndex(const QModelIndex &index);
     void setCurrentRow(int row);
     QModelIndex currentIndex() const;
 signals:

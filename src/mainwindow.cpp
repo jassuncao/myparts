@@ -4,10 +4,7 @@
 #include <QSettings>
 #include <QtGui>
 #include "models/storagetreemodel.h"
-#include "packagemanagerwidget.h"
-#include "distributormanagerwidget.h"
 #include "partsmanagerview.h"
-#include "distributorsmanagerview.h"
 #include "editormanagerview.h"
 #include "dialogs/quickaddresistordialog.h"
 #include "models/modelsrepository.h"

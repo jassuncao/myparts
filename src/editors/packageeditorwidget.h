@@ -23,9 +23,11 @@ class PackageEditorWidget : public AbstractEditor
     Q_OBJECT
 public:
     explicit PackageEditorWidget(QWidget *parent = 0);
-    QModelIndex currentModelIndex() const;
-    void setCurrentModelIndex(const QModelIndex & modelIndex);
+    //QModelIndex currentModelIndex() const;
+    //void setCurrentModelIndex(const QModelIndex & modelIndex);
     void setModel(QAbstractItemModel * model);
+    void setCurrentIndex(int row);
+    int currentIndex() const;
     bool validate();
 public slots:
     void submit();

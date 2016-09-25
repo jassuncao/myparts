@@ -104,6 +104,7 @@ PackageEditorWidget::PackageEditorWidget(QWidget *parent) :
     connect(_attachmentsTable, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(slotAttachmentDoubleClicked(QModelIndex)));    
 }
 
+/*
 QModelIndex PackageEditorWidget::currentModelIndex() const
 {
     return _currentIndex;
@@ -121,6 +122,7 @@ void PackageEditorWidget::setCurrentModelIndex(const QModelIndex & modelIndex)
     _attachmentModel->setCurrentForeignKey(packageId);
     _attachmentModel->select();
 }
+*/
 
 void PackageEditorWidget::setModel(QAbstractItemModel * model)
 {
@@ -131,6 +133,21 @@ void PackageEditorWidget::setModel(QAbstractItemModel * model)
     _mapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
     _mapper->addMapping(_nameLineEdit, PackageTableModel::ColumnName);
     _mapper->addMapping(_descriptionLineEdit, PackageTableModel::ColumnDescription);
+}
+
+void PackageEditorWidget::setCurrentIndex(int row)
+{
+    _mapper->setCurrentIndex(row);
+    setImageEditorData(row);
+    setEnabled(row >= 0);
+    QVariant packageId = _model->index(row, PackageTableModel::ColumnId).data(Qt::EditRole);
+    qDebug()<<"packageId is "<< packageId;
+    _attachmentModel->setCurrentForeignKey(packageId);
+    _attachmentModel->select();
+}
+
+int PackageEditorWidget::currentIndex() const {
+    return _mapper->currentIndex();
 }
 
 bool PackageEditorWidget::validate()

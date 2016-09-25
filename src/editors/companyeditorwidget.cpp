@@ -6,6 +6,7 @@
 #include <QTextEdit>
 #include <QMessageBox>
 #include <QDebug>
+#include "models/basicentitytablemodel.h"
 
 CompanyEditorWidget::CompanyEditorWidget(QWidget *parent) :
     AbstractEditor(parent)
@@ -33,6 +34,7 @@ CompanyEditorWidget::~CompanyEditorWidget()
 {
 }
 
+/*
 QModelIndex CompanyEditorWidget::currentModelIndex() const
 {
     return _currentIndex;
@@ -44,16 +46,28 @@ void CompanyEditorWidget::setCurrentModelIndex(const QModelIndex & modelIndex)
     _commentTextEdit->blockSignals(true);
     _mapper->setCurrentModelIndex(modelIndex);
     _commentTextEdit->blockSignals(false);
-    setEnabled(_currentIndex.isValid());        
+    setEnabled(_currentIndex.isValid());
 }
-
+*/
 void CompanyEditorWidget::setModel(QAbstractItemModel * model)
 {   
     _mapper->setModel(model);
     _mapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
-    _mapper->addMapping(_nameLineEdit, ColumnName);
-    _mapper->addMapping(_websiteLineEdit, ColumnWebsite);
-    _mapper->addMapping(_commentTextEdit, ColumnComment);
+    _mapper->addMapping(_nameLineEdit, CompanyTableModel::ColumnName);
+    _mapper->addMapping(_websiteLineEdit, CompanyTableModel::ColumnWebsite);
+    _mapper->addMapping(_commentTextEdit, CompanyTableModel::ColumnComment);
+}
+
+void CompanyEditorWidget::setCurrentIndex(int row)
+{
+    _commentTextEdit->blockSignals(true);
+    _mapper->setCurrentIndex(row);
+    _commentTextEdit->blockSignals(false);
+    setEnabled(row >= 0);
+}
+
+int CompanyEditorWidget::currentIndex() const {
+    return _mapper->currentIndex();
 }
 
 bool CompanyEditorWidget::validate()

@@ -16,17 +16,18 @@ class MiniSplitter;
 
 class ListNavigatorWidget;
 class CompanyEditorWidget;
-class QSqlTableModel;
 class QStackedLayout;
 class QDialogButtonBox;
 class QPushButton;
 class AbstractEditor;
 class BasicEntityTableModel;
+class QSortFilterProxyModel;
 
 
 class EditorManagerHelper
 {
 public:
+    virtual ~EditorManagerHelper();
     virtual QString mainTitle() const = 0;
     virtual QString deleteButtonText() const = 0;
     virtual QString saveNewButtonText() const = 0;
@@ -67,10 +68,6 @@ public:
     QString saveChangesButtonText() const { return QCoreApplication::translate("PackageManagerHelper", "Save changes"); }
     AbstractEditor* createEditor() const;
     QWidget* createNoDataWidget() const;
-//    virtual QString tableName() const { return QLatin1String("package"); }
-//    virtual int itemLabelColumn() const { return 1; }
-//    virtual int itemIDColumn() const  { return 0; }
-//    virtual QString createFilterExpression(const QString & filterText) const { return QString("name LIKE '\%%1\%'").arg(filterText);}
 };
 
 class EditorManagerView : public Manhattan::MiniSplitter
@@ -81,17 +78,17 @@ public:
     ~EditorManagerView();
 private slots:
     void slotAddItem();
-    void slotDeleteItem(const QModelIndex &index);
+    void slotDeleteItem(const QModelIndex & index);
     void slotFilterChanged(const QString & filterText);
     void slotAccept();
     void slotReject();
     void slotDelete();
     void slotItemSelected(const QModelIndex &index);
     void slotContentChanged();
-    //void slotPrimeInsert(int, QSqlRecord &record);
 private:
-    int findRowNumber(QVariant idValue);
-    void restoreCurrentIndex(const QModelIndex & index);
+    //int findRowNumber(QVariant idValue);
+    void restoreCurrentIndex(int row);
+    void deleteRow(int row);
     QVariant commitChanges();
     bool discardChangesConfirmation();
 
@@ -104,6 +101,7 @@ private:
     QPushButton * _saveButton;
     QPushButton * _deleteButton;
     QPushButton * _cancelButton;
+    QSortFilterProxyModel * _filterProxyModel;
     bool _dirty;
 };
 

@@ -16,18 +16,20 @@ class CompanyEditorWidget : public AbstractEditor
 {
     Q_OBJECT
 public:
-    enum ColumnsIndex {
-        ColumnId = 0,
-        ColumnName,
-        ColumnWebsite,
-        ColumnComment
-    };
+//    enum ColumnsIndex {
+//        ColumnId = 0,
+//        ColumnName,
+//        ColumnWebsite,
+//        ColumnComment
+//    };
 
     explicit CompanyEditorWidget(QWidget *parent = 0);
     ~CompanyEditorWidget();
     QModelIndex currentModelIndex() const;
-    void setCurrentModelIndex(const QModelIndex & modelIndex);
+    //void setCurrentModelIndex(const QModelIndex & modelIndex);
     void setModel(QAbstractItemModel * model);    
+    void setCurrentIndex(int row);
+    int currentIndex() const;
     bool validate();
 public slots:
     void submit();
@@ -37,8 +39,7 @@ private:
     QLineEdit * _nameLineEdit;
     QLineEdit * _websiteLineEdit;
     QTextEdit * _commentTextEdit;      
-    QDataWidgetMapper * _mapper;    
-    QModelIndex _currentIndex;
+    QDataWidgetMapper * _mapper;      
 };
 
 #endif // COMPANYEDITORWIDGET_H

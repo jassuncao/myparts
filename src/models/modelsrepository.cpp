@@ -26,12 +26,14 @@ ModelsRepository::ModelsRepository(QObject *parent) : QObject(parent)
 
     _distributorModel = new CompanyTableModel(this);
     _distributorModel->setTable("distributor");
+    _distributorModel->setSort(_distributorModel->fieldIndex("name"), Qt::AscendingOrder);
 
     _manufacturerModel = new CompanyTableModel(this);
     _manufacturerModel->setTable("manufacturer");
 
     _packageModel = new PackageTableModel(this);
     _packageModel->setTable("package");
+    _packageModel->setSort(_packageModel->fieldIndex("name"), Qt::AscendingOrder);
 
     connect(_categoriesModel, SIGNAL(partsDropped(QVector<int>,TreeItem*)), this, SLOT(slotPartsDroppedInCategory(QVector<int>,TreeItem*)));
     connect(_storageModel, SIGNAL(partsDropped(QVector<int>,TreeItem*)), this, SLOT(slotPartsDroppedInStorage(QVector<int>,TreeItem*)));
