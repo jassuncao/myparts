@@ -145,8 +145,9 @@ double UnitParser::parseUnit(const QString& input, const QString& unit, bool * o
      int idx = 0;
      int prefixIdx = -1;
      QLocale locale;
-     QChar decimalPoint = locale.decimalPoint();
+     QChar decimalPoint = locale.decimalPoint();     
      bool decimalPointFound = false;
+     QString numeratorStr;
 
      int inputLen = input.length();
      //Skip white spaces
@@ -200,6 +201,10 @@ double UnitParser::parseUnit(const QString& input, const QString& unit, bool * o
              decimalPointFound = true;
              buff.append(to_char(c));
          }
+         else if(c == '/'){
+             numeratorStr = QString(buff);
+             buff.clear();
+         }
          else{
              //Found something else.
              //Check if it is a white space in the next
@@ -218,8 +223,14 @@ double UnitParser::parseUnit(const QString& input, const QString& unit, bool * o
             return 0;
         }
      }
-     QString aux(buff);
+     QString aux(buff);     
      double value = locale.toDouble(aux, ok);
+     if(!numeratorStr.isEmpty()){
+        double numerator = locale.toDouble(numeratorStr, ok);
+        if(value != 0){
+            value = numerator / value;
+        }
+     }
 
      if(prefixIdx>=0){
          value*=SI_EXPONENTIALS[prefixIdx];

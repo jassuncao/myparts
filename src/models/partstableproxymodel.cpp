@@ -11,18 +11,18 @@ PartsTableProxyModel::~PartsTableProxyModel()
 {
 }
 
-/*
+
 QVariant PartsTableProxyModel::headerData(int section, Qt::Orientation orientation, int role) const
-{
+{   
     return sourceModel()->headerData(section, orientation, role);
 }
-*/
+
 
 
 Qt::ItemFlags PartsTableProxyModel::flags(const QModelIndex& index) const
 {
     Qt::ItemFlags res = QIdentityProxyModel::flags(index);
-    if(index.column()!=PartsSqlTableModel::ColumnActualStock){
+    if(index.column() != PartsSqlTableModel::ColumnActualStock){
         res &= ~Qt::ItemIsEditable;
     }
     return res;
@@ -32,10 +32,10 @@ QVariant PartsTableProxyModel::data(const QModelIndex &proxyIndex, int role) con
 {
     if(!proxyIndex.isValid()) return QVariant();
     if(role==Qt::ForegroundRole){
-        if(proxyIndex.column()==PartsSqlTableModel::ColumnActualStock){
+        if(proxyIndex.column() == PartsSqlTableModel::ColumnActualStock){
             QVariant minStockVar = sourceModel()->index(proxyIndex.row(), PartsSqlTableModel::ColumnMinStock).data();
             int minStock = minStockVar.toInt();
-            if(minStock>0){
+            if(minStock > 0){
                 QVariant stockVar = sourceModel()->data(proxyIndex, Qt::DisplayRole);
                 int stock = stockVar.toInt();
                 if(stock<minStock){

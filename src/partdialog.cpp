@@ -25,7 +25,7 @@
 #include "models/storagetreemodel.h"
 #include "models/customtablemodel.h"
 #include "models/partstocktablemodel.h"
-#include "models/modelsprovider.h"
+#include "models/modelsrepository.h"
 #include "models/categorytreemodel.h"
 #include "models/partparametertablemodel.h"
 

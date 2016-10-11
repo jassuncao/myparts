@@ -3,7 +3,7 @@
 #include "widgets/booleanitemdelegate.h"
 #include "models/customtablemodel.h"
 #include "models/partconditionmodel.h"
-#include "models/modelsprovider.h"
+#include "models/modelsrepository.h"
 #include "models/parametermodel.h"
 #include "models/parameterunitmodel.h"
 #include "widgets/validatingitemdelegate.h"

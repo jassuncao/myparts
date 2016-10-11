@@ -63,6 +63,7 @@ Qt::ItemFlags ProxyModelNoneEntry::flags(const QModelIndex &index) const
 
 QModelIndex ProxyModelNoneEntry::index(int row, int column, const QModelIndex &parent) const
 {
+    Q_UNUSED(parent)
   if (row > rowCount()) return QModelIndex();
   return createIndex(row, column);
 }

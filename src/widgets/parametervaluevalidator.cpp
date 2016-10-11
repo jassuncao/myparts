@@ -4,9 +4,12 @@
 
 ParameterValueValidator::ParameterValueValidator(const QString& unit, QObject *parent) :
     QRegExpValidator(parent), _unit(unit)
-{
+{    
     QLocale locale;
-    QString exp=QString("^-?\\d+([kKMGTPEZYmunpfazy\\x{03BC}]|\\%1)?\\d*[kKMGTPEZYmunpfazy\\x{03BC}]?").arg(locale.decimalPoint());
+    /*This regex allows some flexibility when using fractions. if not, the user would be unable to change a value from
+     * 1/4W to 1W because it would be invalid when the 4 is deleted.
+     */
+    QString exp=QString("^-?\\d+/?\\d*([kKMGTPEZYmunpfazy\\x{03BC}]|\\%1)?\\d*[kKMGTPEZYmunpfazy\\x{03BC}]?").arg(locale.decimalPoint());
     if(unit.isEmpty()){
         exp.append('$');
     }

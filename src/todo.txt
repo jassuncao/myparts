@@ -1,5 +1,5 @@
 === Doing ===
-
+Implementing support for fractions in UnitParser
 === Done ===
 * Footprint attachments
 * Handle PartDialog "next action" checkbox. -> Need to intercept the accept slot();

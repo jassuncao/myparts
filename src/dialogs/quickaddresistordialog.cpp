@@ -1,7 +1,7 @@
 #include "quickaddresistordialog.h"
 #include "ui_quickaddresistordialog.h"
 #include "widgets/parametervaluevalidator.h"
-#include "models/modelsprovider.h"
+#include "models/modelsrepository.h"
 #include "models/categorytreemodel.h"
 #include "models/storagetreemodel.h"
 #include "models/partconditionmodel.h"
