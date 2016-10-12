@@ -43,6 +43,7 @@ class QToolButton;
 class QAction;
 class QStackedLayout;
 class QSortFilterProxyModel;
+class QShortcut;
 QT_END_NAMESPACE
 
 class QSearchLineEdit;
@@ -112,7 +113,7 @@ class CategoryNavigator : public TreeNavigator
 {
     Q_OBJECT
 public:
-    explicit CategoryNavigator(QWidget *parent = 0);
+    explicit CategoryNavigator(QWidget *parent = 0);    
     virtual QString title() const { return tr("Categories");}
     QVariant currentCategory() const;
 protected:
@@ -125,7 +126,7 @@ private slots:
 private:
     QAction * _actionDeleteCategory;
     QAction * _actionEditCategory;
-    QMenu * _actionsMenu;
+    QMenu * _actionsMenu;    
 };
 
 class StorageNavigator : public TreeNavigator
@@ -133,6 +134,7 @@ class StorageNavigator : public TreeNavigator
     Q_OBJECT
 public:
     explicit StorageNavigator(QWidget *parent = 0);
+    virtual ~StorageNavigator();
     virtual QString title() const { return tr("Storage");}
     QVariant currentStorage() const;
 protected:
@@ -141,12 +143,14 @@ protected:
     void onFilterChanged(const QString & text);
 private slots:
     void slotAddStorage();
+    void slotAddMultipleStorage();
     void slotDeleteStorage();
     void slotEditStorage();
 private:
     QAction * _actionDeleteStorage;
     QAction * _actionEditStorage;
     QMenu * _actionsMenu;
+    QShortcut * _deleteShortcut;
 };
 
 

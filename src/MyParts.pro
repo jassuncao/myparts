@@ -93,7 +93,8 @@ SOURCES += main.cpp\
     models/parameterunitmodel.cpp \
     models/modelsrepository.cpp \
     models/proxymodelnoneentry.cpp \
-    models/basicentitytablemodel.cpp
+    models/basicentitytablemodel.cpp \
+    dialogs/multistoragedialog.cpp
 
 HEADERS  += mainwindow.h \
     partdialog.h \
@@ -172,7 +173,8 @@ HEADERS  += mainwindow.h \
     models/parameterunitmodel.h \
     models/modelsrepository.h \
     models/proxymodelnoneentry.h \
-    models/basicentitytablemodel.h
+    models/basicentitytablemodel.h \
+    dialogs/multistoragedialog.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \
@@ -186,7 +188,8 @@ FORMS    += mainwindow.ui \
     dialogs/attachmentselectiondialog.ui \
     testform2.ui \
     optionsdialog.ui \
-    dialogs/quickaddresistordialog.ui
+    dialogs/quickaddresistordialog.ui \
+    dialogs/multistoragedialog.ui
 
 RESOURCES += \
     resources.qrc

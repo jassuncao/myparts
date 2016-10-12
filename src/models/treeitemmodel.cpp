@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <QMimeData>
 #include <limits>
+#include <algorithm>
 
 
 const char * PART_MIME_TYPE= "myparts/part";
@@ -197,8 +198,19 @@ int TreeItemModel::columnCount(const QModelIndex &parent) const
 
 bool TreeItemModel::insertRows(int row, int count, const QModelIndex &parent)
 {
-    qDebug("insertRows rows called");
-    return true;
+    TreeItem * parentNode = getItem(parent);
+    int startRow = std::min(row, parentNode->childCount());
+    int lastRow = startRow + count;
+    beginInsertRows(parent, startRow, lastRow);
+    bool success = parentNode->insertChildren(startRow, count);
+    if(success){
+        for(; startRow < lastRow; ++startRow){
+            TreeItem * newItem = parentNode->child(startRow);
+            _uncommited.append(newItem);
+        }
+    }
+    endInsertRows();
+    return success;
 }
 
 bool TreeItemModel::removeRows(int row, int count, const QModelIndex &parent)

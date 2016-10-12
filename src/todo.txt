@@ -1,11 +1,13 @@
 === Doing ===
-Implementing support for fractions in UnitParser
+* Support different icons in the storage view. E.g. House, Cabinet, Drawer, Small container
 === Done ===
 * Footprint attachments
 * Handle PartDialog "next action" checkbox. -> Need to intercept the accept slot();
 * Duplicate part
 * Support Distributors
 * Quick add resistor wizard
+* Implementing support for fractions in UnitParser
+* Multiple Storage generator
 
 Icons used:
 

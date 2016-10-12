@@ -42,6 +42,7 @@
 #include <QTreeView>
 #include <QHeaderView>
 #include <QSortFilterProxyModel>
+#include <QShortcut>
 #include <QDebug>
 
 #include "styledbar.h"
@@ -50,6 +51,7 @@
 #include "models/partsquerybuilder.h"
 #include "models/treeitemmodel.h"
 #include "dialogs/treeitemeditdialog.h"
+#include "dialogs/multistoragedialog.h"
 
 NavigationSubWidget::NavigationSubWidget(QWidget *parent) : QWidget(parent)
 {
@@ -392,11 +394,19 @@ StorageNavigator::StorageNavigator(QWidget *parent)
     QIcon deleteStorageIcon(QString::fromLatin1(":/icons/box_delete"));
     QIcon editStorageIcon(QString::fromLatin1(":/icons/box_edit"));
     _actionsMenu = new QMenu(this);
-    _actionsMenu->addAction(addStorageIcon, tr("Add Storage"), this, SLOT(slotAddStorage()));
-    _actionDeleteStorage = _actionsMenu->addAction(deleteStorageIcon, tr("Delete Storage"), this, SLOT(slotDeleteStorage()));
-    _actionEditStorage = _actionsMenu->addAction(editStorageIcon, tr("Edit Storage"), this, SLOT(slotEditStorage()));
+    _actionsMenu->addAction(addStorageIcon, tr("Add storage"), this, SLOT(slotAddStorage()));
+    _actionDeleteStorage = _actionsMenu->addAction(deleteStorageIcon, tr("Delete storage"), this, SLOT(slotDeleteStorage()), QKeySequence::Delete);
+    _actionEditStorage = _actionsMenu->addAction(editStorageIcon, tr("Edit storage"), this, SLOT(slotEditStorage()));
+    _actionsMenu->addAction(addStorageIcon, tr("Add multiple storage"), this, SLOT(slotAddMultipleStorage()));
     _actionDeleteStorage->setEnabled(false);
     _actionEditStorage->setEnabled(false);
+    _deleteShortcut = new QShortcut(QKeySequence(Qt::Key_Delete), view());
+    connect(_deleteShortcut, SIGNAL(activated()), this, SLOT(slotDeleteStorage()));
+}
+
+StorageNavigator::~StorageNavigator()
+{
+    delete _deleteShortcut;
 }
 
 QVariant StorageNavigator::currentStorage() const
@@ -449,6 +459,26 @@ void StorageNavigator::slotAddStorage()
     }
     else{
         qWarning()<<"Failed to insert storage";
+    }
+}
+
+void StorageNavigator::slotAddMultipleStorage()
+{
+    const QModelIndex & parentIndex = currentIndex();
+    MultiStorageDialog dlg(this);
+    if(dlg.exec() == QDialog::Accepted && dlg.listOfNames().length() > 0) {
+        const QStringList names = dlg.listOfNames();
+        int newRow = model()->rowCount(parentIndex);
+        bool ok = model()->insertRows(newRow, names.size(), parentIndex);
+        if(ok){
+            QString name;
+            foreach (name, names) {
+                QModelIndex itemIndex = model()->index(newRow, 0, parentIndex);
+                model()->setData(itemIndex, name, Qt::EditRole);
+                newRow++;
+            }
+            model()->submit();
+        }
     }
 }
 
