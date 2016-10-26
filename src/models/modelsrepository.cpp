@@ -1,3 +1,5 @@
+#include <QSqlQueryModel>
+#include <QStandardItemModel>
 #include "modelsrepository.h"
 #include "models/partssqltablemodel.h"
 #include "models/storagetreemodel.h"
@@ -9,9 +11,12 @@
 #include "models/partconditionmodel.h"
 #include "models/treeitem.h"
 #include "models/basicentitytablemodel.h"
-#include <QSqlQueryModel>
+#include "models/iconsrepository.h"
 
-ModelsRepository::ModelsRepository(QObject *parent) : QObject(parent)
+
+ModelsRepository::ModelsRepository(QObject *parent) : QObject(parent),
+    _storageIconsModel(0),
+    _categoryIconsModel(0)
 {
     _partsQueryBuilder = new PartsQueryBuilder();
     _partsModel = new PartsSqlTableModel(_partsQueryBuilder, this);
@@ -35,6 +40,12 @@ ModelsRepository::ModelsRepository(QObject *parent) : QObject(parent)
     _packageModel->setTable("package");
     _packageModel->setSort(_packageModel->fieldIndex("name"), Qt::AscendingOrder);
 
+    _storageIconsRepository = new IconsRepository(":/storage/storage.xml");
+    _storageModel->setIconsRepository(_storageIconsRepository);
+
+    _categoryIconsRepository = new IconsRepository(":/parts/category.xml");
+    _categoriesModel->setIconsRepository(_categoryIconsRepository);
+
     connect(_categoriesModel, SIGNAL(partsDropped(QVector<int>,TreeItem*)), this, SLOT(slotPartsDroppedInCategory(QVector<int>,TreeItem*)));
     connect(_storageModel, SIGNAL(partsDropped(QVector<int>,TreeItem*)), this, SLOT(slotPartsDroppedInStorage(QVector<int>,TreeItem*)));
 }
@@ -42,6 +53,7 @@ ModelsRepository::ModelsRepository(QObject *parent) : QObject(parent)
 ModelsRepository::~ModelsRepository()
 {    
     delete _partsQueryBuilder;
+    delete _storageIconsRepository;
 }
 
 CategoryTreeModel * ModelsRepository::partCategoryModel() const
@@ -79,6 +91,22 @@ PackageTableModel * ModelsRepository::packageModel() const
     return _packageModel;
 }
 
+QAbstractItemModel * ModelsRepository::storageIconsModel()
+{
+    if(_storageIconsModel == 0){
+        _storageIconsModel = _storageIconsRepository->model(this);
+    }
+    return _storageIconsModel;
+}
+
+QAbstractItemModel * ModelsRepository::categoriesIconsModel()
+{
+    if(_categoryIconsModel == 0){
+        _categoryIconsModel = _categoryIconsRepository->model(this);
+    }
+    return _categoryIconsModel;
+}
+
 void ModelsRepository::initModels()
 {    
     _storageModel->select();
@@ -101,4 +129,8 @@ void ModelsRepository::slotPartsDroppedInStorage(QVector<int> parts, TreeItem* i
     _partsModel->select();
 }
 
+void ModelsRepository::loadTreeIcons()
+{
+
+}
 

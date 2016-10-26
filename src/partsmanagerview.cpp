@@ -81,14 +81,14 @@ PartsManagerView::PartsManagerView(ModelsRepository * modelsProvider, QWidget *p
 
     _navWidget = new NavigationSubWidget(this);    
 
-    _categoryNavigator = new CategoryNavigator(_navWidget);
+    _categoryNavigator = new CategoryNavigator(_modelsRepository, _navWidget);
     _categoryNavigator->setObjectName("CategoryNavigator");
     _categoryNavigator->setModel(_modelsRepository->partCategoryModel());
 
     connect(_categoryNavigator, SIGNAL(selectionChanged(QList<int>)), this, SLOT(slotSelectedCategoryChanged(QList<int>)));
     _navWidget->addNavigator(_categoryNavigator);    
 
-    _storageNavigator = new StorageNavigator(_navWidget);
+    _storageNavigator = new StorageNavigator(_modelsRepository, _navWidget);
     _storageNavigator->setObjectName("StorageNavigator");
     _storageNavigator->setModel(_modelsRepository->partStorageModel());
 

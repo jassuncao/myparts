@@ -5,9 +5,12 @@
 #include <QDialogButtonBox>
 #include <QPushButton>
 #include <QMessageBox>
+#include <QComboBox>
+#include <QDir>
+#include <QStandardItemModel>
 #include <QDebug>
 
-TreeItemEditDialog::TreeItemEditDialog(QWidget *parent) :
+TreeItemEditDialog::TreeItemEditDialog(QAbstractItemModel * iconsModel, QWidget *parent) :
     QDialog(parent)
 {
     _nameEdit = new QLineEdit(this);
@@ -16,6 +19,8 @@ TreeItemEditDialog::TreeItemEditDialog(QWidget *parent) :
     int rowHeight = m.lineSpacing() ;
     _descriptionEdit->setMaximumHeight(4 * rowHeight) ;
     _descriptionEdit->setTabChangesFocus(true);
+    _iconCombo = new QComboBox(this);
+    _iconCombo->setModel(iconsModel);
 
     QDialogButtonBox * buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     buttonBox->button(QDialogButtonBox::Ok)->setDefault(true);
@@ -25,6 +30,7 @@ TreeItemEditDialog::TreeItemEditDialog(QWidget *parent) :
     _formLayout = new QFormLayout;
     _formLayout->addRow(tr("Name:"),_nameEdit);
     _formLayout->addRow(tr("Description:"),_descriptionEdit);
+    _formLayout->addRow(tr("Icon:"), _iconCombo);
 
     QVBoxLayout * mainLayout = new QVBoxLayout;
     mainLayout->addLayout(_formLayout);
@@ -56,6 +62,25 @@ void TreeItemEditDialog::setItemDescription(const QString & description)
 QString TreeItemEditDialog::itemDescription() const
 {
     return _descriptionEdit->toPlainText();
+}
+
+QString TreeItemEditDialog::itemIconName() const
+{
+    int idx = _iconCombo->currentIndex();
+    if(idx >= 0){
+        QVariant var = _iconCombo->model()->index(idx, 0).data(Qt::EditRole);
+        return var.toString();
+    }
+    return QString();
+}
+
+void TreeItemEditDialog::setItemIconName(QString iconName){
+    QAbstractItemModel * iconsModel = _iconCombo->model();
+    QModelIndex startIndex = iconsModel->index(0, 0);
+    QModelIndexList res = iconsModel->match(startIndex, Qt::EditRole, iconName);
+    if(!res.isEmpty()){
+        _iconCombo->setCurrentIndex(res.first().row());
+    }
 }
 
 void TreeItemEditDialog::accept()

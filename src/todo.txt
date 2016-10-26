@@ -1,5 +1,5 @@
 === Doing ===
-* Support different icons in the storage view. E.g. House, Cabinet, Drawer, Small container
+* Support different icons in the storage view. E.g. House, Cabinet, Drawer, Bins, Small container
 === Done ===
 * Footprint attachments
 * Handle PartDialog "next action" checkbox. -> Need to intercept the accept slot();
@@ -13,3 +13,5 @@ Icons used:
 
 Fatcow-hosting-icons-2000
 GEDA PCB
+Benno System Icons by Benno Meyer (License: Free for non-commercial use.)
+Aeon Icons by Kyo-Tux (License: CC Attribution-Noncommercial-Share Alike 4.0)

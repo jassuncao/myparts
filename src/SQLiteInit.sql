@@ -12,7 +12,8 @@ CREATE TABLE IF NOT EXISTS part_unit  (
 CREATE TABLE IF NOT EXISTS storage  (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
-    description TEXT ,
+    description TEXT,
+    icon TEXT,
     lft INTEGER NOT NULL,
     rgt INTEGER NOT NULL
 );
@@ -23,7 +24,8 @@ CREATE INDEX IF NOT EXISTS storage_rgt_idx on storage (rgt);
 CREATE TABLE IF NOT EXISTS category  (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
-    description TEXT ,
+    description TEXT,
+    icon TEXT,
     lft INTEGER NOT NULL,
     rgt INTEGER NOT NULL
 );

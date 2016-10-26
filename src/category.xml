@@ -1,0 +1,23 @@
+<icons>
+    <icon id="resistor">
+        <pixmap state="off">:/parts/extras/category/resistor.png</pixmap>
+    </icon>
+    <icon id="resistor16">
+        <pixmap state="off">:/parts/extras/category/resistor16.png</pixmap>
+    </icon>
+    <icon id="capacitor">
+        <pixmap state="off">:/parts/extras/category/capacitor.png</pixmap>
+    </icon>
+    <icon id="transistor16">
+        <pixmap state="off">:/parts/extras/category/transistor16.png</pixmap>
+    </icon>
+    <icon id="oscillator16">
+        <pixmap state="off">:/parts/extras/category/oscillator16.png</pixmap>
+    </icon>
+    <icon id="chip16">
+        <pixmap state="off">:/parts/extras/category/chip16.png</pixmap>
+    </icon>
+    <icon id="led16">
+        <pixmap state="off">:/parts/extras/category/led16.png</pixmap>
+    </icon>
+</icons>

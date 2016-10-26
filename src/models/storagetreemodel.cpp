@@ -43,7 +43,7 @@ StorageTreeModel::StorageTreeModel(QObject *parent) :
     QIcon folderIcon;
     folderIcon.addFile(":icons/box_closed", QSize(), QIcon::Normal, QIcon::Off);
     folderIcon.addFile(":icons/box_open", QSize(), QIcon::Normal, QIcon::On);
-    setFolderIcon(folderIcon);
+    setDefaultIcon(folderIcon);
 }
 
 StorageTreeModel::~StorageTreeModel()

@@ -1,0 +1,21 @@
+<RCC>
+    <qresource prefix="/parts">
+        <file>extras/category/capacitor.png</file>
+        <file>extras/category/resistor.png</file>
+        <file>category.xml</file>
+        <file>extras/category/resistor16.png</file>
+        <file>extras/category/chip16.png</file>
+        <file>extras/category/oscillator16.png</file>
+        <file>extras/category/transistor16.png</file>
+        <file>extras/category/led16.png</file>
+    </qresource>
+    <qresource prefix="/storage">
+        <file>extras/storage/box.png</file>
+        <file>extras/storage/box_open.png</file>
+        <file>extras/storage/cabinet.png</file>
+        <file>extras/storage/cabinet_open.png</file>
+        <file>extras/storage/drawer.png</file>
+        <file>extras/storage/home.png</file>
+        <file>storage.xml</file>
+    </qresource>
+</RCC>

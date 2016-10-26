@@ -11,7 +11,6 @@
 #include <QSqlRecord>
 #include <QSqlDriver>
 
-
 typedef QPair<TreeItem*,int> TreeItemPair;
 
 TreeItemModelPersistence::TreeItemModelPersistence(const QString &tableName) :
@@ -62,6 +61,7 @@ bool TreeItemModelPersistence::loadTree(TreeItem *rootItem)
         int rgtIdx = rec.indexOf("rgt");
         int nameIdx = rec.indexOf("name");
         int descriptionIdx = rec.indexOf("description");
+        int iconIdx = rec.indexOf("icon");
         while(query.next()){
             rec = query.record();
             QVariant id = rec.value(idIdx);
@@ -74,8 +74,11 @@ bool TreeItemModelPersistence::loadTree(TreeItem *rootItem)
                 while(rgt>stack.top().second){
                     stack.pop();
                 }
-            }            
-            TreeItem * item = new TreeItem(id.toInt(),rec.value(nameIdx), rec.value(descriptionIdx));
+            }
+            QVariant name = rec.value(nameIdx);
+            QVariant description = rec.value(descriptionIdx);
+            QVariant icon = rec.value(iconIdx);
+            TreeItem * item = new TreeItem(id.toInt(),name, description, icon);
             //TreeItem * item = createNewItem(rec);
             TreeItem * parentItem = stack.top().first;
             parentItem->appendChild(item);
@@ -153,11 +156,12 @@ bool TreeItemModelPersistence::insertAtEnd(TreeItem * item) const
 
     //Finally insert the node into the position
     QSqlQuery query;
-    query.prepare(QString("INSERT INTO %1 (name, description, lft, rgt) VALUES (?,?,?,?)").arg(_tableName));
+    query.prepare(QString("INSERT INTO %1 (name, description, icon, lft, rgt) VALUES (?,?,?,?,?)").arg(_tableName));
     query.bindValue(0,item->name());
     query.bindValue(1,item->description());
-    query.bindValue(2,position);
-    query.bindValue(3,position+1);
+    query.bindValue(2,item->iconName());
+    query.bindValue(3,position);
+    query.bindValue(4,position+1);
     if(query.exec()){
         int id = query.lastInsertId().toInt();
         item->setId(id);
@@ -170,7 +174,7 @@ bool TreeItemModelPersistence::insertAtEnd(TreeItem * item) const
 bool TreeItemModelPersistence::revert(TreeItem * item) const
 {
     QSqlQuery query;
-    query.prepare(QString("SELECT name, description FROM %1 WHERE id = ?").arg(_tableName));
+    query.prepare(QString("SELECT name, description, icon FROM %1 WHERE id = ?").arg(_tableName));
     query.bindValue(0, item->id());
     if(!query.exec()){
         qWarning() << "Failed to execute query:" << query.lastError();
@@ -182,16 +186,18 @@ bool TreeItemModelPersistence::revert(TreeItem * item) const
     }
     item->setName(query.value(0));
     item->setDescription(query.value(1));
+    item->setIconName(query.value(2));
     return true;
 }
 
 bool TreeItemModelPersistence::save(TreeItem * item) const
 {
     QSqlQuery query;    
-    query.prepare(QString("UPDATE %1 SET name=?, description=? WHERE id=?").arg(_tableName));
+    query.prepare(QString("UPDATE %1 SET name=?, description=?, icon=? WHERE id=?").arg(_tableName));
     query.bindValue(0,item->name());
     query.bindValue(1,item->description());
-    query.bindValue(2,item->id());
+    query.bindValue(2,item->iconName());
+    query.bindValue(3,item->id());
     if(query.exec()){
         qDebug()<<"Item "<<item->id()<<"("<<item->name()<<") saved";
         return true;

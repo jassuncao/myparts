@@ -1,7 +1,10 @@
 #include "treeitem.h"
 
-TreeItem::TreeItem(const int id, const QVariant &name, const QVariant &description, TreeItem *parent) :
-    _id(id), _name(name), _description(description)
+TreeItem::TreeItem(const int id, const QVariant &name, const QVariant &description, const QVariant &iconName, TreeItem *parent) :
+    _id(id),
+    _name(name),
+    _description(description),
+    _iconName(iconName)
  {
      parentItem = parent;
  }
@@ -53,7 +56,7 @@ TreeItem::TreeItem(const int id, const QVariant &name, const QVariant &descripti
          return false;
 
      for (int row = 0; row < count; ++row) {
-         TreeItem *item = new TreeItem(-1, QString(), QString(), this);
+         TreeItem *item = new TreeItem(-1, QString(), QString(), QVariant(), this);
          childItems.insert(position, item);
      }
      return true;

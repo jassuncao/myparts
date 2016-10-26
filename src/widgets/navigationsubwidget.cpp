@@ -289,9 +289,34 @@ void TreeNavigator::slotCurrentChanged(const QModelIndex &current, const QModelI
     emit selectionChanged(selected);    
 }
 
+bool TreeNavigator::doEdit(const QModelIndex itemIndex, const QString & title)
+{
+    TreeItemModel * treeModel = model();
 
-CategoryNavigator::CategoryNavigator(QWidget *parent)
-    : TreeNavigator(parent)
+    TreeItemEditDialog dlg(iconsModel(), this);
+    dlg.setWindowTitle(title);
+    dlg.setItemName(treeModel->data(itemIndex, Qt::EditRole).toString());
+    dlg.setItemDescription(treeModel->data(itemIndex, Qt::ToolTipRole).toString());
+    dlg.setItemIconName(treeModel->getItemIconName(itemIndex));
+
+    bool success;
+    if(dlg.exec() == QDialog::Accepted){
+        treeModel->setData(itemIndex, dlg.itemName(), Qt::EditRole);
+        treeModel->setData(itemIndex, dlg.itemDescription(), Qt::ToolTipRole);
+        treeModel->setItemIconName(itemIndex, dlg.itemIconName());
+        success = treeModel->submit();
+    }
+    else{
+        treeModel->revert();
+        success = false;
+    }
+    return success;
+}
+
+
+CategoryNavigator::CategoryNavigator(ModelsRepository * modelsRepo, QWidget *parent)
+    : TreeNavigator(parent),
+      _modelsRepo(modelsRepo)
 {   
     QIcon addCategoryIcon(QString::fromLatin1(":/icons/folder_add"));
     QIcon deleteCategoryIcon(QString::fromLatin1(":/icons/folder_delete"));
@@ -327,17 +352,33 @@ void CategoryNavigator::onFilterChanged(const QString & text)
 {
 }
 
+QAbstractItemModel * CategoryNavigator::iconsModel()
+{
+    return _modelsRepo->categoriesIconsModel();
+}
+
 void CategoryNavigator::slotAddCategory()
 {
     const QModelIndex & parentIndex = currentIndex();
     if(model()->insertItem(parentIndex)){
         view()->expand(parentIndex);        
         int newRow = model()->rowCount(parentIndex) - 1;
+
         QModelIndex itemIndex = model()->index(newRow, 0, parentIndex);
-        TreeItemEditDialog dlg(this);
+        bool success = doEdit(itemIndex, tr("Add new category"));
+        if(success){
+            //Position the selection in the new node
+            QModelIndex childIndex = model()->index(newRow, 0, parentIndex);
+            view()->setCurrentIndex(childIndex);
+        }
+        else{
+           view()->setCurrentIndex(parentIndex);
+        }
+        /*
+        TreeItemEditDialog dlg(0, this);
         dlg.setWindowTitle(tr("Add new category"));
         dlg.setItemName(model()->data(itemIndex, Qt::EditRole).toString());
-        dlg.setItemDescription(model()->data(itemIndex, Qt::ToolTipRole).toString());
+        dlg.setItemDescription(model()->data(itemIndex, Qt::ToolTipRole).toString());        
         if(dlg.exec()==QDialog::Accepted){
             model()->setData(itemIndex, dlg.itemName(), Qt::EditRole);
             model()->setData(itemIndex, dlg.itemDescription(), Qt::ToolTipRole);
@@ -349,7 +390,7 @@ void CategoryNavigator::slotAddCategory()
             model()->revert();
             view()->setCurrentIndex(parentIndex);
         }
-
+        */
         view()->setFocus();
     }
     else{
@@ -372,8 +413,9 @@ void CategoryNavigator::slotEditCategory()
     if(!itemIndex.isValid()){
         return;
     }
-
-    TreeItemEditDialog dlg(this);
+    doEdit(itemIndex, tr("Edit category"));
+/*
+    TreeItemEditDialog dlg(0, this);
     dlg.setWindowTitle(tr("Edit category"));
     dlg.setItemName(model()->data(itemIndex, Qt::EditRole).toString());
     dlg.setItemDescription(model()->data(itemIndex, Qt::ToolTipRole).toString());
@@ -385,10 +427,12 @@ void CategoryNavigator::slotEditCategory()
     else{
         model()->revert();
     }
+    */
 }
 
-StorageNavigator::StorageNavigator(QWidget *parent)
-    : TreeNavigator(parent)
+StorageNavigator::StorageNavigator(ModelsRepository * modelsRepo, QWidget *parent)
+    : TreeNavigator(parent),
+      _modelsRepo(modelsRepo)
 {
     QIcon addStorageIcon(QString::fromLatin1(":/icons/box_add"));
     QIcon deleteStorageIcon(QString::fromLatin1(":/icons/box_delete"));
@@ -432,34 +476,81 @@ void StorageNavigator::onFilterChanged(const QString & text)
 {
 }
 
+QAbstractItemModel * StorageNavigator::iconsModel()
+{
+    return _modelsRepo->storageIconsModel();
+}
+
 void StorageNavigator::slotAddStorage()
 {
     const QModelIndex & parentIndex = currentIndex();
     if(model()->insertItem(parentIndex)){
-        view()->expand(parentIndex);
+        view()->expand(parentIndex);        
         int newRow = model()->rowCount(parentIndex) - 1;
         QModelIndex itemIndex = model()->index(newRow, 0, parentIndex);
-        TreeItemEditDialog dlg(this);
-        dlg.setWindowTitle(tr("Add new storage"));
-        dlg.setItemName(model()->data(itemIndex, Qt::EditRole).toString());
-        dlg.setItemDescription(model()->data(itemIndex, Qt::ToolTipRole).toString());
-        if(dlg.exec()==QDialog::Accepted){
-            model()->setData(itemIndex, dlg.itemName(), Qt::EditRole);
-            model()->setData(itemIndex, dlg.itemDescription(), Qt::ToolTipRole);
-            model()->submit();
+
+        bool success = doEdit(itemIndex, tr("Add new storage"));
+        if(success){
+            //Position the selection in the new node
             QModelIndex childIndex = model()->index(newRow, 0, parentIndex);
             view()->setCurrentIndex(childIndex);
         }
         else{
-            model()->revert();
+           view()->setCurrentIndex(parentIndex);
+        }
+        /*
+        TreeItemEditDialog dlg(_modelsRepo->storageIconsModel(), this);
+        dlg.setWindowTitle(tr("Add new storage"));
+        dlg.setItemName(treeModel->data(itemIndex, Qt::EditRole).toString());
+        dlg.setItemDescription(treeModel->data(itemIndex, Qt::ToolTipRole).toString());
+        dlg.setItemIconName(treeModel->getItemIconName(itemIndex));
+        if(dlg.exec()==QDialog::Accepted){
+            treeModel->setData(itemIndex, dlg.itemName(), Qt::EditRole);
+            treeModel->setData(itemIndex, dlg.itemDescription(), Qt::ToolTipRole);
+            treeModel->setItemIconName(itemIndex, dlg.itemIconName());
+            treeModel->submit();
+            //Position the selection in the new node
+            QModelIndex childIndex = treeModel->index(newRow, 0, parentIndex);
+            view()->setCurrentIndex(childIndex);
+        }
+        else{
+            treeModel->revert();
             view()->setCurrentIndex(parentIndex);
         }
-
+        */
         view()->setFocus();
     }
     else{
         qWarning()<<"Failed to insert storage";
     }
+}
+
+
+void StorageNavigator::slotEditStorage()
+{
+    QModelIndex itemIndex = currentIndex();
+    if(!itemIndex.isValid()){
+        return;
+    }
+    doEdit(itemIndex, tr("Edit storage"));
+    /*
+    TreeItemModel * treeModel = model();
+    TreeItemEditDialog dlg(_modelsRepo->storageIconsModel(), this);
+    dlg.setWindowTitle(tr("Edit storage"));
+    dlg.setItemName(treeModel->data(itemIndex, Qt::EditRole).toString());
+    dlg.setItemDescription(treeModel->data(itemIndex, Qt::ToolTipRole).toString());
+    dlg.setItemIconName(treeModel->getItemIconName(itemIndex));
+
+    if(dlg.exec() == QDialog::Accepted){
+        treeModel->setData(itemIndex, dlg.itemName(), Qt::EditRole);
+        treeModel->setData(itemIndex, dlg.itemDescription(), Qt::ToolTipRole);
+        treeModel->setItemIconName(itemIndex, dlg.itemIconName());
+        treeModel->submit();
+    }
+    else{
+        treeModel->revert();
+    }
+    */
 }
 
 void StorageNavigator::slotAddMultipleStorage()
@@ -487,26 +578,5 @@ void StorageNavigator::slotDeleteStorage()
     QModelIndex currentIdx = currentIndex();
     if(currentIdx.isValid()){
         model()->removeItem(currentIdx);
-    }
-}
-
-void StorageNavigator::slotEditStorage()
-{
-    QModelIndex itemIndex = currentIndex();
-    if(!itemIndex.isValid()){
-        return;
-    }
-
-    TreeItemEditDialog dlg(this);
-    dlg.setWindowTitle(tr("Edit storage"));
-    dlg.setItemName(model()->data(itemIndex, Qt::EditRole).toString());
-    dlg.setItemDescription(model()->data(itemIndex, Qt::ToolTipRole).toString());
-    if(dlg.exec()==QDialog::Accepted){
-        model()->setData(itemIndex, dlg.itemName(), Qt::EditRole);
-        model()->setData(itemIndex, dlg.itemDescription(), Qt::ToolTipRole);
-        model()->submit();
-    }
-    else{
-        model()->revert();
     }
 }

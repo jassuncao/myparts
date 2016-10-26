@@ -34,6 +34,7 @@
 #include <QComboBox>
 #include <QList>
 #include <QModelIndex>
+#include "models/modelsrepository.h"
 
 QT_BEGIN_NAMESPACE
 class QMenu;
@@ -95,7 +96,9 @@ protected:
     explicit TreeNavigator(QWidget *parent = 0);
     virtual void onContextMenuRequested(const QPoint &globalPos, const QModelIndex & index);
     virtual void onFilterChanged(const QString & text);    
-    QTreeView * view();
+    virtual QAbstractItemModel * iconsModel() = 0;
+    QTreeView * view();    
+    bool doEdit(const QModelIndex itemIndex, const QString & title);
 private slots:
     void slotCustomContextMenuRequested(const QPoint &pos);
     void slotTextChanged();
@@ -113,12 +116,13 @@ class CategoryNavigator : public TreeNavigator
 {
     Q_OBJECT
 public:
-    explicit CategoryNavigator(QWidget *parent = 0);    
+    explicit CategoryNavigator(ModelsRepository * modelsRepo, QWidget *parent = 0);
     virtual QString title() const { return tr("Categories");}
     QVariant currentCategory() const;
 protected:
     void onContextMenuRequested(const QPoint &globalPos, const QModelIndex & index);
     void onFilterChanged(const QString & text);
+    QAbstractItemModel * iconsModel();
 private slots:
     void slotAddCategory();
     void slotDeleteCategory();
@@ -126,14 +130,15 @@ private slots:
 private:
     QAction * _actionDeleteCategory;
     QAction * _actionEditCategory;
-    QMenu * _actionsMenu;    
+    QMenu * _actionsMenu;
+    ModelsRepository * _modelsRepo;
 };
 
 class StorageNavigator : public TreeNavigator
 {
     Q_OBJECT
 public:
-    explicit StorageNavigator(QWidget *parent = 0);
+    explicit StorageNavigator(ModelsRepository * modelsRepo, QWidget *parent = 0);
     virtual ~StorageNavigator();
     virtual QString title() const { return tr("Storage");}
     QVariant currentStorage() const;
@@ -141,6 +146,7 @@ protected:
 protected:
     void onContextMenuRequested(const QPoint &globalPos, const QModelIndex & index);
     void onFilterChanged(const QString & text);
+    QAbstractItemModel * iconsModel();
 private slots:
     void slotAddStorage();
     void slotAddMultipleStorage();
@@ -151,6 +157,7 @@ private:
     QAction * _actionEditStorage;
     QMenu * _actionsMenu;
     QShortcut * _deleteShortcut;
+    ModelsRepository * _modelsRepo;
 };
 
 

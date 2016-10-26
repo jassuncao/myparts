@@ -2,6 +2,7 @@
 #include "treeitem.h"
 #include "treeitemmodelpersistence.h"
 #include "treemodelmimedata.h"
+#include "iconsrepository.h"
 #include <QDebug>
 #include <QMimeData>
 #include <limits>
@@ -13,11 +14,12 @@ const char * PART_MIME_TYPE= "myparts/part";
 static const int COLUMN_COUNT = 1;
 
 TreeItemModel::TreeItemModel(TreeItemModelPersistence *modelPersistence, const QString &mimeType, QObject *parent) :
-    QAbstractItemModel(parent), _modelPersistence(modelPersistence), _mimeType(mimeType)
+    QAbstractItemModel(parent), _modelPersistence(modelPersistence), _mimeType(mimeType),
+    _iconsRepository(0)
 {
-    _invisibleRootItem = new TreeItem(-1, tr("Name"), tr("Description"));   
-    _folderIcon.addFile(":icons/folder_closed", QSize(), QIcon::Normal, QIcon::Off);
-    _folderIcon.addFile(":icons/folder_open", QSize(), QIcon::Normal, QIcon::On);
+    _invisibleRootItem = new TreeItem(-1, tr("Name"), tr("Description"), QVariant());
+    _defaultIcon.addFile(":icons/folder_closed", QSize(), QIcon::Normal, QIcon::Off);
+    _defaultIcon.addFile(":icons/folder_open", QSize(), QIcon::Normal, QIcon::On);
 }
 
 TreeItemModel::~TreeItemModel()
@@ -56,8 +58,13 @@ QVariant TreeItemModel::data(const QModelIndex &index, int role) const
         return QVariant();
     TreeItem *item = getItem(index);
     switch(role){
-    case Qt::DecorationRole:
-        return _folderIcon;        ;
+    case Qt::DecorationRole:{
+        QString iconName = item->iconName().toString();
+        if(iconName.isNull() || _iconsRepository == 0){
+            return _defaultIcon;
+        }
+        return _iconsRepository->getIcon(iconName);
+    }
     case Qt::DisplayRole:
     case Qt::EditRole:
         return item->name();
@@ -67,6 +74,7 @@ QVariant TreeItemModel::data(const QModelIndex &index, int role) const
         return QVariant();
         break;
     }
+
 }
 
 bool TreeItemModel::setData(const QModelIndex &index, const QVariant &value, int role)
@@ -77,7 +85,7 @@ bool TreeItemModel::setData(const QModelIndex &index, const QVariant &value, int
     if(index.column()<0 || index.column()>=COLUMN_COUNT)
         return false;
 
-    if(role!=Qt::EditRole && role!=Qt::ToolTipRole){
+    if(role!=Qt::EditRole && role!=Qt::ToolTipRole && role!=Qt::DecorationRole){
         return false;
     }
     TreeItem *item = getItem(index);
@@ -86,6 +94,9 @@ bool TreeItemModel::setData(const QModelIndex &index, const QVariant &value, int
     }
     else if(role==Qt::ToolTipRole){
         item->setDescription(value);
+    }
+    else if(role == Qt::DecorationRole){       
+        item->setIconName(value.toString());
     }
     if(!_uncommited.contains(item))
         _uncommited.append(item);
@@ -99,6 +110,20 @@ int TreeItemModel::getItemId(const QModelIndex &index) const
     }
     TreeItem *item = getItem(index);
     return item->id();
+}
+
+QString TreeItemModel::getItemIconName(const QModelIndex &index) const
+{
+    if(!index.isValid()){
+        return QString();
+    }
+    TreeItem *item = getItem(index);
+    return item->iconName().toString();
+}
+
+bool TreeItemModel::setItemIconName(const QModelIndex &index, const QString & iconName)
+{
+    return setData(index, iconName, Qt::DecorationRole);
 }
 
 QList<int> TreeItemModel::getSubTreeIds(const QModelIndex &index) const
@@ -406,5 +431,10 @@ bool TreeItemModel::dropMimeData(const QMimeData *data, Qt::DropAction action, i
     }
 
     return false;
+}
+
+void TreeItemModel::setIconsRepository(IconsRepository * iconsRepository)
+{
+    _iconsRepository = iconsRepository;
 }
 

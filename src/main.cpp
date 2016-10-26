@@ -11,6 +11,7 @@
 #include <QStyle>
 #include <QDebug>
 #include "models/databasehelper.h"
+#include "models/iconsrepository.h"
 
 bool initDatabase(QSqlDatabase& db){
     //db.setDatabaseName(":memory:");
@@ -62,7 +63,8 @@ int main(int argc, char *argv[])
 
     QDir::addSearchPath("packages", "/home/jassuncao/MyProjects/myparts/images/packages");
     QDir::addSearchPath("attachments", "/home/jassuncao/MyProjects/myparts/attachments");
-    QDir::addSearchPath("tmp","/home/jassuncao/MyProjects/myparts/images/tmp");
+    QDir::addSearchPath("tmp","/home/jassuncao/MyProjects/myparts/images/tmp");  
+
     MainWindow w;
     if(fusionFound){
         QApplication::setStyle(fusionStyleName);

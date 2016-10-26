@@ -8,6 +8,12 @@
 
 class TreeItem;
 
+/**
+ * @brief The NodeT struct is used for temporary storage when performing structural changes in the tree.
+ * It keeps structural information used to place a node in the tree, namely the left and right values.
+ * The only reason it is public is so that classes extending TreeItemModelPersistence can perform
+ * additional actions when a node is about to be moved, such as reparenting parts
+ */
 typedef struct NodeT  {
     NodeT(){}
     NodeT(int id, int lft, int rgt, const QString name)
@@ -23,6 +29,9 @@ typedef struct NodeT  {
     QString name;
 } Node;
 
+/**
+ * @brief The TreeItemModelPersistence class
+ */
 class TreeItemModelPersistence
 {
 public:

@@ -11,11 +11,17 @@
 
 class TreeItem;
 class TreeItemModelPersistence;
+class IconsRepository;
 
+/**
+ * @brief The TreeItemModel class provides a tree model that is used for the category and storage views.
+ * This model is kept in memory with persistence performed by subclasses of TreeItemModelPersistence
+ */
 class TreeItemModel : public QAbstractItemModel
 {
     Q_OBJECT
-public:
+public:   
+
     explicit TreeItemModel(TreeItemModelPersistence * modelPersistence, const QString & mimeType, QObject *parent = 0);
     ~TreeItemModel();
 
@@ -31,6 +37,8 @@ public:
     bool insertItem(const QModelIndex &parent);
     bool removeItem(const QModelIndex &index);
     int getItemId(const QModelIndex &index) const;
+    QString getItemIconName(const QModelIndex &index) const;
+    bool setItemIconName(const QModelIndex &index, const QString & iconName);
     QList<int> getSubTreeIds(const QModelIndex &index) const;
     int rootItemId() const;
     bool select();
@@ -41,11 +49,12 @@ public:
     QStringList mimeTypes() const;
     QMimeData * mimeData(const QModelIndexList &indexes) const;
     bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
+    void setIconsRepository(IconsRepository * iconsRepository);    
 protected:   
     TreeItem * getItem(const QModelIndex &index) const;
     QModelIndex internalFindIndex(int nodeId, const TreeItem *parentNode) const;
     TreeItem * rootItem() {return _invisibleRootItem;}
-    void setFolderIcon(const QIcon & icon) {_folderIcon = icon;}
+    void setDefaultIcon(const QIcon & icon) {_defaultIcon = icon;}
 signals:
     void partsDropped(QVector<int> parts, TreeItem * item);
 public slots:
@@ -53,10 +62,11 @@ public slots:
     void revert();
 private:
     TreeItem * _invisibleRootItem;
-    QIcon _folderIcon;    
+    QIcon _defaultIcon;
     QQueue<TreeItem*> _uncommited;  
     TreeItemModelPersistence * _modelPersistence;
     const QString _mimeType;
+    IconsRepository * _iconsRepository;
 };
 
 #endif // TREEITEMMODEL_H

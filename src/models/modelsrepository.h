@@ -3,6 +3,8 @@
 
 #include <QObject>
 #include <QVector>
+#include <QHash>
+#include <QIcon>
 
 class CategoryTreeModel;
 class StorageTreeModel;
@@ -14,6 +16,9 @@ class PartDistributorTableModel2;
 class PartManufacturerTableModel2;
 class CompanyTableModel;
 class PackageTableModel;
+class QStandardItemModel;
+class IconsRepository;
+class QAbstractItemModel;
 
 class ModelsRepository : public QObject
 {
@@ -29,12 +34,15 @@ public:
     CompanyTableModel * distributorModel() const;
     CompanyTableModel * manufacturerModel() const;
     PackageTableModel * packageModel() const;
+    QAbstractItemModel * storageIconsModel();
+    QAbstractItemModel * categoriesIconsModel();
 signals:
 
 private slots:
     void slotPartsDroppedInCategory(QVector<int> parts, TreeItem* item);
     void slotPartsDroppedInStorage(QVector<int> parts, TreeItem* item);
 private:
+    void loadTreeIcons();
     CategoryTreeModel * _categoriesModel;
     StorageTreeModel * _storageModel;
     PartsSqlTableModel * _partsModel;
@@ -44,7 +52,11 @@ private:
     PartManufacturerTableModel2 * _partManufacturerModel;
     CompanyTableModel * _distributorModel;
     CompanyTableModel * _manufacturerModel;
-    PackageTableModel * _packageModel;
+    PackageTableModel * _packageModel;    
+    IconsRepository * _categoryIconsRepository;
+    QAbstractItemModel * _categoryIconsModel;
+    IconsRepository * _storageIconsRepository;
+    QAbstractItemModel * _storageIconsModel;
 };
 
 #endif // MODELSPROVIDER_H

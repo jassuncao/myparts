@@ -94,7 +94,8 @@ SOURCES += main.cpp\
     models/modelsrepository.cpp \
     models/proxymodelnoneentry.cpp \
     models/basicentitytablemodel.cpp \
-    dialogs/multistoragedialog.cpp
+    dialogs/multistoragedialog.cpp \
+    models/iconsrepository.cpp
 
 HEADERS  += mainwindow.h \
     partdialog.h \
@@ -174,7 +175,8 @@ HEADERS  += mainwindow.h \
     models/modelsrepository.h \
     models/proxymodelnoneentry.h \
     models/basicentitytablemodel.h \
-    dialogs/multistoragedialog.h
+    dialogs/multistoragedialog.h \
+    models/iconsrepository.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \
@@ -192,7 +194,8 @@ FORMS    += mainwindow.ui \
     dialogs/multistoragedialog.ui
 
 RESOURCES += \
-    resources.qrc
+    resources.qrc \
+    extras.qrc
 
 OTHER_FILES += \
     todo.txt
@@ -212,4 +215,6 @@ win32-g++: PRE_TARGETDEPS += $$PWD/../../build-qt-manhattan-style-Desktop_Qt_5_2
 
 DISTFILES += \
     SQLiteInit.sql \
-    initialdata.sql
+    initialdata.sql \
+    storage.xml \
+    category.xml
