@@ -8,6 +8,16 @@
         <file>extras/category/oscillator16.png</file>
         <file>extras/category/transistor16.png</file>
         <file>extras/category/led16.png</file>
+        <file>extras/category/polcap_16x16.png</file>
+        <file>extras/category/transistor_16x16.png</file>
+        <file>extras/category/analogchip_16x16.png</file>
+        <file>extras/category/chip_16x16.png</file>
+        <file>extras/category/digitalchip_16x16.png</file>
+        <file>extras/category/diode2_16x16.png</file>
+        <file>extras/category/folder_closed.png</file>
+        <file>extras/category/folder_open.png</file>
+        <file>extras/category/led_16x16.png</file>
+        <file>extras/category/ceramic_16x16.png</file>
     </qresource>
     <qresource prefix="/storage">
         <file>extras/storage/box.png</file>
