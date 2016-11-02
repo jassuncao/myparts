@@ -1,10 +1,10 @@
 #include "treeitem.h"
 
-TreeItem::TreeItem(const int id, const QVariant &name, const QVariant &description, const QVariant &iconName, TreeItem *parent) :
+TreeItem::TreeItem(const int id, const QVariant &name, const QVariant &description, const QVariant &iconId, TreeItem *parent) :
     _id(id),
     _name(name),
     _description(description),
-    _iconName(iconName)
+    _iconId(iconId)
  {
      parentItem = parent;
  }

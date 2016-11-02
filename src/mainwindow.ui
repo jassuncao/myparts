@@ -55,6 +55,7 @@
     </property>
     <addaction name="separator"/>
     <addaction name="actionResistor"/>
+    <addaction name="actionCapacitor"/>
    </widget>
    <addaction name="menuEdit"/>
    <addaction name="menuQuick_Add"/>
@@ -67,6 +68,17 @@
   <action name="actionResistor">
    <property name="text">
     <string>Resistor</string>
+   </property>
+   <property name="toolTip">
+    <string>Adds a new resistor</string>
+   </property>
+  </action>
+  <action name="actionCapacitor">
+   <property name="text">
+    <string>Capacitor</string>
+   </property>
+   <property name="toolTip">
+    <string>Adds a new capacitor</string>
    </property>
   </action>
  </widget>

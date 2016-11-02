@@ -9,7 +9,7 @@
 class TreeItem
 {
 public:
-    TreeItem(const int id, const QVariant & name, const QVariant & description, const QVariant &iconName, TreeItem *parent = 0);
+    TreeItem(const int id, const QVariant & name, const QVariant & description, const QVariant &iconId, TreeItem *parent = 0);
     ~TreeItem();
 
     inline int id() const { return _id;}
@@ -18,8 +18,8 @@ public:
     inline void setName(const QVariant & name) { _name = name; }
     inline QVariant description() const { return _description; }
     inline void setDescription(const QVariant & description) { _description = description;}
-    inline QVariant iconName() const { return _iconName;}
-    void setIconName(const QVariant & iconName) { _iconName = iconName;}
+    inline QVariant iconId() const { return _iconId;}
+    void setIconId(const QVariant & iconId) { _iconId = iconId;}
     TreeItem *child(int number) const;
     int childCount() const;    
     bool insertChildren(int position, int count);
@@ -35,7 +35,7 @@ private:
     int _id;
     QVariant _name;
     QVariant _description;
-    QVariant _iconName;
+    QVariant _iconId;
     QList<TreeItem*> childItems;    
     TreeItem *parentItem;
 };

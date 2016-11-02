@@ -60,4 +60,6 @@ INSERT INTO parameter (key, name, datatype, deletable, unit, description) VALUES
 ('resistance', 'Resistance', 2, 0, 3, 'Resistance'),
 ('capacitance', 'Capacitance', 2, 0, 4, 'Capacitance'),
 ('power_rating', 'Power Rating', 2, 0, 5, 'Power Rating'),
-('resistance_tolerance', 'Resistance Tolerance', 3, 0, NULL, 'Resistance Tolerance');
+('voltage_rating_dc', 'Voltage Rating (DC)', 2, 0, 1, 'Voltage Rating (DC)'),
+('resistance_tolerance', 'Resistance Tolerance', 3, 0, NULL, 'Resistance Tolerance'),
+('capacitance_tolerance', 'Capacitance Tolerance', 3, 0, NULL, 'Capacitance Tolerance');

@@ -159,7 +159,7 @@ bool TreeItemModelPersistence::insertAtEnd(TreeItem * item) const
     query.prepare(QString("INSERT INTO %1 (name, description, icon, lft, rgt) VALUES (?,?,?,?,?)").arg(_tableName));
     query.bindValue(0,item->name());
     query.bindValue(1,item->description());
-    query.bindValue(2,item->iconName());
+    query.bindValue(2,item->iconId());
     query.bindValue(3,position);
     query.bindValue(4,position+1);
     if(query.exec()){
@@ -186,7 +186,7 @@ bool TreeItemModelPersistence::revert(TreeItem * item) const
     }
     item->setName(query.value(0));
     item->setDescription(query.value(1));
-    item->setIconName(query.value(2));
+    item->setIconId(query.value(2));
     return true;
 }
 
@@ -196,7 +196,7 @@ bool TreeItemModelPersistence::save(TreeItem * item) const
     query.prepare(QString("UPDATE %1 SET name=?, description=?, icon=? WHERE id=?").arg(_tableName));
     query.bindValue(0,item->name());
     query.bindValue(1,item->description());
-    query.bindValue(2,item->iconName());
+    query.bindValue(2,item->iconId());
     query.bindValue(3,item->id());
     if(query.exec()){
         qDebug()<<"Item "<<item->id()<<"("<<item->name()<<") saved";

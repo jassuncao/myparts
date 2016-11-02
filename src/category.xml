@@ -1,54 +1,36 @@
 <icons>
-    <icon id="folder">
+    <icon id="folder" name="Folder" default="true">
         <pixmap state="off">:/parts/extras/category/folder_closed.png</pixmap>
         <pixmap state="on">:/parts/extras/category/folder_open.png</pixmap>
     </icon>
-    <icon id="resistor">
+    <icon id="resistor" name="Resistor">
         <pixmap state="off">:/parts/extras/category/resistor.png</pixmap>
-    </icon>
-    <icon id="resistor16">
-        <pixmap state="off">:/parts/extras/category/resistor16.png</pixmap>
-    </icon>
-    <icon id="capacitor">
-        <pixmap state="off">:/parts/extras/category/capacitor.png</pixmap>
-    </icon>
-    <icon id="transistor16">
-        <pixmap state="off">:/parts/extras/category/transistor16.png</pixmap>
-    </icon>
-    <icon id="oscillator16">
-        <pixmap state="off">:/parts/extras/category/oscillator16.png</pixmap>
-    </icon>
-    <icon id="chip16">
-        <pixmap state="off">:/parts/extras/category/chip16.png</pixmap>
-    </icon>
-    <icon id="led16">
-        <pixmap state="off">:/parts/extras/category/led16.png</pixmap>
-    </icon>
-    <icon id="polcap_16x16">
+    </icon>           
+    <icon id="polcap_16x16" name="Polarized Capacitor">
         <pixmap state="off">:/parts/extras/category/polcap_16x16.png</pixmap>
     </icon>
-    <icon id="transistor_16x16">
+    <icon id="transistor_16x16" name="Transistor">
         <pixmap state="off">:/parts/extras/category/transistor_16x16.png</pixmap>
     </icon>
-    <icon id="analogchip_16x16">
+    <icon id="analogchip_16x16" name="Analog Chip">
         <pixmap state="off">:/parts/extras/category/analogchip_16x16.png</pixmap>
     </icon>
-    <icon id="chip_16x16">
+    <icon id="chip_16x16" name="Chip">
         <pixmap state="off">:/parts/extras/category/chip_16x16.png</pixmap>
     </icon>
-    <icon id="digitalchip_16x16">
+    <icon id="digitalchip_16x16" name="Digital Chip">
         <pixmap state="off">:/parts/extras/category/digitalchip_16x16.png</pixmap>
     </icon>
-    <icon id="diode2_16x16">
+    <icon id="diode2_16x16" name="Diode">
         <pixmap state="off">:/parts/extras/category/diode2_16x16.png</pixmap>
     </icon>
-    <icon id="diode2_16x16">
+    <icon id="led_16x16" name="LED">
         <pixmap state="off">:/parts/extras/category/led_16x16.png</pixmap>
     </icon>
-    <icon id="ceramic_16x16">
+    <icon id="ceramic_16x16" name="Ceramic Capacitor">
         <pixmap state="off">:/parts/extras/category/ceramic_16x16.png</pixmap>
     </icon>
-    <icon id="inductor_16x16">
+    <icon id="inductor_16x16" name="Inductor">
         <pixmap state="off">:/parts/extras/category/inductor_16x16.png</pixmap>
     </icon>
 </icons>

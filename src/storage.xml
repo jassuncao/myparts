@@ -1,16 +1,16 @@
 <icons>
-    <icon id="box">
+    <icon id="box" name="Box" default="true">
         <pixmap state="off">:/storage/extras/storage/box.png</pixmap>
         <pixmap state="on">:/storage/extras/storage/box_open.png</pixmap>
     </icon>
-    <icon id="cabinet">
+    <icon id="cabinet" name="Cabinet">
         <pixmap state="off">:/storage/extras/storage/cabinet.png</pixmap>
         <pixmap state="on">:/storage/extras/storage/cabinet_open.png</pixmap>
     </icon>
-    <icon id="drawer">
+    <icon id="drawer" name="Drawer">
         <pixmap state="off">:/storage/extras/storage/drawer.png</pixmap>
     </icon>
-    <icon id="home">
+    <icon id="home" name="Building">
         <pixmap state="off">:/storage/extras/storage/home.png</pixmap>
     </icon>
 </icons>

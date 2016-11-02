@@ -1,13 +1,7 @@
 <RCC>
     <qresource prefix="/parts">
-        <file>extras/category/capacitor.png</file>
         <file>extras/category/resistor.png</file>
         <file>category.xml</file>
-        <file>extras/category/resistor16.png</file>
-        <file>extras/category/chip16.png</file>
-        <file>extras/category/oscillator16.png</file>
-        <file>extras/category/transistor16.png</file>
-        <file>extras/category/led16.png</file>
         <file>extras/category/polcap_16x16.png</file>
         <file>extras/category/transistor_16x16.png</file>
         <file>extras/category/analogchip_16x16.png</file>

@@ -34,8 +34,8 @@ public:
     CompanyTableModel * distributorModel() const;
     CompanyTableModel * manufacturerModel() const;
     PackageTableModel * packageModel() const;
-    QAbstractItemModel * storageIconsModel();
-    QAbstractItemModel * categoriesIconsModel();
+    IconsRepository * storageIconsRepository() const;
+    IconsRepository * categoryIconsRepository() const;
 signals:
 
 private slots:
@@ -54,9 +54,9 @@ private:
     CompanyTableModel * _manufacturerModel;
     PackageTableModel * _packageModel;    
     IconsRepository * _categoryIconsRepository;
-    QAbstractItemModel * _categoryIconsModel;
     IconsRepository * _storageIconsRepository;
-    QAbstractItemModel * _storageIconsModel;
+//    QAbstractItemModel * _storageIconsModel;
+//    QAbstractItemModel * _categoryIconsModel;
 };
 
 #endif // MODELSPROVIDER_H

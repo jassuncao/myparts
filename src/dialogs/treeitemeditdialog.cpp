@@ -1,4 +1,5 @@
 #include "treeitemeditdialog.h"
+#include "models/iconsrepository.h"
 #include <QLineEdit>
 #include <QPlainTextEdit>
 #include <QFormLayout>
@@ -10,7 +11,7 @@
 #include <QStandardItemModel>
 #include <QDebug>
 
-TreeItemEditDialog::TreeItemEditDialog(QAbstractItemModel * iconsModel, QWidget *parent) :
+TreeItemEditDialog::TreeItemEditDialog(IconsRepository * iconsRepo, QWidget *parent) :
     QDialog(parent)
 {
     _nameEdit = new QLineEdit(this);
@@ -20,7 +21,8 @@ TreeItemEditDialog::TreeItemEditDialog(QAbstractItemModel * iconsModel, QWidget 
     _descriptionEdit->setMaximumHeight(4 * rowHeight) ;
     _descriptionEdit->setTabChangesFocus(true);
     _iconCombo = new QComboBox(this);
-    _iconCombo->setModel(iconsModel);
+    _iconCombo->setModel(iconsRepo->model(this));
+    _defaultIconId = iconsRepo->getDefaultIcon();
 
     QDialogButtonBox * buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     buttonBox->button(QDialogButtonBox::Ok)->setDefault(true);
@@ -64,7 +66,7 @@ QString TreeItemEditDialog::itemDescription() const
     return _descriptionEdit->toPlainText();
 }
 
-QString TreeItemEditDialog::itemIconName() const
+QString TreeItemEditDialog::itemIconId() const
 {
     int idx = _iconCombo->currentIndex();
     if(idx >= 0){
@@ -74,10 +76,11 @@ QString TreeItemEditDialog::itemIconName() const
     return QString();
 }
 
-void TreeItemEditDialog::setItemIconName(QString iconName){
+void TreeItemEditDialog::setItemIconId(QString iconId){
     QAbstractItemModel * iconsModel = _iconCombo->model();
     QModelIndex startIndex = iconsModel->index(0, 0);
-    QModelIndexList res = iconsModel->match(startIndex, Qt::EditRole, iconName);
+    QString toFind = iconId.isEmpty() ? _defaultIconId : iconId;
+    QModelIndexList res = iconsModel->match(startIndex, Qt::EditRole, toFind);
     if(!res.isEmpty()){
         _iconCombo->setCurrentIndex(res.first().row());
     }

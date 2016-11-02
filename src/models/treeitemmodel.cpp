@@ -59,11 +59,11 @@ QVariant TreeItemModel::data(const QModelIndex &index, int role) const
     TreeItem *item = getItem(index);
     switch(role){
     case Qt::DecorationRole:{
-        QString iconName = item->iconName().toString();
-        if(iconName.isNull() || _iconsRepository == 0){
+        QString iconId = item->iconId().toString();
+        if(iconId.isNull() || _iconsRepository == 0){
             return _defaultIcon;
         }
-        return _iconsRepository->getIcon(iconName);
+        return _iconsRepository->getIcon(iconId);
     }
     case Qt::DisplayRole:
     case Qt::EditRole:
@@ -74,7 +74,6 @@ QVariant TreeItemModel::data(const QModelIndex &index, int role) const
         return QVariant();
         break;
     }
-
 }
 
 bool TreeItemModel::setData(const QModelIndex &index, const QVariant &value, int role)
@@ -96,7 +95,7 @@ bool TreeItemModel::setData(const QModelIndex &index, const QVariant &value, int
         item->setDescription(value);
     }
     else if(role == Qt::DecorationRole){       
-        item->setIconName(value.toString());
+        item->setIconId(value.toString());
     }
     if(!_uncommited.contains(item))
         _uncommited.append(item);
@@ -112,18 +111,18 @@ int TreeItemModel::getItemId(const QModelIndex &index) const
     return item->id();
 }
 
-QString TreeItemModel::getItemIconName(const QModelIndex &index) const
+QString TreeItemModel::getItemIconId(const QModelIndex &index) const
 {
     if(!index.isValid()){
         return QString();
     }
     TreeItem *item = getItem(index);
-    return item->iconName().toString();
+    return item->iconId().toString();
 }
 
-bool TreeItemModel::setItemIconName(const QModelIndex &index, const QString & iconName)
+bool TreeItemModel::setItemIconId(const QModelIndex &index, const QString & iconId)
 {
-    return setData(index, iconName, Qt::DecorationRole);
+    return setData(index, iconId, Qt::DecorationRole);
 }
 
 QList<int> TreeItemModel::getSubTreeIds(const QModelIndex &index) const

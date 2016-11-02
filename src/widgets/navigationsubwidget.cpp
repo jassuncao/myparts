@@ -293,17 +293,17 @@ bool TreeNavigator::doEdit(const QModelIndex itemIndex, const QString & title)
 {
     TreeItemModel * treeModel = model();
 
-    TreeItemEditDialog dlg(iconsModel(), this);
+    TreeItemEditDialog dlg(iconsRepository(), this);
     dlg.setWindowTitle(title);
     dlg.setItemName(treeModel->data(itemIndex, Qt::EditRole).toString());
     dlg.setItemDescription(treeModel->data(itemIndex, Qt::ToolTipRole).toString());
-    dlg.setItemIconName(treeModel->getItemIconName(itemIndex));
+    dlg.setItemIconId(treeModel->getItemIconId(itemIndex));
 
     bool success;
     if(dlg.exec() == QDialog::Accepted){
         treeModel->setData(itemIndex, dlg.itemName(), Qt::EditRole);
         treeModel->setData(itemIndex, dlg.itemDescription(), Qt::ToolTipRole);
-        treeModel->setItemIconName(itemIndex, dlg.itemIconName());
+        treeModel->setItemIconId(itemIndex, dlg.itemIconId());
         success = treeModel->submit();
     }
     else{
@@ -352,9 +352,9 @@ void CategoryNavigator::onFilterChanged(const QString & text)
 {
 }
 
-QAbstractItemModel * CategoryNavigator::iconsModel()
+IconsRepository * CategoryNavigator::iconsRepository()
 {
-    return _modelsRepo->categoriesIconsModel();
+    return _modelsRepo->categoryIconsRepository();
 }
 
 void CategoryNavigator::slotAddCategory()
@@ -476,9 +476,9 @@ void StorageNavigator::onFilterChanged(const QString & text)
 {
 }
 
-QAbstractItemModel * StorageNavigator::iconsModel()
+IconsRepository * StorageNavigator::iconsRepository()
 {
-    return _modelsRepo->storageIconsModel();
+    return _modelsRepo->storageIconsRepository();
 }
 
 void StorageNavigator::slotAddStorage()
