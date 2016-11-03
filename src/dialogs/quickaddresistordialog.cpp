@@ -8,6 +8,7 @@
 #include "models/partssqltablemodel.h"
 #include "models/partparametertablemodel.h"
 #include "models/partstocktablemodel.h"
+#include "models/basicentitytablemodel.h"
 #include "widgets/unitformatter.h"
 #include "widgets/unitparser.h"
 #include "utils.h"
@@ -69,7 +70,11 @@ QuickAddResistorDialog::QuickAddResistorDialog(ModelsRepository * modelsProvider
     ui->partConditionComboBox->setModelKeyColumn(PartConditionModel::ColumnId);
     ui->partConditionComboBox->setModelColumn(PartConditionModel::ColumnValue);
     int defaultConditionRow = modelsProvider->partConditionModel()->findDefaultValueRow();
-    ui->partConditionComboBox->setCurrentIndex(defaultConditionRow);    
+    ui->partConditionComboBox->setCurrentIndex(defaultConditionRow);
+
+    ui->partPackageComboBox->setModel(modelsProvider->packageModel());
+    ui->partPackageComboBox->setModelKeyColumn(PackageTableModel::ColumnId);
+    ui->partPackageComboBox->setModelColumn(PackageTableModel::ColumnName);
 
     QStandardItemModel * digitsBandsModel = new QStandardItemModel(11,1);
     digitsBandsModel->setItem(0,0, newColorItem(tr("None"), QColor(Qt::transparent), QVariant(), Qt::Key_Backspace));
@@ -152,6 +157,7 @@ void QuickAddResistorDialog::slotReset()
     resetCombo(ui->band3ComboBox);
     resetCombo(ui->multiplierBandComboBox);
     resetCombo(ui->toleranceBandComboBox);
+    resetCombo(ui->partPackageComboBox);
     ui->resistorValueLineEdit->clear();
     ui->resistorPowerRatingLineEdit->clear();
     ui->toleranceLineEdit->clear();
@@ -213,6 +219,7 @@ void QuickAddResistorDialog::slotAddResistor()
     QVariant category = selectedCategory();
     QVariant storage = selectedStorage();
     QVariant condition = selectedCondition();
+    QVariant package = selectedPackage();
     int quantity = ui->quantitySpinBox->value();
     QSqlRecord initialData = _partsModel->record();
 
@@ -223,6 +230,7 @@ void QuickAddResistorDialog::slotAddResistor()
     initialData.setValue(PartsSqlTableModel::ColumnStorageId, storage);
     initialData.setValue(PartsSqlTableModel::ColumnCreateDate, createDate);
     initialData.setValue(PartsSqlTableModel::ColumnActualStock, quantity);        
+    initialData.setValue(PartsSqlTableModel::ColumnPackageId, package);
 
     int newRow = _partsModel->rowCount();
     bool success = _partsModel->insertRecord(newRow, initialData);
@@ -255,6 +263,7 @@ void QuickAddResistorDialog::slotAddResistor()
     }
 
 }
+
 QVariant QuickAddResistorDialog::selectedCategory() const
 {
     TreeItemModel* model = static_cast<TreeItemModel*>(ui->partCategoryComboBox->model());
@@ -307,6 +316,11 @@ void QuickAddResistorDialog::setSelectedStorage(const QVariant & storage)
 QVariant QuickAddResistorDialog::selectedCondition() const
 {
     return ui->partConditionComboBox->currentKey();
+}
+
+QVariant QuickAddResistorDialog::selectedPackage() const
+{
+    return ui->partPackageComboBox->currentKey();
 }
 
 static QVariant getBandValue(QComboBox * combo)

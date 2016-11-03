@@ -37,8 +37,8 @@ public:
     bool insertItem(const QModelIndex &parent);
     bool removeItem(const QModelIndex &index);
     int getItemId(const QModelIndex &index) const;
-    QString getItemIconName(const QModelIndex &index) const;
-    bool setItemIconName(const QModelIndex &index, const QString & iconName);
+    QString getItemIconId(const QModelIndex &index) const;
+    bool setItemIconId(const QModelIndex &index, const QString & iconId);
     QList<int> getSubTreeIds(const QModelIndex &index) const;
     int rootItemId() const;
     bool select();

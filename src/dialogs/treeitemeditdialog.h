@@ -8,19 +8,20 @@ class QPlainTextEdit;
 class QFormLayout;
 class QComboBox;
 class QAbstractItemModel;
+class IconsRepository;
 
 class TreeItemEditDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit TreeItemEditDialog(QAbstractItemModel * iconsModel=0, QWidget *parent = 0);
+    explicit TreeItemEditDialog(IconsRepository * iconsRepo, QWidget *parent = 0);
     ~TreeItemEditDialog();
     void setItemName(const QString & name);
     QString itemName() const;
     void setItemDescription(const QString & description);
     QString itemDescription() const;    
-    void setItemIconName(QString iconName);
-    QString itemIconName() const;
+    void setItemIconId(QString iconId);
+    QString itemIconId() const;
 public slots:
     void accept();
     void reject();
@@ -30,6 +31,7 @@ private:
     QPlainTextEdit *_descriptionEdit;
     QComboBox * _iconCombo;
     QFormLayout * _formLayout;
+    QString _defaultIconId;
 };
 
 #endif // TREEITEMEDITDIALOG_H

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>600</width>
-    <height>369</height>
+    <height>397</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -23,6 +23,9 @@
       <widget class="QLabel" name="label_7">
        <property name="text">
         <string>Number of Bands:</string>
+       </property>
+       <property name="buddy">
+        <cstring>fourBandRadioButton</cstring>
        </property>
       </widget>
      </item>
@@ -70,7 +73,10 @@
      <item row="4" column="0">
       <widget class="QLabel" name="label">
        <property name="text">
-        <string>Resistor value:</string>
+        <string>Resistance</string>
+       </property>
+       <property name="buddy">
+        <cstring>resistorValueLineEdit</cstring>
        </property>
       </widget>
      </item>
@@ -82,36 +88,48 @@
        <property name="text">
         <string>Power:</string>
        </property>
+       <property name="buddy">
+        <cstring>resistorPowerRatingLineEdit</cstring>
+       </property>
       </widget>
      </item>
-     <item row="8" column="0">
+     <item row="9" column="0">
       <widget class="QLabel" name="label_4">
        <property name="text">
         <string>Category:</string>
        </property>
-      </widget>
-     </item>
-     <item row="8" column="1">
-      <widget class="TreeViewComboBox" name="partCategoryComboBox"/>
-     </item>
-     <item row="9" column="0">
-      <widget class="QLabel" name="label_5">
-       <property name="text">
-        <string>Storage:</string>
+       <property name="buddy">
+        <cstring>partCategoryComboBox</cstring>
        </property>
       </widget>
      </item>
      <item row="9" column="1">
-      <widget class="TreeViewComboBox" name="partStorageComboBox"/>
+      <widget class="TreeViewComboBox" name="partCategoryComboBox"/>
      </item>
      <item row="10" column="0">
-      <widget class="QLabel" name="label_6">
+      <widget class="QLabel" name="label_5">
        <property name="text">
-        <string>Condition:</string>
+        <string>Storage:</string>
+       </property>
+       <property name="buddy">
+        <cstring>partStorageComboBox</cstring>
        </property>
       </widget>
      </item>
      <item row="10" column="1">
+      <widget class="TreeViewComboBox" name="partStorageComboBox"/>
+     </item>
+     <item row="11" column="0">
+      <widget class="QLabel" name="label_6">
+       <property name="text">
+        <string>Condition:</string>
+       </property>
+       <property name="buddy">
+        <cstring>partConditionComboBox</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="1">
       <widget class="RelationalComboBox" name="partConditionComboBox"/>
      </item>
      <item row="1" column="0">
@@ -203,12 +221,18 @@
        <property name="text">
         <string>Quantity:</string>
        </property>
+       <property name="buddy">
+        <cstring>quantitySpinBox</cstring>
+       </property>
       </widget>
      </item>
      <item row="6" column="0">
       <widget class="QLabel" name="label_9">
        <property name="text">
         <string>Tolerance:</string>
+       </property>
+       <property name="buddy">
+        <cstring>toleranceLineEdit</cstring>
        </property>
       </widget>
      </item>
@@ -219,6 +243,19 @@
       <widget class="QLineEdit" name="resistorPowerRatingLineEdit">
        <property name="inputMethodHints">
         <set>Qt::ImhNone</set>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="1">
+      <widget class="RelationalComboBox" name="partPackageComboBox"/>
+     </item>
+     <item row="8" column="0">
+      <widget class="QLabel" name="label_10">
+       <property name="text">
+        <string>Package:</string>
+       </property>
+       <property name="buddy">
+        <cstring>partPackageComboBox</cstring>
        </property>
       </widget>
      </item>
@@ -290,6 +327,7 @@
   <tabstop>resistorPowerRatingLineEdit</tabstop>
   <tabstop>toleranceLineEdit</tabstop>
   <tabstop>quantitySpinBox</tabstop>
+  <tabstop>partPackageComboBox</tabstop>
   <tabstop>partCategoryComboBox</tabstop>
   <tabstop>partStorageComboBox</tabstop>
   <tabstop>partConditionComboBox</tabstop>

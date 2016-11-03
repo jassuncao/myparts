@@ -3,6 +3,8 @@
 #include <QXmlStreamReader>
 #include <QDebug>
 
+static const QString TRUE_STR("true");
+
 class IconsRepositoryReader {
 public:
     IconsRepositoryReader(const QString & filename, IconsRepository & repository);
@@ -18,14 +20,14 @@ private:
 
 class IconsRepositoryModel : public QAbstractListModel {
 public:
-    IconsRepositoryModel(QList<QString> keys, QList<QIcon> icons, QObject *parent);
+    IconsRepositoryModel(QList<QString> keys, QList<QPair<QIcon, QString> > icons, QObject *parent);
     virtual ~IconsRepositoryModel();
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role) const;
 private:
     const QList<QString> _keys;
-    const QList<QIcon> _icons;
+    const QList<QPair<QIcon,QString> > _icons;
 };
 
 IconsRepository::IconsRepository(const QString &iconsDefinitionFile)
@@ -34,15 +36,15 @@ IconsRepository::IconsRepository(const QString &iconsDefinitionFile)
     reader.read();
 }
 
-void IconsRepository::addIcon(const QString& key, const QIcon & icon)
-{
-    _cache.insert(key, icon);
+void IconsRepository::addIcon(const QString& key, const QIcon & icon, const QString &name)
+{    
+    _cache.insert(key, qMakePair(icon, name));
 }
 
 
 QIcon IconsRepository::getIcon(const QString & key) const
 {
-    return _cache.value(key);
+    return _cache.value(key).first;
 }
 
 QAbstractListModel* IconsRepository::model(QObject *parent) const
@@ -50,7 +52,7 @@ QAbstractListModel* IconsRepository::model(QObject *parent) const
     return new IconsRepositoryModel(_cache.keys(), _cache.values(),  parent);
 }
 
-IconsRepositoryModel::IconsRepositoryModel(QList<QString> keys, QList<QIcon> icons, QObject *parent)
+IconsRepositoryModel::IconsRepositoryModel(QList<QString> keys, QList<QPair<QIcon,QString> > icons, QObject *parent)
     : QAbstractListModel(parent),
       _keys(keys),
       _icons(icons)
@@ -61,7 +63,6 @@ IconsRepositoryModel::IconsRepositoryModel(QList<QString> keys, QList<QIcon> ico
 IconsRepositoryModel::~IconsRepositoryModel()
 {
 }
-
 
 int IconsRepositoryModel::rowCount(const QModelIndex &parent) const
 {
@@ -80,7 +81,9 @@ QVariant IconsRepositoryModel::data(const QModelIndex &index, int role) const
     if (index.row() < 0 || index.row() >= _keys.size())
         return QVariant();
     if (role == Qt::DecorationRole)
-        return _icons.at(index.row());
+        return _icons.at(index.row()).first;
+    if (role == Qt::DisplayRole)
+        return _icons.at(index.row()).second;
     if (role == Qt::EditRole)
         return _keys.at(index.row());
     return QVariant();
@@ -123,6 +126,8 @@ void IconsRepositoryReader::processIconTag()
         return;
     }
     QString id = _xmlReader.attributes().value("", "id").toString();
+    QString name = _xmlReader.attributes().value("", "name").toString();
+    QString defaultStr = _xmlReader.attributes().value("", "default").toString();
     qDebug()<<"Reading icon "<<id;
     QIcon icon;
     while (_xmlReader.readNextStartElement()) {
@@ -134,7 +139,10 @@ void IconsRepositoryReader::processIconTag()
         _xmlReader.skipCurrentElement();
    }
     if(!id.isEmpty()){
-        _repository.addIcon(id, icon);
+        _repository.addIcon(id, icon, name);
+    }
+    if(TRUE_STR.compare(defaultStr, Qt::CaseInsensitive)==0){
+        _repository.setDefaultIcon(id);
     }
 }
 
@@ -151,5 +159,3 @@ QIcon::State IconsRepositoryReader::getIconState()
     QIcon::State state = isOnState ? QIcon::On : QIcon::Off;
     return state;
 }
-
-

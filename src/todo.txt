@@ -1,4 +1,15 @@
+=== To Do ===
+* Support Projects. A project has name, description, remarks/notes, parts and attachments.
+Each part entry has the following fields: refDes, quantity, part, remarks.
+It would be nice to import from Kicad or from a CSV file.
+
+* Support for BOMs
+It should be possible to do basic BOM management.
+See this link for ideas: http://hackaday.com/2014/01/09/a-simple-and-dirty-bill-of-materials-and-stock-management-utility/
+Generate a report of parts to purchase by distributor.
+
 === Doing ===
+* Quick add capacitor
 * Support different icons in the storage view. E.g. House, Cabinet, Drawer, Bins, Small container
 === Done ===
 * Footprint attachments

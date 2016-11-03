@@ -22,6 +22,7 @@ protected:
 private slots:    
     void slotEditPreferences();
     void on_actionResistor_triggered();
+    void on_actionCapacitor_triggered();
 
 private:
     void readSettings();

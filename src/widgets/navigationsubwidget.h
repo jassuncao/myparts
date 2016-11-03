@@ -35,6 +35,7 @@
 #include <QList>
 #include <QModelIndex>
 #include "models/modelsrepository.h"
+#include "models/iconsrepository.h"
 
 QT_BEGIN_NAMESPACE
 class QMenu;
@@ -95,8 +96,8 @@ signals:
 protected:
     explicit TreeNavigator(QWidget *parent = 0);
     virtual void onContextMenuRequested(const QPoint &globalPos, const QModelIndex & index);
-    virtual void onFilterChanged(const QString & text);    
-    virtual QAbstractItemModel * iconsModel() = 0;
+    virtual void onFilterChanged(const QString & text);
+    virtual IconsRepository * iconsRepository() = 0;
     QTreeView * view();    
     bool doEdit(const QModelIndex itemIndex, const QString & title);
 private slots:
@@ -121,8 +122,8 @@ public:
     QVariant currentCategory() const;
 protected:
     void onContextMenuRequested(const QPoint &globalPos, const QModelIndex & index);
-    void onFilterChanged(const QString & text);
-    QAbstractItemModel * iconsModel();
+    void onFilterChanged(const QString & text);    
+    IconsRepository * iconsRepository();
 private slots:
     void slotAddCategory();
     void slotDeleteCategory();
@@ -146,7 +147,7 @@ protected:
 protected:
     void onContextMenuRequested(const QPoint &globalPos, const QModelIndex & index);
     void onFilterChanged(const QString & text);
-    QAbstractItemModel * iconsModel();
+    IconsRepository * iconsRepository();
 private slots:
     void slotAddStorage();
     void slotAddMultipleStorage();

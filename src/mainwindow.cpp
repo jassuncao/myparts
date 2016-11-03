@@ -7,6 +7,7 @@
 #include "partsmanagerview.h"
 #include "editormanagerview.h"
 #include "dialogs/quickaddresistordialog.h"
+#include "dialogs/quickaddcapacitordialog.h"
 #include "models/modelsrepository.h"
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -98,6 +99,15 @@ void MainWindow::slotEditPreferences()
 void MainWindow::on_actionResistor_triggered()
 {
     QuickAddResistorDialog * dlg = new QuickAddResistorDialog(_modelsProvider, this);
+    dlg->setSelectedCategory(_partsManagerView->selectedCategory());
+    dlg->setSelectedStorage(_partsManagerView->selectedStorage());
+    dlg->exec();
+    dlg->deleteLater();
+}
+
+void MainWindow::on_actionCapacitor_triggered()
+{
+    QuickAddCapacitorDialog * dlg = new QuickAddCapacitorDialog(_modelsProvider, this);
     dlg->setSelectedCategory(_partsManagerView->selectedCategory());
     dlg->setSelectedStorage(_partsManagerView->selectedStorage());
     dlg->exec();

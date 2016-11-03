@@ -14,9 +14,9 @@
 #include "models/iconsrepository.h"
 
 
-ModelsRepository::ModelsRepository(QObject *parent) : QObject(parent),
-    _storageIconsModel(0),
-    _categoryIconsModel(0)
+ModelsRepository::ModelsRepository(QObject *parent) : QObject(parent)
+//    _storageIconsModel(0),
+//    _categoryIconsModel(0)
 {
     _partsQueryBuilder = new PartsQueryBuilder();
     _partsModel = new PartsSqlTableModel(_partsQueryBuilder, this);
@@ -91,6 +91,17 @@ PackageTableModel * ModelsRepository::packageModel() const
     return _packageModel;
 }
 
+IconsRepository * ModelsRepository::categoryIconsRepository() const
+{
+    return _categoryIconsRepository;
+}
+
+IconsRepository * ModelsRepository::storageIconsRepository() const
+{
+    return _storageIconsRepository;
+}
+
+/*
 QAbstractItemModel * ModelsRepository::storageIconsModel()
 {
     if(_storageIconsModel == 0){
@@ -106,6 +117,7 @@ QAbstractItemModel * ModelsRepository::categoriesIconsModel()
     }
     return _categoryIconsModel;
 }
+*/
 
 void ModelsRepository::initModels()
 {    

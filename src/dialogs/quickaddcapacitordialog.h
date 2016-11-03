@@ -1,5 +1,5 @@
-#ifndef QUICKADDRESISTORDIALOG_H
-#define QUICKADDRESISTORDIALOG_H
+#ifndef QUICKADDCAPACITORDIALOG_H
+#define QUICKADDCAPACITORDIALOG_H
 
 #include <QDialog>
 #include "models/parameter.h"
@@ -10,39 +10,40 @@ class PartParameterTableModel;
 class PartStockTableModel;
 
 namespace Ui {
-class QuickAddResistorDialog;
+class QuickAddCapacitorDialog;
 }
 
-class QuickAddResistorDialog : public QDialog
+class QuickAddCapacitorDialog : public QDialog
 {
     Q_OBJECT
+
 public:
-    explicit QuickAddResistorDialog(ModelsRepository *modelsProvider, QWidget *parent = 0);
+    explicit QuickAddCapacitorDialog(ModelsRepository *modelsProvider, QWidget *parent = 0);
     void setSelectedCategory(const QVariant & category);
     void setSelectedStorage(const QVariant & storage);
-    ~QuickAddResistorDialog();
+    ~QuickAddCapacitorDialog();
 protected slots:
-    void slotBandChanged(int);
-    void slotToleranceBandChanged(int);
-    void slotFiveBandToggled(bool checked);
     void slotReset();
-    void slotAddResistor();
+    void slotAddCapacitor();
     void showError(const QString& errorMessage);
     void showSuccess(const QString& successMessage);
-private:
+protected:
+    bool eventFilter(QObject *obj, QEvent *event);
+private:    
     QVariant selectedCategory() const;
     QVariant selectedStorage() const;
     QVariant selectedCondition() const;
     QVariant selectedPackage() const;
+    void attemptAutoComplete();
 
-    Ui::QuickAddResistorDialog *ui;
+    Ui::QuickAddCapacitorDialog *ui;
     PartsSqlTableModel * _partsModel;
     PartParameterTableModel * _partParams;
     PartStockTableModel * _partStockModel;
-    QString _resistorNameTemplate;
-    Parameter _resistanceParam;
-    Parameter _powerRatingParam;
-    Parameter _resistorToleranceParam;
+    QString _capacitorNameTemplate;
+    Parameter _capacitanceParam;
+    Parameter _voltageRatingParam;
+    Parameter _toleranceParam;
 };
 
-#endif // QUICKADDRESISTORDIALOG_H
+#endif // QUICKADDCAPACITORDIALOG_H

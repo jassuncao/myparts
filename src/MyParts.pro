@@ -95,7 +95,8 @@ SOURCES += main.cpp\
     models/proxymodelnoneentry.cpp \
     models/basicentitytablemodel.cpp \
     dialogs/multistoragedialog.cpp \
-    models/iconsrepository.cpp
+    models/iconsrepository.cpp \
+    dialogs/quickaddcapacitordialog.cpp
 
 HEADERS  += mainwindow.h \
     partdialog.h \
@@ -176,7 +177,8 @@ HEADERS  += mainwindow.h \
     models/proxymodelnoneentry.h \
     models/basicentitytablemodel.h \
     dialogs/multistoragedialog.h \
-    models/iconsrepository.h
+    models/iconsrepository.h \
+    dialogs/quickaddcapacitordialog.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \
@@ -191,7 +193,8 @@ FORMS    += mainwindow.ui \
     testform2.ui \
     optionsdialog.ui \
     dialogs/quickaddresistordialog.ui \
-    dialogs/multistoragedialog.ui
+    dialogs/multistoragedialog.ui \
+    dialogs/quickaddcapacitordialog.ui
 
 RESOURCES += \
     resources.qrc \
