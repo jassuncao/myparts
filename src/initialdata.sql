@@ -35,10 +35,6 @@ INSERT INTO storage (name, description, lft, rgt) VALUES
         ('Compartment 1', NULL, 10, 11),
         ('Compartment 2', NULL, 12, 13);
 
-INSERT INTO package (name, description) VALUES
-('0805', '0805 (2.0 x 1.2mm)'),
-('0603', '0603 (1.6 x 0.8mm)'),
-('0402', '0402 (1.0 x 0.5mm)');
 
 INSERT INTO unit (id, name, symbol, deletable) VALUES
 (1,'Volts','V',0),
@@ -46,7 +42,17 @@ INSERT INTO unit (id, name, symbol, deletable) VALUES
 (3,'Ohms','Ω',0),
 (4,'Farads','F',0),
 (5,'Watts','W',0),
-(6,'Hertz','Hz',0);
+(6,'Hertz','Hz',0),
+(7,'Henry','H',0),
+(8,'Second','s',0),
+(9,'Meter','m',0),
+(10,'Decibel','dB',0),
+(11,'Parts-per-million','ppm',0),
+(12,'Candela','cd',0),
+(13,'Celsius','°C',0),
+(14,'American wire gauge','AWG',0),
+(15,'Bit','b',0),
+(16,'Byte','B',0);
 
 INSERT INTO packaging (name) VALUES
 ('Single'),

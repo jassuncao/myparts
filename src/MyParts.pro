@@ -96,7 +96,8 @@ SOURCES += main.cpp\
     models/basicentitytablemodel.cpp \
     dialogs/multistoragedialog.cpp \
     models/iconsrepository.cpp \
-    dialogs/quickaddcapacitordialog.cpp
+    dialogs/quickaddcapacitordialog.cpp \
+    ext/qxtcsvmodel.cpp
 
 HEADERS  += mainwindow.h \
     partdialog.h \
@@ -178,7 +179,8 @@ HEADERS  += mainwindow.h \
     models/basicentitytablemodel.h \
     dialogs/multistoragedialog.h \
     models/iconsrepository.h \
-    dialogs/quickaddcapacitordialog.h
+    dialogs/quickaddcapacitordialog.h \
+    ext/qxtcsvmodel.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \
@@ -220,4 +222,5 @@ DISTFILES += \
     SQLiteInit.sql \
     initialdata.sql \
     storage.xml \
-    category.xml
+    category.xml \
+    ../res/packages.csv

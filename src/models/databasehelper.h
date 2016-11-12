@@ -15,6 +15,7 @@ private:
     bool execSqlStatement(const QString& queryStr, const int lineNumber) const;
     bool execSqlScript(QFile *file) const;
     bool tableExists(const char * tableName) const;
+    bool loadPackagesFromCSV() const;
     QSqlDatabase _db;
 };
 

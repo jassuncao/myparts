@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <QFile>
 #include <QStringBuilder>
+#include "ext/qxtcsvmodel.h"
 
 DatabaseHelper::DatabaseHelper(QSqlDatabase db) :
     _db(db)
@@ -23,7 +24,43 @@ bool DatabaseHelper::loadInitialData(void) const
     QFile f(":/scripts/initialdata.sql");
     if(!f.open(QIODevice::ReadOnly | QIODevice::Text))
         qWarning() << "cannot open initial data script";
-    return execSqlScript(&f);
+    return execSqlScript(&f) && loadPackagesFromCSV();
+}
+
+int findCsvColumn(const QxtCsvModel * tableModel, const QString & colName){
+    for(int col; col < tableModel->columnCount(); ++col){
+        const QString name = tableModel->headerText(col);
+        if(colName.compare(name, Qt::CaseInsensitive) == 0){
+            return col;
+        }
+    }
+    return -1;
+}
+
+bool DatabaseHelper::loadPackagesFromCSV() const {
+    QxtCsvModel csvModel;
+    csvModel.setSource(":/csv/res/packages.csv", true);
+    int nameCol = findCsvColumn(&csvModel, "name");
+    int descriptionCol = findCsvColumn(&csvModel, "description");
+    if(nameCol < 0 || descriptionCol < 0){
+        qDebug()<<"Can not load packages.csv. Some columns are missing";
+        return false;
+    }
+
+    QSqlQuery query("INSERT INTO package (name, description) VALUES(?,?)", _db);
+    int rows = csvModel.rowCount();
+    for(int row = 0; row < rows; ++row){
+        QString name = csvModel.text(row, nameCol);
+        QString description = csvModel.text(row, descriptionCol);
+        query.bindValue(0, name);
+        query.bindValue(1, description);
+        bool res = query.exec();
+        if(!res){
+            qWarning()<<"Failed to insert package. Reason:"<<query.lastError();
+            return false;
+        }
+    }
+    return true;
 }
 
 bool DatabaseHelper::execSqlScript(QFile* file) const

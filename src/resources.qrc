@@ -83,4 +83,7 @@
         <file>SQLiteInit.sql</file>
         <file>initialdata.sql</file>
     </qresource>
+    <qresource prefix="/csv">
+        <file>res/packages.csv</file>
+    </qresource>
 </RCC>

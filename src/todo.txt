@@ -9,8 +9,7 @@ See this link for ideas: http://hackaday.com/2014/01/09/a-simple-and-dirty-bill-
 Generate a report of parts to purchase by distributor.
 
 === Doing ===
-* Quick add capacitor
-* Support different icons in the storage view. E.g. House, Cabinet, Drawer, Bins, Small container
+
 === Done ===
 * Footprint attachments
 * Handle PartDialog "next action" checkbox. -> Need to intercept the accept slot();
@@ -19,6 +18,8 @@ Generate a report of parts to purchase by distributor.
 * Quick add resistor wizard
 * Implementing support for fractions in UnitParser
 * Multiple Storage generator
+* Support different icons in the storage view. E.g. House, Cabinet, Drawer, Bins, Small container
+* Quick add capacitor
 
 Icons used:
 
