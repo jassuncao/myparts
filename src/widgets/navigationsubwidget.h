@@ -52,6 +52,7 @@ class QSearchLineEdit;
 class TreeNavigator;
 class PartsQueryBuilder;
 class TreeItemModel;
+class TreeProxyFilter;
 
 namespace Manhattan { class StyledBar; }
 
@@ -96,7 +97,6 @@ signals:
 protected:
     explicit TreeNavigator(QWidget *parent = 0);
     virtual void onContextMenuRequested(const QPoint &globalPos, const QModelIndex & index);
-    virtual void onFilterChanged(const QString & text);
     virtual IconsRepository * iconsRepository() = 0;
     QTreeView * view();    
     bool doEdit(const QModelIndex itemIndex, const QString & title);
@@ -110,6 +110,7 @@ private:
     TreeItemModel * _model;
     QSearchLineEdit * _filterLineEdit;
     QTreeView * _treeView;
+    TreeProxyFilter * _treeProxyModel;
     bool _filterSelectedItemChecked;
 };
 
@@ -121,8 +122,7 @@ public:
     virtual QString title() const { return tr("Categories");}
     QVariant currentCategory() const;
 protected:
-    void onContextMenuRequested(const QPoint &globalPos, const QModelIndex & index);
-    void onFilterChanged(const QString & text);    
+    void onContextMenuRequested(const QPoint &globalPos, const QModelIndex & index);  
     IconsRepository * iconsRepository();
 private slots:
     void slotAddCategory();
@@ -145,8 +145,7 @@ public:
     QVariant currentStorage() const;
 protected:
 protected:
-    void onContextMenuRequested(const QPoint &globalPos, const QModelIndex & index);
-    void onFilterChanged(const QString & text);
+    void onContextMenuRequested(const QPoint &globalPos, const QModelIndex & index);    
     IconsRepository * iconsRepository();
 private slots:
     void slotAddStorage();

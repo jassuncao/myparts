@@ -42,12 +42,11 @@
 #include <QTextStream>
 #include <QDebug>
 
-class QxtCsvModelPrivate : public QxtPrivate<QxtCsvModel>
-{
+
+class QxtCsvModelData : public QSharedData {
 public:
-    QxtCsvModelPrivate() : csvData(), header(), maxColumn(0), quoteMode(QxtCsvModel::DefaultQuoteMode)
-    {}
-    QXT_DECLARE_PUBLIC(QxtCsvModel)
+    QxtCsvModelData() : csvData(), header(), maxColumn(0), quoteMode(QxtCsvModel::DefaultQuoteMode){}
+    ~QxtCsvModelData() { }
 
     QList<QStringList> csvData;
     QStringList header;
@@ -60,7 +59,7 @@ public:
   */
 QxtCsvModel::QxtCsvModel(QObject *parent) : QAbstractTableModel(parent)
 {
-    QXT_INIT_PRIVATE(QxtCsvModel);
+    d_ptr = new QxtCsvModelData();
 }
 
 /*!
@@ -73,7 +72,7 @@ QxtCsvModel::QxtCsvModel(QObject *parent) : QAbstractTableModel(parent)
   */
 QxtCsvModel::QxtCsvModel(QIODevice *file, QObject *parent, bool withHeader, QChar separator) : QAbstractTableModel(parent)
 {
-    QXT_INIT_PRIVATE(QxtCsvModel);
+    d_ptr = new QxtCsvModelData();
     setSource(file, withHeader, separator);
 }
 
@@ -89,7 +88,7 @@ QxtCsvModel::QxtCsvModel(QIODevice *file, QObject *parent, bool withHeader, QCha
   */
 QxtCsvModel::QxtCsvModel(const QString filename, QObject *parent, bool withHeader, QChar separator) : QAbstractTableModel(parent)
 {
-    QXT_INIT_PRIVATE(QxtCsvModel);
+    d_ptr = new QxtCsvModelData();
     QFile src(filename);
     setSource(&src, withHeader, separator);
 }
@@ -103,7 +102,7 @@ QxtCsvModel::~QxtCsvModel()
 int QxtCsvModel::rowCount(const QModelIndex& parent) const
 {
     if (parent.row() != -1 && parent.column() != -1) return 0;
-    return qxt_d().csvData.count();
+    return d_ptr->csvData.count();
 }
 
 /*!
@@ -112,7 +111,7 @@ int QxtCsvModel::rowCount(const QModelIndex& parent) const
 int QxtCsvModel::columnCount(const QModelIndex& parent) const
 {
     if (parent.row() != -1 && parent.column() != -1) return 0;
-    return qxt_d().maxColumn;
+    return d_ptr->maxColumn;
 }
 
 /*!
@@ -124,7 +123,7 @@ QVariant QxtCsvModel::data(const QModelIndex& index, int role) const
     if(role == Qt::DisplayRole || role == Qt::EditRole || role == Qt::UserRole) {
         if(index.row() < 0 || index.column() < 0 || index.row() >= rowCount())
             return QVariant();
-        const QStringList& row = qxt_d().csvData[index.row()];
+        const QStringList& row = d_ptr->csvData[index.row()];
         if(index.column() >= row.length())
             return QVariant();
         return row[index.column()];
@@ -137,8 +136,8 @@ QVariant QxtCsvModel::data(const QModelIndex& index, int role) const
  */
 QVariant QxtCsvModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    if(section < qxt_d().header.count() && orientation == Qt::Horizontal && (role == Qt::DisplayRole || role == Qt::EditRole || role == Qt::UserRole))
-        return qxt_d().header[section];
+    if(section < d_ptr->header.count() && orientation == Qt::Horizontal && (role == Qt::DisplayRole || role == Qt::EditRole || role == Qt::UserRole))
+        return  d_ptr->header[section];
     else
         return QAbstractTableModel::headerData(section, orientation, role);
 }
@@ -164,16 +163,15 @@ void QxtCsvModel::setSource(const QString filename, bool withHeader, QChar separ
   \sa quoteMode
   */
 void QxtCsvModel::setSource(QIODevice *file, bool withHeader, QChar separator, QTextCodec* codec)
-{
-    QxtCsvModelPrivate* d_ptr = &qxt_d();
+{    
     bool headerSet = !withHeader;
     if(!file->isOpen())
         file->open(QIODevice::ReadOnly);
     if(withHeader)
-        d_ptr->maxColumn = 0;
+         d_ptr->maxColumn = 0;
     else
-        d_ptr->maxColumn = d_ptr->header.size();
-    d_ptr->csvData.clear();
+         d_ptr->maxColumn = d_ptr->header.size();
+     d_ptr->csvData.clear();
     QStringList row;
     QString field;
     QChar quote;
@@ -255,7 +253,7 @@ void QxtCsvModel::setSource(QIODevice *file, bool withHeader, QChar separator, Q
  */
 void QxtCsvModel::setHeaderData(const QStringList& data)
 {
-    qxt_d().header = data;
+    d_ptr->header = data;
     emit headerDataChanged(Qt::Horizontal, 0, data.count());
 }
 
@@ -267,10 +265,10 @@ bool QxtCsvModel::setHeaderData(int section, Qt::Orientation orientation, const 
     if(orientation != Qt::Horizontal) return false;                   // We don't support the vertical header
     if(role != Qt::DisplayRole || role != Qt::EditRole) return false; // We don't support any other roles
     if(section < 0) return false;                                     // Bogus input
-    while(section > qxt_d().header.size()) {
-        qxt_d().header << QString();
+    while(section > d_ptr->header.size()) {
+        d_ptr->header << QString();
     }
-    qxt_d().header[section] = value.toString();
+    d_ptr->header[section] = value.toString();
     emit headerDataChanged(Qt::Horizontal, section, section);
     return true;
 }
@@ -284,7 +282,7 @@ bool QxtCsvModel::setData(const QModelIndex& index, const QVariant& data, int ro
 
     if(role == Qt::DisplayRole || role == Qt::EditRole || role == Qt::UserRole) {
         if(index.row() >= rowCount() || index.column() >= columnCount() || index.row() < 0 || index.column() < 0) return false;
-        QStringList& row = qxt_d().csvData[index.row()];
+        QStringList& row = d_ptr->csvData[index.row()];
         while(row.length() <= index.column())
             row << QString();
         row[index.column()] = data.toString();
@@ -309,11 +307,10 @@ bool QxtCsvModel::insertRows(int row, int count, const QModelIndex& parent)
 {
     if (parent != QModelIndex() || row < 0) return false;
     emit beginInsertRows(parent, row, row + count);
-    QxtCsvModelPrivate& d_ptr = qxt_d();
     if(row >= rowCount()) {
-        for(int i = 0; i < count; i++) d_ptr.csvData << QStringList();
+        for(int i = 0; i < count; i++) d_ptr->csvData << QStringList();
     } else {
-        for(int i = 0; i < count; i++) d_ptr.csvData.insert(row, QStringList());
+        for(int i = 0; i < count; i++) d_ptr->csvData.insert(row, QStringList());
     }
     emit endInsertRows();
     return true;
@@ -336,9 +333,8 @@ bool QxtCsvModel::removeRows(int row, int count, const QModelIndex& parent)
     if (row >= rowCount()) return false;
     if (row + count >= rowCount()) count = rowCount() - row;
     emit beginRemoveRows(parent, row, row + count);
-    QxtCsvModelPrivate& d_ptr = qxt_d();
     for (int i = 0;i < count;i++)
-        d_ptr.csvData.removeAt(row);
+        d_ptr->csvData.removeAt(row);
     emit endRemoveRows();
     return true;
 }
@@ -358,17 +354,16 @@ bool QxtCsvModel::insertColumns(int col, int count, const QModelIndex& parent)
 {
     if (parent != QModelIndex() || col < 0) return false;
     beginInsertColumns(parent, col, col + count - 1);
-    QxtCsvModelPrivate& d_ptr = qxt_d();
     for(int i = 0; i < rowCount(); i++) {
-        QStringList& row = d_ptr.csvData[i];
+        QStringList& row = d_ptr->csvData[i];
         while(col >= row.length()) row.append(QString());
         for(int j = 0; j < count; j++) {
             row.insert(col, QString());
         }
     }
     for(int i = 0; i < count ;i++)
-        d_ptr.header.insert(col, QString());
-    d_ptr.maxColumn += count;
+        d_ptr->header.insert(col, QString());
+    d_ptr->maxColumn += count;
     endInsertColumns();
     return true;
 }
@@ -390,15 +385,14 @@ bool QxtCsvModel::removeColumns(int col, int count, const QModelIndex& parent)
     if (col >= columnCount()) return false;
     if (col + count >= columnCount()) count = columnCount() - col;
     emit beginRemoveColumns(parent, col, col + count);
-    QxtCsvModelPrivate& d_ptr = qxt_d();
     QString before, after;
     for(int i = 0; i < rowCount(); i++) {
         for(int j = 0; j < count; j++) {
-            d_ptr.csvData[i].removeAt(col);
+            d_ptr->csvData[i].removeAt(col);
         }
     }
     for(int i = 0; i < count; i++)
-        d_ptr.header.removeAt(col);
+        d_ptr->header.removeAt(col);
     emit endRemoveColumns();
     return true;
 }
@@ -435,8 +429,7 @@ static QString qxt_addCsvQuotes(QxtCsvModel::QuoteMode mode, QString field)
   to output a row of headers at the top of the file.
  */ 
 void QxtCsvModel::toCSV(QIODevice* dest, bool withHeader, QChar separator, QTextCodec* codec) const
-{
-    const QxtCsvModelPrivate& d_ptr = qxt_d();
+{    
     int row, col, rows, cols;
     rows = rowCount();
     cols = columnCount();
@@ -448,20 +441,20 @@ void QxtCsvModel::toCSV(QIODevice* dest, bool withHeader, QChar separator, QText
         data = "";
         for(col = 0; col < cols; ++col) {
             if(col > 0) data += separator;
-            data += qxt_addCsvQuotes(d_ptr.quoteMode, d_ptr.header.at(col)); 
+            data += qxt_addCsvQuotes(d_ptr->quoteMode, d_ptr->header.at(col));
         }
         stream << data << endl;
     }
     for(row = 0; row < rows; ++row)
     {
-        const QStringList& rowData = d_ptr.csvData[row];
+        const QStringList& rowData = d_ptr->csvData[row];
         data = "";
         for(col = 0; col < cols; ++col) {
             if(col > 0) data += separator;
             if(col < rowData.length())
-                data += qxt_addCsvQuotes(d_ptr.quoteMode, rowData.at(col)); 
+                data += qxt_addCsvQuotes(d_ptr->quoteMode, rowData.at(col));
             else
-                data += qxt_addCsvQuotes(d_ptr.quoteMode, QString());; 
+                data += qxt_addCsvQuotes(d_ptr->quoteMode, QString());;
         }
         stream << data << endl;
     }
@@ -497,7 +490,7 @@ Qt::ItemFlags QxtCsvModel::flags(const QModelIndex& index) const
  */
 QxtCsvModel::QuoteMode QxtCsvModel::quoteMode() const
 {
-    return qxt_d().quoteMode;
+    return d_ptr->quoteMode;
 }
 
 /*!
@@ -509,7 +502,7 @@ QxtCsvModel::QuoteMode QxtCsvModel::quoteMode() const
  */
 void QxtCsvModel::setQuoteMode(QuoteMode mode)
 {
-    qxt_d().quoteMode = mode;
+    d_ptr->quoteMode = mode;
 }
 
 /*!

@@ -20,6 +20,7 @@ Generate a report of parts to purchase by distributor.
 * Multiple Storage generator
 * Support different icons in the storage view. E.g. House, Cabinet, Drawer, Bins, Small container
 * Quick add capacitor
+* Support filter by category in the category view
 
 Icons used:
 

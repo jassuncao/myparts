@@ -50,6 +50,7 @@
 #include "qsearchlineedit.h"
 #include "models/partsquerybuilder.h"
 #include "models/treeitemmodel.h"
+#include "models/treeproxyfilter.h"
 #include "dialogs/treeitemeditdialog.h"
 #include "dialogs/multistoragedialog.h"
 
@@ -137,6 +138,8 @@ TreeNavigator::TreeNavigator(QWidget *parent) : QWidget(parent),
     _filterLineEdit = new QSearchLineEdit(this);
     _filterLineEdit->setObjectName("QSearchLineEdit");
 
+    _treeProxyModel = new TreeProxyFilter(this);
+
     _treeView = new QTreeView;
     _treeView->setObjectName("QTreeView");
     _treeView->setFrameStyle(QFrame::NoFrame);
@@ -177,7 +180,8 @@ void TreeNavigator::setModel(TreeItemModel *model)
                    this, SLOT(slotCurrentChanged(QModelIndex,QModelIndex)));
     }
     _model = model;
-    _treeView->setModel(model);
+    _treeProxyModel->setSourceModel(model);
+    _treeView->setModel(_treeProxyModel);
 #if QT_VERSION >= 0x050000
     _treeView->header()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
 #else
@@ -237,14 +241,10 @@ void TreeNavigator::onContextMenuRequested(const QPoint &, const QModelIndex &)
 {
 }
 
-void TreeNavigator::onFilterChanged(const QString &)
-{
-
-}
-
 QModelIndex TreeNavigator::currentIndex() const
 {
-    return _treeView->currentIndex();
+    return _treeProxyModel->mapToSource(_treeView->currentIndex());
+    //return _treeView->currentIndex();
 }
 
 QTreeView * TreeNavigator::view()
@@ -271,22 +271,24 @@ void TreeNavigator::slotCustomContextMenuRequested(const QPoint &pos)
 
 void TreeNavigator::slotTextChanged()
 {
-    onFilterChanged(_filterLineEdit->text());
+    _treeProxyModel->setFilterFixedString(_filterLineEdit->text());
+    _treeView->expandAll();
 }
 
 void TreeNavigator::slotCurrentChanged(const QModelIndex &current, const QModelIndex &)
 {    
     QList<int> selected;
+    QModelIndex index = _treeProxyModel->mapToSource(current);
     if(_filterSelectedItemChecked){
-        int itemId = _model->getItemId(current);
+        int itemId = _model->getItemId(index);
         if(itemId>=0){
             selected.append(itemId);
         }
     }
     else{
-        selected = _model->getSubTreeIds(current);
+        selected = _model->getSubTreeIds(index);
     }
-    emit selectionChanged(selected);    
+    emit selectionChanged(selected);
 }
 
 bool TreeNavigator::doEdit(const QModelIndex itemIndex, const QString & title)
@@ -346,10 +348,6 @@ void CategoryNavigator::onContextMenuRequested(const QPoint & globalPos, const Q
     _actionEditCategory->setEnabled(indexValid);
     _actionDeleteCategory->setEnabled(indexValid);
     _actionsMenu->exec(globalPos);
-}
-
-void CategoryNavigator::onFilterChanged(const QString & text)
-{
 }
 
 IconsRepository * CategoryNavigator::iconsRepository()
@@ -414,20 +412,6 @@ void CategoryNavigator::slotEditCategory()
         return;
     }
     doEdit(itemIndex, tr("Edit category"));
-/*
-    TreeItemEditDialog dlg(0, this);
-    dlg.setWindowTitle(tr("Edit category"));
-    dlg.setItemName(model()->data(itemIndex, Qt::EditRole).toString());
-    dlg.setItemDescription(model()->data(itemIndex, Qt::ToolTipRole).toString());
-    if(dlg.exec()==QDialog::Accepted){
-        model()->setData(itemIndex, dlg.itemName(), Qt::EditRole);
-        model()->setData(itemIndex, dlg.itemDescription(), Qt::ToolTipRole);
-        model()->submit();
-    }
-    else{
-        model()->revert();
-    }
-    */
 }
 
 StorageNavigator::StorageNavigator(ModelsRepository * modelsRepo, QWidget *parent)
@@ -472,10 +456,6 @@ void StorageNavigator::onContextMenuRequested(const QPoint & globalPos, const QM
     _actionsMenu->exec(globalPos);
 }
 
-void StorageNavigator::onFilterChanged(const QString & text)
-{
-}
-
 IconsRepository * StorageNavigator::iconsRepository()
 {
     return _modelsRepo->storageIconsRepository();
@@ -497,27 +477,7 @@ void StorageNavigator::slotAddStorage()
         }
         else{
            view()->setCurrentIndex(parentIndex);
-        }
-        /*
-        TreeItemEditDialog dlg(_modelsRepo->storageIconsModel(), this);
-        dlg.setWindowTitle(tr("Add new storage"));
-        dlg.setItemName(treeModel->data(itemIndex, Qt::EditRole).toString());
-        dlg.setItemDescription(treeModel->data(itemIndex, Qt::ToolTipRole).toString());
-        dlg.setItemIconName(treeModel->getItemIconName(itemIndex));
-        if(dlg.exec()==QDialog::Accepted){
-            treeModel->setData(itemIndex, dlg.itemName(), Qt::EditRole);
-            treeModel->setData(itemIndex, dlg.itemDescription(), Qt::ToolTipRole);
-            treeModel->setItemIconName(itemIndex, dlg.itemIconName());
-            treeModel->submit();
-            //Position the selection in the new node
-            QModelIndex childIndex = treeModel->index(newRow, 0, parentIndex);
-            view()->setCurrentIndex(childIndex);
-        }
-        else{
-            treeModel->revert();
-            view()->setCurrentIndex(parentIndex);
-        }
-        */
+        }      
         view()->setFocus();
     }
     else{
@@ -532,25 +492,7 @@ void StorageNavigator::slotEditStorage()
     if(!itemIndex.isValid()){
         return;
     }
-    doEdit(itemIndex, tr("Edit storage"));
-    /*
-    TreeItemModel * treeModel = model();
-    TreeItemEditDialog dlg(_modelsRepo->storageIconsModel(), this);
-    dlg.setWindowTitle(tr("Edit storage"));
-    dlg.setItemName(treeModel->data(itemIndex, Qt::EditRole).toString());
-    dlg.setItemDescription(treeModel->data(itemIndex, Qt::ToolTipRole).toString());
-    dlg.setItemIconName(treeModel->getItemIconName(itemIndex));
-
-    if(dlg.exec() == QDialog::Accepted){
-        treeModel->setData(itemIndex, dlg.itemName(), Qt::EditRole);
-        treeModel->setData(itemIndex, dlg.itemDescription(), Qt::ToolTipRole);
-        treeModel->setItemIconName(itemIndex, dlg.itemIconName());
-        treeModel->submit();
-    }
-    else{
-        treeModel->revert();
-    }
-    */
+    doEdit(itemIndex, tr("Edit storage"));   
 }
 
 void StorageNavigator::slotAddMultipleStorage()

@@ -38,11 +38,13 @@
 #include <QString>
 #include <QStringList>
 #include <QModelIndex>
-#include <qxtglobal.h>
-class QTextCodec;
+#include <QSharedDataPointer>
+#include <QSharedData>
 
-class QxtCsvModelPrivate;
-class QXT_CORE_EXPORT QxtCsvModel : public QAbstractTableModel
+class QTextCodec;
+class QxtCsvModelData;
+
+class QxtCsvModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
@@ -89,7 +91,7 @@ public:
     Qt::ItemFlags flags(const QModelIndex& index) const;
 
 private:
-    QXT_DECLARE_PRIVATE(QxtCsvModel)
+    QSharedDataPointer<QxtCsvModelData> d_ptr;
 };
 Q_DECLARE_OPERATORS_FOR_FLAGS(QxtCsvModel::QuoteMode)
 
