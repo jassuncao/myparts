@@ -59,7 +59,7 @@ protected slots:
     */
     void slotShowDetailsPane();
     void slotHideDetailsPane();
-
+    void slotExportTable();
 private:
     void initModels();
     void initPartsTableView();

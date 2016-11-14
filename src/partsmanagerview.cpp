@@ -33,6 +33,10 @@
 #include <QMessageBox>
 #include <QSqlError>
 #include <QSettings>
+#include <QFileDialog>
+#include <QDesktopServices>
+#include <QStandardPaths>
+#include <QApplication>
 
 
 void debugLayout(QString tab, QLayoutItem * item){
@@ -122,6 +126,8 @@ PartsManagerView::PartsManagerView(ModelsRepository * modelsProvider, QWidget *p
     _duplicatePartButton = new QPushButton(QIcon(QString::fromLatin1(":/icons/duplicatePart")), tr("Duplicate"), this);
     _duplicatePartButton->setMenu(duplicateBtnMenu);
 
+    QPushButton * exportButton = new QPushButton(QIcon(QString::fromLatin1(":/icons/link_go")), tr("Export"), this);
+
     QHBoxLayout * partsActionsLayout = new QHBoxLayout;
     partsActionsLayout->setSpacing(6);
     partsActionsLayout->setMargin(6);    
@@ -129,6 +135,7 @@ PartsManagerView::PartsManagerView(ModelsRepository * modelsProvider, QWidget *p
     partsActionsLayout->addWidget(_deletePartButton);
     partsActionsLayout->addWidget(_duplicatePartButton);
     partsActionsLayout->addStretch();
+    partsActionsLayout->addWidget(exportButton);
 
     QFrame * hLine = new QFrame(this);
     hLine->setFrameShape(QFrame::HLine);
@@ -183,6 +190,7 @@ PartsManagerView::PartsManagerView(ModelsRepository * modelsProvider, QWidget *p
 
     connect(addPartButton, SIGNAL(clicked()), this, SLOT(slotAddPart()));
     connect(_deletePartButton, SIGNAL(clicked()), this, SLOT(slotDeletePart()));    
+    connect(exportButton, SIGNAL(clicked()), this, SLOT(slotExportTable()));
     connect(_partsFilterWidget, SIGNAL(filterChanged()), this, SLOT(slotFilterChanged()));    
     connect(_partDetailsView, SIGNAL(editPartSelected()), this, SLOT(slotEditPart()));    
     connect(_hideDetailsPaneButton, SIGNAL(clicked(bool)), this, SLOT(slotHideDetailsPane()));
@@ -424,5 +432,17 @@ void PartsManagerView::duplicatePart(bool allData)
         return;
     PartDialog dlg(_modelsRepository, this);
     dlg.duplicatePart(_partsTableProxyModel->mapToSource(index), allData);
+}
+
+void PartsManagerView::slotExportTable()
+{
+    //QDesktopServices x;
+    QWidget * parent = QApplication::activeWindow();
+    QString docsDir = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+    //QString docsDir = QDir::currentPath();
+    QString filename = QFileDialog::getSaveFileName(parent, tr("Save File"), docsDir, tr("CSV (*.csv)"));
+    if(!filename.isEmpty()){
+        qDebug( filename.toLatin1() );
+    }
 }
 

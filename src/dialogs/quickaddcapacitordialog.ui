@@ -11,7 +11,11 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Add capacitor</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../extras.qrc">
+    <normaloff>:/parts/extras/category/ceramic_16x16.png</normaloff>:/parts/extras/category/ceramic_16x16.png</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -194,7 +198,9 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../extras.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>buttonBox</sender>

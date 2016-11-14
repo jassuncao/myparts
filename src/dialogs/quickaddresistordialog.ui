@@ -11,7 +11,11 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Add Resistor Wizard</string>
+   <string>Add resistor</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../extras.qrc">
+    <normaloff>:/parts/extras/category/resistor.png</normaloff>:/parts/extras/category/resistor.png</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -304,15 +308,15 @@
    <header>widgets/relationalcombobox.h</header>
   </customwidget>
   <customwidget>
-   <class>ColorBandComboBox</class>
-   <extends>QComboBox</extends>
-   <header>widgets/colorbandcombobox.h</header>
-  </customwidget>
-  <customwidget>
    <class>KMessageWidget</class>
    <extends>QWidget</extends>
    <header>widgets/kmessagewidget.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ColorBandComboBox</class>
+   <extends>QComboBox</extends>
+   <header>widgets/colorbandcombobox.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>
@@ -332,7 +336,9 @@
   <tabstop>partStorageComboBox</tabstop>
   <tabstop>partConditionComboBox</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="../extras.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>buttonBox</sender>
