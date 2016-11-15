@@ -8,7 +8,7 @@
 class QAbstractItemModel;
 
 namespace Utils {
-
+    QString getDocumentsDirectory();
     QString copyFileToDir(const QString &srcPath, const QDir & targetDir);
     int findDefaultValueRow(const QAbstractItemModel *model, int column);
     void reportDatabaseError(QWidget *parent, const QString &title, const QString &text, const QSqlError &sqlError);

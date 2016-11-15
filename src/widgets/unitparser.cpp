@@ -43,10 +43,12 @@ static void removeTrailingZeros(QString & str, const QChar decimalPoint)
     str.resize(i+1);
 }
 
+/*
 static float epsilonEqual( double a, double b, double epsilon )
 {
     return fabsf( a - b ) < epsilon;
 }
+*/
 
 UnitParser::UnitParser()
 {
@@ -58,71 +60,6 @@ inline char to_char(QChar c){
 #else
     return c.toAscii();
 #endif
-}
-
-//TODO: Handle expressions like 1/4
-double UnitParser::parseUnit(const QString& input, bool * ok)
-{
-     QByteArray buff;
-     buff.reserve(input.length());
-     //QVarLengthArray<QChar, 16> charBuff(input.length());
-     int idx = 0;
-     int prefixIdx = -1;
-     QLocale locale;
-     QChar decimalPoint = locale.decimalPoint();
-     bool decimalPointFound = false;
-
-     int inputLen = input.length();
-     //Skip white spaces
-     while (idx < inputLen && input.at(idx).isSpace())
-         ++idx;
-
-     while(idx<inputLen){
-         const QChar c = input.at(idx);
-         if(c.isDigit()){
-             buff.append(to_char(c));
-         }         
-         else if(c.isLetter() && prefixIdx<0){
-            prefixIdx = findSIPrefix(c.unicode());
-            if(prefixIdx<0){//Invalid char found
-                if(ok!=0)
-                    *ok=false;
-                return 0;
-            }
-            if(!decimalPointFound){
-                decimalPointFound = true;
-                buff.append(to_char(decimalPoint));
-            }
-         }
-         else if(c==decimalPoint && !decimalPointFound){
-             decimalPointFound = true;
-             buff.append(to_char(c));
-         }
-         else{
-             //Found something else.
-             //Check if it is a white space in the next
-             break;
-         }
-         ++idx;
-     }
-
-     //Check if the remaining chars are white spaces
-     //Something else is considered invalid input
-     for (; idx < inputLen; ++idx) {
-        const QChar c = input.at(idx);
-        if (!c.isSpace()){
-            if(ok!=0)
-                *ok=false;
-            return 0;
-        }
-     }
-     QString aux(buff);
-     double value = locale.toDouble(aux, ok);
-
-     if(prefixIdx>=0){
-         value*=SI_EXPONENTIALS[prefixIdx];
-     }   
-     return value;
 }
 
 bool matchesUnit(const QString& input, int position, const QString& unit)
@@ -137,7 +74,6 @@ bool matchesUnit(const QString& input, int position, const QString& unit)
  1nF
  1.2nF
 */
-//TODO: Handle expressions like 1/4
 double UnitParser::parseUnit(const QString& input, const QString& unit, bool * ok)
 {
      QByteArray buff;

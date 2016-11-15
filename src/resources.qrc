@@ -37,7 +37,6 @@
         <file alias="attach">images/attach.png</file>
         <file alias="image_add">images/image_add.png</file>
         <file alias="image_delete">images/image_delete.png</file>
-        <file>images/footprintplaceholder.png</file>
         <file alias="row_add">images/table_row_insert.png</file>
         <file alias="row_delete">images/table_row_delete.png</file>
         <file alias="distributor_add">images/lorry_add.png</file>
@@ -65,6 +64,7 @@
         <file alias="splitbutton_closeleft">images/splitbutton_closeleft.png</file>
         <file alias="splitbutton_closeright">images/splitbutton_closeright.png</file>
         <file alias="splitbutton_vertical">images/splitbutton_vertical.png</file>
+        <file>images/packageplaceholder_128x128.png</file>
     </qresource>
     <qresource prefix="/largeIcons">
         <file alias="options_general">images/cog_32x32.png</file>

@@ -98,7 +98,8 @@ SOURCES += main.cpp\
     models/iconsrepository.cpp \
     dialogs/quickaddcapacitordialog.cpp \
     ext/qxtcsvmodel.cpp \
-    models/treeproxyfilter.cpp
+    models/treeproxyfilter.cpp \
+    dialogs/imageviewer.cpp
 
 HEADERS  += mainwindow.h \
     partdialog.h \
@@ -182,7 +183,8 @@ HEADERS  += mainwindow.h \
     models/iconsrepository.h \
     dialogs/quickaddcapacitordialog.h \
     ext/qxtcsvmodel.h \
-    models/treeproxyfilter.h
+    models/treeproxyfilter.h \
+    dialogs/imageviewer.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \

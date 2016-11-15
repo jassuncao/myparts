@@ -18,6 +18,7 @@
 #include "models/treeitem.h"
 #include "models/partstableproxymodel.h"
 #include "models/modelsrepository.h"
+#include "utils.h"
 
 #include <QHBoxLayout>
 #include <QPushButton>
@@ -34,10 +35,7 @@
 #include <QSqlError>
 #include <QSettings>
 #include <QFileDialog>
-#include <QDesktopServices>
-#include <QStandardPaths>
 #include <QApplication>
-
 
 void debugLayout(QString tab, QLayoutItem * item){
     if(item->widget()){
@@ -436,13 +434,13 @@ void PartsManagerView::duplicatePart(bool allData)
 
 void PartsManagerView::slotExportTable()
 {
-    //QDesktopServices x;
-    QWidget * parent = QApplication::activeWindow();
-    QString docsDir = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
-    //QString docsDir = QDir::currentPath();
-    QString filename = QFileDialog::getSaveFileName(parent, tr("Save File"), docsDir, tr("CSV (*.csv)"));
+    QString docsDir = Utils::getDocumentsDirectory();
+    if(docsDir.isEmpty()){
+        docsDir = QDir::currentPath();
+    }
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save file"), docsDir, tr("CSV (*.csv)"));
     if(!filename.isEmpty()){
-        qDebug( filename.toLatin1() );
+        qDebug(filename.toLatin1());
     }
 }
 

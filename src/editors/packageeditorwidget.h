@@ -17,6 +17,7 @@ class QModelIndex;
 class QDataWidgetMapper;
 class QToolButton;
 class AttachmentTableModel3;
+class ImageViewer;
 
 class PackageEditorWidget : public AbstractEditor
 {
@@ -62,6 +63,7 @@ private:
     QAction * _actionSetImageLocal;
     QAction * _actionSetImageRemote;
     QAction * _actionRemoveImage;
+    ImageViewer * _imageViewer;
 };
 
 #endif // PACKAGEEDITORWIDGET_H

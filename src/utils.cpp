@@ -3,6 +3,11 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QModelIndex>
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
+#include <QStandardPaths>
+#else
+#include <QDesktopServices>
+#endif
 
 namespace Utils {
 
@@ -55,6 +60,15 @@ int findDefaultValueRow(const QAbstractItemModel *model, int column)
 void reportDatabaseError(QWidget* parent, const QString &title, const QString& text, const QSqlError& sqlError)
 {
     QMessageBox::critical(parent, title, text);
+}
+
+QString getDocumentsDirectory()
+{
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
+    return QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+#else
+    return QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation);
+#endif
 }
 
 }//namespace

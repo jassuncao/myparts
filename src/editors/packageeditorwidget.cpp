@@ -2,6 +2,8 @@
 #include "dialogs/attachmentselectiondialog.h"
 #include "models/customtablemodel.h"
 #include "models/basicentitytablemodel.h"
+#include "utils.h"
+#include "dialogs/imageviewer.h"
 #include <QDebug>
 #include <QToolButton>
 #include <QLineEdit>
@@ -21,6 +23,7 @@
 #include <QStandardItemModel>
 #include <QSqlQuery>
 #include <QDesktopServices>
+
 
 PackageEditorWidget::PackageEditorWidget(QWidget *parent) :
     AbstractEditor(parent), _model(0)
@@ -201,7 +204,7 @@ void PackageEditorWidget::setImageEditorData(int row)
 void PackageEditorWidget::setPackageImage(const QString & filePath)
 {
     QImage pix;
-    QString aux = filePath.isEmpty() ? QLatin1String(":/icons/images/packageplaceholder.png") : filePath;
+    QString aux = filePath.isEmpty() ? QLatin1String(":/icons/images/packageplaceholder_128x128.png") : filePath;
     qDebug()<<"Loading package image "<< aux;
     if(pix.load(aux)){
         qDebug()<<"Package image loaded" << aux;
@@ -230,23 +233,19 @@ void PackageEditorWidget::slotImageShow()
         slotAddImage();
     }
     else{
+        ImageViewer viewer(this);
+        viewer.open(_imageButton->text());
         //TODO: Show full image using image viewer
     }
 }
 
 void PackageEditorWidget::slotAddImage()
 {
-    QFileDialog dlg(this);
-    dlg.setNameFilter(tr("Images (*.png *.xpm *.jpg)"));
-    dlg.setAcceptMode(QFileDialog::AcceptOpen);
-    dlg.setFileMode(QFileDialog::ExistingFile);
-    if(dlg.exec()){
-        QStringList fileNames = dlg.selectedFiles();
-        if(fileNames.size()>0){
-            QString selectedFile = fileNames.first();
-            setPackageImage(selectedFile);
-            slotContentChanged();
-        }
+    QString docsDir = Utils::getDocumentsDirectory();
+    QString selectedFile = QFileDialog::getOpenFileName(this, tr("Choose an image file"), docsDir, tr("Images (*.png *.xpm *.jpg)"));
+    if(!selectedFile.isEmpty()){
+        setPackageImage(selectedFile);
+        slotContentChanged();
     }
 }
 
@@ -270,7 +269,6 @@ void PackageEditorWidget::slotAddAttachment()
         _attachmentModel->insertRow(row);
         const QModelIndex & index = _attachmentModel->index(row, AttachmentTableModel3::ColumnURL);
         _attachmentModel->setData(index, resourceUrl.toString());
-        //_attachmentModel->appendRow(resourceUrl.toString(), QString());
     }
 }
 

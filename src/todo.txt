@@ -13,7 +13,7 @@ Generate a report of parts to purchase by distributor.
 
 === Doing ===
 
-Export parts list
+* Export parts list
 
 === Done ===
 * Footprint attachments
@@ -28,6 +28,7 @@ Export parts list
 * Support filter by category in the category view
 * Add a resistor icon to the quick add resistor dialog.
 * Add a capacitor icon to the quick add capacitor dialog.
+* Open images associated to the package
 
 Icons used:
 
