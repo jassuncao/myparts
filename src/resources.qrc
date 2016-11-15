@@ -65,6 +65,7 @@
         <file alias="splitbutton_closeright">images/splitbutton_closeright.png</file>
         <file alias="splitbutton_vertical">images/splitbutton_vertical.png</file>
         <file>images/packageplaceholder_128x128.png</file>
+        <file alias="table_export">images/table-export_16x16.png</file>
     </qresource>
     <qresource prefix="/largeIcons">
         <file alias="options_general">images/cog_32x32.png</file>

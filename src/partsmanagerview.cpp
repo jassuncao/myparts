@@ -124,7 +124,7 @@ PartsManagerView::PartsManagerView(ModelsRepository * modelsProvider, QWidget *p
     _duplicatePartButton = new QPushButton(QIcon(QString::fromLatin1(":/icons/duplicatePart")), tr("Duplicate"), this);
     _duplicatePartButton->setMenu(duplicateBtnMenu);
 
-    QPushButton * exportButton = new QPushButton(QIcon(QString::fromLatin1(":/icons/link_go")), tr("Export"), this);
+    QPushButton * exportButton = new QPushButton(QIcon(QString::fromLatin1(":/icons/table_export")), tr("Export"), this);
 
     QHBoxLayout * partsActionsLayout = new QHBoxLayout;
     partsActionsLayout->setSpacing(6);

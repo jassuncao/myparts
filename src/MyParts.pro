@@ -40,7 +40,6 @@ SOURCES += main.cpp\
     widgets/treeviewcombobox.cpp \
     models/treemodelmimedata.cpp \
     partdetailsview.cpp \
-    storagemanagerform.cpp \
     widgets/qtabwidget2.cpp \
     models/unittablemodel.cpp \
     widgets/parametervaluevalidator.cpp \
@@ -99,7 +98,8 @@ SOURCES += main.cpp\
     dialogs/quickaddcapacitordialog.cpp \
     ext/qxtcsvmodel.cpp \
     models/treeproxyfilter.cpp \
-    dialogs/imageviewer.cpp
+    dialogs/imageviewer.cpp \
+    dialogs/tableexportdialog.cpp
 
 HEADERS  += mainwindow.h \
     partdialog.h \
@@ -123,7 +123,6 @@ HEADERS  += mainwindow.h \
     widgets/treeviewcombobox.h \
     models/treemodelmimedata.h \
     partdetailsview.h \
-    storagemanagerform.h \
     widgets/qtabwidget2.h \
     models/unittablemodel.h \
     widgets/parametervaluevalidator.h \
@@ -184,7 +183,8 @@ HEADERS  += mainwindow.h \
     dialogs/quickaddcapacitordialog.h \
     ext/qxtcsvmodel.h \
     models/treeproxyfilter.h \
-    dialogs/imageviewer.h
+    dialogs/imageviewer.h \
+    dialogs/tableexportdialog.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \
@@ -193,14 +193,14 @@ FORMS    += mainwindow.ui \
     dialogs/removestockdialog.ui \
     dialog.ui \
     partdetailsview.ui \
-    storagemanagerform.ui \
     testform1.ui \
     dialogs/attachmentselectiondialog.ui \
     testform2.ui \
     optionsdialog.ui \
     dialogs/quickaddresistordialog.ui \
     dialogs/multistoragedialog.ui \
-    dialogs/quickaddcapacitordialog.ui
+    dialogs/quickaddcapacitordialog.ui \
+    dialogs/tableexportdialog.ui
 
 RESOURCES += \
     resources.qrc \
