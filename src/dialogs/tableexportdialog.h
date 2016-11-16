@@ -14,8 +14,10 @@ class TableExportDialog : public QDialog
 public:
     explicit TableExportDialog(QWidget *parent = 0);
     ~TableExportDialog();
-
+private slots:
+    void onBrowse();
 private:
+    void loadCharsets();
     Ui::TableExportDialog *ui;
 };
 

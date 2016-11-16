@@ -19,6 +19,7 @@
 #include "models/partstableproxymodel.h"
 #include "models/modelsrepository.h"
 #include "utils.h"
+#include "dialogs/tableexportdialog.h"
 
 #include <QHBoxLayout>
 #include <QPushButton>
@@ -434,13 +435,10 @@ void PartsManagerView::duplicatePart(bool allData)
 
 void PartsManagerView::slotExportTable()
 {
-    QString docsDir = Utils::getDocumentsDirectory();
-    if(docsDir.isEmpty()){
-        docsDir = QDir::currentPath();
-    }
-    QString filename = QFileDialog::getSaveFileName(this, tr("Save file"), docsDir, tr("CSV (*.csv)"));
-    if(!filename.isEmpty()){
-        qDebug(filename.toLatin1());
+    TableExportDialog dlg(this);
+    int res = dlg.exec();
+    if(QDialog::Accepted == res){
+
     }
 }
 

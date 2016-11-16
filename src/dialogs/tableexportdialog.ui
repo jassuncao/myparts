@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>509</width>
-    <height>147</height>
+    <height>152</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -36,10 +36,10 @@
    <item row="0" column="1">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QLineEdit" name="lineEdit"/>
+      <widget class="QLineEdit" name="filenameEdit"/>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="browsePushButton">
        <property name="text">
         <string>Browse</string>
        </property>
