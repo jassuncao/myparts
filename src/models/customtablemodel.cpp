@@ -100,9 +100,9 @@ QVariant TableRelation::data(const QModelIndex &index, int role) const
 {
     if (index.row() < 0 || index.row() >= _items.size())
         return QVariant();
-    if (role == Qt::DisplayRole)
+    if (role == Qt::DisplayRole || role == Qt::EditRole)
         return _items.at(index.row()).first;
-    if (role == Qt::EditRole)
+    if (role == IModelWithForeignKey::ForeignKeyRole)
         return _items.at(index.row()).second;
     return QVariant();
 }

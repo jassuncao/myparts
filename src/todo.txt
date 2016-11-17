@@ -9,8 +9,10 @@ See this link for ideas: http://hackaday.com/2014/01/09/a-simple-and-dirty-bill-
 Generate a report of parts to purchase by distributor.
 
 * Add a part icon to the add part dialog.
-* Make auto complete work for combos in partdialog
+
 === Doing ===
+
+* Make auto complete work for combos in partdialog
 
 === Done ===
 * Footprint attachments

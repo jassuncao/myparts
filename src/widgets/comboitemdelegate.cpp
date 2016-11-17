@@ -1,6 +1,8 @@
 #include "comboitemdelegate.h"
 #include "models/modelwithforeignkey.h"
 #include <QComboBox>
+#include <QDebug>
+#include <QLineEdit>
 
 ComboItemDelegate::ComboItemDelegate(QObject *parent) : QStyledItemDelegate(parent),
     _comboModel(0)
@@ -36,13 +38,11 @@ QWidget * ComboItemDelegate::createEditor(QWidget *parent, const QStyleOptionVie
         }
     }
     if(lookupModel){
-        QComboBox *combo = new QComboBox(parent);
-        /*
+        QComboBox *combo = new QComboBox(parent);       
         combo->setEditable(true);
         combo->setInsertPolicy(QComboBox::NoInsert);
         combo->setAutoCompletion(true);
-        */
-        combo->setModel(lookupModel);
+        combo->setModel(lookupModel);        
         combo->installEventFilter(const_cast<ComboItemDelegate *>(this));
         return combo;
     }
@@ -68,7 +68,16 @@ void ComboItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
     if (combo) {
         QAbstractItemModel * lookupModel = combo->model();
         int currentIndex = combo->currentIndex();
-        QVariant value = lookupModel->index(currentIndex,0).data(Qt::EditRole);
+        qDebug()<<"Currnt text "<< combo->currentText();
+        qDebug()<<"Currnt idex "<< currentIndex;
+        //When the user "tabs" while editing the combo, the lineEdit doesn't emit the editingFinished signal.
+        //If there is no selection we force the combo to attempt match the current text
+        if(currentIndex < 0 && combo->lineEdit()){
+            combo->lineEdit()->editingFinished();
+            currentIndex = combo->currentIndex();
+            qDebug()<<"Updated idex "<< currentIndex;
+        }
+        QVariant value = lookupModel->index(currentIndex,0).data(IModelWithForeignKey::ForeignKeyRole);
         model->setData(index, value, Qt::EditRole);
     }
     else{
