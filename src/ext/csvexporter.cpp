@@ -1,4 +1,5 @@
 #include "csvexporter.h"
+#include "utils.h"
 #include <QFile>
 #include <QTextStream>
 #include <QDebug>
@@ -14,7 +15,7 @@ CsvExporter::CsvExporter(bool withHeader, const QChar & fieldDelimiter, const QS
     _tableView(0)
 {
     if(!charset.isEmpty()){
-        _codec = QTextCodec::codecForName(charset.toAscii());
+        _codec = QTextCodec::codecForName(Utils::asByteArray(charset));
     }
 }
 
