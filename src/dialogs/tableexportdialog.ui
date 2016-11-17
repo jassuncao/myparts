@@ -65,38 +65,15 @@
     </widget>
    </item>
    <item row="2" column="1">
-    <widget class="QComboBox" name="delimiterComboBox">
-     <item>
-      <property name="text">
-       <string notr="true">,</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string notr="true">;</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string notr="true">:</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Tab</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Space</string>
-      </property>
-     </item>
-    </widget>
+    <widget class="QComboBox" name="delimiterComboBox"/>
    </item>
    <item row="3" column="1">
     <widget class="QCheckBox" name="includeHeaderCheckBox">
      <property name="text">
       <string>Include column names</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
      </property>
     </widget>
    </item>

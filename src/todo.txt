@@ -8,7 +8,6 @@ It should be possible to do basic BOM management.
 See this link for ideas: http://hackaday.com/2014/01/09/a-simple-and-dirty-bill-of-materials-and-stock-management-utility/
 Generate a report of parts to purchase by distributor.
 
-* Add internal part number.
 * Add a part icon to the add part dialog.
 
 === Doing ===

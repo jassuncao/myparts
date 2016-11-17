@@ -14,10 +14,15 @@ class TableExportDialog : public QDialog
 public:
     explicit TableExportDialog(QWidget *parent = 0);
     ~TableExportDialog();
+    QString filename() const;
+    QString charsetName() const;
+    QChar fieldDelimiter() const;
+    bool includeHeader() const;
 private slots:
     void onBrowse();
 private:
     void loadCharsets();
+    void loadDelimiter();
     Ui::TableExportDialog *ui;
 };
 

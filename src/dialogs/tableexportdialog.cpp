@@ -12,11 +12,49 @@ TableExportDialog::TableExportDialog(QWidget *parent) :
     ui->setupUi(this);
     connect(ui->browsePushButton, SIGNAL(clicked(bool)), this, SLOT(onBrowse()));
     loadCharsets();
+    loadDelimiter();
+    /*
+    //Test purposes
+    for(int i=0; i<ui->charSetComboBox->count(); ++i){
+        QTextCodec * codec = QTextCodec::codecForName(ui->charSetComboBox->itemData(i).toString().toAscii());
+        if(!codec){
+            qDebug()<<"Invalid name "<<ui->charSetComboBox->itemData(i).toString();
+        }
+    }
+    */
 }
 
 TableExportDialog::~TableExportDialog()
 {
     delete ui;
+}
+
+QString TableExportDialog::filename() const
+{
+    return ui->filenameEdit->text();
+}
+
+QString TableExportDialog::charsetName() const
+{
+    int index = ui->charSetComboBox->currentIndex();
+    if(index < 0){
+        index = 0;
+    }
+    return ui->charSetComboBox->itemData(index).toString();
+}
+
+QChar TableExportDialog::fieldDelimiter() const
+{
+    int index = ui->delimiterComboBox->currentIndex();
+    if(index < 0){
+        index = 0;
+    }
+    return ui->delimiterComboBox->itemData(index).toChar();
+}
+
+bool TableExportDialog::includeHeader() const
+{
+    return ui->includeHeaderCheckBox->isChecked();
 }
 
 void TableExportDialog::loadCharsets()
@@ -48,6 +86,19 @@ void TableExportDialog::loadCharsets()
     ui->charSetComboBox->addItem(tr("Thai"), "IBM874");
     ui->charSetComboBox->addItem(tr("Turkish"), "windows-1254");
     ui->charSetComboBox->addItem(tr("Vietnamese"), "windows-1258");
+
+    ui->charSetComboBox->setCurrentIndex(0);
+}
+
+void TableExportDialog::loadDelimiter()
+{
+    ui->delimiterComboBox->addItem(",",QChar(','));
+    ui->delimiterComboBox->addItem(";",QChar(';'));
+    ui->delimiterComboBox->addItem(":",QChar(':'));
+    ui->delimiterComboBox->addItem(tr("Tab"),QChar('\t'));
+    ui->delimiterComboBox->addItem(tr("Space"),QChar(' '));
+
+    ui->delimiterComboBox->setCurrentIndex(0);
 }
 
 void TableExportDialog::onBrowse()

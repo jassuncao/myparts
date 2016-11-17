@@ -20,6 +20,7 @@
 #include "models/modelsrepository.h"
 #include "utils.h"
 #include "dialogs/tableexportdialog.h"
+#include "ext/csvexporter.h"
 
 #include <QHBoxLayout>
 #include <QPushButton>
@@ -437,8 +438,11 @@ void PartsManagerView::slotExportTable()
 {
     TableExportDialog dlg(this);
     int res = dlg.exec();
-    if(QDialog::Accepted == res){
-
+    if(QDialog::Accepted == res){       
+        CsvExporter csvExporter(dlg.includeHeader(), dlg.fieldDelimiter(), dlg.charsetName());
+        csvExporter.setTable(_partsTableView);
+        csvExporter.toCSV(dlg.filename());
+        QMessageBox::information(this, tr("File saved"), tr("CSV file saved"));
     }
 }
 

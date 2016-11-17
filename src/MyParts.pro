@@ -99,7 +99,8 @@ SOURCES += main.cpp\
     ext/qxtcsvmodel.cpp \
     models/treeproxyfilter.cpp \
     dialogs/imageviewer.cpp \
-    dialogs/tableexportdialog.cpp
+    dialogs/tableexportdialog.cpp \
+    ext/csvexporter.cpp
 
 HEADERS  += mainwindow.h \
     partdialog.h \
@@ -184,7 +185,8 @@ HEADERS  += mainwindow.h \
     ext/qxtcsvmodel.h \
     models/treeproxyfilter.h \
     dialogs/imageviewer.h \
-    dialogs/tableexportdialog.h
+    dialogs/tableexportdialog.h \
+    ext/csvexporter.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \
