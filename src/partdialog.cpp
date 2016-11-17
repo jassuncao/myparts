@@ -74,6 +74,7 @@ PartDialog::PartDialog(ModelsRepository * modelsProvider, QWidget *parent) :
     _mapper->addMapping(ui->partPackageCombo, PartsSqlTableModel::ColumnPackageId, "currentKey");
     _mapper->addMapping(ui->initialStockSpinBox,PartsSqlTableModel::ColumnActualStock, "value");
     _mapper->addMapping(ui->partCommentText, PartsSqlTableModel::ColumnComment);
+    _mapper->addMapping(ui->partCustomPartNumberEdit, PartsSqlTableModel::ColumnCustomPartNumber);
 
     ui->partParametersTableView->setModel(_partParamsModel);
     ui->partParametersTableView->setItemDelegate(new ComboItemDelegate(this));

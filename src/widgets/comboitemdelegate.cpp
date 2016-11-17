@@ -37,6 +37,11 @@ QWidget * ComboItemDelegate::createEditor(QWidget *parent, const QStyleOptionVie
     }
     if(lookupModel){
         QComboBox *combo = new QComboBox(parent);
+        /*
+        combo->setEditable(true);
+        combo->setInsertPolicy(QComboBox::NoInsert);
+        combo->setAutoCompletion(true);
+        */
         combo->setModel(lookupModel);
         combo->installEventFilter(const_cast<ComboItemDelegate *>(this));
         return combo;

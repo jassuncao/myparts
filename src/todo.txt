@@ -9,10 +9,8 @@ See this link for ideas: http://hackaday.com/2014/01/09/a-simple-and-dirty-bill-
 Generate a report of parts to purchase by distributor.
 
 * Add a part icon to the add part dialog.
-
+* Make auto complete work for combos in partdialog
 === Doing ===
-
-* Export parts list
 
 === Done ===
 * Footprint attachments
@@ -28,6 +26,7 @@ Generate a report of parts to purchase by distributor.
 * Add a resistor icon to the quick add resistor dialog.
 * Add a capacitor icon to the quick add capacitor dialog.
 * Open images associated to the package
+* Export parts list
 
 Icons used:
 
