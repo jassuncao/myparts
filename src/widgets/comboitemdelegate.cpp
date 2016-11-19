@@ -67,16 +67,7 @@ void ComboItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
     QComboBox *combo = qobject_cast<QComboBox *>(editor);
     if (combo) {
         QAbstractItemModel * lookupModel = combo->model();
-        int currentIndex = combo->currentIndex();
-        qDebug()<<"Currnt text "<< combo->currentText();
-        qDebug()<<"Currnt idex "<< currentIndex;
-        //When the user "tabs" while editing the combo, the lineEdit doesn't emit the editingFinished signal.
-        //If there is no selection we force the combo to attempt match the current text
-        if(currentIndex < 0 && combo->lineEdit()){
-            combo->lineEdit()->editingFinished();
-            currentIndex = combo->currentIndex();
-            qDebug()<<"Updated idex "<< currentIndex;
-        }
+        int currentIndex = combo->findText(combo->lineEdit()->text(), Qt::MatchFixedString);
         QVariant value = lookupModel->index(currentIndex,0).data(IModelWithForeignKey::ForeignKeyRole);
         model->setData(index, value, Qt::EditRole);
     }
@@ -84,3 +75,4 @@ void ComboItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
         QStyledItemDelegate::setModelData(editor, model, index);
     }
 }
+
