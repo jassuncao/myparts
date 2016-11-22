@@ -206,7 +206,8 @@ FORMS    += mainwindow.ui \
     dialogs/quickaddresistordialog.ui \
     dialogs/multistoragedialog.ui \
     dialogs/quickaddcapacitordialog.ui \
-    dialogs/tableexportdialog.ui
+    dialogs/tableexportdialog.ui \
+    editors/projecteditorform.ui
 
 RESOURCES += \
     resources.qrc \
