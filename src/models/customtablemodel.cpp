@@ -508,6 +508,15 @@ AttachmentTableModel3 * AttachmentTableModel3::createNewPackageAttachmentModel(Q
     return new AttachmentTableModel3("package_attachment", fieldNames, columnNames, "package", parent);
 }
 
+AttachmentTableModel3 * AttachmentTableModel3::createNewProjectAttachmentModel(QObject * parent)
+{
+    QStringList fieldNames;
+    QStringList columnNames;
+    fieldNames<<"url"<<"description";
+    columnNames<<tr("Location")<<tr("Description");
+    return new AttachmentTableModel3("project_attachment", fieldNames, columnNames, "project", parent);
+}
+
 
 PartManufacturerTableModel2::PartManufacturerTableModel2(const QStringList &fieldNames, const QStringList &columnNames, QObject *parent)
     : SimpleSqlTableModel("part_manufacturer", fieldNames, columnNames, "part", parent)

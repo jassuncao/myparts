@@ -138,6 +138,7 @@ public:
 
     static AttachmentTableModel3 * createNewPackageAttachmentModel(QObject *parent);
     static AttachmentTableModel3 * createNewPartAttachmentModel(QObject *parent);
+    static AttachmentTableModel3 * createNewProjectAttachmentModel(QObject *parent);
 
 protected:
     explicit AttachmentTableModel3(const QString &tableName, const QStringList & fieldNames,

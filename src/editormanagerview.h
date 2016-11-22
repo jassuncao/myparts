@@ -70,6 +70,17 @@ public:
     QWidget* createNoDataWidget() const;
 };
 
+class ProjectManagerHelper : public EditorManagerHelper
+{
+public:
+    QString mainTitle() const { return QCoreApplication::translate("ProjectManagerHelper", "Projects"); }
+    QString deleteButtonText() const { return QCoreApplication::translate("ProjectManagerHelper", "Delete project"); }
+    QString saveNewButtonText() const { return QCoreApplication::translate("ProjectManagerHelper", "Save project"); }
+    QString saveChangesButtonText() const { return QCoreApplication::translate("ProjectManagerHelper", "Save changes"); }
+    AbstractEditor* createEditor() const;
+    QWidget* createNoDataWidget() const;
+};
+
 class EditorManagerView : public Manhattan::MiniSplitter
 {
     Q_OBJECT

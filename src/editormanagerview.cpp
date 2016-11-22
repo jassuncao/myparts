@@ -1,6 +1,7 @@
 #include "editormanagerview.h"
 #include "editors/companyeditorwidget.h"
 #include "editors/packageeditorwidget.h"
+#include "editors/projecteditorwidget.h"
 #include "widgets/itemstreeview.h"
 #include "widgets/listnavigatorwidget.h"
 #include "widgets/qsearchlineedit.h"
@@ -59,6 +60,17 @@ QWidget* PackageManagerHelper::createNoDataWidget() const
 
 AbstractEditor* PackageManagerHelper::createEditor() const {
     return new PackageEditorWidget;
+}
+
+QWidget* ProjectManagerHelper::createNoDataWidget() const
+{
+    QLabel * l = new QLabel(QCoreApplication::translate("ProjectManagerHelper", "Select a project"));
+    l->setAlignment(Qt::AlignCenter);
+    return l;
+}
+
+AbstractEditor* ProjectManagerHelper::createEditor() const {
+    return new ProjectEditorWidget;
 }
 
 

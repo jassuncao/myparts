@@ -100,7 +100,9 @@ SOURCES += main.cpp\
     models/treeproxyfilter.cpp \
     dialogs/imageviewer.cpp \
     dialogs/tableexportdialog.cpp \
-    ext/csvexporter.cpp
+    ext/csvexporter.cpp \
+    models/projecttablemodel.cpp \
+    editors/projecteditorwidget.cpp
 
 HEADERS  += mainwindow.h \
     partdialog.h \
@@ -186,7 +188,9 @@ HEADERS  += mainwindow.h \
     models/treeproxyfilter.h \
     dialogs/imageviewer.h \
     dialogs/tableexportdialog.h \
-    ext/csvexporter.h
+    ext/csvexporter.h \
+    models/projecttablemodel.h \
+    editors/projecteditorwidget.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \

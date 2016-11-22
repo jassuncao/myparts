@@ -191,7 +191,6 @@ CREATE TABLE IF NOT EXISTS project_part (
     refdes TEXT NOT NULL,
     part_name TEXT NULL,
     part INTEGER NULL,
-    url TEXT NOT NULL,
     remark TEXT ,
     FOREIGN KEY(part) REFERENCES part(id)
 );
