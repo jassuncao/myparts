@@ -170,4 +170,31 @@ CREATE TABLE IF NOT EXISTS package_attachment  (
     FOREIGN KEY(package) REFERENCES package(id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS project  (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    description TEXT ,
+    remark TEXT
+);
+
+CREATE TABLE IF NOT EXISTS project_attachment  (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    project INTEGER NOT NULL,
+    url TEXT NOT NULL,
+    description TEXT ,
+    FOREIGN KEY(project) REFERENCES project(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS project_part (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    quantity INTEGER NOT NULL,
+    refdes TEXT NOT NULL,
+    part_name TEXT NULL,
+    part INTEGER NULL,
+    url TEXT NOT NULL,
+    remark TEXT ,
+    FOREIGN KEY(part) REFERENCES part(id)
+);
+
+
 PRAGMA foreign_keys = ON
