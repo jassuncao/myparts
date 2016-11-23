@@ -12,6 +12,7 @@
 #include "models/treeitem.h"
 #include "models/basicentitytablemodel.h"
 #include "models/iconsrepository.h"
+#include "models/projecttablemodel.h"
 
 
 ModelsRepository::ModelsRepository(QObject *parent) : QObject(parent)
@@ -39,6 +40,9 @@ ModelsRepository::ModelsRepository(QObject *parent) : QObject(parent)
     _packageModel = new PackageTableModel(this);
     _packageModel->setTable("package");
     _packageModel->setSort(_packageModel->fieldIndex("name"), Qt::AscendingOrder);
+
+    _projectModel = new ProjectTableModel(this);
+    _projectModel->setSort(_projectModel->fieldIndex("name"), Qt::AscendingOrder);
 
     _storageIconsRepository = new IconsRepository(":/storage/storage.xml");
     _storageModel->setIconsRepository(_storageIconsRepository);
@@ -89,6 +93,11 @@ CompanyTableModel* ModelsRepository::manufacturerModel() const
 PackageTableModel * ModelsRepository::packageModel() const
 {
     return _packageModel;
+}
+
+ProjectTableModel * ModelsRepository::projectModel() const
+{
+    return _projectModel;
 }
 
 IconsRepository * ModelsRepository::categoryIconsRepository() const

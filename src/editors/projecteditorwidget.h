@@ -18,6 +18,10 @@ class QDataWidgetMapper;
 class QToolButton;
 class AttachmentTableModel3;
 
+namespace Ui {
+    class ProjectEditorForm;
+}
+
 class ProjectEditorWidget : public AbstractEditor
 {
     Q_OBJECT
@@ -36,13 +40,16 @@ private slots:
     void slotRemoveAttachment();
     void slotCurrentAttachmentRowChanged(const QModelIndex &current, const QModelIndex &);
     void slotAttachmentDoubleClicked(const QModelIndex &index);
-private:
+private:    
+    Ui::ProjectEditorForm *ui;
+    /*
     QLineEdit * _nameLineEdit;
     QLineEdit * _descriptionLineEdit;
     QLineEdit * _remarkLineEdit;
     QTableView * _attachmentsTable;
     QPushButton * _removeImageButton;
     QPushButton * _removeAttachmentButton;
+    */
     QAbstractItemModel * _model;
     AttachmentTableModel3 * _attachmentModel;
     QDataWidgetMapper * _mapper;

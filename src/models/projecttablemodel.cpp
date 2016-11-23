@@ -2,8 +2,7 @@
 
 ProjectTableModel::ProjectTableModel(QObject *parent, QSqlDatabase db) :
     BasicEntityTableModel(parent, db)
-{
-    setSort(ColumnName, Qt::AscendingOrder);
+{    
     setEditStrategy(QSqlTableModel::OnManualSubmit);
     setTable("project");
 }

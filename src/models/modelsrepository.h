@@ -6,6 +6,8 @@
 #include <QHash>
 #include <QIcon>
 
+#include "models/projecttablemodel.h"
+
 class CategoryTreeModel;
 class StorageTreeModel;
 class PartsSqlTableModel;
@@ -34,6 +36,7 @@ public:
     CompanyTableModel * distributorModel() const;
     CompanyTableModel * manufacturerModel() const;
     PackageTableModel * packageModel() const;
+    ProjectTableModel * projectModel() const;
     IconsRepository * storageIconsRepository() const;
     IconsRepository * categoryIconsRepository() const;
 signals:
@@ -53,6 +56,7 @@ private:
     CompanyTableModel * _distributorModel;
     CompanyTableModel * _manufacturerModel;
     PackageTableModel * _packageModel;    
+    ProjectTableModel * _projectModel;
     IconsRepository * _categoryIconsRepository;
     IconsRepository * _storageIconsRepository;
 //    QAbstractItemModel * _storageIconsModel;

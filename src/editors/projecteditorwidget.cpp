@@ -1,7 +1,8 @@
 #include "projecteditorwidget.h"
 #include "dialogs/attachmentselectiondialog.h"
 #include "models/customtablemodel.h"
-#include "models/basicentitytablemodel.h"
+#include "models/projecttablemodel.h"
+#include "ui_projecteditorform.h"
 #include "utils.h"
 #include "dialogs/imageviewer.h"
 #include <QDebug>
@@ -25,16 +26,16 @@
 #include <QDesktopServices>
 
 ProjectEditorWidget::ProjectEditorWidget(QWidget *parent) :
-    AbstractEditor(parent), _model(0)
+    AbstractEditor(parent),
+    ui(new Ui::ProjectEditorForm),
+    _model(0)
 {
-    //Info groupbox START
-    _nameLineEdit = new QLineEdit;
-    _descriptionLineEdit = new QLineEdit;
-    QFormLayout * formLayout = new QFormLayout;
-    formLayout->addRow(tr("Name:"), _nameLineEdit);
-    formLayout->addRow(tr("Description:"), _descriptionLineEdit);
-    setFocusProxy(_nameLineEdit);
-    //Info groupbox END
+    ui->setupUi(this);
+
+    _attachmentModel = AttachmentTableModel3::createNewPackageAttachmentModel(this);
+    _mapper = new QDataWidgetMapper(this);
+    connect(ui->nameLineEdit, SIGNAL(textEdited(QString)), this, SLOT(slotContentChanged()));
+    connect(ui->descriptionTextEdit, SIGNAL(textChanged()), this, SLOT(slotContentChanged()));
 }
 
 void ProjectEditorWidget::setModel(QAbstractItemModel * model)
@@ -43,17 +44,17 @@ void ProjectEditorWidget::setModel(QAbstractItemModel * model)
         return;
     _model = model;
     _mapper->setModel(_model);
-    _mapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
-    _mapper->addMapping(_nameLineEdit, PackageTableModel::ColumnName);
-    _mapper->addMapping(_descriptionLineEdit, PackageTableModel::ColumnDescription);
+    _mapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);        
+    _mapper->addMapping(ui->nameLineEdit, ProjectTableModel::ColumnName);
+    _mapper->addMapping(ui->descriptionTextEdit, ProjectTableModel::ColumnDescription);
 }
 
 void ProjectEditorWidget::setCurrentIndex(int row)
 {
     _mapper->setCurrentIndex(row);
     setEnabled(row >= 0);
-    QVariant packageId = _model->index(row, PackageTableModel::ColumnId).data(Qt::EditRole);
-    qDebug()<<"packageId is "<< packageId;
+    QVariant packageId = _model->index(row, ProjectTableModel::ColumnId).data(Qt::EditRole);
+    qDebug()<<"project ID is "<< packageId;
     _attachmentModel->setCurrentForeignKey(packageId);
     _attachmentModel->select();
 }
@@ -64,7 +65,7 @@ int ProjectEditorWidget::currentIndex() const {
 
 bool ProjectEditorWidget::validate()
 {
-    if(_nameLineEdit->text().isEmpty()){
+    if(ui->nameLineEdit->text().isEmpty()){
         QMessageBox::warning(this, tr("Required field"), tr("Please fill the name field"), QMessageBox::Close);
         return false;
     }
@@ -102,7 +103,7 @@ void ProjectEditorWidget::slotAddAttachment()
 
 void ProjectEditorWidget::slotRemoveAttachment()
 {
-    QModelIndex index = _attachmentsTable->currentIndex();
+    QModelIndex index = ui->attachmentsTableView->currentIndex();
     if(index.isValid()){
         qDebug()<<"Removing row";
         bool res = _attachmentModel->removeRow(index.row());
@@ -114,7 +115,7 @@ void ProjectEditorWidget::slotRemoveAttachment()
 
 void ProjectEditorWidget::slotCurrentAttachmentRowChanged(const QModelIndex &current, const QModelIndex &)
 {
-    _removeAttachmentButton->setEnabled(current.isValid());
+    ui->deleteAttachmentButton->setEnabled(current.isValid());
 }
 
 void ProjectEditorWidget::slotAttachmentDoubleClicked(const QModelIndex &index)
