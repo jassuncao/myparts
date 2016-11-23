@@ -75,7 +75,7 @@ AbstractEditor* ProjectManagerHelper::createEditor() const {
 
 
 EditorManagerView::EditorManagerView(const EditorManagerHelper *helper, BasicEntityTableModel *model, QWidget *parent)
-    : Manhattan::MiniSplitter(parent), _helper(helper), _model(model), _dirty(false)
+    : Manhattan::MiniSplitter(parent), _helper(helper), _model(model), _dirty(false), _newRow(false)
 {
     _navigatorWidget = new ListNavigatorWidget(_helper->mainTitle());
     _editorWidget = _helper->createEditor();
@@ -162,9 +162,11 @@ void EditorManagerView::slotAddItem()
     }
     int row = _model->rowCount();
     if(_model->insertRow(row)){
+        _newRow = true;
         _navigatorWidget->setCurrentRow(row);
     }
     else{
+        qWarning("Failed to insert row. Reason is %s", qPrintable(_model->lastError().text()));
         //TODO: Show error message
     }
 }
@@ -200,20 +202,15 @@ void EditorManagerView::slotItemSelected(const QModelIndex &index)
     }
     QModelIndex sourceIndex = _filterProxyModel->mapToSource(index);
     _editorWidget->setCurrentIndex(sourceIndex.row());
-    if(sourceIndex.isValid()==false){
+    if(sourceIndex.isValid() == false){
         _stackedLayout->setCurrentIndex(0);
         return;
-    }
+    }    
     _stackedLayout->setCurrentIndex(1);
     //A brand new row is set with an invalid ID
-    if(sourceIndex.data(Qt::EditRole).isValid()){
-        //Editing an existing element
-        _saveButton->setText(_helper->saveChangesButtonText());
-        _saveButton->setEnabled(false);
-        _cancelButton->setEnabled(false);
-        _deleteButton->setEnabled(true);
-    }
-    else{
+    QVariant x = sourceIndex.data(Qt::EditRole);
+    qDebug()<<"X= "<<x;
+    if(_newRow){
         //Editing a brand new
         _saveButton->setText(_helper->saveNewButtonText());
         _saveButton->setEnabled(true);
@@ -221,6 +218,14 @@ void EditorManagerView::slotItemSelected(const QModelIndex &index)
         _deleteButton->setEnabled(false);
         _editorWidget->setFocus();
         _dirty = true;
+    }
+    else{
+        //Editing an existing element
+        _saveButton->setText(_helper->saveChangesButtonText());
+        _saveButton->setEnabled(false);
+        _cancelButton->setEnabled(false);
+        _deleteButton->setEnabled(true);
+
     }
 }
 
@@ -311,6 +316,7 @@ QVariant EditorManagerView::commitChanges()
     _editorWidget->submitChilds(id);
     if(success){
         _dirty = false;
+        _newRow = false;
     }
     else{
         qWarning()<<"Failed to submit changes ";
@@ -325,6 +331,7 @@ void EditorManagerView::slotReject()
     _model->revertRow(row);
     _editorWidget->revert();
     _dirty = false;
+    _newRow = false;
     _cancelButton->setEnabled(false);
     _saveButton->setEnabled(false);
 }

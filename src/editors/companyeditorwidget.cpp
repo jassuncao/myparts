@@ -3,9 +3,10 @@
 #include <QFormLayout>
 #include <QVBoxLayout>
 #include <QDataWidgetMapper>
-#include <QTextEdit>
+#include <QPlainTextEdit>
 #include <QMessageBox>
 #include <QDebug>
+#include <QLabel>
 #include "models/basicentitytablemodel.h"
 
 CompanyEditorWidget::CompanyEditorWidget(QWidget *parent) :
@@ -13,16 +14,40 @@ CompanyEditorWidget::CompanyEditorWidget(QWidget *parent) :
 {
     _nameLineEdit = new QLineEdit;
     _websiteLineEdit = new QLineEdit;
-    _commentTextEdit =new QTextEdit;
+    _commentTextEdit = new QPlainTextEdit;
     _commentTextEdit->setTabChangesFocus(true);
     setFocusProxy(_nameLineEdit);
 
+    QVBoxLayout * layout = new QVBoxLayout;
+    layout->setSpacing(2);
+
+    QLabel * nameLabel = new QLabel(tr("Name"));
+    nameLabel->setBuddy(_nameLineEdit);
+    layout->addWidget(nameLabel);
+    layout->addWidget(_nameLineEdit);
+    layout->addSpacing(8);
+
+    QLabel * siteLabel = new QLabel(tr("Website"));
+    siteLabel->setBuddy(_websiteLineEdit);
+    layout->addWidget(siteLabel);
+    layout->addWidget(_websiteLineEdit);
+    layout->addSpacing(8);
+
+    QLabel * commentLabel = new QLabel(tr("Comment"));
+    commentLabel->setBuddy(_commentTextEdit);
+    layout->addWidget(commentLabel);
+    layout->addWidget(_commentTextEdit);
+    layout->addStretch(1);
+
+    setLayout(layout);
+    /*
     QFormLayout * formLayout = new QFormLayout;
     formLayout->addRow(tr("Name:"), _nameLineEdit);
     formLayout->addRow(tr("Website:"), _websiteLineEdit);
     formLayout->addRow(tr("Comment:"), _commentTextEdit);
-
     setLayout(formLayout);
+    */
+
 
     _mapper = new QDataWidgetMapper(this);    
     connect(_nameLineEdit, SIGNAL(textEdited(QString)), this, SLOT(slotContentChanged()));

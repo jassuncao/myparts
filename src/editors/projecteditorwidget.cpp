@@ -31,16 +31,21 @@ ProjectEditorWidget::ProjectEditorWidget(QWidget *parent) :
     _model(0)
 {
     ui->setupUi(this);
-
     _attachmentModel = AttachmentTableModel3::createNewPackageAttachmentModel(this);
     _mapper = new QDataWidgetMapper(this);
     connect(ui->nameLineEdit, SIGNAL(textEdited(QString)), this, SLOT(slotContentChanged()));
     connect(ui->descriptionTextEdit, SIGNAL(textChanged()), this, SLOT(slotContentChanged()));
+
+    connect(ui->attachmentsTableView->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), this, SLOT(slotCurrentAttachmentRowChanged(QModelIndex,QModelIndex)));
+    connect(ui->attachmentsTableView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(slotAttachmentDoubleClicked(QModelIndex)));
+    connect(_attachmentModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(slotContentChanged()));
+
+    setFocusProxy(ui->nameLineEdit);
 }
 
 void ProjectEditorWidget::setModel(QAbstractItemModel * model)
 {
-    if(_model==model)
+    if(_model == model)
         return;
     _model = model;
     _mapper->setModel(_model);
@@ -123,7 +128,7 @@ void ProjectEditorWidget::slotAttachmentDoubleClicked(const QModelIndex &index)
     if(!index.isValid()) {
         return;
     }
-    if(index.column()==0){
+    if(index.column() == 0){
         const QModelIndex & urlColIndex = _attachmentModel->index(index.row(), AttachmentTableModel3::ColumnURL);
         QString url = urlColIndex.data(Qt::EditRole).toString();
         QDesktopServices::openUrl(QUrl::fromUserInput(url));

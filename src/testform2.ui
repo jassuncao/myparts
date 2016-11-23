@@ -60,7 +60,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -179,8 +179,6 @@
         </widget>
        </item>
       </layout>
-      <zorder>groupBox_2</zorder>
-      <zorder>groupBox</zorder>
      </widget>
     </widget>
    </item>

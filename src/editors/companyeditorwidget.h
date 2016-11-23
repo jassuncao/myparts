@@ -7,7 +7,7 @@
 #include "abstracteditor.h"
 
 class QLineEdit;
-class QTextEdit;
+class QPlainTextEdit;
 class QAbstractItemModel;
 class QModelIndex;
 class QDataWidgetMapper;
@@ -38,7 +38,7 @@ private slots:
 private:    
     QLineEdit * _nameLineEdit;
     QLineEdit * _websiteLineEdit;
-    QTextEdit * _commentTextEdit;      
+    QPlainTextEdit * _commentTextEdit;
     QDataWidgetMapper * _mapper;      
 };
 

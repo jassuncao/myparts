@@ -114,6 +114,7 @@ private:
     QPushButton * _cancelButton;
     QSortFilterProxyModel * _filterProxyModel;
     bool _dirty;
+    bool _newRow;
 };
 
 #endif // COMPANYMANAGERVIEW_H
