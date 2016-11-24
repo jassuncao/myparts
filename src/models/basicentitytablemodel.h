@@ -11,6 +11,7 @@ public:
     virtual int getNameColumn() const = 0;    
     virtual QModelIndex findIndexOfKeyValue(const QVariant& keyValue) = 0;
     virtual QVariant keyValue(int row) = 0;
+    virtual QVariant lastInsertedId() const;
 protected:
     virtual QModelIndex findIndexOf(const QVariant& value, int columnIndex, int role = Qt::EditRole);
 };

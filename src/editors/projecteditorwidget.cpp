@@ -56,7 +56,9 @@ void ProjectEditorWidget::setModel(QAbstractItemModel * model)
 
 void ProjectEditorWidget::setCurrentIndex(int row)
 {
+    bool previousState = ui->descriptionTextEdit->blockSignals(true);
     _mapper->setCurrentIndex(row);
+    ui->descriptionTextEdit->blockSignals(previousState);
     setEnabled(row >= 0);
     QVariant packageId = _model->index(row, ProjectTableModel::ColumnId).data(Qt::EditRole);
     qDebug()<<"project ID is "<< packageId;

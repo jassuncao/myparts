@@ -1,4 +1,5 @@
 #include "basicentitytablemodel.h"
+#include <QSqlQuery>
 
 BasicEntityTableModel::BasicEntityTableModel(QObject *parent, QSqlDatabase db) :
     QSqlTableModel(parent, db)
@@ -33,6 +34,11 @@ QModelIndex BasicEntityTableModel::findIndexOf(const QVariant& value, int column
         }
     }
     return QModelIndex();
+}
+
+QVariant BasicEntityTableModel::lastInsertedId() const
+{
+    return query().lastInsertId();
 }
 
 CompanyTableModel::CompanyTableModel(QObject *parent, QSqlDatabase db) :

@@ -238,17 +238,15 @@ void EditorManagerView::slotDelete()
 void EditorManagerView::deleteRow(int row)
 {
     _dirty = false;
-    qDebug()<<"Deleting row "<<row;
+    qDebug()<<"Deleting row " << row;
     if(row < 0){
         return;
     }
-    QMessageBox msgBox;
-    msgBox.setIcon(QMessageBox::Question);
-    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-    msgBox.setDefaultButton(QMessageBox::Yes);
-    msgBox.setText("Do you really wish to delete the selected item?");
-    if(msgBox.exec()!=QMessageBox::Yes)
+    int res = QMessageBox::question(this, tr("Confirmation"), tr("Do you really wish to delete the selected item?"), QMessageBox::Yes | QMessageBox::No);
+    if( res != QMessageBox::Yes) {
         return;
+    }
+
     //Resets the editor state
     _editorWidget->setCurrentIndex(-1);
 
@@ -278,7 +276,7 @@ void EditorManagerView::slotFilterChanged(const QString &filterText)
 
 void EditorManagerView::slotAccept()
 {    
-    if(_editorWidget->validate()==false){
+    if(_editorWidget->validate() == false){
         return;
     }    
     QVariant elementId = commitChanges();
@@ -302,17 +300,18 @@ QVariant EditorManagerView::commitChanges()
     QVariant id;
     bool success;
 
-    _editorWidget->submit();
-    //We assume the editor widget is set with a QModelIndex made of (row,Id Column)
+    _editorWidget->submit();    
     id = _model->keyValue(_editorWidget->currentIndex());
     if(id.isValid()){
-        success=_model->submitAll();
+        success = _model->submitAll();
     }
     else{
         //If the id is not valid it must be a brand new item. We need to submit to get the generated ID
         success=_model->submitAll();
-        id = _model->query().lastInsertId();        
+        id = _model->lastInsertedId();
     }
+
+    //For a brand new item we need to pass the last inserted ID. It will be needed to insert child entities
     _editorWidget->submitChilds(id);
     if(success){
         _dirty = false;
@@ -330,19 +329,19 @@ void EditorManagerView::slotReject()
     int row = _editorWidget->currentIndex();
     _model->revertRow(row);
     _editorWidget->revert();
+
     _dirty = false;
-    _newRow = false;
     _cancelButton->setEnabled(false);
     _saveButton->setEnabled(false);
 }
 
 void EditorManagerView::slotContentChanged()
 {
-    if(!_dirty){
-        _cancelButton->setEnabled(true);
-        _saveButton->setEnabled(true);
-        _dirty = true;
-    }
+    if(_dirty) { return; }
+
+    _cancelButton->setEnabled(true);
+    _saveButton->setEnabled(true);
+    _dirty = true;
 }
 
 //int EditorManagerView::findRowNumber(QVariant idValue)
