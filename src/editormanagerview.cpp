@@ -80,19 +80,40 @@ EditorManagerView::EditorManagerView(const EditorManagerHelper *helper, BasicEnt
     _navigatorWidget = new ListNavigatorWidget(_helper->mainTitle());
     _editorWidget = _helper->createEditor();
 
-    _buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+
+    /*
+    _buttonBox = new QDialogButtonBox(QDialogButtonBox::Save | QDialogButtonBox::Cancel);
     _cancelButton = _buttonBox->button(QDialogButtonBox::Cancel);
     _cancelButton->setEnabled(false);
-    _saveButton = _buttonBox->button(QDialogButtonBox::Ok);
+    _saveButton = _buttonBox->button(QDialogButtonBox::Save);
     _saveButton->setEnabled(false);
+    _saveButton->setText(_helper->saveChangesButtonText());
     _deleteButton = new QPushButton(_helper->deleteButtonText());
     _buttonBox->addButton(_deleteButton, QDialogButtonBox::ResetRole);
+    */
+
+    _deleteButton = new QPushButton(tr("Delete"));
+    _deleteButton->setEnabled(false);
+    _saveButton = new QPushButton(_helper->saveChangesButtonText());
+    _saveButton->setIcon(style()->standardIcon(QStyle::StandardPixmap(QStyle::SP_DialogSaveButton)));
+    _saveButton->setEnabled(false);
+    _cancelButton = new QPushButton(tr("Cancel"));
+    _cancelButton->setIcon(style()->standardIcon(QStyle::StandardPixmap(QStyle::SP_DialogCancelButton)));
+    _cancelButton->setEnabled(false);
+
+    QHBoxLayout * actionsLayout = new QHBoxLayout;
+    //actionsLayout->setMargin(6);
+    actionsLayout->setSpacing(8);
+    actionsLayout->addWidget(_deleteButton);
+    actionsLayout->addStretch();
+    actionsLayout->addWidget(_saveButton);
+    actionsLayout->addWidget(_cancelButton);
 
     QVBoxLayout * editorLayout = new QVBoxLayout;
     editorLayout->setMargin(6);
 
     editorLayout->addWidget(_editorWidget);
-    editorLayout->addWidget(_buttonBox);
+    editorLayout->addLayout(actionsLayout);
     QWidget * editorWapper = new QWidget;
     editorWapper->setLayout(editorLayout);
 
@@ -133,8 +154,10 @@ EditorManagerView::EditorManagerView(const EditorManagerHelper *helper, BasicEnt
     connect(_editorWidget, SIGNAL(contentChanged()), this, SLOT(slotContentChanged()));
     //connect(_model, SIGNAL(primeInsert(int,QSqlRecord&)), this, SLOT(slotPrimeInsert(int,QSqlRecord&)));
 
-    connect(_buttonBox, SIGNAL(accepted()), this, SLOT(slotAccept()));
-    connect(_buttonBox, SIGNAL(rejected()), this, SLOT(slotReject()));
+    //connect(_buttonBox, SIGNAL(accepted()), this, SLOT(slotAccept()));
+    //connect(_buttonBox, SIGNAL(rejected()), this, SLOT(slotReject()));
+    connect(_saveButton, SIGNAL(clicked(bool)), this, SLOT(slotAccept()));
+    connect(_cancelButton, SIGNAL(clicked(bool)), this, SLOT(slotReject()));
     connect(_deleteButton, SIGNAL(clicked()), this, SLOT(slotDelete()));  
 }
 

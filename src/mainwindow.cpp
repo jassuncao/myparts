@@ -35,7 +35,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->centralWidget->insertTab(3, packageView, QIcon(QString::fromUtf8(":/largeIcons/page_packages")), tr("Packages"));
     ui->centralWidget->setTabEnabled(3, true);
 
-    ui->centralWidget->insertTab(4, projectView, QIcon(QString::fromUtf8(":/largeIcons/page_packages")), tr("Projects"));
+    ui->centralWidget->insertTab(4, projectView, QIcon(QString::fromUtf8(":/largeIcons/page_projects")), tr("Projects"));
     ui->centralWidget->setTabEnabled(4, true);
 
 

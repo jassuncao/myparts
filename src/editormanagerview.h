@@ -109,7 +109,7 @@ private:
     AbstractEditor * _editorWidget;
     BasicEntityTableModel * _model;
     QStackedLayout * _stackedLayout;
-    QDialogButtonBox * _buttonBox;
+    //QDialogButtonBox * _buttonBox;
     QPushButton * _saveButton;
     QPushButton * _deleteButton;
     QPushButton * _cancelButton;

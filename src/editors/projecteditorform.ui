@@ -94,6 +94,10 @@
       <bool>true</bool>
      </property>
      <widget class="QWidget" name="tab">
+      <attribute name="icon">
+       <iconset resource="../resources.qrc">
+        <normaloff>:/icons/parts</normaloff>:/icons/parts</iconset>
+      </attribute>
       <attribute name="title">
        <string>Parts</string>
       </attribute>
@@ -149,6 +153,10 @@
       </layout>
      </widget>
      <widget class="QWidget" name="tab_2">
+      <attribute name="icon">
+       <iconset resource="../resources.qrc">
+        <normaloff>:/icons/attach</normaloff>:/icons/attach</iconset>
+      </attribute>
       <attribute name="title">
        <string>Attachments</string>
       </attribute>
