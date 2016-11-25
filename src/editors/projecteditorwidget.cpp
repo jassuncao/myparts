@@ -24,6 +24,7 @@
 #include <QStandardItemModel>
 #include <QSqlQuery>
 #include <QDesktopServices>
+#include "widgets/comboitemdelegate.h"
 
 ProjectEditorWidget::ProjectEditorWidget(QWidget *parent) :
     AbstractEditor(parent),
@@ -32,13 +33,37 @@ ProjectEditorWidget::ProjectEditorWidget(QWidget *parent) :
 {
     ui->setupUi(this);
     _attachmentModel = AttachmentTableModel3::createNewPackageAttachmentModel(this);
+    _partsModel = ProjectPartTableModel::createNew(this);
     _mapper = new QDataWidgetMapper(this);
+
+    ui->attachmentsTableView->setSelectionMode(QTableView::SingleSelection);
+    ui->attachmentsTableView->setSelectionBehavior(QTableView::SelectRows);
+    ui->attachmentsTableView->setModel(_attachmentModel);
+    ui->attachmentsTableView->verticalHeader()->setVisible(false);
+    ui->attachmentsTableView->horizontalHeader()->setStretchLastSection(true);
+    ui->attachmentsTableView->setColumnWidth(0, 512);
+
+    ui->partsTableView->setSelectionMode(QTableView::SingleSelection);
+    ui->partsTableView->setSelectionBehavior(QTableView::SelectRows);
+    ui->partsTableView->setModel(_partsModel);
+    ui->partsTableView->verticalHeader()->setVisible(false);
+    ui->partsTableView->horizontalHeader()->setStretchLastSection(true);
+    ui->partsTableView->setItemDelegate(new ComboItemDelegate(this));
+
     connect(ui->nameLineEdit, SIGNAL(textEdited(QString)), this, SLOT(slotContentChanged()));
     connect(ui->descriptionTextEdit, SIGNAL(textChanged()), this, SLOT(slotContentChanged()));
 
     connect(ui->attachmentsTableView->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), this, SLOT(slotCurrentAttachmentRowChanged(QModelIndex,QModelIndex)));
     connect(ui->attachmentsTableView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(slotAttachmentDoubleClicked(QModelIndex)));
     connect(_attachmentModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(slotContentChanged()));
+    connect(ui->addAttachmentButton, SIGNAL(clicked()), this, SLOT(slotAddAttachment()));
+    connect(ui->deleteAttachmentButton, SIGNAL(clicked()), this, SLOT(slotRemoveAttachment()));
+
+    connect(ui->partsTableView->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), this, SLOT(slotCurrentPartRowChanged(QModelIndex,QModelIndex)));
+    //connect(ui->partsTableView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(slotAttachmentDoubleClicked(QModelIndex)));
+    connect(_partsModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(slotContentChanged()));
+    connect(ui->addPartButton, SIGNAL(clicked()), this, SLOT(slotAddPart()));
+    connect(ui->deletePartButton, SIGNAL(clicked()), this, SLOT(slotRemovePart()));
 
     setFocusProxy(ui->nameLineEdit);
 }
@@ -64,6 +89,9 @@ void ProjectEditorWidget::setCurrentIndex(int row)
     qDebug()<<"project ID is "<< packageId;
     _attachmentModel->setCurrentForeignKey(packageId);
     _attachmentModel->select();
+
+    _partsModel->setCurrentForeignKey(packageId);
+    _partsModel->select();
 }
 
 int ProjectEditorWidget::currentIndex() const {
@@ -88,12 +116,16 @@ void ProjectEditorWidget::submitChilds(const QVariant & id)
 {
    _attachmentModel->setCurrentForeignKey(id);
    _attachmentModel->submitAll();
+
+   _partsModel->setCurrentForeignKey(id);
+   _partsModel->submitAll();
 }
 
 void ProjectEditorWidget::revert()
 {
     _mapper->revert();
     _attachmentModel->select();
+    _partsModel->select();
 }
 
 void ProjectEditorWidget::slotAddAttachment()
@@ -120,9 +152,37 @@ void ProjectEditorWidget::slotRemoveAttachment()
     }
 }
 
+void ProjectEditorWidget::slotAddPart()
+{
+    int rowCount = _partsModel->rowCount();
+    if(_partsModel->insertRow(rowCount)){
+        QModelIndex index = _partsModel->index(rowCount,ProjectPartTableModel::ColumnQuantity);
+        ui->partsTableView->setCurrentIndex(index);
+        ui->partsTableView->edit(index);
+    }
+}
+
+void ProjectEditorWidget::slotRemovePart()
+{
+    QModelIndex index = ui->partsTableView->currentIndex();
+    if(index.isValid()){
+        qDebug()<<"Removing row";
+        bool res = _partsModel->removeRow(index.row());
+        if(!res){
+            qDebug()<<"Failed to remove";
+        }
+    }
+}
+
 void ProjectEditorWidget::slotCurrentAttachmentRowChanged(const QModelIndex &current, const QModelIndex &)
 {
     ui->deleteAttachmentButton->setEnabled(current.isValid());
+}
+
+void ProjectEditorWidget::slotCurrentPartRowChanged(const QModelIndex &current, const QModelIndex &)
+{
+    ui->deletePartButton->setEnabled(current.isValid());
+    ui->viewPartButton->setEnabled(current.isValid());
 }
 
 void ProjectEditorWidget::slotAttachmentDoubleClicked(const QModelIndex &index)

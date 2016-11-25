@@ -7,16 +7,19 @@
 #include <QStyledItemDelegate>
 #include <QDir>
 
+/*
 class QLineEdit;
 class QLabel;
 class QTableView;
 class QDialogButtonBox;
 class QPushButton;
 class QAbstractItemModel;
+class QToolButton;
+*/
 class QModelIndex;
 class QDataWidgetMapper;
-class QToolButton;
 class AttachmentTableModel3;
+class ProjectPartTableModel;
 
 namespace Ui {
     class ProjectEditorForm;
@@ -38,20 +41,16 @@ public slots:
 private slots:
     void slotAddAttachment();
     void slotRemoveAttachment();
+    void slotAddPart();
+    void slotRemovePart();
     void slotCurrentAttachmentRowChanged(const QModelIndex &current, const QModelIndex &);
-    void slotAttachmentDoubleClicked(const QModelIndex &index);
+    void slotCurrentPartRowChanged(const QModelIndex &current, const QModelIndex &);
+    void slotAttachmentDoubleClicked(const QModelIndex &index);    
 private:    
-    Ui::ProjectEditorForm *ui;
-    /*
-    QLineEdit * _nameLineEdit;
-    QLineEdit * _descriptionLineEdit;
-    QLineEdit * _remarkLineEdit;
-    QTableView * _attachmentsTable;
-    QPushButton * _removeImageButton;
-    QPushButton * _removeAttachmentButton;
-    */
+    Ui::ProjectEditorForm *ui;   
     QAbstractItemModel * _model;
     AttachmentTableModel3 * _attachmentModel;
+    ProjectPartTableModel * _partsModel;
     QDataWidgetMapper * _mapper;
     QModelIndex _currentIndex;
 };

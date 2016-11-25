@@ -22,7 +22,6 @@ class ProjectPartTableModel : public SimpleSqlTableModel
 {
 public:
     enum ColumnIndex {
-        ColumnId = 0,
         ColumnQuantity,
         ColumnRefdes,
         ColumnPartName,

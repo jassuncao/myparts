@@ -548,7 +548,7 @@ PartDistributorTableModel2 * PartDistributorTableModel2::createNew(QObject * par
 {
     QStringList fieldNames;
     QStringList columnNames;
-    fieldNames<<"distributor"<<"partNumber"<<"minimumOrder"<<"unitPrice"<<"packaging";
+    fieldNames <<  "distributor"  <<  "partNumber" << "minimumOrder"<<"unitPrice"<<"packaging";
     columnNames<<tr("Distributor")<<tr("Part Number")<<tr("Minimum Order")<<tr("Unit Price")<<tr("Packaging");
     return new PartDistributorTableModel2(fieldNames, columnNames, parent);
 }

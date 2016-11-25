@@ -87,6 +87,9 @@
    </item>
    <item>
     <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
      <property name="usesScrollButtons">
       <bool>true</bool>
      </property>
@@ -110,7 +113,7 @@
          <item>
           <widget class="QPushButton" name="addPartButton">
            <property name="text">
-            <string>Add</string>
+            <string>Add...</string>
            </property>
           </widget>
          </item>
@@ -165,7 +168,11 @@
          <item>
           <widget class="QPushButton" name="addAttachmentButton">
            <property name="text">
-            <string>Add</string>
+            <string>Add...</string>
+           </property>
+           <property name="icon">
+            <iconset resource="../resources.qrc">
+             <normaloff>:/icons/link_add</normaloff>:/icons/link_add</iconset>
            </property>
           </widget>
          </item>
@@ -173,6 +180,10 @@
           <widget class="QPushButton" name="deleteAttachmentButton">
            <property name="text">
             <string>Delete</string>
+           </property>
+           <property name="icon">
+            <iconset resource="../resources.qrc">
+             <normaloff>:/icons/link_delete</normaloff>:/icons/link_delete</iconset>
            </property>
           </widget>
          </item>
@@ -197,6 +208,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

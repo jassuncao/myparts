@@ -102,6 +102,7 @@ private:
     void deleteRow(int row);
     QVariant commitChanges();
     bool discardChangesConfirmation();
+    void setDirty(bool dirty);
 
     const EditorManagerHelper * _helper;
     ListNavigatorWidget * _navigatorWidget;
@@ -113,6 +114,7 @@ private:
     QPushButton * _deleteButton;
     QPushButton * _cancelButton;
     QSortFilterProxyModel * _filterProxyModel;
+
     bool _dirty;
     bool _newRow;
 };

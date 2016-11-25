@@ -32,9 +32,7 @@ ProjectPartTableModel* ProjectPartTableModel::createNew(QObject *parent)
 {
     QStringList fieldNames;
     QStringList columnNames;
-    fieldNames<<QLatin1String("quantity")<<QLatin1String("refdes")
-             <<QLatin1String("part_name")<<QLatin1String("part")
-            <<QLatin1String("remark");
-    columnNames<<QString()<<tr("Quantity")<<tr("Ref. Des.")<<tr("Part")<<tr("Linked Part")<<tr("Remark");
+    fieldNames<<QLatin1String("quantity") << QLatin1String("refdes") << QLatin1String("part_name") << QLatin1String("part") << QLatin1String("remark");
+    columnNames<< tr("Quantity") << tr("Ref. Des.") << tr("Part") << tr("Assigned Part") << tr("Remark");
     return new ProjectPartTableModel(fieldNames, columnNames, parent);
 }

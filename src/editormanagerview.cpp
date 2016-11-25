@@ -82,7 +82,9 @@ EditorManagerView::EditorManagerView(const EditorManagerHelper *helper, BasicEnt
 
     _buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     _cancelButton = _buttonBox->button(QDialogButtonBox::Cancel);
+    _cancelButton->setEnabled(false);
     _saveButton = _buttonBox->button(QDialogButtonBox::Ok);
+    _saveButton->setEnabled(false);
     _deleteButton = new QPushButton(_helper->deleteButtonText());
     _buttonBox->addButton(_deleteButton, QDialogButtonBox::ResetRole);
 
@@ -164,6 +166,7 @@ void EditorManagerView::slotAddItem()
     if(_model->insertRow(row)){
         _newRow = true;
         _navigatorWidget->setCurrentRow(row);
+        _editorWidget->setFocus();
     }
     else{
         qWarning("Failed to insert row. Reason is %s", qPrintable(_model->lastError().text()));
@@ -186,6 +189,14 @@ bool EditorManagerView::discardChangesConfirmation()
     msgBox.setStandardButtons(QMessageBox::Discard | QMessageBox::Cancel);
     msgBox.setDefaultButton(QMessageBox::Discard);
     return msgBox.exec()==QMessageBox::Discard;
+}
+
+void EditorManagerView::setDirty(bool dirty)
+{
+    if(_dirty == dirty){ return; }
+    _dirty = dirty;
+    _saveButton->setEnabled(dirty);
+    _cancelButton->setEnabled(dirty);
 }
 
 void EditorManagerView::slotItemSelected(const QModelIndex &index)
@@ -212,19 +223,17 @@ void EditorManagerView::slotItemSelected(const QModelIndex &index)
     qDebug()<<"X= "<<x;
     if(_newRow){
         //Editing a brand new
-        _saveButton->setText(_helper->saveNewButtonText());
-        _saveButton->setEnabled(true);
-        _cancelButton->setEnabled(true);
-        _deleteButton->setEnabled(false);
+        _saveButton->setText(_helper->saveNewButtonText());        
+        _deleteButton->setEnabled(false);        
         _editorWidget->setFocus();
-        _dirty = true;
+        setDirty(true);
+
     }
     else{
         //Editing an existing element
         _saveButton->setText(_helper->saveChangesButtonText());
-        _saveButton->setEnabled(false);
-        _cancelButton->setEnabled(false);
         _deleteButton->setEnabled(true);
+        setDirty(false);
 
     }
 }
@@ -299,23 +308,26 @@ QVariant EditorManagerView::commitChanges()
     //We keep the id of element being edited to use later for locating the row associated to the element
     QVariant id;
     bool success;
-
+    qDebug() << "Commiting changes";
     _editorWidget->submit();    
-    id = _model->keyValue(_editorWidget->currentIndex());
-    if(id.isValid()){
-        success = _model->submitAll();
-    }
-    else{
-        //If the id is not valid it must be a brand new item. We need to submit to get the generated ID
+    if(_newRow){
+        //We need to submit to get the generated ID
         success=_model->submitAll();
         id = _model->lastInsertedId();
+        qDebug() << "New item has id " << id;
     }
-
+    else {
+        //Get the ID before the submit or we will loose it
+        id = _model->keyValue(_editorWidget->currentIndex());
+        success = _model->submitAll();
+    }
     //For a brand new item we need to pass the last inserted ID. It will be needed to insert child entities
+    qDebug() << "Saving item with id "<<id<< " childs (if any) ";
     _editorWidget->submitChilds(id);
     if(success){
-        _dirty = false;
+        setDirty(false);
         _newRow = false;
+        qDebug() << "Item saved.";
     }
     else{
         qWarning()<<"Failed to submit changes ";
@@ -326,22 +338,15 @@ QVariant EditorManagerView::commitChanges()
 
 void EditorManagerView::slotReject()
 {    
-    int row = _editorWidget->currentIndex();
-    _model->revertRow(row);
+    //int row = _editorWidget->currentIndex();
+    //_model->revertRow(row);
     _editorWidget->revert();
-
-    _dirty = false;
-    _cancelButton->setEnabled(false);
-    _saveButton->setEnabled(false);
+    setDirty(false);
 }
 
 void EditorManagerView::slotContentChanged()
 {
-    if(_dirty) { return; }
-
-    _cancelButton->setEnabled(true);
-    _saveButton->setEnabled(true);
-    _dirty = true;
+    setDirty(true);
 }
 
 //int EditorManagerView::findRowNumber(QVariant idValue)

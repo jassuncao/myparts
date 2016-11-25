@@ -9,8 +9,7 @@ class AbstractEditor : public QWidget
     Q_OBJECT
 public:
     explicit AbstractEditor(QWidget *parent = 0);
-    virtual ~AbstractEditor();   
-    //virtual void setCurrentModelIndex(const QModelIndex & modelIndex) = 0;
+    virtual ~AbstractEditor();       
     virtual void setModel(QAbstractItemModel * model) = 0;
     virtual void setCurrentIndex(int row) = 0;
     virtual int currentIndex() const = 0;
