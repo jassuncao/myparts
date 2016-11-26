@@ -49,6 +49,7 @@ ProjectEditorWidget::ProjectEditorWidget(QWidget *parent) :
     ui->partsTableView->verticalHeader()->setVisible(false);
     ui->partsTableView->horizontalHeader()->setStretchLastSection(true);
     ui->partsTableView->setItemDelegate(new ComboItemDelegate(this));
+    //ui->partsTableView->setItemDelegateForColumn(ProjectPartTableModel::ColumnQuantity, new ValidatingItemDelegate(new QIntValidator(), this));
 
     connect(ui->nameLineEdit, SIGNAL(textEdited(QString)), this, SLOT(slotContentChanged()));
     connect(ui->descriptionTextEdit, SIGNAL(textChanged()), this, SLOT(slotContentChanged()));
@@ -156,7 +157,7 @@ void ProjectEditorWidget::slotAddPart()
 {
     int rowCount = _partsModel->rowCount();
     if(_partsModel->insertRow(rowCount)){
-        QModelIndex index = _partsModel->index(rowCount,ProjectPartTableModel::ColumnQuantity);
+        QModelIndex index = _partsModel->index(rowCount,0);
         ui->partsTableView->setCurrentIndex(index);
         ui->partsTableView->edit(index);
     }

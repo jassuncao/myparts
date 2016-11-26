@@ -59,7 +59,7 @@ PartDialog::PartDialog(ModelsRepository * modelsProvider, QWidget *parent) :
     _partStockModel = PartStockTableModel::createNew(this);    
 
     _nextActionCheckbox = new QCheckBox(this);
-    ui->buttonBox->addButton(_nextActionCheckbox, QDialogButtonBox::HelpRole);
+    ui->buttonBox->addButton(_nextActionCheckbox, QDialogButtonBox::ResetRole);
     initCombos();
 
     _mapper = new QDataWidgetMapper(this);

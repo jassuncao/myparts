@@ -19,6 +19,7 @@ CompanyEditorWidget::CompanyEditorWidget(QWidget *parent) :
     setFocusProxy(_nameLineEdit);
 
     QVBoxLayout * layout = new QVBoxLayout;
+    layout->setMargin(0);
     layout->setSpacing(2);
 
     QLabel * nameLabel = new QLabel(tr("Name"));

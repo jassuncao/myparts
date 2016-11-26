@@ -21,17 +21,19 @@ public:
 class ProjectPartTableModel : public SimpleSqlTableModel
 {
 public:
-    enum ColumnIndex {
+    enum ColumnIndex {        
+        ColumnRefdes = 0,
         ColumnQuantity,
-        ColumnRefdes,
         ColumnPartName,
         ColumnPart,
         ColumnRemark
     };
 
     static ProjectPartTableModel * createNew(QObject *parent);
+    QVariant data(const QModelIndex &index, int role) const;
 protected:
     explicit ProjectPartTableModel(const QStringList &fieldNames, const QStringList &columnNames, QObject *parent = 0);
+    TableItem * createBlankItem() const;
 };
 
 #endif // PROJECTTABLEMODEL_H

@@ -94,6 +94,7 @@ PackageEditorWidget::PackageEditorWidget(QWidget *parent) :
     //Attachments groupbox END
 
     QVBoxLayout * mainLayout = new QVBoxLayout;
+    mainLayout->setMargin(0);
     mainLayout->addLayout(hboxLayout1);
     mainLayout->addWidget(groupBox3);
     mainLayout->addStretch();

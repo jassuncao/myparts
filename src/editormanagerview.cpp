@@ -24,6 +24,9 @@
 #include <QMessageBox>
 #include <QSortFilterProxyModel>
 
+static const int NO_DATA_WIDGET = 0;
+static const int EDITOR_WIDGET = 1;
+
 EditorManagerHelper::~EditorManagerHelper()
 {
 
@@ -78,8 +81,7 @@ EditorManagerView::EditorManagerView(const EditorManagerHelper *helper, BasicEnt
     : Manhattan::MiniSplitter(parent), _helper(helper), _model(model), _dirty(false), _newRow(false)
 {
     _navigatorWidget = new ListNavigatorWidget(_helper->mainTitle());
-    _editorWidget = _helper->createEditor();
-
+    _editorWidget = _helper->createEditor();    
 
     /*
     _buttonBox = new QDialogButtonBox(QDialogButtonBox::Save | QDialogButtonBox::Cancel);
@@ -95,10 +97,10 @@ EditorManagerView::EditorManagerView(const EditorManagerHelper *helper, BasicEnt
     _deleteButton = new QPushButton(tr("Delete"));
     _deleteButton->setEnabled(false);
     _saveButton = new QPushButton(_helper->saveChangesButtonText());
-    _saveButton->setIcon(style()->standardIcon(QStyle::StandardPixmap(QStyle::SP_DialogSaveButton)));
+    //_saveButton->setIcon(style()->standardIcon(QStyle::StandardPixmap(QStyle::SP_DialogSaveButton)));
     _saveButton->setEnabled(false);
     _cancelButton = new QPushButton(tr("Cancel"));
-    _cancelButton->setIcon(style()->standardIcon(QStyle::StandardPixmap(QStyle::SP_DialogCancelButton)));
+    //_cancelButton->setIcon(style()->standardIcon(QStyle::StandardPixmap(QStyle::SP_DialogCancelButton)));
     _cancelButton->setEnabled(false);
 
     QHBoxLayout * actionsLayout = new QHBoxLayout;
@@ -110,7 +112,7 @@ EditorManagerView::EditorManagerView(const EditorManagerHelper *helper, BasicEnt
     actionsLayout->addWidget(_cancelButton);
 
     QVBoxLayout * editorLayout = new QVBoxLayout;
-    editorLayout->setMargin(6);
+    editorLayout->setMargin(9);
 
     editorLayout->addWidget(_editorWidget);
     editorLayout->addLayout(actionsLayout);
@@ -237,27 +239,23 @@ void EditorManagerView::slotItemSelected(const QModelIndex &index)
     QModelIndex sourceIndex = _filterProxyModel->mapToSource(index);
     _editorWidget->setCurrentIndex(sourceIndex.row());
     if(sourceIndex.isValid() == false){
-        _stackedLayout->setCurrentIndex(0);
+        _stackedLayout->setCurrentIndex(NO_DATA_WIDGET);
         return;
-    }    
-    _stackedLayout->setCurrentIndex(1);
-    //A brand new row is set with an invalid ID
-    QVariant x = sourceIndex.data(Qt::EditRole);
-    qDebug()<<"X= "<<x;
+    }
+
+    _stackedLayout->setCurrentIndex(EDITOR_WIDGET);
     if(_newRow){
         //Editing a brand new
         _saveButton->setText(_helper->saveNewButtonText());        
         _deleteButton->setEnabled(false);        
         _editorWidget->setFocus();
         setDirty(true);
-
     }
     else{
         //Editing an existing element
         _saveButton->setText(_helper->saveChangesButtonText());
         _deleteButton->setEnabled(true);
         setDirty(false);
-
     }
 }
 

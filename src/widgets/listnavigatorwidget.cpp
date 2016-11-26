@@ -34,7 +34,7 @@ ListNavigatorWidget::ListNavigatorWidget(const QString & title, QWidget *parent)
     QPushButton * addButton = new QPushButton(tr("Add"));
 
     QHBoxLayout * actionsLayout = new QHBoxLayout;
-    actionsLayout->setMargin(6);
+    actionsLayout->setMargin(9);
     actionsLayout->setSpacing(8);
     actionsLayout->addStretch();
     actionsLayout->addWidget(addButton);
