@@ -69,6 +69,8 @@
         <file alias="part">images/brick.png</file>
         <file alias="parts">images/bricks.png</file>
         <file alias="link">images/link.png</file>
+        <file alias="partView">images/brick_go.png</file>
+        <file alias="parameter">images/parameter.png</file>
     </qresource>
     <qresource prefix="/largeIcons">
         <file alias="options_general">images/cog_32x32.png</file>

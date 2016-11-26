@@ -122,6 +122,11 @@
            <verstretch>1</verstretch>
           </sizepolicy>
          </property>
+         <property name="font">
+          <font>
+           <pointsize>8</pointsize>
+          </font>
+         </property>
         </widget>
        </item>
        <item>
@@ -129,7 +134,11 @@
          <item>
           <widget class="QPushButton" name="addPartButton">
            <property name="text">
-            <string>Add...</string>
+            <string>Add</string>
+           </property>
+           <property name="icon">
+            <iconset resource="../resources.qrc">
+             <normaloff>:/icons/addStock</normaloff>:/icons/addStock</iconset>
            </property>
           </widget>
          </item>
@@ -138,12 +147,20 @@
            <property name="text">
             <string>Delete</string>
            </property>
+           <property name="icon">
+            <iconset resource="../resources.qrc">
+             <normaloff>:/icons/removeStock</normaloff>:/icons/removeStock</iconset>
+           </property>
           </widget>
          </item>
          <item>
           <widget class="QPushButton" name="viewPartButton">
            <property name="text">
-            <string>View Part</string>
+            <string>View</string>
+           </property>
+           <property name="icon">
+            <iconset resource="../resources.qrc">
+             <normaloff>:/icons/partView</normaloff>:/icons/partView</iconset>
            </property>
           </widget>
          </item>
@@ -180,6 +197,11 @@
            <horstretch>0</horstretch>
            <verstretch>1</verstretch>
           </sizepolicy>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>8</pointsize>
+          </font>
          </property>
         </widget>
        </item>

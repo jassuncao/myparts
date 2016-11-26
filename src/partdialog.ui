@@ -21,9 +21,13 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="tab_1">
+      <attribute name="icon">
+       <iconset resource="resources.qrc">
+        <normaloff>:/icons/part</normaloff>:/icons/part</iconset>
+      </attribute>
       <attribute name="title">
        <string>Basic Data</string>
       </attribute>
@@ -303,6 +307,10 @@
       </layout>
      </widget>
      <widget class="QWidget" name="tab_2">
+      <attribute name="icon">
+       <iconset resource="resources.qrc">
+        <normaloff>:/icons/distributor</normaloff>:/icons/distributor</iconset>
+      </attribute>
       <attribute name="title">
        <string>Distributors</string>
       </attribute>
@@ -371,6 +379,10 @@
       </layout>
      </widget>
      <widget class="QWidget" name="tab_3">
+      <attribute name="icon">
+       <iconset resource="resources.qrc">
+        <normaloff>:/icons/manufacturer</normaloff>:/icons/manufacturer</iconset>
+      </attribute>
       <attribute name="title">
        <string>Manufacturers</string>
       </attribute>
@@ -436,6 +448,10 @@
       </layout>
      </widget>
      <widget class="QWidget" name="tab_4">
+      <attribute name="icon">
+       <iconset resource="resources.qrc">
+        <normaloff>:/icons/parameter</normaloff>:/icons/parameter</iconset>
+      </attribute>
       <attribute name="title">
        <string>Parameters</string>
       </attribute>
@@ -501,6 +517,10 @@
       </layout>
      </widget>
      <widget class="QWidget" name="tab_5">
+      <attribute name="icon">
+       <iconset resource="resources.qrc">
+        <normaloff>:/icons/attach</normaloff>:/icons/attach</iconset>
+      </attribute>
       <attribute name="title">
        <string>Attachments</string>
       </attribute>
