@@ -21,6 +21,7 @@
 #include <QSqlRecord>
 #include <math.h>
 #include <QKeyEvent>
+#include <QShortcut>
 
 #ifdef __MINGW32__
 
@@ -51,7 +52,9 @@ QuickAddCapacitorDialog::QuickAddCapacitorDialog(ModelsRepository *modelsProvide
 
     //XXX: Disabled the validator to allow "auto complete" (ctrl+space) to work
     //ui->capacitanceValueLineEdit->setValidator(new ParameterValueValidator(_capacitanceParam.unitSymbol(), this));
-    ui->capacitanceValueLineEdit->installEventFilter(this);
+    QShortcut *sc = new QShortcut(QKeySequence("Ctrl+Space"), this);
+    connect(sc, SIGNAL(activated()), this, SLOT(attemptAutoComplete()));
+    //ui->capacitanceValueLineEdit->installEventFilter(this);
     ui->voltageRatingLineEdit->setValidator(new ParameterValueValidator(_voltageRatingParam.unitSymbol(), this));
     ui->partCategoryComboBox->setModel(modelsProvider->partCategoryModel());
     ui->partCategoryComboBox->setMinimumContentsLength(22);
@@ -272,6 +275,7 @@ void QuickAddCapacitorDialog::showSuccess(const QString& successMessage)
     QTimer::singleShot(2000, ui->messageWidget, SLOT(animatedHide()));
 }
 
+/*
 bool QuickAddCapacitorDialog::eventFilter(QObject *obj, QEvent *event)
 {
     if (obj == ui->capacitanceValueLineEdit && event->type() == QEvent::KeyPress ) {
@@ -282,6 +286,7 @@ bool QuickAddCapacitorDialog::eventFilter(QObject *obj, QEvent *event)
     }
     return QWidget::eventFilter(obj, event);
 }
+*/
 
 QString lookupTolerance(const char c){
     //Source https://wiki.xtronics.com/index.php/Capacitor_Codes

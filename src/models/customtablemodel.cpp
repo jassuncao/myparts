@@ -3,6 +3,8 @@
 #include <QSqlError>
 #include <QStringBuilder>
 #include <QDateTime>
+#include <QMimeData>
+#include <QUrl>
 #include "parametervalue.h"
 
 /*
@@ -474,7 +476,7 @@ AttachmentTableModel3::AttachmentTableModel3(const QString &tableName, const QSt
 
 Qt::ItemFlags AttachmentTableModel3::flags(const QModelIndex &index) const
 {
-    Qt::ItemFlags theFlags = SimpleSqlTableModel::flags(index);
+    Qt::ItemFlags theFlags = SimpleSqlTableModel::flags(index) | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
     if(index.column()==ColumnURL){
         theFlags = theFlags & (~Qt::ItemIsEditable);
     }
@@ -488,6 +490,32 @@ bool AttachmentTableModel3::appendRow(const QString & url, const QString & descr
     item->setData(ColumnDescription, description);    
     doInsertRow(rowCount(), item);
     return true;
+}
+
+Qt::DropActions AttachmentTableModel3::supportedDropActions() const
+{
+    return Qt::MoveAction | Qt::CopyAction | Qt::LinkAction;
+}
+
+bool AttachmentTableModel3::dropMimeData(const QMimeData *data, Qt::DropAction, int row, int column, const QModelIndex &)
+{
+    bool success = false;
+    qDebug()<<"Dropping "<<data<<" At "<<row<<","<<column;
+    if(data->hasUrls()){
+        int newRow = rowCount();
+        success = insertRows(newRow, data->urls().size(), QModelIndex());
+        if(success){
+            foreach(QUrl url, data->urls()) {
+                const QModelIndex idx = index(newRow, ColumnURL);
+                setData(idx, url.toString());
+                newRow++;
+            }
+        }
+        else{
+            qWarning()<<"Failed to append rows to attachments model";
+        }
+    }
+    return success;
 }
 
 AttachmentTableModel3 * AttachmentTableModel3::createNewPartAttachmentModel(QObject * parent)

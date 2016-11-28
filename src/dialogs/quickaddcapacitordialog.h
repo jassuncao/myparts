@@ -27,14 +27,14 @@ protected slots:
     void slotAddCapacitor();
     void showError(const QString& errorMessage);
     void showSuccess(const QString& successMessage);
+    void attemptAutoComplete();
 protected:
-    bool eventFilter(QObject *obj, QEvent *event);
+    //bool eventFilter(QObject *obj, QEvent *event);
 private:    
     QVariant selectedCategory() const;
     QVariant selectedStorage() const;
     QVariant selectedCondition() const;
     QVariant selectedPackage() const;
-    void attemptAutoComplete();
 
     Ui::QuickAddCapacitorDialog *ui;
     PartsSqlTableModel * _partsModel;

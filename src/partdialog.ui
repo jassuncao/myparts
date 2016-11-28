@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>844</width>
-    <height>456</height>
+    <height>458</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,7 +21,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>2</number>
+      <number>4</number>
      </property>
      <widget class="QWidget" name="tab_1">
       <attribute name="icon">
@@ -576,7 +576,7 @@
         </layout>
        </item>
        <item>
-        <widget class="QTableView" name="partAttachmentsTableView">
+        <widget class="AttachmentsTableView" name="partAttachmentsTableView">
          <property name="alternatingRowColors">
           <bool>true</bool>
          </property>
@@ -625,6 +625,11 @@
    <class>ExtendedTableView</class>
    <extends>QTableView</extends>
    <header>widgets/extendedtableview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>AttachmentsTableView</class>
+   <extends>QTableView</extends>
+   <header>widgets/attachmentstableview.h</header>
   </customwidget>
  </customwidgets>
  <resources>

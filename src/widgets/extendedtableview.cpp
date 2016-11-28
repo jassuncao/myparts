@@ -15,7 +15,7 @@ ExtendedTableView::~ExtendedTableView()
 
 void ExtendedTableView::closeEditor(QWidget* editor, QAbstractItemDelegate::EndEditHint hint)
 {
-    if(hint==QAbstractItemDelegate::EditNextItem){
+    if(hint == QAbstractItemDelegate::EditNextItem){
         int right = model()->columnCount() - 1;
         while (right >= 0 && isColumnHidden(right))
             --right;

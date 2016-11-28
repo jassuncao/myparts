@@ -4,12 +4,12 @@
 #include "models/basicentitytablemodel.h"
 #include "utils.h"
 #include "dialogs/imageviewer.h"
+#include "widgets/attachmentstableview.h"
 #include <QDebug>
 #include <QToolButton>
 #include <QLineEdit>
 #include <QFormLayout>
 #include <QAction>
-#include <QTableView>
 #include <QHeaderView>
 #include <QPushButton>
 #include <QGroupBox>
@@ -67,7 +67,7 @@ PackageEditorWidget::PackageEditorWidget(QWidget *parent) :
     //Attachments groupbox START
     _attachmentModel = AttachmentTableModel3::createNewPackageAttachmentModel(this);
 
-    _attachmentsTable = new QTableView;
+    _attachmentsTable = new AttachmentsTableView;
     _attachmentsTable->setSelectionMode(QTableView::SingleSelection);
     _attachmentsTable->setSelectionBehavior(QTableView::SelectRows);
     _attachmentsTable->setModel(_attachmentModel);

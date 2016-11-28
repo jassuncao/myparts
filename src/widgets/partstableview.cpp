@@ -41,7 +41,7 @@ void PartsTableView::setModel(QAbstractItemModel * model)
     int colCount = model->columnCount();
     for(int section = 0; section<colCount; ++section){
         QVariant aux = model->headerData(section, Qt::Horizontal, PartsSqlTableModel::VISIBILITY_COLUMN_ROLE);
-        if(aux.toBool()==false){
+        if(aux.toBool() == false){
             setColumnHidden(section, true);
         }
     }

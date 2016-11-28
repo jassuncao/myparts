@@ -9,7 +9,7 @@
 
 class QLineEdit;
 class QLabel;
-class QTableView;
+class AttachmentsTableView;
 class QDialogButtonBox;
 class QPushButton;
 class QAbstractItemModel;
@@ -52,7 +52,7 @@ private:
     QLineEdit * _nameLineEdit;
     QLineEdit * _descriptionLineEdit;
     QToolButton * _imageButton;
-    QTableView * _attachmentsTable;
+    AttachmentsTableView * _attachmentsTable;
     QPushButton * _removeImageButton;
     QPushButton * _removeAttachmentButton;
     QAbstractItemModel * _model;

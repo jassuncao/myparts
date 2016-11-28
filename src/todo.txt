@@ -18,6 +18,7 @@ Based on a user action, the part name is looked up in octopart and the user can 
 Each part entry has the following fields: refDes, quantity, part, remarks.
 It would be nice to import from Kicad or from a CSV file.
 
+* Support drag and drop attachments
 
 === Done ===
 * Footprint attachments

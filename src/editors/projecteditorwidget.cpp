@@ -41,7 +41,10 @@ ProjectEditorWidget::ProjectEditorWidget(QWidget *parent) :
     ui->attachmentsTableView->setModel(_attachmentModel);
     ui->attachmentsTableView->verticalHeader()->setVisible(false);
     ui->attachmentsTableView->horizontalHeader()->setStretchLastSection(true);
-    ui->attachmentsTableView->setColumnWidth(0, 512);
+    ui->attachmentsTableView->setColumnWidth(0, 512);    
+    //ui->attachmentsTableView->setDragDropMode(QAbstractItemView::DragDrop);
+
+
 
     ui->partsTableView->setSelectionMode(QTableView::SingleSelection);
     ui->partsTableView->setSelectionBehavior(QTableView::SelectRows);

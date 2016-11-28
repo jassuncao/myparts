@@ -135,6 +135,8 @@ public:
     Qt::ItemFlags flags(const QModelIndex &index) const;
     bool appendRow(const QString &url, const QString & description);
     inline void setCurrentPartId(const QVariant & partId) { setCurrentForeignKey(partId); }
+    Qt::DropActions supportedDropActions() const;
+    bool dropMimeData(const QMimeData *data, Qt::DropAction, int row, int column, const QModelIndex &);
 
     static AttachmentTableModel3 * createNewPackageAttachmentModel(QObject *parent);
     static AttachmentTableModel3 * createNewPartAttachmentModel(QObject *parent);
