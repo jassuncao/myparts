@@ -103,7 +103,8 @@ SOURCES += main.cpp\
     ext/csvexporter.cpp \
     models/projecttablemodel.cpp \
     editors/projecteditorwidget.cpp \
-    widgets/attachmentstableview.cpp
+    widgets/attachmentstableview.cpp \
+    widgets/partpicker.cpp
 
 HEADERS  += mainwindow.h \
     partdialog.h \
@@ -192,7 +193,8 @@ HEADERS  += mainwindow.h \
     ext/csvexporter.h \
     models/projecttablemodel.h \
     editors/projecteditorwidget.h \
-    widgets/attachmentstableview.h
+    widgets/attachmentstableview.h \
+    widgets/partpicker.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \

@@ -7,8 +7,6 @@ It should be possible to do basic BOM management.
 See this link for ideas: http://hackaday.com/2014/01/09/a-simple-and-dirty-bill-of-materials-and-stock-management-utility/
 Generate a report of parts to purchase by distributor.
 
-* Add a part icon to the add part dialog.
-
 * Lookup part in octopart
 Based on a user action, the part name is looked up in octopart and the user can choose to import additional data from there.
 
@@ -18,7 +16,9 @@ Based on a user action, the part name is looked up in octopart and the user can 
 Each part entry has the following fields: refDes, quantity, part, remarks.
 It would be nice to import from Kicad or from a CSV file.
 
-* Support drag and drop attachments
+* In the projects parts, add a widget to make the association to an existing part easier
+
+* There is a latent performance issue in project parts. The part relation will cause a select of all the parts into memory
 
 === Done ===
 * Footprint attachments
@@ -36,6 +36,8 @@ It would be nice to import from Kicad or from a CSV file.
 * Open images associated to the package
 * Export parts list
 * Make auto complete work for combos in partdialog
+* Support drag and drop attachments
+* Add a part icon to the add part dialog.
 
 Icons used:
 
