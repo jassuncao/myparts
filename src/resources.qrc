@@ -64,7 +64,7 @@
         <file alias="splitbutton_closeleft">images/splitbutton_closeleft.png</file>
         <file alias="splitbutton_closeright">images/splitbutton_closeright.png</file>
         <file alias="splitbutton_vertical">images/splitbutton_vertical.png</file>
-        <file>images/packageplaceholder_128x128.png</file>
+        <file>images/packageplaceholder_128x128.png</file>        
         <file alias="table_export">images/table-export_16x16.png</file>
         <file alias="part">images/brick.png</file>
         <file alias="parts">images/bricks.png</file>
@@ -84,7 +84,8 @@
         <file alias="page_packages">images/footprint_32x32.png</file>
         <file alias="table">images/table_32x32.png</file>
         <file alias="page_parameters">images/parameter_32x32.png</file>
-        <file alias="page_projects">images/check_box_list.png</file>
+        <file alias="page_checklist">images/check_box_list.png</file>
+        <file alias="page_projects">images/project_32x32.png</file>
     </qresource>
     <qresource prefix="/scripts">
         <file>SQLiteInit.sql</file>

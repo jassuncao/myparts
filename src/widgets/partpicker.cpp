@@ -8,7 +8,7 @@ PartPicker::PartPicker(QWidget *parent) :
     _skipNextHide(false)
 {
     PartPickerView * pickerView = new PartPickerView(this);
-    setView(pickerView);
+    //setView(pickerView);
     //view()->viewport()->installEventFilter(this);
 }
 
@@ -29,7 +29,7 @@ bool PartPicker::eventFilter(QObject* object, QEvent* event)
 void PartPicker::showPopup()
 {
 
-    PartPickerView * pickerView = static_cast<PartPickerView*>(view());
+    //PartPickerView * pickerView = static_cast<PartPickerView*>(view());
     QComboBox::showPopup();
 }
 
