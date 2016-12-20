@@ -78,8 +78,7 @@ public:
     bool insertRows(int row, int count, const QModelIndex&);
     bool removeRows(int row, int count, const QModelIndex&);    
     void select();
-    bool submitAll();
-    //void createRelation(const int column, const QString & tableName, const QString & indexField, const QString & displayField, const bool nullable=false);
+    bool submitAll();    
     virtual QAbstractItemModel *relationModel(const int column) const;
     void cloneData();
 protected:

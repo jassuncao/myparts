@@ -191,10 +191,10 @@ CREATE TABLE IF NOT EXISTS project_part (
     quantity INTEGER NOT NULL,
     refdes TEXT NOT NULL,
     part_name TEXT NULL,
-    part INTEGER NULL,
+    assigned_part INTEGER NULL,
     remark TEXT ,
     FOREIGN KEY(project) REFERENCES project(id) ON DELETE CASCADE,
-    FOREIGN KEY(part) REFERENCES part(id)
+    FOREIGN KEY(assigned_part) REFERENCES part(id)
 );
 
 

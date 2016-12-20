@@ -81,7 +81,7 @@ void TableRelation::populateDictionary()
         while(_selectQuery.next()){
             int indexValue = _selectQuery.value(0).toInt();
             QString displayValue = _selectQuery.value(1).toString();
-            _lookupDictionary[indexValue] = displayValue;
+            _lookupDictionary[indexValue] = displayValue;\
             _items.append(qMakePair(displayValue, indexValue));
         }
         _initialized = true;

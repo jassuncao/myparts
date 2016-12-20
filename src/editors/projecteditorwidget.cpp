@@ -25,6 +25,9 @@
 #include <QSqlQuery>
 #include <QDesktopServices>
 #include "widgets/comboitemdelegate.h"
+#include "widgets/validatingitemdelegate.h"
+#include "models/projectparttablemodel.h"
+#include "models/alignmentproxymodel.h"
 
 ProjectEditorWidget::ProjectEditorWidget(QWidget *parent) :
     AbstractEditor(parent),
@@ -33,8 +36,13 @@ ProjectEditorWidget::ProjectEditorWidget(QWidget *parent) :
 {
     ui->setupUi(this);
     _attachmentModel = AttachmentTableModel3::createNewPackageAttachmentModel(this);
-    _partsModel = ProjectPartTableModel::createNew(this);
+    //_partsModel = ProjectPartTableModel::createNew(this);
+    _partsModel = new ProjectPartTableModel(this);
     _mapper = new QDataWidgetMapper(this);
+
+    _partsAlignmentProxyModel = new AlignmentProxyModel(this);
+    _partsAlignmentProxyModel->setSourceModel(_partsModel);
+    _partsAlignmentProxyModel->setColumnAlignment(ProjectPartTableModel::Quantity, Qt::AlignTrailing | Qt::AlignVCenter);
 
     ui->attachmentsTableView->setSelectionMode(QTableView::SingleSelection);
     ui->attachmentsTableView->setSelectionBehavior(QTableView::SelectRows);
@@ -48,11 +56,12 @@ ProjectEditorWidget::ProjectEditorWidget(QWidget *parent) :
 
     ui->partsTableView->setSelectionMode(QTableView::SingleSelection);
     ui->partsTableView->setSelectionBehavior(QTableView::SelectRows);
-    ui->partsTableView->setModel(_partsModel);
+    ui->partsTableView->setModel(_partsAlignmentProxyModel);
     ui->partsTableView->verticalHeader()->setVisible(false);
     ui->partsTableView->horizontalHeader()->setStretchLastSection(true);
     ui->partsTableView->setItemDelegate(new ComboItemDelegate(this));
-    //ui->partsTableView->setItemDelegateForColumn(ProjectPartTableModel::ColumnQuantity, new ValidatingItemDelegate(new QIntValidator(), this));
+    ui->partsTableView->setItemDelegateForColumn(ProjectPartTableModel::Quantity, new ValidatingItemDelegate(new QIntValidator(), this));
+    ui->partsTableView->setSortingEnabled(true);
 
     connect(ui->nameLineEdit, SIGNAL(textEdited(QString)), this, SLOT(slotContentChanged()));
     connect(ui->descriptionTextEdit, SIGNAL(textChanged()), this, SLOT(slotContentChanged()));
@@ -89,12 +98,12 @@ void ProjectEditorWidget::setCurrentIndex(int row)
     _mapper->setCurrentIndex(row);
     ui->descriptionTextEdit->blockSignals(previousState);
     setEnabled(row >= 0);
-    QVariant packageId = _model->index(row, ProjectTableModel::ColumnId).data(Qt::EditRole);
-    qDebug()<<"project ID is "<< packageId;
-    _attachmentModel->setCurrentForeignKey(packageId);
+    QVariant parentId = _model->index(row, ProjectTableModel::ColumnId).data(Qt::EditRole);
+    qDebug()<<"project ID is "<< parentId;
+    _attachmentModel->setCurrentForeignKey(parentId);
     _attachmentModel->select();
 
-    _partsModel->setCurrentForeignKey(packageId);
+    _partsModel->setProject(parentId);
     _partsModel->select();
 }
 
@@ -121,7 +130,8 @@ void ProjectEditorWidget::submitChilds(const QVariant & id)
    _attachmentModel->setCurrentForeignKey(id);
    _attachmentModel->submitAll();
 
-   _partsModel->setCurrentForeignKey(id);
+   //_partsModel->setCurrentForeignKey(id);
+   _partsModel->setProject(id);
    _partsModel->submitAll();
 }
 
@@ -171,7 +181,8 @@ void ProjectEditorWidget::slotRemovePart()
     QModelIndex index = ui->partsTableView->currentIndex();
     if(index.isValid()){
         qDebug()<<"Removing row";
-        bool res = _partsModel->removeRow(index.row());
+        const QModelIndex sourceIndex = _partsAlignmentProxyModel->mapToSource(index);
+        bool res = _partsModel->removeRow(sourceIndex.row());
         if(!res){
             qDebug()<<"Failed to remove";
         }

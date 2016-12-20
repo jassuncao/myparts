@@ -104,7 +104,10 @@ SOURCES += main.cpp\
     models/projecttablemodel.cpp \
     editors/projecteditorwidget.cpp \
     widgets/attachmentstableview.cpp \
-    widgets/partpicker.cpp
+    widgets/partpicker.cpp \
+    models/cachedsqltablemodel.cpp \
+    models/projectparttablemodel.cpp \
+    models/alignmentproxymodel.cpp
 
 HEADERS  += mainwindow.h \
     partdialog.h \
@@ -194,7 +197,10 @@ HEADERS  += mainwindow.h \
     models/projecttablemodel.h \
     editors/projecteditorwidget.h \
     widgets/attachmentstableview.h \
-    widgets/partpicker.h
+    widgets/partpicker.h \
+    models/cachedsqltablemodel.h \
+    models/projectparttablemodel.h \
+    models/alignmentproxymodel.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \

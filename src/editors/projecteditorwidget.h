@@ -20,6 +20,7 @@ class QModelIndex;
 class QDataWidgetMapper;
 class AttachmentTableModel3;
 class ProjectPartTableModel;
+class AlignmentProxyModel;
 
 namespace Ui {
     class ProjectEditorForm;
@@ -51,6 +52,7 @@ private:
     QAbstractItemModel * _model;
     AttachmentTableModel3 * _attachmentModel;
     ProjectPartTableModel * _partsModel;
+    AlignmentProxyModel * _partsAlignmentProxyModel;
     QDataWidgetMapper * _mapper;
     QModelIndex _currentIndex;
 };

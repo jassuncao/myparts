@@ -18,7 +18,8 @@ public:
     QVariant keyValue(int row);
 };
 
-class ProjectPartTableModel : public SimpleSqlTableModel
+/*
+class ProjectPartTableModel : public CustomTableModel
 {
 public:
     enum ColumnIndex {        
@@ -29,11 +30,26 @@ public:
         ColumnRemark
     };
 
-    static ProjectPartTableModel * createNew(QObject *parent);
+    explicit ProjectPartTableModel(QObject *parent = 0);
     QVariant data(const QModelIndex &index, int role) const;
+    void setParentKey(const QVariant & parentKey);
+    void sort(int column, Qt::SortOrder order = Qt::AscendingOrder);
 protected:
-    explicit ProjectPartTableModel(const QStringList &fieldNames, const QStringList &columnNames, QObject *parent = 0);
+
+    QString generateSelectStatement(int sortColumn, Qt::SortOrder order);
     TableItem * createBlankItem() const;
+    virtual bool deleteItem(QVariant id);
+    virtual bool saveItem(TableItem* item) ;
+    virtual bool loadItems(QList<TableItem *> &dest);
+private:
+    QVariant _parentKey;
+    QSqlQuery _selectQuery;
+    QSqlQuery _insertQuery;
+    QSqlQuery _updateQuery;
+    QSqlQuery _deleteQuery;
+    int _sortColumn;
+    Qt::SortOrder _order;
 };
+*/
 
 #endif // PROJECTTABLEMODEL_H
