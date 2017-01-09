@@ -65,6 +65,10 @@ AbstractEditor* PackageManagerHelper::createEditor() const {
     return new PackageEditorWidget;
 }
 
+ProjectManagerHelper::ProjectManagerHelper(ModelsRepository * modelsRepo) :
+    _modelsRepo(modelsRepo)
+{}
+
 QWidget* ProjectManagerHelper::createNoDataWidget() const
 {
     QLabel * l = new QLabel(QCoreApplication::translate("ProjectManagerHelper", "Select a project"));
@@ -73,7 +77,7 @@ QWidget* ProjectManagerHelper::createNoDataWidget() const
 }
 
 AbstractEditor* ProjectManagerHelper::createEditor() const {
-    return new ProjectEditorWidget;
+    return new ProjectEditorWidget(_modelsRepo);
 }
 
 

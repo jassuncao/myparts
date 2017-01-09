@@ -108,6 +108,12 @@ QAction * PartsFilterWidget::createFilterItemAction(QMenu * menu, const QString 
     return action;
 }
 
+void PartsFilterWidget::insertFixedFilterItemWidget(FilterItemWidget * filterItem)
+{
+    _fixedItemsLayout->insertWidget(0, filterItem);
+    registerFilterItemWidget(filterItem);
+}
+
 void PartsFilterWidget::registerFilterItemWidget(FilterItemWidget * filterItem)
 {
     _activeFilterItems[filterItem->filterTag()]=filterItem;
@@ -137,7 +143,7 @@ FilterItemWidget * PartsFilterWidget::createStockFilterItem()
     stockFilterItemModel->setItem(2,inStockItem);
     stockFilterItemModel->setItem(3,belowMinStockItem);
 
-    FilterItemWidget * item  = new FilterItemWidget(tr("Stock:"), PartsQueryBuilder::FilterByStock, false, this);
+    ComboFilterItemWidget * item  = new ComboFilterItemWidget(tr("Stock:"), PartsQueryBuilder::FilterByStock, false, this);
     item->setOptionsModel(stockFilterItemModel);
     item->setDisplayColumn(0);
     item->setValueColumn(0,  Qt::UserRole + 1);
@@ -151,7 +157,7 @@ FilterItemWidget * PartsFilterWidget::createPartConditionFilterItem()
     ProxyModelNoneEntry * proxyModel = new ProxyModelNoneEntry(tr("Any"), QVariant(), this);
     proxyModel->setSourceModel(source);
 
-    FilterItemWidget * item  = new FilterItemWidget(tr("Condition:"), PartsQueryBuilder::FilterByCondition, false, this);
+    ComboFilterItemWidget * item  = new ComboFilterItemWidget(tr("Condition:"), PartsQueryBuilder::FilterByCondition, false, this);
     item->setOptionsModel(proxyModel);
     item->setDisplayColumn(PartConditionModel::ColumnValue);
     item->setValueColumn(PartConditionModel::ColumnId, Qt::EditRole);
@@ -165,7 +171,7 @@ FilterItemWidget * PartsFilterWidget::createPartDistributorFilterItem()
     ProxyModelNoneEntry * proxyModel = new ProxyModelNoneEntry(tr("Any"), QVariant(), this);
     proxyModel->setSourceModel(sourceModel);
 
-    FilterItemWidget * item  = new FilterItemWidget(tr("Distributor:"), PartsQueryBuilder::FilterByDistributor, true, this);
+    ComboFilterItemWidget * item  = new ComboFilterItemWidget(tr("Distributor:"), PartsQueryBuilder::FilterByDistributor, true, this);
     item->setOptionsModel(proxyModel);
     item->setDisplayColumn(CompanyTableModel::ColumnName);
     item->setValueColumn(CompanyTableModel::ColumnId, Qt::EditRole);
@@ -179,7 +185,7 @@ FilterItemWidget * PartsFilterWidget::createPartManufacturerFilterItem()
     ProxyModelNoneEntry * proxyModel = new ProxyModelNoneEntry(tr("Any"), QVariant(), this);
     proxyModel->setSourceModel(sourceModel);
 
-    FilterItemWidget * item  = new FilterItemWidget(tr("Manufacturer:"), PartsQueryBuilder::FilterByManufacturer, true, this);
+    ComboFilterItemWidget * item  = new ComboFilterItemWidget(tr("Manufacturer:"), PartsQueryBuilder::FilterByManufacturer, true, this);
     item->setOptionsModel(proxyModel);
     item->setDisplayColumn(CompanyTableModel::ColumnName);
     item->setValueColumn(CompanyTableModel::ColumnId, Qt::EditRole);
@@ -193,7 +199,7 @@ FilterItemWidget * PartsFilterWidget::createPartPackageFilterItem()
     ProxyModelNoneEntry * proxyModel = new ProxyModelNoneEntry(tr("Any"), QVariant(), this);
     proxyModel->setSourceModel(sourceModel);
 
-    FilterItemWidget * item  = new FilterItemWidget(tr("Package:"), PartsQueryBuilder::FilterByPackage, true, this);
+    ComboFilterItemWidget * item  = new ComboFilterItemWidget(tr("Package:"), PartsQueryBuilder::FilterByPackage, true, this);
     item->setOptionsModel(proxyModel);
     item->setDisplayColumn(PackageTableModel::ColumnName);
     item->setValueColumn(PackageTableModel::ColumnId, Qt::EditRole);

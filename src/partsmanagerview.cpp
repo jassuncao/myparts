@@ -300,7 +300,6 @@ void PartsManagerView::slotNavModeChanged(int mode)
 void PartsManagerView::slotFilterChanged()
 {    
     _modelsRepository->partsModel()->select();
-    //_partsModel->select();
 }
 
 void PartsManagerView::slotSelectedCategoryChanged(const QList<int> selectedIds)
@@ -322,7 +321,6 @@ void PartsManagerView::slotSelectedCategoryChanged(const QList<int> selectedIds)
     queryBuilder->setFilter(PartsQueryBuilder::FilterByCategory, QVariant::fromValue(value));
     queryBuilder->setFilter(PartsQueryBuilder::FilterByStorage, QVariant::fromValue(NodeCriterionValue()));
     partsModel->select();
-    //slotFilterChanged();
 }
 
 QVariant PartsManagerView::selectedCategory() const

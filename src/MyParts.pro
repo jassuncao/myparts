@@ -107,7 +107,8 @@ SOURCES += main.cpp\
     widgets/partpicker.cpp \
     models/cachedsqltablemodel.cpp \
     models/projectparttablemodel.cpp \
-    models/alignmentproxymodel.cpp
+    models/alignmentproxymodel.cpp \
+    dialogs/partsassignmentdialog.cpp
 
 HEADERS  += mainwindow.h \
     partdialog.h \
@@ -200,7 +201,8 @@ HEADERS  += mainwindow.h \
     widgets/partpicker.h \
     models/cachedsqltablemodel.h \
     models/projectparttablemodel.h \
-    models/alignmentproxymodel.h
+    models/alignmentproxymodel.h \
+    dialogs/partsassignmentdialog.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \
@@ -217,7 +219,8 @@ FORMS    += mainwindow.ui \
     dialogs/multistoragedialog.ui \
     dialogs/quickaddcapacitordialog.ui \
     dialogs/tableexportdialog.ui \
-    editors/projecteditorform.ui
+    editors/projecteditorform.ui \
+    dialogs/partsassignmentdialog.ui
 
 RESOURCES += \
     resources.qrc \

@@ -28,10 +28,13 @@
 #include "widgets/validatingitemdelegate.h"
 #include "models/projectparttablemodel.h"
 #include "models/alignmentproxymodel.h"
+#include "widgets/partpicker.h"
+#include "models/modelsrepository.h"
 
-ProjectEditorWidget::ProjectEditorWidget(QWidget *parent) :
+ProjectEditorWidget::ProjectEditorWidget(ModelsRepository * modelsRepo, QWidget *parent) :
     AbstractEditor(parent),
     ui(new Ui::ProjectEditorForm),
+    _modelsRepo(modelsRepo),
     _model(0)
 {
     ui->setupUi(this);
@@ -77,6 +80,7 @@ ProjectEditorWidget::ProjectEditorWidget(QWidget *parent) :
     connect(_partsModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(slotContentChanged()));
     connect(ui->addPartButton, SIGNAL(clicked()), this, SLOT(slotAddPart()));
     connect(ui->deletePartButton, SIGNAL(clicked()), this, SLOT(slotRemovePart()));
+    connect(ui->assignPartButton, SIGNAL(clicked(bool)), this, SLOT(slotAssignPart()));
 
     setFocusProxy(ui->nameLineEdit);
 }
@@ -186,6 +190,28 @@ void ProjectEditorWidget::slotRemovePart()
         if(!res){
             qDebug()<<"Failed to remove";
         }
+    }
+}
+
+
+void ProjectEditorWidget::slotAssignPart()
+{
+    QModelIndex index = ui->partsTableView->currentIndex();
+    if(index.isValid()){
+        qDebug()<<"Assign part row";
+        const QModelIndex sourceIndex = _partsAlignmentProxyModel->mapToSource(index);
+        QDialog pickerDlg(this);
+        PartPickerView * pickerView = new PartPickerView(_modelsRepo, &pickerDlg);
+        QVBoxLayout * layout = new QVBoxLayout;
+        layout->addWidget(pickerView);
+        pickerDlg.setLayout(layout);
+        pickerDlg.exec();
+        /*
+        bool res = _partsModel->removeRow(sourceIndex.row());
+        if(!res){
+            qDebug()<<"Failed to remove";
+        }
+        */
     }
 }
 

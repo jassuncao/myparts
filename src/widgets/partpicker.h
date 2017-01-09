@@ -20,15 +20,25 @@ private:
 
 class QTreeBox;
 class QTableView;
+class PartsTableView;
+class PartsFilterWidget;
+class ModelsRepository;
+class PartsQueryBuilder;
+class PartsSqlTableModel;
 
 class PartPickerView : public QWidget
 {
     Q_OBJECT
 public:
-    explicit PartPickerView(QWidget *parent = 0);
+    explicit PartPickerView(ModelsRepository *modelsRepo, QWidget *parent = 0);
+    virtual ~PartPickerView();
+private slots:
+    void slotFilterChanged();
 private:
-    QTreeBox * _categoryCombo;
-    QTableView * _partsView;
+    PartsQueryBuilder * _partsQueryBuilder;
+    PartsFilterWidget * _partsFilterWidget;
+    PartsTableView * _partsTable;
+    PartsSqlTableModel * _partsModels;
 };
 
 #endif // PARTPICKER_H

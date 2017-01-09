@@ -100,7 +100,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <property name="usesScrollButtons">
       <bool>true</bool>
@@ -150,6 +150,13 @@
            <property name="icon">
             <iconset resource="../resources.qrc">
              <normaloff>:/icons/removeStock</normaloff>:/icons/removeStock</iconset>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="assignPartButton">
+           <property name="text">
+            <string>Assign</string>
            </property>
           </widget>
          </item>

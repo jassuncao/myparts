@@ -36,6 +36,7 @@ public:
     explicit PartsFilterWidget(ModelsRepository * modelsRepository, QWidget *parent = 0);
     ~PartsFilterWidget();
     void setPartsQueryBuilder(PartsQueryBuilder * partsQueryBuilder);
+    void insertFixedFilterItemWidget(FilterItemWidget * filterItem);
 signals:
     void filterChanged();
 public slots:
@@ -46,9 +47,9 @@ private slots:
     void slotAddFilterItem(const int filterTag);
     void slotTextFilterItemChanged();
 private:
-    QMenu * createFilterMoreMenu();
-    QAction * createFilterItemAction(QMenu * menu, const QString & title, const int filterTag);
     void registerFilterItemWidget(FilterItemWidget * filterItem);
+    QMenu * createFilterMoreMenu();
+    QAction * createFilterItemAction(QMenu * menu, const QString & title, const int filterTag);   
 
     FilterItemWidget * createStockFilterItem();
     FilterItemWidget * createPartConditionFilterItem();

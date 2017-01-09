@@ -22,6 +22,7 @@ class QPushButton;
 class AbstractEditor;
 class BasicEntityTableModel;
 class QSortFilterProxyModel;
+class ModelsRepository;
 
 
 class EditorManagerHelper
@@ -73,12 +74,15 @@ public:
 class ProjectManagerHelper : public EditorManagerHelper
 {
 public:
+    explicit ProjectManagerHelper(ModelsRepository * modelsRepo);
     QString mainTitle() const { return QCoreApplication::translate("ProjectManagerHelper", "Projects"); }
     QString deleteButtonText() const { return QCoreApplication::translate("ProjectManagerHelper", "Delete project"); }
     QString saveNewButtonText() const { return QCoreApplication::translate("ProjectManagerHelper", "Save project"); }
     QString saveChangesButtonText() const { return QCoreApplication::translate("ProjectManagerHelper", "Save changes"); }
     AbstractEditor* createEditor() const;
     QWidget* createNoDataWidget() const;
+private:
+    ModelsRepository * _modelsRepo;
 };
 
 class EditorManagerView : public Manhattan::MiniSplitter
