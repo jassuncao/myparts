@@ -59,12 +59,12 @@
         <file alias="expand_tree2">images/expand_tree2.png</file>
         <file alias="tree_filter_selected">images/tree_filter_selected.png</file>
         <file alias="tree_filter_childs">images/tree_filter.png</file>
-        <file alias="duplicatePart">images/brick_link.png</file>
+        <file alias="partLink">images/brick_link.png</file>
         <file alias="sidebaricon_right">images/sidebaricon.png</file>
         <file alias="splitbutton_closeleft">images/splitbutton_closeleft.png</file>
         <file alias="splitbutton_closeright">images/splitbutton_closeright.png</file>
         <file alias="splitbutton_vertical">images/splitbutton_vertical.png</file>
-        <file>images/packageplaceholder_128x128.png</file>        
+        <file>images/packageplaceholder_128x128.png</file>
         <file alias="table_export">images/table-export_16x16.png</file>
         <file alias="part">images/brick.png</file>
         <file alias="parts">images/bricks.png</file>

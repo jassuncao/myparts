@@ -250,4 +250,9 @@ bool PartsSqlTableModel::submitAll()
     return res;
 }
 
+void PartsSqlTableModel::filterChanged()
+{
+    select();
+}
+
 

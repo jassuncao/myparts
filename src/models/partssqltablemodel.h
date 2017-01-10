@@ -57,11 +57,12 @@ public:
     void setSort(int column, Qt::SortOrder order);
     QModelIndex findIndex(QVariant partId);
     PartsQueryBuilder * queryBuilder() const;
-signals:
+Q_SIGNALS:
     void beforeSubmit();
     void afterSubmit();
-public slots:
+public Q_SLOTS:
     bool submitAll();
+    void filterChanged();
 private:
     PartsQueryBuilder * _partsQueryBuilder;
     void setColumnName(int section, const QString & columnName);

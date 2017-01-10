@@ -197,21 +197,17 @@ void ProjectEditorWidget::slotRemovePart()
 void ProjectEditorWidget::slotAssignPart()
 {
     QModelIndex index = ui->partsTableView->currentIndex();
-    if(index.isValid()){
-        qDebug()<<"Assign part row";
-        const QModelIndex sourceIndex = _partsAlignmentProxyModel->mapToSource(index);
-        QDialog pickerDlg(this);
-        PartPickerView * pickerView = new PartPickerView(_modelsRepo, &pickerDlg);
-        QVBoxLayout * layout = new QVBoxLayout;
-        layout->addWidget(pickerView);
-        pickerDlg.setLayout(layout);
-        pickerDlg.exec();
-        /*
-        bool res = _partsModel->removeRow(sourceIndex.row());
-        if(!res){
-            qDebug()<<"Failed to remove";
-        }
-        */
+    if(false == index.isValid()){
+        return;
+    }
+    qDebug()<<"Assign part row";
+    const QModelIndex sourceIndex = _partsAlignmentProxyModel->mapToSource(index);
+    PartPickerDialog pickerDlg(_modelsRepo, this);
+    int res = pickerDlg.exec();
+    if(QDialog::Accepted == res){
+        QVariant partId = pickerDlg.selectedPart();
+        QModelIndex colIdx = _partsModel->index(sourceIndex.row(), ProjectPartTableModel::AssignedPart);
+        _partsModel->setData(colIdx, partId);
     }
 }
 
@@ -223,7 +219,7 @@ void ProjectEditorWidget::slotCurrentAttachmentRowChanged(const QModelIndex &cur
 void ProjectEditorWidget::slotCurrentPartRowChanged(const QModelIndex &current, const QModelIndex &)
 {
     ui->deletePartButton->setEnabled(current.isValid());
-    ui->viewPartButton->setEnabled(current.isValid());
+    ui->assignPartButton->setEnabled(current.isValid());
 }
 
 void ProjectEditorWidget::slotAttachmentDoubleClicked(const QModelIndex &index)

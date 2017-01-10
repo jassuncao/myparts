@@ -3,12 +3,14 @@
 
 #include <QWidget>
 #include <QVariant>
+#include <QModelIndex>
 
 class QComboBox;
 class QToolButton;
 class QEvent;
 class QAbstractItemModel;
 class TreeViewComboBox;
+class TreeItemModel;
 
 class FilterItemWidget : public QWidget
 {
@@ -57,9 +59,9 @@ class TreeComboFilterItemWidget : public FilterItemWidget {
 public:
     explicit TreeComboFilterItemWidget(const QString &labelText, const int filterTag, bool removableItem=false, QWidget *parent=0);
     ~TreeComboFilterItemWidget();
-    void setOptionsModel(QAbstractItemModel * model);
+    void setOptionsModel(TreeItemModel *model);
 protected slots:
-    void slotCurrentIndexChanged(int row);
+    void slotCurrentIndexChanged(int);
 protected:
     void slotDeleteItem();
     void doReset();

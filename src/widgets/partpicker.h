@@ -1,22 +1,8 @@
 #ifndef PARTPICKER_H
 #define PARTPICKER_H
 
-#include <QComboBox>
-
-class PartPickerView;
-
-class PartPicker : public QComboBox
-{
-    Q_OBJECT
-public:
-    explicit PartPicker(QWidget *parent = 0);
-    virtual void showPopup();
-    virtual void hidePopup();
-
-private:
-    bool eventFilter(QObject* object, QEvent* event);
-    bool _skipNextHide;
-};
+#include <QDialog>
+#include <QVariant>
 
 class QTreeBox;
 class QTableView;
@@ -25,20 +11,23 @@ class PartsFilterWidget;
 class ModelsRepository;
 class PartsQueryBuilder;
 class PartsSqlTableModel;
+class CategoryTreeModel;
+class TreeComboFilterItemWidget;
 
-class PartPickerView : public QWidget
+class PartPickerDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit PartPickerView(ModelsRepository *modelsRepo, QWidget *parent = 0);
-    virtual ~PartPickerView();
-private slots:
-    void slotFilterChanged();
+    explicit PartPickerDialog(ModelsRepository *modelsRepo, QWidget *parent = 0);
+    virtual ~PartPickerDialog();
+    void accept();
+    inline QVariant selectedPart() {return _selectedPart;}
 private:
-    PartsQueryBuilder * _partsQueryBuilder;
+    PartsQueryBuilder * const _partsQueryBuilder;
     PartsFilterWidget * _partsFilterWidget;
     PartsTableView * _partsTable;
     PartsSqlTableModel * _partsModels;
+    QVariant _selectedPart;
 };
 
 #endif // PARTPICKER_H

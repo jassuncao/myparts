@@ -17,6 +17,7 @@
 #include <QDebug>
 #include "widgets/treeviewcombobox.h"
 #include "models/treeitemmodel.h"
+#include "models/partsquerybuilder.h"
 
 #if defined(Q_WS_X11)
 #include <private/qkde_p.h>
@@ -256,20 +257,24 @@ TreeComboFilterItemWidget::~TreeComboFilterItemWidget()
 {
 }
 
-void TreeComboFilterItemWidget::setOptionsModel(QAbstractItemModel * model)
+void TreeComboFilterItemWidget::setOptionsModel(TreeItemModel * model)
 {
     _comboBox->setModel(model);
 }
 
-void TreeComboFilterItemWidget::slotCurrentIndexChanged(int row)
+void TreeComboFilterItemWidget::slotCurrentIndexChanged(int)
 {
-
+    NodeCriterionValue nodeCriterion;//Default is NodeCriterionValue::All
     QModelIndex currIndex = _comboBox->view()->currentIndex();
-    if(currIndex.isValid()){
-        TreeItemModel* model = static_cast<TreeItemModel*>(_comboBox->model());
-        int itemId = model->getItemId(currIndex);
-        emit valueChanged(_filterTag, itemId);
+    //The root node has a valid index but an invalid parent
+    //We only care for it's children.
+    if(currIndex.isValid() && currIndex.parent().isValid()){
+        TreeItemModel * model = static_cast<TreeItemModel*>(_comboBox->model());
+        QList<int> nodes = model->getSubTreeIds(currIndex);
+        nodeCriterion = NodeCriterionValue(NodeCriterionValue::IncludeNodeChilds, nodes);
     }
+    QVariant value = QVariant::fromValue(nodeCriterion);
+    emit valueChanged(_filterTag, value);
 }
 
 bool TreeComboFilterItemWidget::eventFilter(QObject *obj, QEvent *event)
@@ -289,6 +294,5 @@ bool TreeComboFilterItemWidget::eventFilter(QObject *obj, QEvent *event)
 
 void TreeComboFilterItemWidget::doReset()
 {
-    qDebug("Clear item");
     _comboBox->setCurrentIndex(QModelIndex());
 }

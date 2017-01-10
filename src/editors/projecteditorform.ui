@@ -158,16 +158,9 @@
            <property name="text">
             <string>Assign</string>
            </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="viewPartButton">
-           <property name="text">
-            <string>View</string>
-           </property>
            <property name="icon">
             <iconset resource="../resources.qrc">
-             <normaloff>:/icons/partView</normaloff>:/icons/partView</iconset>
+             <normaloff>:/icons/partLink</normaloff>:/icons/partLink</iconset>
            </property>
           </widget>
          </item>

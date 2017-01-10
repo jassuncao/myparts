@@ -132,7 +132,7 @@ void TreeViewComboBox::setCurrentIndex(const QModelIndex &index)
     m_view->setCurrentIndex(index);
     setRootModelIndex(model()->parent(index));
     QComboBox::setCurrentIndex(index.row());
-    setRootModelIndex(QModelIndex());
+    setRootModelIndex(QModelIndex());//To make the view show the full tree
 }
 
 bool TreeViewComboBox::eventFilter(QObject *object, QEvent *event)
