@@ -76,7 +76,7 @@ ProjectEditorWidget::ProjectEditorWidget(ModelsRepository * modelsRepo, QWidget 
     connect(ui->deleteAttachmentButton, SIGNAL(clicked()), this, SLOT(slotRemoveAttachment()));
 
     connect(ui->partsTableView->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), this, SLOT(slotCurrentPartRowChanged(QModelIndex,QModelIndex)));
-    //connect(ui->partsTableView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(slotAttachmentDoubleClicked(QModelIndex)));
+    connect(ui->partsTableView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(slotPartsDoubleCkicked(QModelIndex)));
     connect(_partsModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(slotContentChanged()));
     connect(ui->addPartButton, SIGNAL(clicked()), this, SLOT(slotAddPart()));
     connect(ui->deletePartButton, SIGNAL(clicked()), this, SLOT(slotRemovePart()));
@@ -205,9 +205,11 @@ void ProjectEditorWidget::slotAssignPart()
     PartPickerDialog pickerDlg(_modelsRepo, this);
     int res = pickerDlg.exec();
     if(QDialog::Accepted == res){
-        QVariant partId = pickerDlg.selectedPart();
-        QModelIndex colIdx = _partsModel->index(sourceIndex.row(), ProjectPartTableModel::AssignedPart);
-        _partsModel->setData(colIdx, partId);
+        QVariant partId = pickerDlg.selectedPartId();
+        QVariant partName = pickerDlg.selectedPartName();
+        QModelIndex partIndex = _partsModel->index(sourceIndex.row(), ProjectPartTableModel::AssignedPart);
+        _partsModel->setData(partIndex, partId, Qt::EditRole);
+        _partsModel->setData(partIndex, partName, Qt::DisplayRole);
     }
 }
 
@@ -234,3 +236,12 @@ void ProjectEditorWidget::slotAttachmentDoubleClicked(const QModelIndex &index)
     }
 }
 
+void ProjectEditorWidget::slotPartsDoubleCkicked(const QModelIndex &index)
+{
+    if(!index.isValid()) {
+        return;
+    }
+    if(index.column() == ProjectPartTableModel::AssignedPart){
+        slotAssignPart();
+    }
+}

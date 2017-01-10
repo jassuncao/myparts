@@ -26,7 +26,6 @@ ProjectPartTableModel::ProjectPartTableModel(QObject *parent) :
     mapColumn(QVariant::String, Field_Remark, Field_Remark);
     setHeaderData(0, Qt::Horizontal, tr("Ref. Des."));
     setHeaderData(1, Qt::Horizontal, tr("Quantity"));
-    //setHeaderData(1, Qt::Horizontal, Qt::AlignTrailing, Qt::TextAlignmentRole);
     setHeaderData(2, Qt::Horizontal, tr("Part Name"));
     setHeaderData(3, Qt::Horizontal, tr("Assigned Part"));
     setHeaderData(4, Qt::Horizontal, tr("Remark"));
@@ -47,7 +46,7 @@ ProjectPartTableModel::ProjectPartTableModel(QObject *parent) :
 
 
 void ProjectPartTableModel::setProject(const QVariant & projectId)
-{
+{    
     _projectId = projectId;
 }
 
@@ -125,6 +124,15 @@ bool ProjectPartTableModel::deleteRow(const TableRow * row)
         qWarning()<<"Failed to execute delete query. Reason: "<<_deleteQuery.lastError().driverText();
     }
     return res;
+}
+
+Qt::ItemFlags ProjectPartTableModel::flags(const QModelIndex &index) const
+{
+    Qt::ItemFlags theFlags = CachedSqlTableModel::flags(index);
+    if(index.column() == AssignedPart){
+        theFlags = theFlags & (~Qt::ItemIsEditable);
+    }
+    return theFlags;
 }
 
 

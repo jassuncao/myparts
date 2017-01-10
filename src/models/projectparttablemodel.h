@@ -18,6 +18,7 @@ public:
     QVariant projectId() const { return _projectId;}
     void setProject(const QVariant & projectId);
     void sort(int column, Qt::SortOrder order);
+    Qt::ItemFlags flags(const QModelIndex &index) const;
 protected:
     virtual QSqlQuery prepareSelectQuery();
     virtual TableRow * createBlankItem() const;

@@ -55,10 +55,12 @@ void PartPickerDialog::accept()
 {
     QModelIndex index = _partsTable->currentIndex();
     if(index.isValid()){
-        _selectedPart = _partsModels->index(index.row(), PartsSqlTableModel::ColumnId).data(Qt::EditRole);
+        _selectedPartId = _partsModels->index(index.row(), PartsSqlTableModel::ColumnId).data(Qt::EditRole);
+        _selectedPartName = _partsModels->index(index.row(), PartsSqlTableModel::ColumnName).data(Qt::EditRole);
     }
     else{
-        _selectedPart = QVariant();
+        _selectedPartId = QVariant();
+        _selectedPartName = QVariant();
     }
     QDialog::accept();
 }

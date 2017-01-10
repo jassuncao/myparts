@@ -49,6 +49,7 @@ private slots:
     void slotCurrentAttachmentRowChanged(const QModelIndex &current, const QModelIndex &);
     void slotCurrentPartRowChanged(const QModelIndex &current, const QModelIndex &);
     void slotAttachmentDoubleClicked(const QModelIndex &index);    
+    void slotPartsDoubleCkicked(const QModelIndex &index);
 private:    
     Ui::ProjectEditorForm *ui;   
     ModelsRepository * _modelsRepo;

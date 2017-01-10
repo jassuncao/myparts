@@ -21,13 +21,15 @@ public:
     explicit PartPickerDialog(ModelsRepository *modelsRepo, QWidget *parent = 0);
     virtual ~PartPickerDialog();
     void accept();
-    inline QVariant selectedPart() {return _selectedPart;}
+    inline QVariant selectedPartId() {return _selectedPartId;}
+    inline QVariant selectedPartName() {return _selectedPartName;}
 private:
     PartsQueryBuilder * const _partsQueryBuilder;
     PartsFilterWidget * _partsFilterWidget;
     PartsTableView * _partsTable;
     PartsSqlTableModel * _partsModels;
-    QVariant _selectedPart;
+    QVariant _selectedPartId;
+    QVariant _selectedPartName;
 };
 
 #endif // PARTPICKER_H
