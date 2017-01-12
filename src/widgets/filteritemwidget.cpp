@@ -166,7 +166,7 @@ ComboFilterItemWidget::ComboFilterItemWidget(const QString & labelText, const in
     if(removableItem){
         _deleteBtn = createDeleteButton();
         _deleteBtn->installEventFilter(this);
-        connect(_deleteBtn, SIGNAL(clicked()), this, SLOT(slotDeleteItem()));
+        connect(_deleteBtn, SIGNAL(clicked()), this, SLOT(deleteItem()));
         layout->addWidget(_deleteBtn);
     }
     setLayout(layout);
