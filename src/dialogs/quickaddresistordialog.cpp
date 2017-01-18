@@ -28,6 +28,7 @@
 #include <QMessageBox>
 #include <QTimer>
 #include <QSqlRecord>
+#include <QShortcut>
 
 
 static QStandardItem * newColorItem(const QString & name, const QColor & color, const QVariant & value, const int shortcutKey)
@@ -56,7 +57,12 @@ QuickAddResistorDialog::QuickAddResistorDialog(ModelsRepository * modelsProvider
     _partParams = new PartParameterTableModel(this);
     _partStockModel = PartStockTableModel::createNew(this);
 
-    ui->resistorValueLineEdit->setValidator(new ParameterValueValidator(_resistanceParam.unitSymbol(), this));
+
+
+    QShortcut *sc = new QShortcut(QKeySequence("Ctrl+Space"), this);
+    connect(sc, SIGNAL(activated()), this, SLOT(slotAttemptAutoComplete()));
+    //XXX: Disabled the validator to allow "auto complete" (ctrl+space) to work
+    //ui->resistorValueLineEdit->setValidator(new ParameterValueValidator(_resistanceParam.unitSymbol(), this));
     ui->resistorPowerRatingLineEdit->setValidator(new ParameterValueValidator(_powerRatingParam.unitSymbol(), this));
     ui->partCategoryComboBox->setModel(modelsProvider->partCategoryModel());        
     ui->partCategoryComboBox->setMinimumContentsLength(22);
@@ -156,8 +162,7 @@ void QuickAddResistorDialog::slotReset()
     resetCombo(ui->band2ComboBox);
     resetCombo(ui->band3ComboBox);
     resetCombo(ui->multiplierBandComboBox);
-    resetCombo(ui->toleranceBandComboBox);
-    resetCombo(ui->partPackageComboBox);
+    resetCombo(ui->toleranceBandComboBox);    
     ui->resistorValueLineEdit->clear();
     ui->resistorPowerRatingLineEdit->clear();
     ui->toleranceLineEdit->clear();
@@ -221,6 +226,7 @@ void QuickAddResistorDialog::slotAddResistor()
     QVariant condition = selectedCondition();
     QVariant package = selectedPackage();
     int quantity = ui->quantitySpinBox->value();
+    //Creates a new empty record;
     QSqlRecord initialData = _partsModel->record();
 
     initialData.setValue(PartsSqlTableModel::ColumnName, partName);
@@ -381,4 +387,16 @@ void QuickAddResistorDialog::showSuccess(const QString& successMessage)
     ui->messageWidget->setMessageType(KMessageWidget::Positive);
     ui->messageWidget->animatedShow();
     QTimer::singleShot(2000, ui->messageWidget, SLOT(animatedHide()));
+}
+
+void QuickAddResistorDialog::slotAttemptAutoComplete()
+{
+    QString text = ui->resistorValueLineEdit->text().trimmed();
+    bool ok;
+    double resistance = _smdResistorCalc.parse(text, &ok);
+    if(ok){
+        QString formatted = UnitFormatter::format(resistance, _resistanceParam.unitSymbol());
+        ui->resistorValueLineEdit->setText(formatted);
+    }
+
 }

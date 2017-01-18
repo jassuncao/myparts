@@ -38,29 +38,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->centralWidget->insertTab(4, projectView, QIcon(QString::fromUtf8(":/largeIcons/page_projects")), tr("Projects"));
     ui->centralWidget->setTabEnabled(4, true);
 
-
-    //qDebug("MIN WIDTH %d", ui->centralWidget->minimumSizeHint().width());
     ui->centralWidget->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
     ui->centralWidget->setMinimumWidth(ui->centralWidget->minimumSizeHint().width());
 
-
-    //ui->centralWidget->insertTab(2,new PartManagerForm(this), QIcon(QString::fromUtf8(":/largeIcons/page_parts")), tr("Parts"));
-    //ui->centralWidget->insertTab(1,new PackageManagerWidget(this), QIcon(QString::fromUtf8(":/largeIcons/page_packages")), tr("Packages"));
-    //ui->stackedWidget->addWidget(new PartManagerForm(this));
-    /*
-    StorageTreeModel * storageTreeModel = new StorageTreeModel(headerData, this);
-    storageTreeModel->select();
-    ui->storageManagerWidget->setModel(storageTreeModel);
-
-    PackageManagerWidget* packageManager = new PackageManagerWidget(this);
-    ui->tabWidget->addTab(packageManager, tr("Packages"));
-
-    UnitManagerWidget* unitManager = new UnitManagerWidget(this);
-    ui->tabWidget->addTab(unitManager, tr("Units"));
-
-    DistributorManagerWidget* distributorManager = new DistributorManagerWidget(this);
-    ui->tabWidget->addTab(distributorManager, QIcon(":/icons/distributor"), tr("Distributors"));
-*/
     connect(ui->actionPreferences, SIGNAL(triggered()), this, SLOT(slotEditPreferences()));
     readSettings();
 }

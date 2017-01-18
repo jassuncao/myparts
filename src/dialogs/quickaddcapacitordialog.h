@@ -27,7 +27,7 @@ protected slots:
     void slotAddCapacitor();
     void showError(const QString& errorMessage);
     void showSuccess(const QString& successMessage);
-    void attemptAutoComplete();
+    void slotAttemptAutoComplete();
 protected:
     //bool eventFilter(QObject *obj, QEvent *event);
 private:    

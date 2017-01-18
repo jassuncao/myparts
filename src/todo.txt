@@ -12,6 +12,10 @@ Based on a user action, the part name is looked up in octopart and the user can 
 
 * Import project parts from a CSV file. Nice to have: Kicad.
 
+* Add a merge part dialog
+
+* Add "autocomplete" for the resistance field in the resistor wizard
+
 === Doing ===
 
 * Support Projects. A project has name, description, remarks/notes, parts and attachments.

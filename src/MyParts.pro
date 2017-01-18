@@ -108,7 +108,8 @@ SOURCES += main.cpp\
     models/cachedsqltablemodel.cpp \
     models/projectparttablemodel.cpp \
     models/alignmentproxymodel.cpp \
-    dialogs/partsassignmentdialog.cpp
+    dialogs/partsassignmentdialog.cpp \
+    smdresistorcalculator.cpp
 
 HEADERS  += mainwindow.h \
     partdialog.h \
@@ -202,7 +203,8 @@ HEADERS  += mainwindow.h \
     models/cachedsqltablemodel.h \
     models/projectparttablemodel.h \
     models/alignmentproxymodel.h \
-    dialogs/partsassignmentdialog.h
+    dialogs/partsassignmentdialog.h \
+    smdresistorcalculator.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \
@@ -248,3 +250,6 @@ DISTFILES += \
     storage.xml \
     category.xml \
     ../res/packages.csv
+
+SUBDIRS += \
+    Test.pro

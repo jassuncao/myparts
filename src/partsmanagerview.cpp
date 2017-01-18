@@ -242,6 +242,8 @@ void PartsManagerView::initPartsTableView(){
 void PartsManagerView::writeSettings(QSettings& settings) const
 {
     settings.setValue("parts/splitterSizes", saveState());
+    bool showDetails = _detailsPane->isVisible();
+    settings.setValue("parts/showDetails", QVariant(showDetails));
 }
 
 void PartsManagerView::readSettings(QSettings& settings)
@@ -249,6 +251,17 @@ void PartsManagerView::readSettings(QSettings& settings)
     QVariant var = settings.value("parts/splitterSizes");
     if(var.isValid()){
         restoreState(var.toByteArray());
+    }
+    var = settings.value("parts/showDetails");
+    bool b = true;
+    if(var.isValid()){
+        b = var.toBool();
+    }
+    if(b){
+        slotShowDetailsPane();
+    }
+    else{
+        slotHideDetailsPane();
     }
 }
 

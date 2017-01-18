@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include "models/parameter.h"
+#include "smdresistorcalculator.h"
 
 class PartsSqlTableModel;
 class ModelsRepository;
@@ -29,6 +30,7 @@ protected slots:
     void slotAddResistor();
     void showError(const QString& errorMessage);
     void showSuccess(const QString& successMessage);
+    void slotAttemptAutoComplete();
 private:
     QVariant selectedCategory() const;
     QVariant selectedStorage() const;
@@ -43,6 +45,7 @@ private:
     Parameter _resistanceParam;
     Parameter _powerRatingParam;
     Parameter _resistorToleranceParam;
+    SmdResistorCalculator _smdResistorCalc;
 };
 
 #endif // QUICKADDRESISTORDIALOG_H

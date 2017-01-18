@@ -53,7 +53,7 @@ QuickAddCapacitorDialog::QuickAddCapacitorDialog(ModelsRepository *modelsProvide
     //XXX: Disabled the validator to allow "auto complete" (ctrl+space) to work
     //ui->capacitanceValueLineEdit->setValidator(new ParameterValueValidator(_capacitanceParam.unitSymbol(), this));
     QShortcut *sc = new QShortcut(QKeySequence("Ctrl+Space"), this);
-    connect(sc, SIGNAL(activated()), this, SLOT(attemptAutoComplete()));
+    connect(sc, SIGNAL(activated()), this, SLOT(slotAttemptAutoComplete()));
     //ui->capacitanceValueLineEdit->installEventFilter(this);
     ui->voltageRatingLineEdit->setValidator(new ParameterValueValidator(_voltageRatingParam.unitSymbol(), this));
     ui->partCategoryComboBox->setModel(modelsProvider->partCategoryModel());
@@ -330,7 +330,7 @@ inline char to_char(QChar c){
 #endif
 }
 
-void QuickAddCapacitorDialog::attemptAutoComplete()
+void QuickAddCapacitorDialog::slotAttemptAutoComplete()
 {
     QString text = ui->capacitanceValueLineEdit->text().trimmed();
     //We accept 3 digit value codes with an optional tolerance code
