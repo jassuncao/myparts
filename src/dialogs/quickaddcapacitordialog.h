@@ -8,6 +8,7 @@ class PartsSqlTableModel;
 class ModelsRepository;
 class PartParameterTableModel;
 class PartStockTableModel;
+class SaveButtonHelper;
 
 namespace Ui {
 class QuickAddCapacitorDialog;
@@ -27,7 +28,8 @@ protected slots:
     void slotAddCapacitor();
     void showError(const QString& errorMessage);
     void showSuccess(const QString& successMessage);
-    void slotAttemptAutoComplete();
+    void saveSuccessFeedback();
+    void slotAttemptAutoComplete();    
 protected:
     //bool eventFilter(QObject *obj, QEvent *event);
 private:    
@@ -44,6 +46,7 @@ private:
     Parameter _capacitanceParam;
     Parameter _voltageRatingParam;
     Parameter _toleranceParam;
+    SaveButtonHelper * _saveButtonHelper;
 };
 
 #endif // QUICKADDCAPACITORDIALOG_H

@@ -11,6 +11,7 @@
 #include "models/basicentitytablemodel.h"
 #include "widgets/unitformatter.h"
 #include "widgets/unitparser.h"
+#include "widgets/savebuttonhelper.h"
 #include "utils.h"
 
 #include <QStyledItemDelegate>
@@ -47,6 +48,8 @@ QuickAddResistorDialog::QuickAddResistorDialog(ModelsRepository * modelsProvider
 {
     ui->setupUi(this);
     ui->messageWidget->hide();
+
+    _saveButtonHelper = new SaveButtonHelper(this);
 
     QSettings settings;
     _resistorNameTemplate = settings.value("resistor_template", tr("Resistor %1 %2 (%3)")).toString();
@@ -136,6 +139,16 @@ QuickAddResistorDialog::QuickAddResistorDialog(ModelsRepository * modelsProvider
     connect(resetButton, SIGNAL(clicked(bool)), this, SLOT(slotReset()));
     connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(slotAddResistor()));
     connect(ui->messageWidget, SIGNAL(hideAnimationFinished()), ui->messageWidget, SLOT(hide()));
+
+    _saveButtonHelper->monitor(ui->resistorValueLineEdit);
+    _saveButtonHelper->monitor(ui->resistorPowerRatingLineEdit);
+    _saveButtonHelper->monitor(ui->toleranceLineEdit);
+    _saveButtonHelper->monitor(ui->partCategoryComboBox);
+    _saveButtonHelper->monitor(ui->partPackageComboBox);
+    _saveButtonHelper->monitor(ui->partStorageComboBox);
+    _saveButtonHelper->monitor(ui->partConditionComboBox);
+    _saveButtonHelper->monitor(ui->quantitySpinBox);
+    _saveButtonHelper->setButtonBox(ui->buttonBox, QDialogButtonBox::Save);
 }
 
 QuickAddResistorDialog::~QuickAddResistorDialog()
@@ -167,6 +180,8 @@ void QuickAddResistorDialog::slotReset()
     ui->resistorPowerRatingLineEdit->clear();
     ui->toleranceLineEdit->clear();
     ui->quantitySpinBox->clear();
+    _saveButtonHelper->reset();
+    ui->resistorValueLineEdit->setFocus();
 }
 
 void QuickAddResistorDialog::slotAddResistor()
@@ -251,7 +266,7 @@ void QuickAddResistorDialog::slotAddResistor()
                 _partStockModel->submitAll();
             }
             _partsModel->database().commit();
-            showSuccess(tr("Resistor saved!"));
+            //showSuccess(tr("Resistor saved!"));
             slotReset();
         }
         else{

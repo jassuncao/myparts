@@ -17,6 +17,9 @@
    <iconset resource="../extras.qrc">
     <normaloff>:/parts/extras/category/resistor.png</normaloff>:/parts/extras/category/resistor.png</iconset>
   </property>
+  <property name="whatsThis">
+   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/icons/information&quot;/&gt; Hint!&lt;/p&gt;&lt;p&gt;The resistance field supports SMD resistor codes. Type the code followed by &lt;span style=&quot; font-weight:600;&quot;&gt;Control+Space &lt;/span&gt;and it will converted to a resistance value.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="KMessageWidget" name="messageWidget" native="true"/>

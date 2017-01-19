@@ -109,7 +109,9 @@ SOURCES += main.cpp\
     models/projectparttablemodel.cpp \
     models/alignmentproxymodel.cpp \
     dialogs/partsassignmentdialog.cpp \
-    smdresistorcalculator.cpp
+    smdresistorcalculator.cpp \
+    widgets/savebuttonhelper.cpp \
+    widgets/hintlineedit.cpp
 
 HEADERS  += mainwindow.h \
     partdialog.h \
@@ -204,7 +206,9 @@ HEADERS  += mainwindow.h \
     models/projectparttablemodel.h \
     models/alignmentproxymodel.h \
     dialogs/partsassignmentdialog.h \
-    smdresistorcalculator.h
+    smdresistorcalculator.h \
+    widgets/savebuttonhelper.h \
+    widgets/hintlineedit.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \

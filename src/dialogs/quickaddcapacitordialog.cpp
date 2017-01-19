@@ -11,6 +11,7 @@
 #include "models/basicentitytablemodel.h"
 #include "widgets/unitformatter.h"
 #include "widgets/unitparser.h"
+#include "widgets/savebuttonhelper.h"
 #include "utils.h"
 
 #include <QSettings>
@@ -40,6 +41,8 @@ QuickAddCapacitorDialog::QuickAddCapacitorDialog(ModelsRepository *modelsProvide
 {
     ui->setupUi(this);
     ui->messageWidget->hide();
+
+    _saveButtonHelper = new SaveButtonHelper(this);
 
     QSettings settings;
     _capacitorNameTemplate = settings.value("capacitor_template", tr("Capacitor %1 %2 (%3)")).toString();
@@ -78,6 +81,16 @@ QuickAddCapacitorDialog::QuickAddCapacitorDialog(ModelsRepository *modelsProvide
     connect(resetButton, SIGNAL(clicked(bool)), this, SLOT(slotReset()));
     connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(slotAddCapacitor()));
     connect(ui->messageWidget, SIGNAL(hideAnimationFinished()), ui->messageWidget, SLOT(hide()));
+
+    _saveButtonHelper->monitor(ui->capacitanceValueLineEdit);
+    _saveButtonHelper->monitor(ui->voltageRatingLineEdit);
+    _saveButtonHelper->monitor(ui->toleranceLineEdit);
+    _saveButtonHelper->monitor(ui->partCategoryComboBox);
+    _saveButtonHelper->monitor(ui->partPackageComboBox);
+    _saveButtonHelper->monitor(ui->partStorageComboBox);
+    _saveButtonHelper->monitor(ui->partConditionComboBox);
+    _saveButtonHelper->monitor(ui->quantitySpinBox);
+    _saveButtonHelper->setButtonBox(ui->buttonBox, QDialogButtonBox::Save);
 }
 
 QuickAddCapacitorDialog::~QuickAddCapacitorDialog()
@@ -99,6 +112,8 @@ void QuickAddCapacitorDialog::slotReset()
     ui->voltageRatingLineEdit->clear();
     ui->toleranceLineEdit->clear();
     ui->quantitySpinBox->clear();
+    _saveButtonHelper->reset();
+    ui->capacitanceValueLineEdit->setFocus();
 }
 
 void QuickAddCapacitorDialog::slotAddCapacitor()
@@ -182,7 +197,7 @@ void QuickAddCapacitorDialog::slotAddCapacitor()
                 _partStockModel->submitAll();
             }
             _partsModel->database().commit();
-            showSuccess(tr("Capacitor saved!"));
+            saveSuccessFeedback();
             slotReset();
         }
         else{
@@ -197,8 +212,7 @@ void QuickAddCapacitorDialog::slotAddCapacitor()
     }
     else {
         qWarning("Failed to insert new part");
-    }
-
+    }    
 }
 
 QVariant QuickAddCapacitorDialog::selectedCategory() const
@@ -273,6 +287,11 @@ void QuickAddCapacitorDialog::showSuccess(const QString& successMessage)
     ui->messageWidget->setMessageType(KMessageWidget::Positive);
     ui->messageWidget->animatedShow();
     QTimer::singleShot(2000, ui->messageWidget, SLOT(animatedHide()));
+}
+
+
+void QuickAddCapacitorDialog::saveSuccessFeedback()
+{
 }
 
 /*

@@ -9,6 +9,7 @@ class PartsSqlTableModel;
 class ModelsRepository;
 class PartParameterTableModel;
 class PartStockTableModel;
+class SaveButtonHelper;
 
 namespace Ui {
 class QuickAddResistorDialog;
@@ -46,6 +47,7 @@ private:
     Parameter _powerRatingParam;
     Parameter _resistorToleranceParam;
     SmdResistorCalculator _smdResistorCalc;
+    SaveButtonHelper * _saveButtonHelper;
 };
 
 #endif // QUICKADDRESISTORDIALOG_H
