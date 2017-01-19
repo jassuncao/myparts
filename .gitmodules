@@ -1,0 +1,6 @@
+[submodule "qt-manhattan-style"]
+	path = qt-manhattan-style
+	url = https://github.com/jassuncao/qt-manhattan-style.git
+[submodule "qjson-backport"]
+	path = qjson-backport
+	url = https://github.com/jassuncao/qjson-backport

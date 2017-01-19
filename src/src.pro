@@ -4,18 +4,14 @@
 #
 #-------------------------------------------------
 
+include(../defaults.pri)
+
 QT       += core gui sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = MyParts
 TEMPLATE = app
-
-#win32:DQUEST_INCLUDE_PATH=$$quote(F:\MyProjects\QtApps\dquest-0.2\src\dquest.pri)
-#unix:DQUEST_INCLUDE_PATH=$$quote(/home/jassuncao/MyProjects/dquest-0.2/src/dquest.pri)
-
-#include($$DQUEST_INCLUDE_PATH)
-
 
 SOURCES += main.cpp\
         mainwindow.cpp \
@@ -235,16 +231,20 @@ RESOURCES += \
 OTHER_FILES += \
     todo.txt
 
-#unix:!macx: LIBS += -L$$PWD/../../../lixo/qt-manhattan-style/build/ -lqt-manhattan-style
 
-INCLUDEPATH += $$PWD/../../qt-manhattan-style
-DEPENDPATH += $$PWD/../../qt-manhattan-style
+INCLUDEPATH += $$PWD/../qt-manhattan-style
+DEPENDPATH += $$PWD/../qt-manhattan-style
 
-unix:!macx: LIBS += -L$$PWD/../../build-qt-manhattan-style-Desktop-Debug/ -lqt-manhattan-style
-unix:!macx: PRE_TARGETDEPS += $$PWD/../../build-qt-manhattan-style-Desktop-Debug/libqt-manhattan-style.a
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../qt-manhattan-style/release/ -lqt-manhattan-style
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../qt-manhattan-style/debug/ -lqt-manhattan-style
+else:unix: LIBS += -L$$OUT_PWD/../qt-manhattan-style/ -lqt-manhattan-style
 
-win32: LIBS += -L$$PWD/../../build-qt-manhattan-style-Desktop_Qt_5_2_1_MinGW_32bit-Debug/debug/ -lqt-manhattan-style
-win32-g++: PRE_TARGETDEPS += $$PWD/../../build-qt-manhattan-style-Desktop_Qt_5_2_1_MinGW_32bit-Debug/debug/libqt-manhattan-style.a
+INCLUDEPATH += $$PWD/../qjson-backport
+DEPENDPATH += $$PWD/../qjson-backport
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../qjson-backport/release/ -lqjson-backport
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../qjson-backport/debug/ -lqjson-backport
+else:unix: LIBS += -L$$OUT_PWD/../qjson-backport/ -lqjson-backport
 
 #unix:!macx: LIBS += -lwwwidgets4
 
@@ -254,6 +254,3 @@ DISTFILES += \
     storage.xml \
     category.xml \
     ../res/packages.csv
-
-SUBDIRS += \
-    Test.pro
