@@ -1,6 +1,7 @@
 #include <QtTest> 
 #include <QtCore>
 #include "smdresistorcalculator.h"
+#include <QJsonObject>
 
 class TestSmdResistorCalculator: public QObject {
    Q_OBJECT

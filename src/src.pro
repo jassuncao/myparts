@@ -239,12 +239,16 @@ win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../qt-manhattan-style/
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../qt-manhattan-style/debug/ -lqt-manhattan-style
 else:unix: LIBS += -L$$OUT_PWD/../qt-manhattan-style/ -lqt-manhattan-style
 
-INCLUDEPATH += $$PWD/../qjson-backport
-DEPENDPATH += $$PWD/../qjson-backport
+lessThan(QT_MAJOR_VERSION, 5){
 
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../qjson-backport/release/ -lqjson-backport
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../qjson-backport/debug/ -lqjson-backport
-else:unix: LIBS += -L$$OUT_PWD/../qjson-backport/ -lqjson-backport
+ INCLUDEPATH += $$PWD/../qjson-backport
+ DEPENDPATH += $$PWD/../qjson-backport
+
+ win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../qjson-backport/release/ -lqjson-backport
+ else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../qjson-backport/debug/ -lqjson-backport
+ else:unix: LIBS += -L$$OUT_PWD/../qjson-backport/ -lqjson-backport
+
+}
 
 #unix:!macx: LIBS += -lwwwidgets4
 
