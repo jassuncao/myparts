@@ -2,10 +2,60 @@
 
 #include <QDebug>
 #include <QUrl>
+
 #include "qjsonarray.h"
 #include "qjsondocument.h"
 
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
+#include <QUrlQuery>
+
+class UrlQueryBuilder {
+public:
+    UrlQueryBuilder(const QString &queryString) :
+        _urlQuery(queryString)
+    {}
+    void addQueryItem(const QString &key, const QString &value)
+    {
+        _urlQuery.addQueryItem(key, value);
+    }
+
+    QUrl url(){
+        QUrl url;
+        url.setQuery(_urlQuery);
+        return url;
+    }
+
+private:
+    QUrlQuery _urlQuery;
+};
+
+#else
+
+class UrlQueryBuilder {
+public:
+    UrlQueryBuilder(const QString &queryString) :
+        _url(queryString)
+    {}
+    void addQueryItem(const QString &key, const QString &value)
+    {
+        _url.addQueryItem(key, value);
+    }
+
+    QUrl url(){
+        return _url;
+    }
+
+private:
+    QUrl _url;
+};
+
+#endif
+
+
+
 namespace Octopart {
+
+
 
 static QString readStringValue(const QJsonObject & json, const QString & key, bool * ok){
     Q_ASSERT(ok);
@@ -128,17 +178,18 @@ QList<PartBrief> OctopartAPI::partsMatch(const QString & mpn, int start, int lim
     QJsonDocument doc(queries);
     QByteArray ba = doc.toJson(QJsonDocument::Compact);
 
-    QUrl url(_apiUrl+"parts/match");
-    url.addQueryItem("apikey", _apiKey);
-    url.addQueryItem("queries", QString(ba));
-    url.addQueryItem("include[]", "short_description");
-    url.addQueryItem("show[]", "mpn");
-    url.addQueryItem("show[]", "brand.name");
-    url.addQueryItem("show[]", "octopart_url");
-    url.addQueryItem("show[]", "short_description");
-    url.addQueryItem("show[]", "uid");
 
+    UrlQueryBuilder queryBuilder(_apiUrl+"parts/match");
+    queryBuilder.addQueryItem("apikey", _apiKey);
+    queryBuilder.addQueryItem("queries", QString(ba));
+    queryBuilder.addQueryItem("include[]", "short_description");
+    queryBuilder.addQueryItem("show[]", "mpn");
+    queryBuilder.addQueryItem("show[]", "brand.name");
+    queryBuilder.addQueryItem("show[]", "octopart_url");
+    queryBuilder.addQueryItem("show[]", "short_description");
+    queryBuilder.addQueryItem("show[]", "uid");
 
+    QUrl url = queryBuilder.url();
     qDebug()<<"Request URL "<<qPrintable(url.toEncoded());
 
     return QList<PartBrief>();
