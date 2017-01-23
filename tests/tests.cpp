@@ -1,7 +1,7 @@
 #include <QtTest> 
 #include <QtCore>
 #include "smdresistorcalculator.h"
-#include <QJsonObject>
+#include "testoctopartapi.h"
 
 class TestSmdResistorCalculator: public QObject {
    Q_OBJECT
@@ -107,5 +107,19 @@ void TestSmdResistorCalculator::testParseEIA96Codes()
 }
 
 
-QTEST_MAIN(TestSmdResistorCalculator)
+int main(int argc, char *argv[])
+{
+    int status = 0;
+    QCoreApplication app(argc, argv);
+    {
+        TestSmdResistorCalculator tc;
+        status |= QTest::qExec(&tc, argc, argv);
+
+        TestOctopartApi tc2;
+        status |= QTest::qExec(&tc2, argc, argv);
+    }
+    return status;
+}
+
+//QTEST_MAIN(TestSmdResistorCalculator)
 #include "tests.moc"

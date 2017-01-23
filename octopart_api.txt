@@ -1,0 +1,70 @@
+curl -G https://octopart.com/api/v3/parts/match \
+   -d queries='[{"mpn":"NE555D","start":3,"limit":3}]' \
+   -d apikey=12621337 \
+   -d pretty_print=true \
+   -d include[]=short_description \
+   -d show[]=mpn \
+   -d show[]=brand.name \
+   -d show[]=octopart_url \
+   -d show[]=short_description \
+   -d show[]=uid
+
+{
+    "__class__": "PartsMatchResponse",
+    "msec": 81,
+    "request": {
+        "__class__": "PartsMatchRequest",
+        "exact_only": false,
+        "queries": [
+            {
+                "__class__": "PartsMatchQuery",
+                "brand": null,
+                "limit": 3,
+                "mpn": "NE555D",
+                "mpn_or_sku": null,
+                "q": "",
+                "reference": null,
+                "seller": null,
+                "sku": null,
+                "start": 0
+            }
+        ]
+    },
+    "results": [
+        {
+            "__class__": "PartsMatchResult",
+            "error": null,
+            "hits": 5,
+            "items": [
+                {
+                    "brand": {
+                        "name": "Texas Instruments"
+                    },
+                    "mpn": "NE555D",
+                    "octopart_url": "https://octopart.com/ne555d-texas+instruments-19922",
+                    "short_description": "Peripheral circuit; astable/monostable, timer; 500kHz; 4.5\u00f716VDC",
+                    "uid": "7a97b39d1223a550"
+                },
+                {
+                    "brand": {
+                        "name": "STMicroelectronics"
+                    },
+                    "mpn": "NE555D",
+                    "octopart_url": "https://octopart.com/ne555d-stmicroelectronics-516589",
+                    "short_description": "General purpose single bipolar timer",
+                    "uid": "a87861756cf377bf"
+                },
+                {
+                    "brand": {
+                        "name": "Fairchild Semiconductor"
+                    },
+                    "mpn": "NE555D",
+                    "octopart_url": "https://octopart.com/ne555d-fairchild+semiconductor-13412725",
+                    "short_description": "Ic Osc Mono Timing 8-Sop - Ne555d",
+                    "uid": "1f11d6d79302c0d6"
+                }
+            ],
+            "reference": null
+        }
+    ]
+}

@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>octopart_query_response.json</file>
+    </qresource>
+</RCC>
