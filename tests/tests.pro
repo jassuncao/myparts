@@ -5,7 +5,7 @@
 #-------------------------------------------------
 
 QT       += testlib
-
+QT       += network
 QT       -= gui
 
 TARGET = tst_calculator
@@ -24,7 +24,9 @@ SOURCES += ../src/smdresistorcalculator.cpp \
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 DISTFILES += \
-    octopart_query_response.json
+    octopart_query_response.json \
+    api_key.txt \
+    octopart_part_response.json
 
 HEADERS += \
     testoctopartapi.h

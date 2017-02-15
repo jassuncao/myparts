@@ -110,13 +110,14 @@ void TestSmdResistorCalculator::testParseEIA96Codes()
 int main(int argc, char *argv[])
 {
     int status = 0;
-    QCoreApplication app(argc, argv);
+    QCoreApplication app(argc, argv);  
     {
+        QStringList otherArgs;
         TestSmdResistorCalculator tc;
         status |= QTest::qExec(&tc, argc, argv);
 
         TestOctopartApi tc2;
-        status |= QTest::qExec(&tc2, argc, argv);
+        status |= QTest::qExec(&tc2, otherArgs);
     }
     return status;
 }

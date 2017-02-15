@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       -= gui
+QT       += network
 
 TARGET = octopart
 TEMPLATE = lib
@@ -21,9 +22,11 @@ lessThan(QT_MAJOR_VERSION, 5){
 
 }
 
-SOURCES += octopartapi.cpp
+SOURCES += octopartapi.cpp \
+    octopartpartsearchmodel.cpp
 
-HEADERS += octopartapi.h
+HEADERS += octopartapi.h \
+    octopartpartsearchmodel.h
 unix {
     target.path = /usr/lib
     INSTALLS += target

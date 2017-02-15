@@ -1,0 +1,2283 @@
+{
+    "brand": {
+        "name": "Texas Instruments"
+    },
+    "datasheets": [
+        {
+            "__class__": "Datasheet",
+            "attribution": {
+                "__class__": "Attribution",
+                "first_acquired": null,
+                "sources": [
+                    {
+                        "__class__": "Source",
+                        "name": "Texas Instruments",
+                        "uid": "40f985f368ed933e"
+                    }
+                ]
+            },
+            "metadata": null,
+            "mimetype": "text/html",
+            "url": "https://octopart.com/click/track?country=PT&ak=12621337&ct=datasheets&sig=0a7d75b&at=physicalpart&sid=370&ppid=19922&hlid=24901164"
+        },
+        {
+            "__class__": "Datasheet",
+            "attribution": {
+                "__class__": "Attribution",
+                "first_acquired": null,
+                "sources": [
+                    {
+                        "__class__": "Source",
+                        "name": "Texas Instruments",
+                        "uid": "40f985f368ed933e"
+                    }
+                ]
+            },
+            "metadata": {
+                "date_created": "2014-09-18T05:38:53Z",
+                "last_updated": "2014-09-18T05:38:53Z",
+                "num_pages": 34,
+                "size_bytes": 1320123
+            },
+            "mimetype": "application/pdf",
+            "url": "http://datasheet.octopart.com/NE555D-Texas-Instruments-datasheet-32015266.pdf"
+        },
+        {
+            "__class__": "Datasheet",
+            "attribution": {
+                "__class__": "Attribution",
+                "first_acquired": null,
+                "sources": [
+                    {
+                        "__class__": "Source",
+                        "name": "Texas Instruments",
+                        "uid": "40f985f368ed933e"
+                    }
+                ]
+            },
+            "metadata": {
+                "date_created": "2008-03-20T06:23:41Z",
+                "last_updated": "2008-03-20T06:23:42Z",
+                "num_pages": 27,
+                "size_bytes": 653214
+            },
+            "mimetype": "application/pdf",
+            "url": "http://datasheet.octopart.com/NE555D-Texas-Instruments-datasheet-148786.pdf"
+        },
+        {
+            "__class__": "Datasheet",
+            "attribution": {
+                "__class__": "Attribution",
+                "first_acquired": null,
+                "sources": [
+                    {
+                        "__class__": "Source",
+                        "name": "Texas Instruments",
+                        "uid": "40f985f368ed933e"
+                    }
+                ]
+            },
+            "metadata": {
+                "date_created": "2011-07-14T13:18:11Z",
+                "last_updated": "2011-07-14T13:18:11Z",
+                "num_pages": 30,
+                "size_bytes": 809878
+            },
+            "mimetype": "application/pdf",
+            "url": "http://datasheet.octopart.com/NE555D-Texas-Instruments-datasheet-10254335.pdf"
+        },
+        {
+            "__class__": "Datasheet",
+            "attribution": {
+                "__class__": "Attribution",
+                "first_acquired": null,
+                "sources": [
+                    {
+                        "__class__": "Source",
+                        "name": "Texas Instruments",
+                        "uid": "40f985f368ed933e"
+                    }
+                ]
+            },
+            "metadata": {
+                "date_created": "2012-01-28T04:05:37Z",
+                "last_updated": "2012-01-28T04:05:37Z",
+                "num_pages": 31,
+                "size_bytes": 1036352
+            },
+            "mimetype": "application/pdf",
+            "url": "http://datasheet.octopart.com/NE555D-Texas-Instruments-datasheet-10744844.pdf"
+        },
+        {
+            "__class__": "Datasheet",
+            "attribution": {
+                "__class__": "Attribution",
+                "first_acquired": null,
+                "sources": [
+                    {
+                        "__class__": "Source",
+                        "name": "Texas Instruments",
+                        "uid": "40f985f368ed933e"
+                    }
+                ]
+            },
+            "metadata": {
+                "date_created": "2007-05-18T22:31:30Z",
+                "last_updated": "2007-05-18T22:31:30Z",
+                "num_pages": 63,
+                "size_bytes": 1197432
+            },
+            "mimetype": "application/pdf",
+            "url": "http://datasheet.octopart.com/NE555D-Texas-Instruments-datasheet-148389.pdf"
+        },
+        {
+            "__class__": "Datasheet",
+            "attribution": {
+                "__class__": "Attribution",
+                "first_acquired": null,
+                "sources": [
+                    {
+                        "__class__": "Source",
+                        "name": "Texas Instruments",
+                        "uid": "40f985f368ed933e"
+                    }
+                ]
+            },
+            "metadata": {
+                "date_created": "2015-05-01T05:47:39Z",
+                "last_updated": "2015-05-01T05:47:39Z",
+                "num_pages": 36,
+                "size_bytes": 1593276
+            },
+            "mimetype": "application/pdf",
+            "url": "http://datasheet.octopart.com/NE555D-Texas-Instruments-datasheet-41215706.pdf"
+        },
+        {
+            "__class__": "Datasheet",
+            "attribution": {
+                "__class__": "Attribution",
+                "first_acquired": null,
+                "sources": [
+                    {
+                        "__class__": "Source",
+                        "name": "Texas Instruments",
+                        "uid": "40f985f368ed933e"
+                    }
+                ]
+            },
+            "metadata": {
+                "date_created": "2011-06-07T15:20:55Z",
+                "last_updated": "2011-06-07T15:20:55Z",
+                "num_pages": 2,
+                "size_bytes": 62475
+            },
+            "mimetype": "application/pdf",
+            "url": "http://sigma.octopart.com/49249642/technical_drawing/Texas-Instruments-NE555D.pdf"
+        },
+        {
+            "__class__": "Datasheet",
+            "attribution": {
+                "__class__": "Attribution",
+                "first_acquired": null,
+                "sources": [
+                    {
+                        "__class__": "Source",
+                        "name": "Farnell",
+                        "uid": "58989d9272cd8b5f"
+                    }
+                ]
+            },
+            "metadata": {
+                "date_created": "2008-10-07T05:32:45Z",
+                "last_updated": "2008-10-07T05:32:46Z",
+                "num_pages": 27,
+                "size_bytes": 653380
+            },
+            "mimetype": "application/pdf",
+            "url": "http://datasheet.octopart.com/NE555D-Texas-Instruments-datasheet-5312905.pdf"
+        },
+        {
+            "__class__": "Datasheet",
+            "attribution": {
+                "__class__": "Attribution",
+                "first_acquired": null,
+                "sources": [
+                    {
+                        "__class__": "Source",
+                        "name": "element14",
+                        "uid": "bd937899b36c6e54"
+                    }
+                ]
+            },
+            "metadata": {
+                "date_created": "2011-06-09T17:23:57Z",
+                "last_updated": "2011-06-09T17:23:57Z",
+                "num_pages": 30,
+                "size_bytes": 810541
+            },
+            "mimetype": "application/pdf",
+            "url": "http://datasheet.octopart.com/NE555D-Texas-Instruments-datasheet-10196622.pdf"
+        },
+        {
+            "__class__": "Datasheet",
+            "attribution": {
+                "__class__": "Attribution",
+                "first_acquired": null,
+                "sources": [
+                    {
+                        "__class__": "Source",
+                        "name": "Jameco",
+                        "uid": "bab57fbf9ab96972"
+                    }
+                ]
+            },
+            "metadata": {
+                "date_created": "2006-11-16T16:00:43Z",
+                "last_updated": "2006-11-16T16:00:43Z",
+                "num_pages": 25,
+                "size_bytes": 421253
+            },
+            "mimetype": "application/pdf",
+            "url": "http://datasheet.octopart.com/NE555D-Texas-Instruments-datasheet-7084690.pdf"
+        },
+        {
+            "__class__": "Datasheet",
+            "attribution": {
+                "__class__": "Attribution",
+                "first_acquired": null,
+                "sources": [
+                    {
+                        "__class__": "Source",
+                        "name": "Newark",
+                        "uid": "d294179ef2900153"
+                    }
+                ]
+            },
+            "metadata": {
+                "date_created": "2015-03-10T05:46:45Z",
+                "last_updated": "2015-03-10T05:46:45Z",
+                "num_pages": 36,
+                "size_bytes": 1593642
+            },
+            "mimetype": "application/pdf",
+            "url": "http://datasheet.octopart.com/NE555D-Texas-Instruments-datasheet-41205011.pdf"
+        },
+        {
+            "__class__": "Datasheet",
+            "attribution": {
+                "__class__": "Attribution",
+                "first_acquired": null,
+                "sources": [
+                    {
+                        "__class__": "Source",
+                        "name": "Digi-Key",
+                        "uid": "2c3be9310496fffc"
+                    }
+                ]
+            },
+            "metadata": {
+                "date_created": "2004-03-31T15:51:57Z",
+                "last_updated": "2004-04-01T04:01:43Z",
+                "num_pages": 24,
+                "size_bytes": 535992
+            },
+            "mimetype": "application/pdf",
+            "url": "http://datasheet.octopart.com/NE555D-Texas-Instruments-datasheet-5424.pdf"
+        },
+        {
+            "__class__": "Datasheet",
+            "attribution": {
+                "__class__": "Attribution",
+                "first_acquired": null,
+                "sources": [
+                    {
+                        "__class__": "Source",
+                        "name": "Arrow",
+                        "uid": "9d5b5851b06f4e9c"
+                    }
+                ]
+            },
+            "metadata": {
+                "date_created": "2012-07-10T04:03:16Z",
+                "last_updated": "2012-07-10T04:03:16Z",
+                "num_pages": 31,
+                "size_bytes": 1037290
+            },
+            "mimetype": "application/pdf",
+            "url": "http://datasheet.octopart.com/NE555D-Texas-Instruments-datasheet-11834945.pdf"
+        },
+        {
+            "__class__": "Datasheet",
+            "attribution": {
+                "__class__": "Attribution",
+                "first_acquired": null,
+                "sources": [
+                    {
+                        "__class__": "Source",
+                        "name": "TME",
+                        "uid": "223ee7340ea4f1f9"
+                    }
+                ]
+            },
+            "metadata": {
+                "date_created": "2016-02-02T06:47:34Z",
+                "last_updated": "2016-02-02T06:47:34Z",
+                "num_pages": 36,
+                "size_bytes": 1593404
+            },
+            "mimetype": "application/pdf",
+            "url": "http://datasheet.octopart.com/NE555D-Texas-Instruments-datasheet-62073668.pdf"
+        },
+        {
+            "__class__": "Datasheet",
+            "attribution": {
+                "__class__": "Attribution",
+                "first_acquired": null,
+                "sources": [
+                    {
+                        "__class__": "Source",
+                        "name": "element14",
+                        "uid": "bd937899b36c6e54"
+                    }
+                ]
+            },
+            "metadata": {
+                "date_created": "2010-06-22T02:04:48Z",
+                "last_updated": "2010-06-22T02:04:48Z",
+                "num_pages": 28,
+                "size_bytes": 674874
+            },
+            "mimetype": "application/pdf",
+            "url": "http://datasheet.octopart.com/NE555D-Texas-Instruments-datasheet-8767820.pdf"
+        },
+        {
+            "__class__": "Datasheet",
+            "attribution": {
+                "__class__": "Attribution",
+                "first_acquired": null,
+                "sources": [
+                    {
+                        "__class__": "Source",
+                        "name": "Allied Electronics",
+                        "uid": "f9e13cebd0892a26"
+                    }
+                ]
+            },
+            "metadata": {
+                "date_created": "2004-03-31T15:51:57Z",
+                "last_updated": "2006-01-27T10:06:29Z",
+                "num_pages": 24,
+                "size_bytes": 455746
+            },
+            "mimetype": "application/pdf",
+            "url": "http://datasheet.octopart.com/NE555D-Texas-Instruments-datasheet-22228.pdf"
+        },
+        {
+            "__class__": "Datasheet",
+            "attribution": {
+                "__class__": "Attribution",
+                "first_acquired": null,
+                "sources": [
+                    {
+                        "__class__": "Source",
+                        "name": "element14",
+                        "uid": "bd937899b36c6e54"
+                    }
+                ]
+            },
+            "metadata": {
+                "date_created": "2010-04-25T02:04:02Z",
+                "last_updated": "2010-04-25T02:04:02Z",
+                "num_pages": 27,
+                "size_bytes": 666484
+            },
+            "mimetype": "application/pdf",
+            "url": "http://datasheet.octopart.com/NE555D-Texas-Instruments-datasheet-8637843.pdf"
+        },
+        {
+            "__class__": "Datasheet",
+            "attribution": {
+                "__class__": "Attribution",
+                "first_acquired": null,
+                "sources": [
+                    {
+                        "__class__": "Source",
+                        "name": "Newark",
+                        "uid": "d294179ef2900153"
+                    }
+                ]
+            },
+            "metadata": {
+                "date_created": "2006-06-21T19:50:24Z",
+                "last_updated": "2006-12-17T03:42:06Z",
+                "num_pages": 24,
+                "size_bytes": 428350
+            },
+            "mimetype": "application/pdf",
+            "url": "http://datasheet.octopart.com/NE555D-Texas-Instruments-datasheet-32500.pdf"
+        },
+        {
+            "__class__": "Datasheet",
+            "attribution": {
+                "__class__": "Attribution",
+                "first_acquired": null,
+                "sources": [
+                    {
+                        "__class__": "Source",
+                        "name": "Jameco",
+                        "uid": "bab57fbf9ab96972"
+                    }
+                ]
+            },
+            "metadata": {
+                "date_created": "2005-10-20T10:47:30Z",
+                "last_updated": "2008-11-07T08:59:41Z",
+                "num_pages": 20,
+                "size_bytes": 514703
+            },
+            "mimetype": "application/pdf",
+            "url": "http://datasheet.octopart.com/NE555D-Texas-Instruments-datasheet-503160.pdf"
+        },
+        {
+            "__class__": "Datasheet",
+            "attribution": {
+                "__class__": "Attribution",
+                "first_acquired": null,
+                "sources": [
+                    {
+                        "__class__": "Source",
+                        "name": "Sierra IC",
+                        "uid": "b99b7c9199846a5c"
+                    }
+                ]
+            },
+            "metadata": {
+                "date_created": "2004-03-31T15:51:57Z",
+                "last_updated": "2004-07-22T19:41:30Z",
+                "num_pages": 24,
+                "size_bytes": 585342
+            },
+            "mimetype": "application/pdf",
+            "url": "http://datasheet.octopart.com/NE555D-Texas-Instruments-datasheet-111737.pdf"
+        },
+        {
+            "__class__": "Datasheet",
+            "attribution": {
+                "__class__": "Attribution",
+                "first_acquired": null,
+                "sources": [
+                    {
+                        "__class__": "Source",
+                        "name": "Newark",
+                        "uid": "d294179ef2900153"
+                    }
+                ]
+            },
+            "metadata": {
+                "date_created": "2013-10-21T03:07:34Z",
+                "last_updated": "2013-10-21T03:07:34Z",
+                "num_pages": 30,
+                "size_bytes": 1209690
+            },
+            "mimetype": "application/pdf",
+            "url": "http://datasheet.octopart.com/NE555D-Texas-Instruments-datasheet-21220987.pdf"
+        }
+    ],
+    "mpn": "NE555D",
+    "octopart_url": "https://octopart.com/ne555d-texas+instruments-19922",
+    "offers": [
+        {
+            "__class__": "PartOffer",
+            "_naive_id": "e5e95162d52703a05d6046aa670cf9d0",
+            "eligible_region": "",
+            "factory_lead_days": 42,
+            "factory_order_multiple": null,
+            "in_stock_quantity": 4577,
+            "is_authorized": true,
+            "is_realtime": false,
+            "last_updated": "2017-02-03T13:27:17Z",
+            "moq": 1,
+            "octopart_rfq_url": null,
+            "on_order_eta": null,
+            "on_order_quantity": null,
+            "order_multiple": null,
+            "packaging": "Tube",
+            "prices": {
+                "USD": [
+                    [
+                        1,
+                        "0.39000"
+                    ],
+                    [
+                        10,
+                        "0.31500"
+                    ],
+                    [
+                        100,
+                        "0.21440"
+                    ],
+                    [
+                        500,
+                        "0.16080"
+                    ],
+                    [
+                        1000,
+                        "0.12060"
+                    ],
+                    [
+                        2500,
+                        "0.11055"
+                    ],
+                    [
+                        5000,
+                        "0.10385"
+                    ],
+                    [
+                        10000,
+                        "0.09715"
+                    ]
+                ]
+            },
+            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=03e9397&sid=459&ppid=19922&vpid=1316784&ct=offers",
+            "seller": {
+                "__class__": "Seller",
+                "display_flag": "US",
+                "has_ecommerce": true,
+                "homepage_url": "http://www.digikey.com",
+                "id": "459",
+                "name": "Digi-Key",
+                "uid": "2c3be9310496fffc"
+            },
+            "sku": "296-16792-ND"
+        },
+        {
+            "__class__": "PartOffer",
+            "_naive_id": "d0fbe08763898d37f776929460b9a150",
+            "eligible_region": "",
+            "factory_lead_days": 42,
+            "factory_order_multiple": null,
+            "in_stock_quantity": 5243,
+            "is_authorized": true,
+            "is_realtime": false,
+            "last_updated": "2017-02-01T09:53:51Z",
+            "moq": 1,
+            "octopart_rfq_url": null,
+            "on_order_eta": null,
+            "on_order_quantity": null,
+            "order_multiple": 1,
+            "packaging": null,
+            "prices": {
+                "USD": [
+                    [
+                        1,
+                        "0.33079"
+                    ],
+                    [
+                        10,
+                        "0.25731"
+                    ],
+                    [
+                        25,
+                        "0.25667"
+                    ],
+                    [
+                        50,
+                        "0.25603"
+                    ],
+                    [
+                        100,
+                        "0.14725"
+                    ]
+                ]
+            },
+            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=0aafef2&sid=5822&ppid=19922&vpid=17669309&ct=offers",
+            "seller": {
+                "__class__": "Seller",
+                "display_flag": "US",
+                "has_ecommerce": true,
+                "homepage_url": "http://avnetexpress.avnet.com",
+                "id": "2628",
+                "name": "Avnet",
+                "uid": "3667f36d1545e5a0"
+            },
+            "sku": "NE555D"
+        },
+        {
+            "__class__": "PartOffer",
+            "_naive_id": "13a37ca7a5138c4efe58ff9d2abc378f",
+            "eligible_region": "",
+            "factory_lead_days": null,
+            "factory_order_multiple": null,
+            "in_stock_quantity": 5524,
+            "is_authorized": true,
+            "is_realtime": false,
+            "last_updated": "2017-02-03T15:10:33Z",
+            "moq": 1,
+            "octopart_rfq_url": null,
+            "on_order_eta": null,
+            "on_order_quantity": null,
+            "order_multiple": 1,
+            "packaging": null,
+            "prices": {
+                "USD": [
+                    [
+                        1,
+                        "0.35110"
+                    ],
+                    [
+                        10,
+                        "0.27230"
+                    ],
+                    [
+                        100,
+                        "0.16420"
+                    ],
+                    [
+                        500,
+                        "0.14070"
+                    ],
+                    [
+                        1000,
+                        "0.09900"
+                    ],
+                    [
+                        2500,
+                        "0.09640"
+                    ],
+                    [
+                        5000,
+                        "0.09320"
+                    ],
+                    [
+                        10000,
+                        "0.08380"
+                    ]
+                ]
+            },
+            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=0084216&sid=1106&ppid=19922&vpid=15359170&ct=offers",
+            "seller": {
+                "__class__": "Seller",
+                "display_flag": "US",
+                "has_ecommerce": true,
+                "homepage_url": "http://www.arrownac.com/",
+                "id": "1106",
+                "name": "Arrow",
+                "uid": "9d5b5851b06f4e9c"
+            },
+            "sku": "NE555D"
+        },
+        {
+            "__class__": "PartOffer",
+            "_naive_id": "92f1850f6a9c28942e595443fe1bde4d",
+            "eligible_region": "",
+            "factory_lead_days": null,
+            "factory_order_multiple": null,
+            "in_stock_quantity": 10000,
+            "is_authorized": true,
+            "is_realtime": false,
+            "last_updated": "2017-02-02T17:45:06Z",
+            "moq": 2500,
+            "octopart_rfq_url": null,
+            "on_order_eta": null,
+            "on_order_quantity": null,
+            "order_multiple": null,
+            "packaging": null,
+            "prices": {
+                "USD": [
+                    [
+                        2500,
+                        "0.49570"
+                    ]
+                ]
+            },
+            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=0d33c1d&sid=5489&ppid=19922&vpid=270303123&ct=offers",
+            "seller": {
+                "__class__": "Seller",
+                "display_flag": "US",
+                "has_ecommerce": true,
+                "homepage_url": "http://www.verical.com",
+                "id": "2617",
+                "name": "Verical",
+                "uid": "504e954473118389"
+            },
+            "sku": "NE555D"
+        },
+        {
+            "__class__": "PartOffer",
+            "_naive_id": "92f1850f6a9c28942e595443fe1bde4d",
+            "eligible_region": "",
+            "factory_lead_days": null,
+            "factory_order_multiple": null,
+            "in_stock_quantity": 5524,
+            "is_authorized": true,
+            "is_realtime": false,
+            "last_updated": "2017-02-02T17:45:06Z",
+            "moq": 224,
+            "octopart_rfq_url": null,
+            "on_order_eta": null,
+            "on_order_quantity": null,
+            "order_multiple": null,
+            "packaging": null,
+            "prices": {
+                "USD": [
+                    [
+                        224,
+                        "0.16420"
+                    ],
+                    [
+                        500,
+                        "0.14070"
+                    ],
+                    [
+                        1000,
+                        "0.09900"
+                    ],
+                    [
+                        2500,
+                        "0.09640"
+                    ],
+                    [
+                        5000,
+                        "0.09320"
+                    ]
+                ]
+            },
+            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=0b8049f&sid=5489&ppid=19922&vpid=327876190&ct=offers",
+            "seller": {
+                "__class__": "Seller",
+                "display_flag": "US",
+                "has_ecommerce": true,
+                "homepage_url": "http://www.verical.com",
+                "id": "2617",
+                "name": "Verical",
+                "uid": "504e954473118389"
+            },
+            "sku": "NE555D"
+        },
+        {
+            "__class__": "PartOffer",
+            "_naive_id": "92f1850f6a9c28942e595443fe1bde4d",
+            "eligible_region": "",
+            "factory_lead_days": null,
+            "factory_order_multiple": null,
+            "in_stock_quantity": 1175,
+            "is_authorized": true,
+            "is_realtime": false,
+            "last_updated": "2017-02-02T17:45:06Z",
+            "moq": 113,
+            "octopart_rfq_url": null,
+            "on_order_eta": null,
+            "on_order_quantity": null,
+            "order_multiple": null,
+            "packaging": null,
+            "prices": {
+                "USD": [
+                    [
+                        113,
+                        "0.22250"
+                    ]
+                ]
+            },
+            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=028bda4&sid=5489&ppid=19922&vpid=401826811&ct=offers",
+            "seller": {
+                "__class__": "Seller",
+                "display_flag": "US",
+                "has_ecommerce": true,
+                "homepage_url": "http://www.verical.com",
+                "id": "2617",
+                "name": "Verical",
+                "uid": "504e954473118389"
+            },
+            "sku": "NE555D"
+        },
+        {
+            "__class__": "PartOffer",
+            "_naive_id": "fafecfb9655125cb8a0834b49b2c504f",
+            "eligible_region": "",
+            "factory_lead_days": null,
+            "factory_order_multiple": null,
+            "in_stock_quantity": 3027,
+            "is_authorized": true,
+            "is_realtime": false,
+            "last_updated": "2017-02-03T02:17:13Z",
+            "moq": 1,
+            "octopart_rfq_url": null,
+            "on_order_eta": null,
+            "on_order_quantity": null,
+            "order_multiple": null,
+            "packaging": null,
+            "prices": {
+                "USD": [
+                    [
+                        1,
+                        "0.30000"
+                    ],
+                    [
+                        10,
+                        "0.26000"
+                    ],
+                    [
+                        25,
+                        "0.24000"
+                    ],
+                    [
+                        100,
+                        "0.21000"
+                    ],
+                    [
+                        250,
+                        "0.18000"
+                    ],
+                    [
+                        500,
+                        "0.14000"
+                    ],
+                    [
+                        750,
+                        "0.10000"
+                    ]
+                ]
+            },
+            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=034c372&sid=27219&ppid=19922&vpid=267016813&ct=offers",
+            "seller": {
+                "__class__": "Seller",
+                "display_flag": "US",
+                "has_ecommerce": true,
+                "homepage_url": "https://store.ti.com/",
+                "id": "11039",
+                "name": "TI store",
+                "uid": "0e26cb2c0c5fdde1"
+            },
+            "sku": "NE555D"
+        },
+        {
+            "__class__": "PartOffer",
+            "_naive_id": "326d386e2cb54d059585286b687b1631",
+            "eligible_region": "",
+            "factory_lead_days": 42,
+            "factory_order_multiple": null,
+            "in_stock_quantity": 47400,
+            "is_authorized": true,
+            "is_realtime": false,
+            "last_updated": "2017-02-03T06:38:18Z",
+            "moq": 75,
+            "octopart_rfq_url": null,
+            "on_order_eta": null,
+            "on_order_quantity": null,
+            "order_multiple": 75,
+            "packaging": null,
+            "prices": {
+                "EUR": [
+                    [
+                        75,
+                        "0.13971"
+                    ],
+                    [
+                        150,
+                        "0.10867"
+                    ],
+                    [
+                        300,
+                        "0.08891"
+                    ],
+                    [
+                        450,
+                        "0.07523"
+                    ],
+                    [
+                        750,
+                        "0.06986"
+                    ]
+                ]
+            },
+            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=0c777ce&sid=15544&ppid=19922&vpid=61590873&ct=offers",
+            "seller": {
+                "__class__": "Seller",
+                "display_flag": "EU",
+                "has_ecommerce": true,
+                "homepage_url": "http://avnetexpress.avnet.com/store/em/EMController?storeId=500201&action=home&region=EMEA&catalogId=500201&langId=-1",
+                "id": "5347",
+                "name": "Avnet Europe",
+                "uid": "9416511ca99347d1"
+            },
+            "sku": "NE555D"
+        },
+        {
+            "__class__": "PartOffer",
+            "_naive_id": "81942bf65eacc0d7056b9dd515cb05b6",
+            "eligible_region": "",
+            "factory_lead_days": 1,
+            "factory_order_multiple": null,
+            "in_stock_quantity": 1175,
+            "is_authorized": true,
+            "is_realtime": false,
+            "last_updated": "2017-02-03T11:01:25Z",
+            "moq": 25,
+            "octopart_rfq_url": null,
+            "on_order_eta": null,
+            "on_order_quantity": null,
+            "order_multiple": null,
+            "packaging": null,
+            "prices": {
+                "CNY": [
+                    [
+                        25,
+                        "1.44000"
+                    ]
+                ],
+                "JPY": [
+                    [
+                        25,
+                        "19.80000"
+                    ],
+                    [
+                        50,
+                        "17.20000"
+                    ],
+                    [
+                        100,
+                        "14.60000"
+                    ],
+                    [
+                        200,
+                        "14.10000"
+                    ],
+                    [
+                        500,
+                        "12.10000"
+                    ]
+                ],
+                "USD": [
+                    [
+                        25,
+                        "0.17800"
+                    ],
+                    [
+                        50,
+                        "0.15400"
+                    ],
+                    [
+                        100,
+                        "0.13100"
+                    ],
+                    [
+                        200,
+                        "0.12700"
+                    ],
+                    [
+                        500,
+                        "0.10900"
+                    ]
+                ]
+            },
+            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=025562f&sid=13512&ppid=19922&vpid=280643521&ct=offers",
+            "seller": {
+                "__class__": "Seller",
+                "display_flag": "JP",
+                "has_ecommerce": true,
+                "homepage_url": "http://chip1stop.com/",
+                "id": "4089",
+                "name": "Chip One Stop Japan",
+                "uid": "90be55b4b6214379"
+            },
+            "sku": "C1S523900766521"
+        },
+        {
+            "__class__": "PartOffer",
+            "_naive_id": "d24817e7a8eae2bc412f5ef9c8ac333e",
+            "eligible_region": "",
+            "factory_lead_days": null,
+            "factory_order_multiple": null,
+            "in_stock_quantity": 22037,
+            "is_authorized": true,
+            "is_realtime": false,
+            "last_updated": "2017-02-03T09:45:37Z",
+            "moq": null,
+            "octopart_rfq_url": null,
+            "on_order_eta": null,
+            "on_order_quantity": null,
+            "order_multiple": null,
+            "packaging": null,
+            "prices": {
+                "USD": [
+                    [
+                        1,
+                        "0.13000"
+                    ],
+                    [
+                        25,
+                        "0.12000"
+                    ],
+                    [
+                        100,
+                        "0.11000"
+                    ],
+                    [
+                        500,
+                        "0.11000"
+                    ],
+                    [
+                        1000,
+                        "0.10000"
+                    ]
+                ]
+            },
+            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=0c95dd2&sid=5832&ppid=19922&vpid=182227600&ct=offers",
+            "seller": {
+                "__class__": "Seller",
+                "display_flag": "US",
+                "has_ecommerce": true,
+                "homepage_url": "http://www.rocelec.com/",
+                "id": "2638",
+                "name": "Rochester Electronics",
+                "uid": "76dfb3d555f7a518"
+            },
+            "sku": "NE555D"
+        },
+        {
+            "__class__": "PartOffer",
+            "_naive_id": "ec0c529b22672ee004d8350a956480f3",
+            "eligible_region": "",
+            "factory_lead_days": null,
+            "factory_order_multiple": null,
+            "in_stock_quantity": 5142,
+            "is_authorized": true,
+            "is_realtime": false,
+            "last_updated": "2017-02-03T13:21:15Z",
+            "moq": null,
+            "octopart_rfq_url": null,
+            "on_order_eta": null,
+            "on_order_quantity": null,
+            "order_multiple": null,
+            "packaging": null,
+            "prices": {
+                "USD": [
+                    [
+                        1,
+                        "0.39000"
+                    ],
+                    [
+                        10,
+                        "0.29700"
+                    ],
+                    [
+                        50,
+                        "0.29700"
+                    ],
+                    [
+                        100,
+                        "0.16100"
+                    ],
+                    [
+                        1000,
+                        "0.12100"
+                    ],
+                    [
+                        10000,
+                        "0.09700"
+                    ]
+                ]
+            },
+            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=0ae6df8&sid=2401&ppid=19922&vpid=37630969&ct=offers",
+            "seller": {
+                "__class__": "Seller",
+                "display_flag": "US",
+                "has_ecommerce": true,
+                "homepage_url": "http://www.mouser.com",
+                "id": "2401",
+                "name": "Mouser",
+                "uid": "a5e060ea85e77627"
+            },
+            "sku": "595-NE555D"
+        },
+        {
+            "__class__": "PartOffer",
+            "_naive_id": "40cc840ca02a5ba9e15543e1db5ac101",
+            "eligible_region": "",
+            "factory_lead_days": 3,
+            "factory_order_multiple": null,
+            "in_stock_quantity": 375,
+            "is_authorized": true,
+            "is_realtime": false,
+            "last_updated": "2017-02-03T12:38:46Z",
+            "moq": 75,
+            "octopart_rfq_url": null,
+            "on_order_eta": null,
+            "on_order_quantity": null,
+            "order_multiple": null,
+            "packaging": null,
+            "prices": {
+                "CNY": [
+                    [
+                        75,
+                        "2.24000"
+                    ],
+                    [
+                        150,
+                        "1.23000"
+                    ]
+                ],
+                "USD": [
+                    [
+                        75,
+                        "0.29600"
+                    ],
+                    [
+                        150,
+                        "0.16000"
+                    ]
+                ]
+            },
+            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=018e63e&sid=27109&ppid=19922&vpid=276949225&ct=offers",
+            "seller": {
+                "__class__": "Seller",
+                "display_flag": "JP",
+                "has_ecommerce": true,
+                "homepage_url": "http://www.chip1stop.com",
+                "id": "10930",
+                "name": "Chip One Stop Global",
+                "uid": "d2d317d9d1070114"
+            },
+            "sku": "C1S746201307060"
+        },
+        {
+            "__class__": "PartOffer",
+            "_naive_id": "077f130a19865a30a176d4a3c6e7c621",
+            "eligible_region": "",
+            "factory_lead_days": 5,
+            "factory_order_multiple": null,
+            "in_stock_quantity": 344,
+            "is_authorized": true,
+            "is_realtime": false,
+            "last_updated": "2017-02-03T12:38:46Z",
+            "moq": 5,
+            "octopart_rfq_url": null,
+            "on_order_eta": null,
+            "on_order_quantity": null,
+            "order_multiple": null,
+            "packaging": null,
+            "prices": {
+                "CNY": [
+                    [
+                        5,
+                        "2.54000"
+                    ],
+                    [
+                        25,
+                        "1.93000"
+                    ],
+                    [
+                        50,
+                        "1.93000"
+                    ],
+                    [
+                        100,
+                        "0.95400"
+                    ]
+                ],
+                "JPY": [
+                    [
+                        5,
+                        "24.60000"
+                    ],
+                    [
+                        50,
+                        "23.60000"
+                    ]
+                ],
+                "USD": [
+                    [
+                        5,
+                        "0.22100"
+                    ],
+                    [
+                        50,
+                        "0.21200"
+                    ]
+                ]
+            },
+            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=0976161&sid=27109&ppid=19922&vpid=268130272&ct=offers",
+            "seller": {
+                "__class__": "Seller",
+                "display_flag": "JP",
+                "has_ecommerce": true,
+                "homepage_url": "http://www.chip1stop.com",
+                "id": "10930",
+                "name": "Chip One Stop Global",
+                "uid": "d2d317d9d1070114"
+            },
+            "sku": "C1S746200072875"
+        },
+        {
+            "__class__": "PartOffer",
+            "_naive_id": "5edbab8bfdc25bd04d7ddd8dfe09ec86",
+            "eligible_region": "",
+            "factory_lead_days": 2,
+            "factory_order_multiple": null,
+            "in_stock_quantity": 22,
+            "is_authorized": true,
+            "is_realtime": false,
+            "last_updated": "2017-02-03T12:38:46Z",
+            "moq": 5,
+            "octopart_rfq_url": null,
+            "on_order_eta": null,
+            "on_order_quantity": null,
+            "order_multiple": null,
+            "packaging": null,
+            "prices": {
+                "USD": [
+                    [
+                        5,
+                        "1.30000"
+                    ]
+                ]
+            },
+            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=020c74b&sid=27109&ppid=19922&vpid=286230201&ct=offers",
+            "seller": {
+                "__class__": "Seller",
+                "display_flag": "JP",
+                "has_ecommerce": true,
+                "homepage_url": "http://www.chip1stop.com",
+                "id": "10930",
+                "name": "Chip One Stop Global",
+                "uid": "d2d317d9d1070114"
+            },
+            "sku": "C1S746201307079"
+        },
+        {
+            "__class__": "PartOffer",
+            "_naive_id": "d8c3756bb08f246fd73ce2d4ceccdb39",
+            "eligible_region": "",
+            "factory_lead_days": null,
+            "factory_order_multiple": null,
+            "in_stock_quantity": 3840,
+            "is_authorized": true,
+            "is_realtime": false,
+            "last_updated": "2017-02-03T06:12:49Z",
+            "moq": 1,
+            "octopart_rfq_url": null,
+            "on_order_eta": null,
+            "on_order_quantity": null,
+            "order_multiple": null,
+            "packaging": null,
+            "prices": {
+                "USD": [
+                    [
+                        1,
+                        "0.39900"
+                    ],
+                    [
+                        10,
+                        "0.30900"
+                    ],
+                    [
+                        100,
+                        "0.16800"
+                    ],
+                    [
+                        1000,
+                        "0.12500"
+                    ],
+                    [
+                        2500,
+                        "0.10800"
+                    ],
+                    [
+                        10000,
+                        "0.10100"
+                    ],
+                    [
+                        25000,
+                        "0.09300"
+                    ],
+                    [
+                        50000,
+                        "0.08900"
+                    ]
+                ]
+            },
+            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=07f62de&sid=2402&ppid=19922&vpid=2897704&ct=offers",
+            "seller": {
+                "__class__": "Seller",
+                "display_flag": "US",
+                "has_ecommerce": true,
+                "homepage_url": "http://www.newark.com",
+                "id": "2402",
+                "name": "Newark",
+                "uid": "d294179ef2900153"
+            },
+            "sku": "08F2512"
+        },
+        {
+            "__class__": "PartOffer",
+            "_naive_id": "a5aa6d3b51d2a1a1ebdd451906858fba",
+            "eligible_region": "",
+            "factory_lead_days": 42,
+            "factory_order_multiple": null,
+            "in_stock_quantity": 1500,
+            "is_authorized": true,
+            "is_realtime": false,
+            "last_updated": "2017-02-03T06:06:24Z",
+            "moq": 1500,
+            "octopart_rfq_url": null,
+            "on_order_eta": null,
+            "on_order_quantity": null,
+            "order_multiple": 75,
+            "packaging": null,
+            "prices": {
+                "USD": [
+                    [
+                        1500,
+                        "0.08375"
+                    ]
+                ]
+            },
+            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=0641935&sid=14182&ppid=19922&vpid=52266588&ct=offers",
+            "seller": {
+                "__class__": "Seller",
+                "display_flag": "SG",
+                "has_ecommerce": true,
+                "homepage_url": "http://avnetexpress.avnet.com/store/em/EMController?langId=-1&storeId=500201&catalogId=500201&action=home",
+                "id": "4523",
+                "name": "Avnet Asia",
+                "uid": "8604430ebec955c3"
+            },
+            "sku": "NE555D"
+        },
+        {
+            "__class__": "PartOffer",
+            "_naive_id": "76869fb3f9d0e0b0b9e3fe4abf9718f0",
+            "eligible_region": "",
+            "factory_lead_days": 28,
+            "factory_order_multiple": null,
+            "in_stock_quantity": 3928,
+            "is_authorized": false,
+            "is_realtime": false,
+            "last_updated": "2017-02-03T12:15:35Z",
+            "moq": 1,
+            "octopart_rfq_url": null,
+            "on_order_eta": null,
+            "on_order_quantity": null,
+            "order_multiple": 1,
+            "packaging": null,
+            "prices": {
+                "USD": [
+                    [
+                        1,
+                        "0.55000"
+                    ],
+                    [
+                        25,
+                        "0.12000"
+                    ],
+                    [
+                        100,
+                        "0.10200"
+                    ],
+                    [
+                        500,
+                        "0.08500"
+                    ],
+                    [
+                        1500,
+                        "0.07600"
+                    ]
+                ]
+            },
+            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=0e6e823&sid=1532&ppid=19922&vpid=103422841&ct=offers",
+            "seller": {
+                "__class__": "Seller",
+                "display_flag": "PL",
+                "has_ecommerce": true,
+                "homepage_url": "http://www.tme.eu/en/",
+                "id": "1532",
+                "name": "TME",
+                "uid": "223ee7340ea4f1f9"
+            },
+            "sku": "NE555D"
+        },
+        {
+            "__class__": "PartOffer",
+            "_naive_id": "1e869674d48fe194a8a89b3c8580b8d1",
+            "eligible_region": "",
+            "factory_lead_days": null,
+            "factory_order_multiple": null,
+            "in_stock_quantity": 1806,
+            "is_authorized": false,
+            "is_realtime": false,
+            "last_updated": "2017-02-02T22:18:13Z",
+            "moq": 1,
+            "octopart_rfq_url": "https://octopart.com/rfq/generate?ppid=19922&vpid=45029776",
+            "on_order_eta": null,
+            "on_order_quantity": null,
+            "order_multiple": 1,
+            "packaging": null,
+            "prices": {
+                "USD": [
+                    [
+                        130,
+                        "0.19200"
+                    ],
+                    [
+                        500,
+                        "0.16500"
+                    ],
+                    [
+                        1000,
+                        "0.11000"
+                    ]
+                ]
+            },
+            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=0df2271&sid=13184&ppid=19922&vpid=45029776&ct=offers",
+            "seller": {
+                "__class__": "Seller",
+                "display_flag": "GB",
+                "has_ecommerce": true,
+                "homepage_url": "http://componentsense.com/",
+                "id": "3951",
+                "name": "Component Sense",
+                "uid": "cd0a0800eb031ecd"
+            },
+            "sku": "NE555D"
+        },
+        {
+            "__class__": "PartOffer",
+            "_naive_id": "a56fdbfd3e66a89d97044ad0354b27c5",
+            "eligible_region": "",
+            "factory_lead_days": null,
+            "factory_order_multiple": null,
+            "in_stock_quantity": 11950,
+            "is_authorized": false,
+            "is_realtime": false,
+            "last_updated": "2017-02-03T06:34:02Z",
+            "moq": 25,
+            "octopart_rfq_url": null,
+            "on_order_eta": null,
+            "on_order_quantity": null,
+            "order_multiple": null,
+            "packaging": null,
+            "prices": {
+                "EUR": [
+                    [
+                        25,
+                        "0.26200"
+                    ],
+                    [
+                        100,
+                        "0.13100"
+                    ],
+                    [
+                        300,
+                        "0.06550"
+                    ],
+                    [
+                        1000,
+                        "0.06250"
+                    ]
+                ]
+            },
+            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=0227d0f&sid=15176&ppid=19922&vpid=215066212&ct=offers",
+            "seller": {
+                "__class__": "Seller",
+                "display_flag": "DE",
+                "has_ecommerce": true,
+                "homepage_url": "http://www.schukat.com",
+                "id": "5192",
+                "name": "Schukat",
+                "uid": "0783c2893aadd444"
+            },
+            "sku": "LM555D-SMD"
+        },
+        {
+            "__class__": "PartOffer",
+            "_naive_id": "a0f0642804f163fd230a6e53b041504b",
+            "eligible_region": "",
+            "factory_lead_days": null,
+            "factory_order_multiple": null,
+            "in_stock_quantity": 18604,
+            "is_authorized": false,
+            "is_realtime": false,
+            "last_updated": "2017-02-03T12:06:25Z",
+            "moq": null,
+            "octopart_rfq_url": null,
+            "on_order_eta": null,
+            "on_order_quantity": null,
+            "order_multiple": null,
+            "packaging": null,
+            "prices": {},
+            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=049ce91&sid=10022&ppid=19922&vpid=48633188&ct=offers",
+            "seller": {
+                "__class__": "Seller",
+                "display_flag": "GB",
+                "has_ecommerce": true,
+                "homepage_url": "http://www.rs-components.com",
+                "id": "3261",
+                "name": "RS Components",
+                "uid": "fbaa3ea0de71286d"
+            },
+            "sku": "785818"
+        },
+        {
+            "__class__": "PartOffer",
+            "_naive_id": "48e0bd35a08db871a86460b30748425c",
+            "eligible_region": "",
+            "factory_lead_days": null,
+            "factory_order_multiple": null,
+            "in_stock_quantity": 1000,
+            "is_authorized": false,
+            "is_realtime": false,
+            "last_updated": "2016-10-20T00:00:27Z",
+            "moq": 1,
+            "octopart_rfq_url": null,
+            "on_order_eta": null,
+            "on_order_quantity": null,
+            "order_multiple": 1,
+            "packaging": null,
+            "prices": {
+                "USD": [
+                    [
+                        1,
+                        "0.59000"
+                    ]
+                ]
+            },
+            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=02ba3ae&sid=15896&ppid=19922&vpid=176943456&ct=offers",
+            "seller": {
+                "__class__": "Seller",
+                "display_flag": "US",
+                "has_ecommerce": true,
+                "homepage_url": "http://vetco.net",
+                "id": "5567",
+                "name": "Vetco",
+                "uid": "cd10081af1c91ed7"
+            },
+            "sku": "16885"
+        },
+        {
+            "__class__": "PartOffer",
+            "_naive_id": "77fa1ce45fbb72bad37a9440e4869692",
+            "eligible_region": "",
+            "factory_lead_days": null,
+            "factory_order_multiple": null,
+            "in_stock_quantity": 403,
+            "is_authorized": false,
+            "is_realtime": false,
+            "last_updated": "2017-02-03T02:26:11Z",
+            "moq": 1,
+            "octopart_rfq_url": null,
+            "on_order_eta": null,
+            "on_order_quantity": null,
+            "order_multiple": null,
+            "packaging": null,
+            "prices": {
+                "EUR": [
+                    [
+                        1,
+                        "0.33000"
+                    ],
+                    [
+                        25,
+                        "0.29000"
+                    ],
+                    [
+                        100,
+                        "0.25000"
+                    ],
+                    [
+                        250,
+                        "0.22000"
+                    ]
+                ]
+            },
+            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=0072f5d&sid=14389&ppid=19922&vpid=53295296&ct=offers",
+            "seller": {
+                "__class__": "Seller",
+                "display_flag": "EU",
+                "has_ecommerce": true,
+                "homepage_url": "http://www.distrelec.com",
+                "id": "4617",
+                "name": "Distrelec",
+                "uid": "e53d2037de5236fa"
+            },
+            "sku": "NE555D"
+        },
+        {
+            "__class__": "PartOffer",
+            "_naive_id": "4c9c0e2be2c4f04099543b843b45f55f",
+            "eligible_region": "",
+            "factory_lead_days": null,
+            "factory_order_multiple": null,
+            "in_stock_quantity": 3,
+            "is_authorized": false,
+            "is_realtime": false,
+            "last_updated": "2017-01-30T19:34:27Z",
+            "moq": null,
+            "octopart_rfq_url": null,
+            "on_order_eta": null,
+            "on_order_quantity": null,
+            "order_multiple": null,
+            "packaging": null,
+            "prices": {
+                "USD": [
+                    [
+                        1,
+                        "0.12000"
+                    ]
+                ]
+            },
+            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=0e4fe18&sid=13062&ppid=19922&vpid=210313452&ct=offers",
+            "seller": {
+                "__class__": "Seller",
+                "display_flag": "US",
+                "has_ecommerce": true,
+                "homepage_url": "http://rcfreelance.com/",
+                "id": "3917",
+                "name": "Freelance Electronics",
+                "uid": "a1fc64f687d7723b"
+            },
+            "sku": "NE555D"
+        },
+        {
+            "__class__": "PartOffer",
+            "_naive_id": "db84000cac14721bcc31542f49dbf293",
+            "eligible_region": "",
+            "factory_lead_days": null,
+            "factory_order_multiple": null,
+            "in_stock_quantity": 7024,
+            "is_authorized": false,
+            "is_realtime": false,
+            "last_updated": "2017-02-02T23:13:27Z",
+            "moq": null,
+            "octopart_rfq_url": null,
+            "on_order_eta": null,
+            "on_order_quantity": null,
+            "order_multiple": null,
+            "packaging": null,
+            "prices": {
+                "USD": [
+                    [
+                        1,
+                        "1.00000"
+                    ],
+                    [
+                        6,
+                        "0.50000"
+                    ],
+                    [
+                        21,
+                        "0.30000"
+                    ],
+                    [
+                        168,
+                        "0.20000"
+                    ],
+                    [
+                        2001,
+                        "0.15000"
+                    ],
+                    [
+                        5334,
+                        "0.12500"
+                    ]
+                ]
+            },
+            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=006f7d7&sid=2412&ppid=19922&vpid=5055265&ct=offers",
+            "seller": {
+                "__class__": "Seller",
+                "display_flag": "US",
+                "has_ecommerce": true,
+                "homepage_url": "http://www.questcomp.com",
+                "id": "2412",
+                "name": "Quest",
+                "uid": "b29977939293615e"
+            },
+            "sku": "NE555D"
+        },
+        {
+            "__class__": "PartOffer",
+            "_naive_id": "6b2b3cab8402868e314f751e36764fd7",
+            "eligible_region": "",
+            "factory_lead_days": null,
+            "factory_order_multiple": null,
+            "in_stock_quantity": 675,
+            "is_authorized": false,
+            "is_realtime": false,
+            "last_updated": "2017-01-31T17:55:50Z",
+            "moq": null,
+            "octopart_rfq_url": null,
+            "on_order_eta": null,
+            "on_order_quantity": null,
+            "order_multiple": null,
+            "packaging": null,
+            "prices": {},
+            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=071dba0&sid=13909&ppid=19922&vpid=49958930&ct=offers",
+            "seller": {
+                "__class__": "Seller",
+                "display_flag": "US",
+                "has_ecommerce": false,
+                "homepage_url": "http://www.nstechnology.com",
+                "id": "4293",
+                "name": "NetSource Technology",
+                "uid": "6d39a833549abefe"
+            },
+            "sku": "NE555D"
+        },
+        {
+            "__class__": "PartOffer",
+            "_naive_id": "0f362bc1b21e2efc7402ba086595b848",
+            "eligible_region": "",
+            "factory_lead_days": null,
+            "factory_order_multiple": null,
+            "in_stock_quantity": -2,
+            "is_authorized": false,
+            "is_realtime": false,
+            "last_updated": "2017-02-01T19:33:51Z",
+            "moq": null,
+            "octopart_rfq_url": null,
+            "on_order_eta": null,
+            "on_order_quantity": null,
+            "order_multiple": null,
+            "packaging": null,
+            "prices": {},
+            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=08f5a0b&sid=13801&ppid=19922&vpid=277573473&ct=offers",
+            "seller": {
+                "__class__": "Seller",
+                "display_flag": "US",
+                "has_ecommerce": false,
+                "homepage_url": "http://www.cpluselectronics.com",
+                "id": "4209",
+                "name": "C Plus Electronics",
+                "uid": "b66b73618f7c65ac"
+            },
+            "sku": "NE555D"
+        },
+        {
+            "__class__": "PartOffer",
+            "_naive_id": "07f44364ad17c3c9b0ba70e3c94cda04",
+            "eligible_region": "",
+            "factory_lead_days": null,
+            "factory_order_multiple": null,
+            "in_stock_quantity": 1425,
+            "is_authorized": false,
+            "is_realtime": false,
+            "last_updated": "2017-01-27T16:37:05Z",
+            "moq": null,
+            "octopart_rfq_url": null,
+            "on_order_eta": null,
+            "on_order_quantity": null,
+            "order_multiple": null,
+            "packaging": null,
+            "prices": {},
+            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=0a683c4&sid=26773&ppid=19922&vpid=244487224&ct=offers",
+            "seller": {
+                "__class__": "Seller",
+                "display_flag": "US",
+                "has_ecommerce": false,
+                "homepage_url": "http://stlaa.com/",
+                "id": "10597",
+                "name": "STLAA.com",
+                "uid": "606aa5606069b3ad"
+            },
+            "sku": "NE555D"
+        },
+        {
+            "__class__": "PartOffer",
+            "_naive_id": "0be1e7e1646ef0d1badbc2b2eef75d2d",
+            "eligible_region": "",
+            "factory_lead_days": null,
+            "factory_order_multiple": null,
+            "in_stock_quantity": 3325,
+            "is_authorized": false,
+            "is_realtime": false,
+            "last_updated": "2017-01-17T20:41:43Z",
+            "moq": null,
+            "octopart_rfq_url": null,
+            "on_order_eta": null,
+            "on_order_quantity": null,
+            "order_multiple": null,
+            "packaging": null,
+            "prices": {},
+            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=0c37af1&sid=24049&ppid=19922&vpid=278111543&ct=offers",
+            "seller": {
+                "__class__": "Seller",
+                "display_flag": "SE",
+                "has_ecommerce": false,
+                "homepage_url": "http://rotakorn.se",
+                "id": "9477",
+                "name": "Rotakorn",
+                "uid": "6bd3aed967b0b814"
+            },
+            "sku": "868245287"
+        },
+        {
+            "__class__": "PartOffer",
+            "_naive_id": "6248a1c2740313e97c675f565757a8ad",
+            "eligible_region": "",
+            "factory_lead_days": null,
+            "factory_order_multiple": null,
+            "in_stock_quantity": 300,
+            "is_authorized": false,
+            "is_realtime": false,
+            "last_updated": "2016-12-30T11:34:16Z",
+            "moq": null,
+            "octopart_rfq_url": null,
+            "on_order_eta": null,
+            "on_order_quantity": null,
+            "order_multiple": null,
+            "packaging": null,
+            "prices": {},
+            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=0753e87&sid=9309&ppid=19922&vpid=34937226&ct=offers",
+            "seller": {
+                "__class__": "Seller",
+                "display_flag": "US",
+                "has_ecommerce": false,
+                "homepage_url": "http://www.sie-connect.com",
+                "id": "3197",
+                "name": "SIE Connect",
+                "uid": "ca350f3fef2e19f2"
+            },
+            "sku": "NE555D"
+        },
+        {
+            "__class__": "PartOffer",
+            "_naive_id": "e0ebd919a5808613e775162c14040fb8",
+            "eligible_region": "",
+            "factory_lead_days": null,
+            "factory_order_multiple": null,
+            "in_stock_quantity": 10,
+            "is_authorized": false,
+            "is_realtime": false,
+            "last_updated": "2016-12-06T12:00:20Z",
+            "moq": null,
+            "octopart_rfq_url": null,
+            "on_order_eta": null,
+            "on_order_quantity": null,
+            "order_multiple": null,
+            "packaging": null,
+            "prices": {},
+            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=0982dc4&sid=27233&ppid=19922&vpid=312115507&ct=offers",
+            "seller": {
+                "__class__": "Seller",
+                "display_flag": "IN",
+                "has_ecommerce": false,
+                "homepage_url": null,
+                "id": "11053",
+                "name": "Accelarata",
+                "uid": "4280878a40cb9147"
+            },
+            "sku": "EI4-NE555D"
+        },
+        {
+            "__class__": "PartOffer",
+            "_naive_id": "3da10f5bdcf4cc74725814ce13c06923",
+            "eligible_region": "",
+            "factory_lead_days": null,
+            "factory_order_multiple": null,
+            "in_stock_quantity": -2,
+            "is_authorized": false,
+            "is_realtime": false,
+            "last_updated": "2017-02-03T03:40:49Z",
+            "moq": null,
+            "octopart_rfq_url": null,
+            "on_order_eta": null,
+            "on_order_quantity": null,
+            "order_multiple": null,
+            "packaging": null,
+            "prices": {},
+            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=09e652c&sid=14587&ppid=19922&vpid=411355963&ct=offers",
+            "seller": {
+                "__class__": "Seller",
+                "display_flag": "US",
+                "has_ecommerce": true,
+                "homepage_url": "http://conrad.com",
+                "id": "4782",
+                "name": "Conrad",
+                "uid": "7914bc1e42dcaad3"
+            },
+            "sku": "142549"
+        },
+        {
+            "__class__": "PartOffer",
+            "_naive_id": "04a6eeaf0790f1be227226697006e236",
+            "eligible_region": "",
+            "factory_lead_days": null,
+            "factory_order_multiple": null,
+            "in_stock_quantity": 33409,
+            "is_authorized": false,
+            "is_realtime": false,
+            "last_updated": "2017-01-24T14:25:47Z",
+            "moq": null,
+            "octopart_rfq_url": "https://octopart.com/rfq/generate?ppid=19922&vpid=192948664",
+            "on_order_eta": null,
+            "on_order_quantity": null,
+            "order_multiple": null,
+            "packaging": null,
+            "prices": {},
+            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=07dc08d&sid=20251&ppid=19922&vpid=192948664&ct=offers",
+            "seller": {
+                "__class__": "Seller",
+                "display_flag": "IL",
+                "has_ecommerce": false,
+                "homepage_url": "http://www.gtelec.com/",
+                "id": "8169",
+                "name": "GreenTree Electronics",
+                "uid": "a633633990bc75f4"
+            },
+            "sku": "NE555D"
+        }
+    ],
+    "short_description": "Peripheral circuit; astable/monostable, timer; 500kHz; 4.5\u00f716VDC",
+    "specs": {
+        "case_package": {
+            "__class__": "SpecValue",
+            "attribution": {
+                "__class__": "Attribution",
+                "first_acquired": null,
+                "sources": [
+                    {
+                        "__class__": "Source",
+                        "name": "Texas Instruments",
+                        "uid": "40f985f368ed933e"
+                    }
+                ]
+            },
+            "display_value": "SOIC",
+            "max_value": null,
+            "metadata": {
+                "__class__": "SpecMetadata",
+                "datatype": "string",
+                "key": "case_package",
+                "name": "Case/Package",
+                "unit": null
+            },
+            "min_value": null,
+            "value": [
+                "SOIC"
+            ]
+        },
+        "current_rating": {
+            "__class__": "SpecValue",
+            "attribution": {
+                "__class__": "Attribution",
+                "first_acquired": null,
+                "sources": [
+                    {
+                        "__class__": "Source",
+                        "name": "_legacy Newark",
+                        "uid": "e2e827e2ff00312f"
+                    }
+                ]
+            },
+            "display_value": "10.0 A",
+            "max_value": null,
+            "metadata": {
+                "__class__": "SpecMetadata",
+                "datatype": "decimal",
+                "key": "current_rating",
+                "name": "Current Rating",
+                "unit": {
+                    "__class__": "UnitOfMeasurement",
+                    "name": "A",
+                    "symbol": "A"
+                }
+            },
+            "min_value": null,
+            "value": [
+                "10.0"
+            ]
+        },
+        "frequency": {
+            "__class__": "SpecValue",
+            "attribution": {
+                "__class__": "Attribution",
+                "first_acquired": null,
+                "sources": [
+                    {
+                        "__class__": "Source",
+                        "name": "Farnell",
+                        "uid": "58989d9272cd8b5f"
+                    }
+                ]
+            },
+            "display_value": "500 kHz",
+            "max_value": null,
+            "metadata": {
+                "__class__": "SpecMetadata",
+                "datatype": "decimal",
+                "key": "frequency",
+                "name": "Frequency",
+                "unit": {
+                    "__class__": "UnitOfMeasurement",
+                    "name": "Hz",
+                    "symbol": "Hz"
+                }
+            },
+            "min_value": null,
+            "value": [
+                "500000.0"
+            ]
+        },
+        "lead_free_status": {
+            "__class__": "SpecValue",
+            "attribution": {
+                "__class__": "Attribution",
+                "first_acquired": null,
+                "sources": [
+                    {
+                        "__class__": "Source",
+                        "name": "Texas Instruments",
+                        "uid": "40f985f368ed933e"
+                    }
+                ]
+            },
+            "display_value": "Lead Free",
+            "max_value": null,
+            "metadata": {
+                "__class__": "SpecMetadata",
+                "datatype": "string",
+                "key": "lead_free_status",
+                "name": "Lead-Free Status",
+                "unit": null
+            },
+            "min_value": null,
+            "value": [
+                "Lead Free"
+            ]
+        },
+        "lifecycle_status": {
+            "__class__": "SpecValue",
+            "attribution": {
+                "__class__": "Attribution",
+                "first_acquired": null,
+                "sources": [
+                    {
+                        "__class__": "Source",
+                        "name": "Texas Instruments",
+                        "uid": "40f985f368ed933e"
+                    }
+                ]
+            },
+            "display_value": "Active",
+            "max_value": null,
+            "metadata": {
+                "__class__": "SpecMetadata",
+                "datatype": "string",
+                "key": "lifecycle_status",
+                "name": "Lifecycle Status",
+                "unit": null
+            },
+            "min_value": null,
+            "value": [
+                "Active"
+            ]
+        },
+        "mounting_style": {
+            "__class__": "SpecValue",
+            "attribution": {
+                "__class__": "Attribution",
+                "first_acquired": null,
+                "sources": null
+            },
+            "display_value": "Surface Mount",
+            "max_value": null,
+            "metadata": {
+                "__class__": "SpecMetadata",
+                "datatype": "string",
+                "key": "mounting_style",
+                "name": "Mounting Style",
+                "unit": null
+            },
+            "min_value": null,
+            "value": [
+                "Surface Mount"
+            ]
+        },
+        "packaging": {
+            "__class__": "SpecValue",
+            "attribution": {
+                "__class__": "Attribution",
+                "first_acquired": null,
+                "sources": null
+            },
+            "display_value": "Bulk",
+            "max_value": null,
+            "metadata": {
+                "__class__": "SpecMetadata",
+                "datatype": "string",
+                "key": "packaging",
+                "name": "Packaging",
+                "unit": null
+            },
+            "min_value": null,
+            "value": [
+                "Bulk"
+            ]
+        },
+        "pin_count": {
+            "__class__": "SpecValue",
+            "attribution": {
+                "__class__": "Attribution",
+                "first_acquired": null,
+                "sources": [
+                    {
+                        "__class__": "Source",
+                        "name": "Texas Instruments",
+                        "uid": "40f985f368ed933e"
+                    }
+                ]
+            },
+            "display_value": "8",
+            "max_value": null,
+            "metadata": {
+                "__class__": "SpecMetadata",
+                "datatype": "integer",
+                "key": "pin_count",
+                "name": "Number of Pins",
+                "unit": null
+            },
+            "min_value": null,
+            "value": [
+                "8"
+            ]
+        },
+        "quiescent_current": {
+            "__class__": "SpecValue",
+            "attribution": {
+                "__class__": "Attribution",
+                "first_acquired": null,
+                "sources": [
+                    {
+                        "__class__": "Source",
+                        "name": "Texas Instruments",
+                        "uid": "40f985f368ed933e"
+                    }
+                ]
+            },
+            "display_value": "2.00 mA",
+            "max_value": null,
+            "metadata": {
+                "__class__": "SpecMetadata",
+                "datatype": "decimal",
+                "key": "quiescent_current",
+                "name": "Quiescent Current",
+                "unit": {
+                    "__class__": "UnitOfMeasurement",
+                    "name": "A",
+                    "symbol": "A"
+                }
+            },
+            "min_value": null,
+            "value": [
+                "0.002"
+            ]
+        },
+        "reach_svhc_compliance": {
+            "__class__": "SpecValue",
+            "attribution": {
+                "__class__": "Attribution",
+                "first_acquired": null,
+                "sources": [
+                    {
+                        "__class__": "Source",
+                        "name": "Farnell",
+                        "uid": "58989d9272cd8b5f"
+                    }
+                ]
+            },
+            "display_value": "No SVHC",
+            "max_value": null,
+            "metadata": {
+                "__class__": "SpecMetadata",
+                "datatype": "string",
+                "key": "reach_svhc_compliance",
+                "name": "REACH SVHC Compliance",
+                "unit": null
+            },
+            "min_value": null,
+            "value": [
+                "No SVHC"
+            ]
+        },
+        "rohs_status": {
+            "__class__": "SpecValue",
+            "attribution": {
+                "__class__": "Attribution",
+                "first_acquired": null,
+                "sources": [
+                    {
+                        "__class__": "Source",
+                        "name": "Texas Instruments",
+                        "uid": "40f985f368ed933e"
+                    }
+                ]
+            },
+            "display_value": "Compliant",
+            "max_value": null,
+            "metadata": {
+                "__class__": "SpecMetadata",
+                "datatype": "string",
+                "key": "rohs_status",
+                "name": "RoHS",
+                "unit": null
+            },
+            "min_value": null,
+            "value": [
+                "Compliant"
+            ]
+        },
+        "supply_current": {
+            "__class__": "SpecValue",
+            "attribution": {
+                "__class__": "Attribution",
+                "first_acquired": null,
+                "sources": [
+                    {
+                        "__class__": "Source",
+                        "name": "_legacy Allied Electronics",
+                        "uid": "bc94799ea17f6f53"
+                    }
+                ]
+            },
+            "display_value": "9.00 mA",
+            "max_value": null,
+            "metadata": {
+                "__class__": "SpecMetadata",
+                "datatype": "decimal",
+                "key": "supply_current",
+                "name": "Supply Current",
+                "unit": {
+                    "__class__": "UnitOfMeasurement",
+                    "name": "A",
+                    "symbol": "A"
+                }
+            },
+            "min_value": null,
+            "value": [
+                "0.009"
+            ]
+        },
+        "supply_voltage_dc": {
+            "__class__": "SpecValue",
+            "attribution": {
+                "__class__": "Attribution",
+                "first_acquired": null,
+                "sources": null
+            },
+            "display_value": "16.0 V (max)",
+            "max_value": "16.0",
+            "metadata": {
+                "__class__": "SpecMetadata",
+                "datatype": "decimal",
+                "key": "supply_voltage_dc",
+                "name": "Supply Voltage (DC)",
+                "unit": {
+                    "__class__": "UnitOfMeasurement",
+                    "name": "V",
+                    "symbol": "V"
+                }
+            },
+            "min_value": null,
+            "value": []
+        }
+    }
+}

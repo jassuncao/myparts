@@ -14,6 +14,8 @@ Based on a user action, the part name is looked up in octopart and the user can 
 
 * Add a merge part dialog
 
+* Prices should support currency
+
 === Doing ===
 
 * Support Projects. A project has name, description, remarks/notes, parts and attachments.

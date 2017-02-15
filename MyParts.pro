@@ -8,4 +8,5 @@ SUBDIRS += \
     qt-manhattan-style \
     octopart \
     src \
-    tests
+    tests \
+    octopart-test

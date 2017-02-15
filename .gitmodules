@@ -4,3 +4,6 @@
 [submodule "qjson-backport"]
 	path = qjson-backport
 	url = https://github.com/jassuncao/qjson-backport
+[submodule "QProgressIndicator"]
+	path = QProgressIndicator
+	url = https://github.com/mojocorp/QProgressIndicator.git

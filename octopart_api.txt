@@ -1,8 +1,8 @@
 curl -G https://octopart.com/api/v3/parts/match \
-   -d queries='[{"mpn":"NE555D","start":3,"limit":3}]' \
+   -d queries='[{"mpn":"NE555D","start":0,"limit":3}]' \
    -d apikey=12621337 \
    -d pretty_print=true \
-   -d include[]=short_description \
+   -d include[]=short_description \   
    -d show[]=mpn \
    -d show[]=brand.name \
    -d show[]=octopart_url \
@@ -68,3 +68,18 @@ curl -G https://octopart.com/api/v3/parts/match \
         }
     ]
 }
+
+
+curl -G https://octopart.com/api/v3/parts/7a97b39d1223a550 \
+   -d apikey=12621337 \
+   -d pretty_print=true \
+   -d include[]=short_description \
+   -d include[]=datasheets \
+   -d include[]=specs \
+   -d show[]=mpn \
+   -d show[]=datasheets \
+   -d show[]=specs \
+   -d show[]=brand.name \
+   -d show[]=octopart_url \
+   -d show[]=short_description
+
