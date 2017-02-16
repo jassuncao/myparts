@@ -89,6 +89,14 @@ class Offer {
 public:
     Offer();
     bool read(const QJsonObject & json);
+    QVariant moq() const {return _moq;}
+    QString packaging() const {return _packaging;}
+    QString sku() const {return _sku;}
+    Seller seller() const {return _seller;}
+    QVariant moqPrice() const {return _moqPrice;}
+    QString currency() const {return _currency;}
+    QString url() const {return _url;}
+
 private:
     QVariant findMoqPrice(const QJsonArray & pairs, QVariant moq) const;
     QVariant _moq;
@@ -104,9 +112,13 @@ class PartFull : public PartBrief{
 public:
     PartFull();
     virtual bool read(const QJsonObject & json);
+    QList<Datasheet> datasheets() const { return _datasheets;}
+    QList<PartSpec> specs() const { return _specs;}
+    QList<Offer> offers() const { return _offers;}
 private:
     QList<Datasheet> _datasheets;
     QList<PartSpec> _specs;
+    QList<Offer> _offers;
 };
 
 class PartsMatchResult {
@@ -134,8 +146,10 @@ class OctopartAPI : public QObject
 public:
     OctopartAPI(const QString &apiKey, QObject * parent = 0);
     int partsMatch(const QString & mpn, int start=0, int limit=10);
+    int partsGet(const QString & partUid);
 signals:
     void partsMatchResultFinished(int id, Octopart::PartsMatchResult result);
+    void partsGetFinished(int id, Octopart::PartFull result);
 private slots:
     void slotReplyFinished(QNetworkReply *reply);
 private:

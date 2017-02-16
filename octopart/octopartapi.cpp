@@ -60,8 +60,8 @@ private:
 namespace Octopart {
 
 enum RequestType {
-    PartsMatch
-
+    PartsMatch,
+    PartsGet
 };
 
 
@@ -152,15 +152,16 @@ Datasheet::Datasheet() :
 
 bool Datasheet::read(const QJsonObject & json)
 {
+    qDebug("Reading Datasheet object");
     bool ok = true;
     _sourceName = readSourceName(json, &ok);
     _mimetype = readStringValue(json, "mimetype", &ok);
-    _url = readStringValue(json, "octopart_url", &ok);
+    _url = readStringValue(json, "url", &ok);
     const QJsonValue & metadata = json["metadata"];
     if(metadata.isObject()){
         _numPages = readIntValue(metadata.toObject(), "num_pages", &ok);
     }
-    else{
+    else if(metadata.isUndefined()) {
        qDebug("metadata object missing");
     }
     return ok;
@@ -171,6 +172,7 @@ PartSpec::PartSpec()
 
 bool PartSpec::read(const QJsonObject & json)
 {
+    qDebug("Reading PartSpec object");
     bool ok = true;
 
     _maxValue = readNumberValue(json, "max_value");
@@ -216,12 +218,8 @@ Seller::Seller()
 
 bool Seller::read(const QJsonObject & json)
 {
-    bool ok = true;
-
-    QString _name;
-    QString _url;
-    QString _uid;
-    QString _countryCode;
+    qDebug("Reading Seller object");
+    bool ok = true;  
 
     _name = readStringValue(json, "name", &ok);
     _uid = readStringValue(json, "uid", &ok);
@@ -236,24 +234,17 @@ Offer::Offer()
 
 bool Offer::read(const QJsonObject & json)
 {
+    qDebug("Reading Offer object");
     bool ok = true;
-
-    QVariant _moq;
-    QString _packaging;
-    QString _sku;
-    Seller _seller;
-    QVariant _moqPrice;
-    QString _currency;
-    QString _url;
 
     _moq = readNumberValue(json, "moq");
     _packaging = readStringValue(json, "packaging", &ok);
     _sku = readStringValue(json, "sku", &ok);
     _url = json.value("product_url").toString();
 
-    const QJsonObject seller = json.value("seller").toObject();
-    if(!seller.isEmpty()){
-        ok = ok && _seller.read(seller);
+    const QJsonObject sellerObj = json.value("seller").toObject();
+    if(!sellerObj.isEmpty()){
+        ok = ok && _seller.read(sellerObj);
     }
 
     if(json.value("prices").isObject()){
@@ -312,16 +303,36 @@ bool PartFull::read(const QJsonObject & json)
     }
 
     const QJsonValue & tmp2 = json.value("specs");
-    if(tmp2.isArray()){
-        QJsonArray specsArr = tmp2.toArray();
-        for (int i = 0; i < specsArr.size(); ++i) {
-            QJsonObject obj = specsArr[i].toObject();
+    if(tmp2.isObject()){
+        QJsonObject specsMap = tmp2.toObject();
+
+        const QStringList keys = specsMap.keys();
+        for (int i = 0; i < keys.count(); ++i) {
+            const QString key = keys.at(i);
+            QJsonObject obj = specsMap.value(key).toObject();
             PartSpec spec;
             bool specOk = spec.read(obj);
             if(specOk){
                 _specs.append(spec);
             }
             ok = ok && specOk;
+        }
+    }
+    else{
+        qDebug()<<"No Specs";
+    }
+
+    const QJsonValue & tmp3 = json.value("offers");
+    if(tmp3.isArray()){
+        QJsonArray offersArr = tmp3.toArray();
+        for (int i = 0; i < offersArr.size(); ++i) {
+            QJsonObject obj = offersArr[i].toObject();
+            Offer offer;
+            bool offerOk = offer.read(obj);
+            if(offerOk){
+                _offers.append(offer);
+            }
+            ok = ok && offerOk;
         }
     }
 
@@ -456,6 +467,26 @@ int OctopartAPI::partsMatch(const QString & mpn, int start, int limit)
     return id;
 }
 
+int OctopartAPI::partsGet(const QString & partUid)
+{
+    UrlQueryBuilder queryBuilder(_apiUrl+"parts/"+partUid);
+    queryBuilder.addQueryItem("apikey", _apiKey);
+
+    queryBuilder.addQueryItem("include[]", "short_description");
+    queryBuilder.addQueryItem("include[]", "datasheets");
+    queryBuilder.addQueryItem("include[]", "specs");
+
+    QUrl url = queryBuilder.url();
+    qDebug()<<"Request URL "<<qPrintable(url.toEncoded());
+
+    int id = _requestCounter.fetchAndAddRelaxed(1);
+    QNetworkRequest request(url);
+    QNetworkReply *reply = _manager->get(request);
+    reply->setProperty("type", PartsGet);
+    reply->setProperty("id", id);
+    return id;
+}
+
 void OctopartAPI::slotReplyFinished(QNetworkReply *reply)
 {
     QByteArray json = reply->readAll();
@@ -478,6 +509,11 @@ void OctopartAPI::slotReplyFinished(QNetworkReply *reply)
             int size = result.items().size();
             qDebug("Query returned %d of %d", size, count);
             emit partsMatchResultFinished(id, result);
+        }
+        else if(type == PartsGet){
+            QJsonParseError parseError;
+            PartFull result = parsePartObject(json, &parseError);
+            emit partsGetFinished(id, result);
         }
 
     }

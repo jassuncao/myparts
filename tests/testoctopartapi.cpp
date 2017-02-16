@@ -58,7 +58,26 @@ void TestOctopartApi::testPartParsing()
 
 }
 
+void TestOctopartApi::testPartsGetRequest()
+{
+    Octopart::OctopartAPI api(_apiKey);
+    QSignalSpy spy(&api, SIGNAL(partsGetFinished(int,Octopart::PartFull)));
+    connect(&api, SIGNAL(partsGetFinished(int,Octopart::PartFull)), this, SLOT(_partsGetFinished(int,Octopart::PartFull)));
+    int id = api.partsGet("7a97b39d1223a550");
+    QTest::qWait(1000);
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(_lastPart.uid(), QString("7a97b39d1223a550"));
+    QCOMPARE(_lastPart.offers().at(0).seller().name(), QString("Digi-Key"));
+}
+
+
 void TestOctopartApi::_partsMatchResultFinished(int id, Octopart::PartsMatchResult res)
 {
     _lastPartsMatchResult = res;
 }
+
+void TestOctopartApi::_partsGetFinished(int id, Octopart::PartFull res)
+{
+    _lastPart = res;
+}
+

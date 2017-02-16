@@ -1,6 +1,10 @@
 {
+    "__class__": "Part",
     "brand": {
-        "name": "Texas Instruments"
+        "__class__": "Brand",
+        "homepage_url": "http://ti.com",
+        "name": "Texas Instruments",
+        "uid": "2239e3330e2df5fe"
     },
     "datasheets": [
         {
@@ -483,6 +487,12 @@
             "url": "http://datasheet.octopart.com/NE555D-Texas-Instruments-datasheet-21220987.pdf"
         }
     ],
+    "manufacturer": {
+        "__class__": "Manufacturer",
+        "homepage_url": "http://ti.com",
+        "name": "Texas Instruments",
+        "uid": "40f985f368ed933e"
+    },
     "mpn": "NE555D",
     "octopart_url": "https://octopart.com/ne555d-texas+instruments-19922",
     "offers": [
@@ -492,10 +502,10 @@
             "eligible_region": "",
             "factory_lead_days": 42,
             "factory_order_multiple": null,
-            "in_stock_quantity": 4577,
+            "in_stock_quantity": 4425,
             "is_authorized": true,
             "is_realtime": false,
-            "last_updated": "2017-02-03T13:27:17Z",
+            "last_updated": "2017-02-15T13:32:05Z",
             "moq": 1,
             "octopart_rfq_url": null,
             "on_order_eta": null,
@@ -523,18 +533,6 @@
                     [
                         1000,
                         "0.12060"
-                    ],
-                    [
-                        2500,
-                        "0.11055"
-                    ],
-                    [
-                        5000,
-                        "0.10385"
-                    ],
-                    [
-                        10000,
-                        "0.09715"
                     ]
                 ]
             },
@@ -559,7 +557,7 @@
             "in_stock_quantity": 5243,
             "is_authorized": true,
             "is_realtime": false,
-            "last_updated": "2017-02-01T09:53:51Z",
+            "last_updated": "2017-02-10T22:01:09Z",
             "moq": 1,
             "octopart_rfq_url": null,
             "on_order_eta": null,
@@ -604,70 +602,6 @@
         },
         {
             "__class__": "PartOffer",
-            "_naive_id": "13a37ca7a5138c4efe58ff9d2abc378f",
-            "eligible_region": "",
-            "factory_lead_days": null,
-            "factory_order_multiple": null,
-            "in_stock_quantity": 5524,
-            "is_authorized": true,
-            "is_realtime": false,
-            "last_updated": "2017-02-03T15:10:33Z",
-            "moq": 1,
-            "octopart_rfq_url": null,
-            "on_order_eta": null,
-            "on_order_quantity": null,
-            "order_multiple": 1,
-            "packaging": null,
-            "prices": {
-                "USD": [
-                    [
-                        1,
-                        "0.35110"
-                    ],
-                    [
-                        10,
-                        "0.27230"
-                    ],
-                    [
-                        100,
-                        "0.16420"
-                    ],
-                    [
-                        500,
-                        "0.14070"
-                    ],
-                    [
-                        1000,
-                        "0.09900"
-                    ],
-                    [
-                        2500,
-                        "0.09640"
-                    ],
-                    [
-                        5000,
-                        "0.09320"
-                    ],
-                    [
-                        10000,
-                        "0.08380"
-                    ]
-                ]
-            },
-            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=0084216&sid=1106&ppid=19922&vpid=15359170&ct=offers",
-            "seller": {
-                "__class__": "Seller",
-                "display_flag": "US",
-                "has_ecommerce": true,
-                "homepage_url": "http://www.arrownac.com/",
-                "id": "1106",
-                "name": "Arrow",
-                "uid": "9d5b5851b06f4e9c"
-            },
-            "sku": "NE555D"
-        },
-        {
-            "__class__": "PartOffer",
             "_naive_id": "92f1850f6a9c28942e595443fe1bde4d",
             "eligible_region": "",
             "factory_lead_days": null,
@@ -675,7 +609,7 @@
             "in_stock_quantity": 10000,
             "is_authorized": true,
             "is_realtime": false,
-            "last_updated": "2017-02-02T17:45:06Z",
+            "last_updated": "2017-02-15T17:45:55Z",
             "moq": 2500,
             "octopart_rfq_url": null,
             "on_order_eta": null,
@@ -686,7 +620,7 @@
                 "USD": [
                     [
                         2500,
-                        "0.49570"
+                        "0.46760"
                     ]
                 ]
             },
@@ -708,10 +642,10 @@
             "eligible_region": "",
             "factory_lead_days": null,
             "factory_order_multiple": null,
-            "in_stock_quantity": 5524,
+            "in_stock_quantity": 5372,
             "is_authorized": true,
             "is_realtime": false,
-            "last_updated": "2017-02-02T17:45:06Z",
+            "last_updated": "2017-02-15T17:45:55Z",
             "moq": 224,
             "octopart_rfq_url": null,
             "on_order_eta": null,
@@ -722,23 +656,23 @@
                 "USD": [
                     [
                         224,
-                        "0.16420"
+                        "0.15500"
                     ],
                     [
                         500,
-                        "0.14070"
+                        "0.13540"
                     ],
                     [
                         1000,
-                        "0.09900"
+                        "0.08170"
                     ],
                     [
                         2500,
-                        "0.09640"
+                        "0.08120"
                     ],
                     [
                         5000,
-                        "0.09320"
+                        "0.08090"
                     ]
                 ]
             },
@@ -763,7 +697,7 @@
             "in_stock_quantity": 1175,
             "is_authorized": true,
             "is_realtime": false,
-            "last_updated": "2017-02-02T17:45:06Z",
+            "last_updated": "2017-02-15T17:45:55Z",
             "moq": 113,
             "octopart_rfq_url": null,
             "on_order_eta": null,
@@ -796,10 +730,10 @@
             "eligible_region": "",
             "factory_lead_days": null,
             "factory_order_multiple": null,
-            "in_stock_quantity": 3027,
+            "in_stock_quantity": 2957,
             "is_authorized": true,
             "is_realtime": false,
-            "last_updated": "2017-02-03T02:17:13Z",
+            "last_updated": "2017-02-15T02:07:59Z",
             "moq": 1,
             "octopart_rfq_url": null,
             "on_order_eta": null,
@@ -852,14 +786,78 @@
         },
         {
             "__class__": "PartOffer",
+            "_naive_id": "13a37ca7a5138c4efe58ff9d2abc378f",
+            "eligible_region": "",
+            "factory_lead_days": null,
+            "factory_order_multiple": null,
+            "in_stock_quantity": 5372,
+            "is_authorized": true,
+            "is_realtime": false,
+            "last_updated": "2017-02-15T15:10:46Z",
+            "moq": 1,
+            "octopart_rfq_url": null,
+            "on_order_eta": null,
+            "on_order_quantity": null,
+            "order_multiple": 1,
+            "packaging": null,
+            "prices": {
+                "USD": [
+                    [
+                        1,
+                        "0.34690"
+                    ],
+                    [
+                        10,
+                        "0.26950"
+                    ],
+                    [
+                        100,
+                        "0.15500"
+                    ],
+                    [
+                        500,
+                        "0.13540"
+                    ],
+                    [
+                        1000,
+                        "0.08170"
+                    ],
+                    [
+                        2500,
+                        "0.08120"
+                    ],
+                    [
+                        5000,
+                        "0.08090"
+                    ],
+                    [
+                        10000,
+                        "0.08060"
+                    ]
+                ]
+            },
+            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=0084216&sid=1106&ppid=19922&vpid=15359170&ct=offers",
+            "seller": {
+                "__class__": "Seller",
+                "display_flag": "US",
+                "has_ecommerce": true,
+                "homepage_url": "http://www.arrownac.com/",
+                "id": "1106",
+                "name": "Arrow",
+                "uid": "9d5b5851b06f4e9c"
+            },
+            "sku": "NE555D"
+        },
+        {
+            "__class__": "PartOffer",
             "_naive_id": "326d386e2cb54d059585286b687b1631",
             "eligible_region": "",
             "factory_lead_days": 42,
             "factory_order_multiple": null,
-            "in_stock_quantity": 47400,
+            "in_stock_quantity": 38250,
             "is_authorized": true,
             "is_realtime": false,
-            "last_updated": "2017-02-03T06:38:18Z",
+            "last_updated": "2017-02-16T06:59:39Z",
             "moq": 75,
             "octopart_rfq_url": null,
             "on_order_eta": null,
@@ -870,23 +868,23 @@
                 "EUR": [
                     [
                         75,
-                        "0.13971"
+                        "0.14200"
                     ],
                     [
                         150,
-                        "0.10867"
+                        "0.11044"
                     ],
                     [
                         300,
-                        "0.08891"
+                        "0.09036"
                     ],
                     [
                         450,
-                        "0.07523"
+                        "0.07646"
                     ],
                     [
                         750,
-                        "0.06986"
+                        "0.07100"
                     ]
                 ]
             },
@@ -911,7 +909,7 @@
             "in_stock_quantity": 1175,
             "is_authorized": true,
             "is_realtime": false,
-            "last_updated": "2017-02-03T11:01:25Z",
+            "last_updated": "2017-02-15T11:24:37Z",
             "moq": 25,
             "octopart_rfq_url": null,
             "on_order_eta": null,
@@ -991,7 +989,7 @@
             "in_stock_quantity": 22037,
             "is_authorized": true,
             "is_realtime": false,
-            "last_updated": "2017-02-03T09:45:37Z",
+            "last_updated": "2017-02-15T09:45:38Z",
             "moq": null,
             "octopart_rfq_url": null,
             "on_order_eta": null,
@@ -1040,10 +1038,10 @@
             "eligible_region": "",
             "factory_lead_days": null,
             "factory_order_multiple": null,
-            "in_stock_quantity": 5142,
+            "in_stock_quantity": 4829,
             "is_authorized": true,
             "is_realtime": false,
-            "last_updated": "2017-02-03T13:21:15Z",
+            "last_updated": "2017-02-15T14:20:38Z",
             "moq": null,
             "octopart_rfq_url": null,
             "on_order_eta": null,
@@ -1092,6 +1090,62 @@
         },
         {
             "__class__": "PartOffer",
+            "_naive_id": "5edbab8bfdc25bd04d7ddd8dfe09ec86",
+            "eligible_region": "",
+            "factory_lead_days": 2,
+            "factory_order_multiple": null,
+            "in_stock_quantity": 1639,
+            "is_authorized": true,
+            "is_realtime": false,
+            "last_updated": "2017-02-15T13:31:34Z",
+            "moq": 5,
+            "octopart_rfq_url": null,
+            "on_order_eta": null,
+            "on_order_quantity": null,
+            "order_multiple": null,
+            "packaging": null,
+            "prices": {
+                "USD": [
+                    [
+                        5,
+                        "1.30000"
+                    ],
+                    [
+                        25,
+                        "0.91000"
+                    ],
+                    [
+                        50,
+                        "0.83500"
+                    ],
+                    [
+                        100,
+                        "0.71400"
+                    ],
+                    [
+                        500,
+                        "0.64300"
+                    ],
+                    [
+                        1000,
+                        "0.61300"
+                    ]
+                ]
+            },
+            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=020c74b&sid=27109&ppid=19922&vpid=286230201&ct=offers",
+            "seller": {
+                "__class__": "Seller",
+                "display_flag": "JP",
+                "has_ecommerce": true,
+                "homepage_url": "http://www.chip1stop.com",
+                "id": "10930",
+                "name": "Chip One Stop Global",
+                "uid": "d2d317d9d1070114"
+            },
+            "sku": "C1S746201307079"
+        },
+        {
+            "__class__": "PartOffer",
             "_naive_id": "40cc840ca02a5ba9e15543e1db5ac101",
             "eligible_region": "",
             "factory_lead_days": 3,
@@ -1099,7 +1153,7 @@
             "in_stock_quantity": 375,
             "is_authorized": true,
             "is_realtime": false,
-            "last_updated": "2017-02-03T12:38:46Z",
+            "last_updated": "2017-02-15T13:31:34Z",
             "moq": 75,
             "octopart_rfq_url": null,
             "on_order_eta": null,
@@ -1149,7 +1203,7 @@
             "in_stock_quantity": 344,
             "is_authorized": true,
             "is_realtime": false,
-            "last_updated": "2017-02-03T12:38:46Z",
+            "last_updated": "2017-02-15T13:31:34Z",
             "moq": 5,
             "octopart_rfq_url": null,
             "on_order_eta": null,
@@ -1210,42 +1264,6 @@
         },
         {
             "__class__": "PartOffer",
-            "_naive_id": "5edbab8bfdc25bd04d7ddd8dfe09ec86",
-            "eligible_region": "",
-            "factory_lead_days": 2,
-            "factory_order_multiple": null,
-            "in_stock_quantity": 22,
-            "is_authorized": true,
-            "is_realtime": false,
-            "last_updated": "2017-02-03T12:38:46Z",
-            "moq": 5,
-            "octopart_rfq_url": null,
-            "on_order_eta": null,
-            "on_order_quantity": null,
-            "order_multiple": null,
-            "packaging": null,
-            "prices": {
-                "USD": [
-                    [
-                        5,
-                        "1.30000"
-                    ]
-                ]
-            },
-            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=020c74b&sid=27109&ppid=19922&vpid=286230201&ct=offers",
-            "seller": {
-                "__class__": "Seller",
-                "display_flag": "JP",
-                "has_ecommerce": true,
-                "homepage_url": "http://www.chip1stop.com",
-                "id": "10930",
-                "name": "Chip One Stop Global",
-                "uid": "d2d317d9d1070114"
-            },
-            "sku": "C1S746201307079"
-        },
-        {
-            "__class__": "PartOffer",
             "_naive_id": "d8c3756bb08f246fd73ce2d4ceccdb39",
             "eligible_region": "",
             "factory_lead_days": null,
@@ -1253,7 +1271,7 @@
             "in_stock_quantity": 3840,
             "is_authorized": true,
             "is_realtime": false,
-            "last_updated": "2017-02-03T06:12:49Z",
+            "last_updated": "2017-02-16T06:55:19Z",
             "moq": 1,
             "octopart_rfq_url": null,
             "on_order_eta": null,
@@ -1264,35 +1282,35 @@
                 "USD": [
                     [
                         1,
-                        "0.39900"
+                        "0.39100"
                     ],
                     [
                         10,
-                        "0.30900"
+                        "0.30300"
                     ],
                     [
                         100,
-                        "0.16800"
+                        "0.16500"
                     ],
                     [
                         1000,
-                        "0.12500"
+                        "0.12300"
                     ],
                     [
                         2500,
-                        "0.10800"
+                        "0.10600"
                     ],
                     [
                         10000,
-                        "0.10100"
+                        "0.09900"
                     ],
                     [
                         25000,
-                        "0.09300"
+                        "0.09100"
                     ],
                     [
                         50000,
-                        "0.08900"
+                        "0.08800"
                     ]
                 ]
             },
@@ -1314,11 +1332,11 @@
             "eligible_region": "",
             "factory_lead_days": 42,
             "factory_order_multiple": null,
-            "in_stock_quantity": 1500,
+            "in_stock_quantity": 950,
             "is_authorized": true,
             "is_realtime": false,
-            "last_updated": "2017-02-03T06:06:24Z",
-            "moq": 1500,
+            "last_updated": "2017-02-16T06:30:58Z",
+            "moq": 75,
             "octopart_rfq_url": null,
             "on_order_eta": null,
             "on_order_quantity": null,
@@ -1327,7 +1345,23 @@
             "prices": {
                 "USD": [
                     [
-                        1500,
+                        75,
+                        "0.09571"
+                    ],
+                    [
+                        150,
+                        "0.09178"
+                    ],
+                    [
+                        300,
+                        "0.08816"
+                    ],
+                    [
+                        450,
+                        "0.08590"
+                    ],
+                    [
+                        750,
                         "0.08375"
                     ]
                 ]
@@ -1346,110 +1380,14 @@
         },
         {
             "__class__": "PartOffer",
-            "_naive_id": "76869fb3f9d0e0b0b9e3fe4abf9718f0",
-            "eligible_region": "",
-            "factory_lead_days": 28,
-            "factory_order_multiple": null,
-            "in_stock_quantity": 3928,
-            "is_authorized": false,
-            "is_realtime": false,
-            "last_updated": "2017-02-03T12:15:35Z",
-            "moq": 1,
-            "octopart_rfq_url": null,
-            "on_order_eta": null,
-            "on_order_quantity": null,
-            "order_multiple": 1,
-            "packaging": null,
-            "prices": {
-                "USD": [
-                    [
-                        1,
-                        "0.55000"
-                    ],
-                    [
-                        25,
-                        "0.12000"
-                    ],
-                    [
-                        100,
-                        "0.10200"
-                    ],
-                    [
-                        500,
-                        "0.08500"
-                    ],
-                    [
-                        1500,
-                        "0.07600"
-                    ]
-                ]
-            },
-            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=0e6e823&sid=1532&ppid=19922&vpid=103422841&ct=offers",
-            "seller": {
-                "__class__": "Seller",
-                "display_flag": "PL",
-                "has_ecommerce": true,
-                "homepage_url": "http://www.tme.eu/en/",
-                "id": "1532",
-                "name": "TME",
-                "uid": "223ee7340ea4f1f9"
-            },
-            "sku": "NE555D"
-        },
-        {
-            "__class__": "PartOffer",
-            "_naive_id": "1e869674d48fe194a8a89b3c8580b8d1",
-            "eligible_region": "",
-            "factory_lead_days": null,
-            "factory_order_multiple": null,
-            "in_stock_quantity": 1806,
-            "is_authorized": false,
-            "is_realtime": false,
-            "last_updated": "2017-02-02T22:18:13Z",
-            "moq": 1,
-            "octopart_rfq_url": "https://octopart.com/rfq/generate?ppid=19922&vpid=45029776",
-            "on_order_eta": null,
-            "on_order_quantity": null,
-            "order_multiple": 1,
-            "packaging": null,
-            "prices": {
-                "USD": [
-                    [
-                        130,
-                        "0.19200"
-                    ],
-                    [
-                        500,
-                        "0.16500"
-                    ],
-                    [
-                        1000,
-                        "0.11000"
-                    ]
-                ]
-            },
-            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=0df2271&sid=13184&ppid=19922&vpid=45029776&ct=offers",
-            "seller": {
-                "__class__": "Seller",
-                "display_flag": "GB",
-                "has_ecommerce": true,
-                "homepage_url": "http://componentsense.com/",
-                "id": "3951",
-                "name": "Component Sense",
-                "uid": "cd0a0800eb031ecd"
-            },
-            "sku": "NE555D"
-        },
-        {
-            "__class__": "PartOffer",
             "_naive_id": "a56fdbfd3e66a89d97044ad0354b27c5",
             "eligible_region": "",
             "factory_lead_days": null,
             "factory_order_multiple": null,
-            "in_stock_quantity": 11950,
+            "in_stock_quantity": 13900,
             "is_authorized": false,
             "is_realtime": false,
-            "last_updated": "2017-02-03T06:34:02Z",
+            "last_updated": "2017-02-16T06:34:17Z",
             "moq": 25,
             "octopart_rfq_url": null,
             "on_order_eta": null,
@@ -1490,14 +1428,110 @@
         },
         {
             "__class__": "PartOffer",
+            "_naive_id": "76869fb3f9d0e0b0b9e3fe4abf9718f0",
+            "eligible_region": "",
+            "factory_lead_days": 28,
+            "factory_order_multiple": null,
+            "in_stock_quantity": 2268,
+            "is_authorized": false,
+            "is_realtime": false,
+            "last_updated": "2017-02-15T13:58:19Z",
+            "moq": 1,
+            "octopart_rfq_url": null,
+            "on_order_eta": null,
+            "on_order_quantity": null,
+            "order_multiple": 1,
+            "packaging": null,
+            "prices": {
+                "USD": [
+                    [
+                        1,
+                        "0.55000"
+                    ],
+                    [
+                        25,
+                        "0.12000"
+                    ],
+                    [
+                        100,
+                        "0.10200"
+                    ],
+                    [
+                        500,
+                        "0.08520"
+                    ],
+                    [
+                        1500,
+                        "0.07620"
+                    ]
+                ]
+            },
+            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=0e6e823&sid=1532&ppid=19922&vpid=103422841&ct=offers",
+            "seller": {
+                "__class__": "Seller",
+                "display_flag": "PL",
+                "has_ecommerce": true,
+                "homepage_url": "http://www.tme.eu/en/",
+                "id": "1532",
+                "name": "TME",
+                "uid": "223ee7340ea4f1f9"
+            },
+            "sku": "NE555D"
+        },
+        {
+            "__class__": "PartOffer",
+            "_naive_id": "1e869674d48fe194a8a89b3c8580b8d1",
+            "eligible_region": "",
+            "factory_lead_days": null,
+            "factory_order_multiple": null,
+            "in_stock_quantity": 1806,
+            "is_authorized": false,
+            "is_realtime": false,
+            "last_updated": "2017-02-15T22:18:13Z",
+            "moq": 1,
+            "octopart_rfq_url": "https://octopart.com/rfq/generate?ppid=19922&vpid=45029776",
+            "on_order_eta": null,
+            "on_order_quantity": null,
+            "order_multiple": 1,
+            "packaging": null,
+            "prices": {
+                "USD": [
+                    [
+                        130,
+                        "0.19200"
+                    ],
+                    [
+                        500,
+                        "0.16500"
+                    ],
+                    [
+                        1000,
+                        "0.11000"
+                    ]
+                ]
+            },
+            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=0df2271&sid=13184&ppid=19922&vpid=45029776&ct=offers",
+            "seller": {
+                "__class__": "Seller",
+                "display_flag": "GB",
+                "has_ecommerce": true,
+                "homepage_url": "http://componentsense.com/",
+                "id": "3951",
+                "name": "Component Sense",
+                "uid": "cd0a0800eb031ecd"
+            },
+            "sku": "NE555D"
+        },
+        {
+            "__class__": "PartOffer",
             "_naive_id": "a0f0642804f163fd230a6e53b041504b",
             "eligible_region": "",
             "factory_lead_days": null,
             "factory_order_multiple": null,
-            "in_stock_quantity": 18604,
+            "in_stock_quantity": 18512,
             "is_authorized": false,
             "is_realtime": false,
-            "last_updated": "2017-02-03T12:06:25Z",
+            "last_updated": "2017-02-15T12:08:01Z",
             "moq": null,
             "octopart_rfq_url": null,
             "on_order_eta": null,
@@ -1526,7 +1560,7 @@
             "in_stock_quantity": 1000,
             "is_authorized": false,
             "is_realtime": false,
-            "last_updated": "2016-10-20T00:00:27Z",
+            "last_updated": "2017-02-16T09:00:41Z",
             "moq": 1,
             "octopart_rfq_url": null,
             "on_order_eta": null,
@@ -1610,7 +1644,7 @@
             "in_stock_quantity": 3,
             "is_authorized": false,
             "is_realtime": false,
-            "last_updated": "2017-01-30T19:34:27Z",
+            "last_updated": "2017-02-15T19:00:27Z",
             "moq": null,
             "octopart_rfq_url": null,
             "on_order_eta": null,
@@ -1646,7 +1680,7 @@
             "in_stock_quantity": 7024,
             "is_authorized": false,
             "is_realtime": false,
-            "last_updated": "2017-02-02T23:13:27Z",
+            "last_updated": "2017-02-15T23:09:49Z",
             "moq": null,
             "octopart_rfq_url": null,
             "on_order_eta": null,
@@ -1702,7 +1736,7 @@
             "in_stock_quantity": 675,
             "is_authorized": false,
             "is_realtime": false,
-            "last_updated": "2017-01-31T17:55:50Z",
+            "last_updated": "2017-02-06T23:13:51Z",
             "moq": null,
             "octopart_rfq_url": null,
             "on_order_eta": null,
@@ -1724,14 +1758,14 @@
         },
         {
             "__class__": "PartOffer",
-            "_naive_id": "0f362bc1b21e2efc7402ba086595b848",
+            "_naive_id": "3da10f5bdcf4cc74725814ce13c06923",
             "eligible_region": "",
             "factory_lead_days": null,
             "factory_order_multiple": null,
-            "in_stock_quantity": -2,
+            "in_stock_quantity": -3,
             "is_authorized": false,
             "is_realtime": false,
-            "last_updated": "2017-02-01T19:33:51Z",
+            "last_updated": "2017-02-16T03:29:09Z",
             "moq": null,
             "octopart_rfq_url": null,
             "on_order_eta": null,
@@ -1739,75 +1773,46 @@
             "order_multiple": null,
             "packaging": null,
             "prices": {},
-            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=08f5a0b&sid=13801&ppid=19922&vpid=277573473&ct=offers",
+            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=09e652c&sid=14587&ppid=19922&vpid=411355963&ct=offers",
+            "seller": {
+                "__class__": "Seller",
+                "display_flag": "US",
+                "has_ecommerce": true,
+                "homepage_url": "http://conrad.com",
+                "id": "4782",
+                "name": "Conrad",
+                "uid": "7914bc1e42dcaad3"
+            },
+            "sku": "142549"
+        },
+        {
+            "__class__": "PartOffer",
+            "_naive_id": "7b98389a855f30ea607f27f3c956a5ef",
+            "eligible_region": "",
+            "factory_lead_days": null,
+            "factory_order_multiple": null,
+            "in_stock_quantity": 33,
+            "is_authorized": false,
+            "is_realtime": false,
+            "last_updated": "2017-02-15T15:15:13Z",
+            "moq": null,
+            "octopart_rfq_url": null,
+            "on_order_eta": null,
+            "on_order_quantity": null,
+            "order_multiple": null,
+            "packaging": null,
+            "prices": {},
+            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=05c72f1&sid=2467&ppid=19922&vpid=232423453&ct=offers",
             "seller": {
                 "__class__": "Seller",
                 "display_flag": "US",
                 "has_ecommerce": false,
-                "homepage_url": "http://www.cpluselectronics.com",
-                "id": "4209",
-                "name": "C Plus Electronics",
-                "uid": "b66b73618f7c65ac"
+                "homepage_url": "http://directics.com",
+                "id": "2467",
+                "name": "Direct Components",
+                "uid": "6545a04f4580b682"
             },
             "sku": "NE555D"
-        },
-        {
-            "__class__": "PartOffer",
-            "_naive_id": "07f44364ad17c3c9b0ba70e3c94cda04",
-            "eligible_region": "",
-            "factory_lead_days": null,
-            "factory_order_multiple": null,
-            "in_stock_quantity": 1425,
-            "is_authorized": false,
-            "is_realtime": false,
-            "last_updated": "2017-01-27T16:37:05Z",
-            "moq": null,
-            "octopart_rfq_url": null,
-            "on_order_eta": null,
-            "on_order_quantity": null,
-            "order_multiple": null,
-            "packaging": null,
-            "prices": {},
-            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=0a683c4&sid=26773&ppid=19922&vpid=244487224&ct=offers",
-            "seller": {
-                "__class__": "Seller",
-                "display_flag": "US",
-                "has_ecommerce": false,
-                "homepage_url": "http://stlaa.com/",
-                "id": "10597",
-                "name": "STLAA.com",
-                "uid": "606aa5606069b3ad"
-            },
-            "sku": "NE555D"
-        },
-        {
-            "__class__": "PartOffer",
-            "_naive_id": "0be1e7e1646ef0d1badbc2b2eef75d2d",
-            "eligible_region": "",
-            "factory_lead_days": null,
-            "factory_order_multiple": null,
-            "in_stock_quantity": 3325,
-            "is_authorized": false,
-            "is_realtime": false,
-            "last_updated": "2017-01-17T20:41:43Z",
-            "moq": null,
-            "octopart_rfq_url": null,
-            "on_order_eta": null,
-            "on_order_quantity": null,
-            "order_multiple": null,
-            "packaging": null,
-            "prices": {},
-            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=0c37af1&sid=24049&ppid=19922&vpid=278111543&ct=offers",
-            "seller": {
-                "__class__": "Seller",
-                "display_flag": "SE",
-                "has_ecommerce": false,
-                "homepage_url": "http://rotakorn.se",
-                "id": "9477",
-                "name": "Rotakorn",
-                "uid": "6bd3aed967b0b814"
-            },
-            "sku": "868245287"
         },
         {
             "__class__": "PartOffer",
@@ -1818,7 +1823,7 @@
             "in_stock_quantity": 300,
             "is_authorized": false,
             "is_realtime": false,
-            "last_updated": "2016-12-30T11:34:16Z",
+            "last_updated": "2017-02-08T08:49:47Z",
             "moq": null,
             "octopart_rfq_url": null,
             "on_order_eta": null,
@@ -1869,14 +1874,14 @@
         },
         {
             "__class__": "PartOffer",
-            "_naive_id": "3da10f5bdcf4cc74725814ce13c06923",
+            "_naive_id": "0be1e7e1646ef0d1badbc2b2eef75d2d",
             "eligible_region": "",
             "factory_lead_days": null,
             "factory_order_multiple": null,
-            "in_stock_quantity": -2,
+            "in_stock_quantity": 3325,
             "is_authorized": false,
             "is_realtime": false,
-            "last_updated": "2017-02-03T03:40:49Z",
+            "last_updated": "2017-01-17T20:41:43Z",
             "moq": null,
             "octopart_rfq_url": null,
             "on_order_eta": null,
@@ -1884,17 +1889,17 @@
             "order_multiple": null,
             "packaging": null,
             "prices": {},
-            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=09e652c&sid=14587&ppid=19922&vpid=411355963&ct=offers",
+            "product_url": "https://octopart.com/click/track?country=PT&ak=12621337&sig=0c37af1&sid=24049&ppid=19922&vpid=278111543&ct=offers",
             "seller": {
                 "__class__": "Seller",
-                "display_flag": "US",
-                "has_ecommerce": true,
-                "homepage_url": "http://conrad.com",
-                "id": "4782",
-                "name": "Conrad",
-                "uid": "7914bc1e42dcaad3"
+                "display_flag": "SE",
+                "has_ecommerce": false,
+                "homepage_url": "http://rotakorn.se",
+                "id": "9477",
+                "name": "Rotakorn",
+                "uid": "6bd3aed967b0b814"
             },
-            "sku": "142549"
+            "sku": "868245287"
         },
         {
             "__class__": "PartOffer",
@@ -1925,6 +1930,10 @@
             },
             "sku": "NE555D"
         }
+    ],
+    "redirected_uids": [
+        "fc9d3519a0fa235a",
+        "5e48940d6095818f"
     ],
     "short_description": "Peripheral circuit; astable/monostable, timer; 500kHz; 4.5\u00f716VDC",
     "specs": {
@@ -2279,5 +2288,6 @@
             "min_value": null,
             "value": []
         }
-    }
+    },
+    "uid": "7a97b39d1223a550"
 }

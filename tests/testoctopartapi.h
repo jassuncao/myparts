@@ -12,10 +12,13 @@ private slots:
     void testPartsMatchParsing();
     void testPartsMatchRequest();
     void testPartParsing();
+    void testPartsGetRequest();
     void _partsMatchResultFinished(int id, Octopart::PartsMatchResult res);
+    void _partsGetFinished(int id, Octopart::PartFull res);
 private:
     QString _apiKey;
     Octopart::PartsMatchResult _lastPartsMatchResult;
+    Octopart::PartFull _lastPart;
 };
 
 #endif // TESTOCTOPARTAPI_H
