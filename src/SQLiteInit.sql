@@ -132,7 +132,9 @@ CREATE TABLE IF NOT EXISTS part_distributor  (
     partNumber TEXT ,
     minimumOrder DOUBLE ,
     unitPrice DOUBLE ,
+    currency TEXT,
     packaging INTEGER ,
+    dateTime DATETIME NOT NULL,
     FOREIGN KEY(part) REFERENCES part(id) ON DELETE CASCADE,
     FOREIGN KEY(distributor) REFERENCES distributor(id) ON DELETE CASCADE,
     FOREIGN KEY(packaging) REFERENCES packaging(id) ON DELETE CASCADE

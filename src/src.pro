@@ -107,7 +107,9 @@ SOURCES += main.cpp\
     dialogs/partsassignmentdialog.cpp \
     smdresistorcalculator.cpp \
     widgets/savebuttonhelper.cpp \
-    widgets/hintlineedit.cpp
+    widgets/hintlineedit.cpp \
+    price.cpp \
+    models/partdistributorproxymodel.cpp
 
 HEADERS  += mainwindow.h \
     partdialog.h \
@@ -204,7 +206,9 @@ HEADERS  += mainwindow.h \
     dialogs/partsassignmentdialog.h \
     smdresistorcalculator.h \
     widgets/savebuttonhelper.h \
-    widgets/hintlineedit.h
+    widgets/hintlineedit.h \
+    price.h \
+    models/partdistributorproxymodel.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \

@@ -173,11 +173,14 @@ public:
         ColumnPartNumber,
         ColumnMinimumOrder,
         ColumnUnitPrice,
+        ColumnCurrency,
         ColumnPackaging,
+        ColumnDateTime
     };
 
     inline void setCurrentPartId(const QVariant & partId) { setCurrentForeignKey(partId); }
-
+    Qt::ItemFlags flags(const QModelIndex &index) const;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     static PartDistributorTableModel2 * createNew(QObject *parent);
 protected:
     explicit PartDistributorTableModel2(const QStringList & fieldNames, const QStringList & columnNames, QObject *parent = 0);

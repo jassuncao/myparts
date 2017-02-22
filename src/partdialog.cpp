@@ -20,6 +20,7 @@
 #include "widgets/currencydelegate.h"
 #include "widgets/validatingitemdelegate.h"
 #include "widgets/comboitemdelegate.h"
+#include "widgets/datetimedelegate.h"
 #include "dialogs/attachmentselectiondialog.h"
 #include "models/partssqltablemodel.h"
 #include "models/storagetreemodel.h"
@@ -28,6 +29,7 @@
 #include "models/modelsrepository.h"
 #include "models/categorytreemodel.h"
 #include "models/partparametertablemodel.h"
+#include "models/partdistributorproxymodel.h"
 
 #include "utils.h"
 
@@ -81,10 +83,14 @@ PartDialog::PartDialog(ModelsRepository * modelsProvider, QWidget *parent) :
     ui->partParametersTableView->setItemDelegateForColumn(PartParameterTableModel::ColumnParameterValue, new ParameterValueDelegate(this));
     ui->partParametersTableView->setColumnWidth(PartParameterTableModel::ColumnParameter, 180);
 
+    //PartDistributorProxyModel * distributorProxyModel = new PartDistributorProxyModel(this);
+    //distributorProxyModel->setSourceModel(_partDistributorModel);
     ui->partDistributorsTableView->setModel(_partDistributorModel);
     ui->partDistributorsTableView->setItemDelegateForColumn(PartDistributorTableModel2::ColumnUnitPrice, new CurrencyDelegate(this));
     //ui->partDistributorsTableView->setItemDelegateForColumn(PartDistributorTableModel2::ColumnMinimumOrder, new ValidatingItemDelegate(new QIntValidator(), this));
+    ui->partDistributorsTableView->setItemDelegateForColumn(PartDistributorTableModel2::ColumnDateTime, new DateDelegate(this));
     ui->partDistributorsTableView->setItemDelegate(new ComboItemDelegate(this));
+    ui->partDistributorsTableView->hideColumn(PartDistributorTableModel2::ColumnCurrency);
     ui->partDistributorsTableView->setColumnWidth(PartDistributorTableModel2::ColumnDistributor, 180);
     ui->partDistributorsTableView->setColumnWidth(PartDistributorTableModel2::ColumnPartNumber, 180);
 

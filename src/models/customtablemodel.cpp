@@ -6,6 +6,7 @@
 #include <QMimeData>
 #include <QUrl>
 #include "parametervalue.h"
+#include "price.h"
 
 /*
 AbstractTableItem::AbstractTableItem(const QVariant & id, const bool dirty) : _id(id), _dirty(dirty)
@@ -576,16 +577,46 @@ PartDistributorTableModel2 * PartDistributorTableModel2::createNew(QObject * par
 {
     QStringList fieldNames;
     QStringList columnNames;
-    fieldNames <<  "distributor"  <<  "partNumber" << "minimumOrder"<<"unitPrice"<<"packaging";
-    columnNames<<tr("Distributor")<<tr("Part Number")<<tr("Minimum Order")<<tr("Unit Price")<<tr("Packaging");
+    fieldNames <<  "distributor"  <<  "partNumber" << "minimumOrder" << "unitPrice" << "currency" << "packaging" << "dateTime";
+    columnNames<<tr("Distributor")<<tr("Part Number")<<tr("Minimum Order")<<tr("Unit Price")<<tr("Currency")<<tr("Packaging") << tr("Date");
     return new PartDistributorTableModel2(fieldNames, columnNames, parent);
 }
 
 TableItem * PartDistributorTableModel2::createBlankItem() const
 {
+    QDateTime now = QDateTime::currentDateTimeUtc();
     TableItem * item = SimpleSqlTableModel::createBlankItem();
     item->setData(ColumnMinimumOrder, QVariant(0.0));
     item->setData(ColumnUnitPrice, QVariant(0.0));
+    item->setData(ColumnDateTime, now.toTime_t());
     return item;
+}
+
+Qt::ItemFlags PartDistributorTableModel2::flags(const QModelIndex& index) const
+{
+    Qt::ItemFlags res = SimpleSqlTableModel::flags(index);
+    if(index.column() == PartDistributorTableModel2::ColumnDateTime){
+        res &= ~Qt::ItemIsEditable;
+    }
+    return res;
+}
+
+QVariant PartDistributorTableModel2::data(const QModelIndex &index, int role) const
+{
+    if(!index.isValid()) return QVariant();
+    int column = index.column();
+    if(column == PartDistributorTableModel2::ColumnUnitPrice){
+        if(role == Qt::DisplayRole || role == Qt::EditRole){
+            QVariant value = SimpleSqlTableModel::data(index, role);
+            if(value.isValid()){
+                QVariant currency = SimpleSqlTableModel::index(index.row(), PartDistributorTableModel2::ColumnCurrency).data();
+                return QVariant::fromValue(Price(value.toDouble(), currency.toString()));
+            }
+            else{
+                return value;
+            }
+        }
+    }
+    return SimpleSqlTableModel::data(index, role);
 }
 

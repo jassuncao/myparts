@@ -53,6 +53,7 @@ private:
     void setupParamsUnitsModel();
     void setupParametersModel();
     void setupPartConditionModel();
+    void setupCurrenciesModel();
     void setupConnections();
     void setupGeneralSettings();
     Ui::OptionsDialog *ui;

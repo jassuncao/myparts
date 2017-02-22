@@ -36,6 +36,7 @@ OptionsDialog::~OptionsDialog()
 
 void OptionsDialog::setupModels()
 {
+    setupCurrenciesModel();
     setupPartUnitsModel();
     setupParamsUnitsModel();
     setupPartConditionModel();
@@ -95,6 +96,19 @@ void OptionsDialog::setupPartConditionModel()
     ui->partConditionTableView->horizontalHeader()->setResizeMode(PartConditionModel::ColumnDefault, QHeaderView::Fixed);
 #endif
     _partConditionModel->select();
+}
+
+void OptionsDialog::setupCurrenciesModel()
+{
+    QList<QLocale> allLocales = QLocale::matchingLocales(QLocale::AnyLanguage, QLocale::AnyScript, QLocale::AnyCountry);
+    QStringList isoCodes;
+    for(int i=0; i<allLocales.size(); ++i){
+        const QString isoCode = allLocales.at(i).currencySymbol(QLocale::CurrencyIsoCode);
+        if(!isoCodes.contains(isoCode)) {
+            isoCodes.append(isoCode);
+        }
+    }
+    ui->currencyComboBox->addItems(isoCodes);
 }
 
 void OptionsDialog::setupConnections()
