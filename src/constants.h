@@ -3,8 +3,9 @@
 
 #include <QString>
 
+const QString CURRENCY_CODE_KEY("currency/isoCode");
 const QString CURRENCY_SYMBOL_KEY("currency/symbol");
-const QString  CURRENCY_POSITION_KEY("currency/after");
+const QString CURRENCY_POSITION_KEY("currency/after");
 
 
 #endif // CONSTANTS_H

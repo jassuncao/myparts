@@ -8,6 +8,7 @@
 #include "models/parameterunitmodel.h"
 #include "widgets/validatingitemdelegate.h"
 #include "widgets/comboitemdelegate.h"
+#include "widgets/currencydelegate.h"
 #include "constants.h"
 #include <QDebug>
 #include <QSettings>
@@ -100,14 +101,7 @@ void OptionsDialog::setupPartConditionModel()
 
 void OptionsDialog::setupCurrenciesModel()
 {
-    QList<QLocale> allLocales = QLocale::matchingLocales(QLocale::AnyLanguage, QLocale::AnyScript, QLocale::AnyCountry);
-    QStringList isoCodes;
-    for(int i=0; i<allLocales.size(); ++i){
-        const QString isoCode = allLocales.at(i).currencySymbol(QLocale::CurrencyIsoCode);
-        if(!isoCodes.contains(isoCode)) {
-            isoCodes.append(isoCode);
-        }
-    }
+    const QStringList isoCodes = CurrencyDelegate::currencyCodes();
     ui->currencyComboBox->addItems(isoCodes);
 }
 
@@ -253,6 +247,7 @@ void OptionsDialog::slotApplyChanges()
 {
     QSettings settings;
     settings.setValue(CURRENCY_SYMBOL_KEY, ui->currencySymbolLineEdit->text());
+    settings.setValue(CURRENCY_CODE_KEY, ui->currencyComboBox->currentText());
     bool currencyAfter = ui->currencySymbAfterRadio->isChecked();
     settings.setValue(CURRENCY_POSITION_KEY, currencyAfter);
 

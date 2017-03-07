@@ -620,3 +620,21 @@ QVariant PartDistributorTableModel2::data(const QModelIndex &index, int role) co
     return SimpleSqlTableModel::data(index, role);
 }
 
+bool PartDistributorTableModel2::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    int column = index.column();
+    bool res(false);
+    if(column == PartDistributorTableModel2::ColumnUnitPrice && value.canConvert<Price>()){
+        Price price = qvariant_cast<Price>(value);
+        const QModelIndex currencyIndex = SimpleSqlTableModel::index(index.row(), PartDistributorTableModel2::ColumnCurrency);
+
+        res = SimpleSqlTableModel::setData(currencyIndex, price.currency(), Qt::EditRole);
+        res = res && SimpleSqlTableModel::setData(index, price.value(), Qt::EditRole);
+    }
+    else {
+        res = SimpleSqlTableModel::setData(index, value, role);
+    }
+
+    return res;
+}
+

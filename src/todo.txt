@@ -16,6 +16,10 @@ Based on a user action, the part name is looked up in octopart and the user can 
 
 * Prices should support currency
 
+* Change the following part associations: storage and condition.
+- Allow a part to have multiple storage locations
+- Remove the part condition association. Move the condition to association with storage location.
+
 === Doing ===
 
 * Support Projects. A project has name, description, remarks/notes, parts and attachments.

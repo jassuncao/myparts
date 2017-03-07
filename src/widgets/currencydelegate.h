@@ -3,7 +3,7 @@
 
 #include <QStyledItemDelegate>
 #include <QMap>
-
+#include <QStringList>
 
 class CurrencyDelegate : public QStyledItemDelegate
 {
@@ -18,12 +18,26 @@ public:
     void updateEditorGeometry(QWidget *editor,
                               const QStyleOptionViewItem &option,
                               const QModelIndex &index) const;
+
+    static QStringList currencyCodes() {return _isoCodes;}
+
+
 protected:
     void initStyleOption(QStyleOptionViewItem *option, const QModelIndex &index) const;
 private:    
-    QString _symbol;
-    Qt::Alignment _horizontalAlignment;
-    QMap<QString,QString> _symbols;
+    friend class _init;
+    class _init {
+    public:
+        _init();
+    };
+    static _init _initializer;
+
+    QString _defaultCurrency;
+    Qt::Alignment _horizontalAlignment;    
+    static QStringList _isoCodes;
+    static QMap<QString,QString> _symbols;
 };
+
+
 
 #endif // CURRENCYDELEGATE_H
