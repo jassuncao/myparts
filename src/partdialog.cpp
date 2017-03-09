@@ -18,6 +18,7 @@
 
 #include "widgets/parametervaluedelegate.h"
 #include "widgets/currencydelegate.h"
+#include "widgets/priceitemdelegate.h"
 #include "widgets/validatingitemdelegate.h"
 #include "widgets/comboitemdelegate.h"
 #include "widgets/datetimedelegate.h"
@@ -32,6 +33,8 @@
 #include "models/partdistributorproxymodel.h"
 
 #include "utils.h"
+#include "constants.h"
+#include "currencyhelper.h"
 
 
 inline static QVariant getColumnValue(QAbstractItemModel * model, int row, int column){
@@ -83,16 +86,16 @@ PartDialog::PartDialog(ModelsRepository * modelsProvider, QWidget *parent) :
     ui->partParametersTableView->setItemDelegateForColumn(PartParameterTableModel::ColumnParameterValue, new ParameterValueDelegate(this));
     ui->partParametersTableView->setColumnWidth(PartParameterTableModel::ColumnParameter, 180);
 
-    //PartDistributorProxyModel * distributorProxyModel = new PartDistributorProxyModel(this);
-    //distributorProxyModel->setSourceModel(_partDistributorModel);
     ui->partDistributorsTableView->setModel(_partDistributorModel);
-    ui->partDistributorsTableView->setItemDelegateForColumn(PartDistributorTableModel2::ColumnUnitPrice, new CurrencyDelegate(this));
+    ui->partDistributorsTableView->setItemDelegateForColumn(PartDistributorTableModel2::ColumnUnitPrice, new PriceItemDelegate(false, this));
+    ui->partDistributorsTableView->setItemDelegateForColumn(PartDistributorTableModel2::ColumnCurrency, new CurrencyDelegate(this));
     //ui->partDistributorsTableView->setItemDelegateForColumn(PartDistributorTableModel2::ColumnMinimumOrder, new ValidatingItemDelegate(new QIntValidator(), this));
     ui->partDistributorsTableView->setItemDelegateForColumn(PartDistributorTableModel2::ColumnDateTime, new DateDelegate(this));
     ui->partDistributorsTableView->setItemDelegate(new ComboItemDelegate(this));
-    ui->partDistributorsTableView->hideColumn(PartDistributorTableModel2::ColumnCurrency);
+    ui->partDistributorsTableView->hideColumn(PartDistributorTableModel2::ColumnDateTime);
     ui->partDistributorsTableView->setColumnWidth(PartDistributorTableModel2::ColumnDistributor, 180);
     ui->partDistributorsTableView->setColumnWidth(PartDistributorTableModel2::ColumnPartNumber, 180);
+    ui->partDistributorsTableView->horizontalHeader()->swapSections(PartDistributorTableModel2::ColumnUnitPrice, PartDistributorTableModel2::ColumnCurrency);
 
     ui->partManufacturerTableView->setModel(_partManufacturerModel);
     ui->partManufacturerTableView->setItemDelegate(new ComboItemDelegate(this));
@@ -103,10 +106,14 @@ PartDialog::PartDialog(ModelsRepository * modelsProvider, QWidget *parent) :
     ui->partAttachmentsTableView->setColumnWidth(0, 512);
 
     QSettings settings;
-    QString defaultCurrency(QChar(8364));
-    QString currency = settings.value("currency/symbol", defaultCurrency).toString();
-    bool currencyAfter = settings.value("currency/after",true).toBool();
-    if(currencyAfter)
+    QString currency = settings.value(CURRENCY_CODE_KEY).toString();
+    int format = settings.value(CURRENCY_FORMAT_KEY).toInt();
+    if(format == QLocale::CurrencySymbol){
+        currency = CurrencyHelper::currencySymbol(currency);
+    }
+
+    CurrencyHelper::CurrencySymbolPosition position = CurrencyHelper::symbolPosition();
+    if(position == CurrencyHelper::Suffix)
         ui->priceSpinBox->setSuffix(currency);
     else
         ui->priceSpinBox->setPrefix(currency);

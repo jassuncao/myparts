@@ -8,6 +8,9 @@
 class Price
 {    
 public:
+    enum Role {
+        PriceRole = Qt::UserRole + 1
+    };
     explicit Price();
     explicit Price(double value, const QString & currency);
     bool isValid() const {return _valid;}

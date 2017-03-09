@@ -8,6 +8,7 @@
 #include "models/partssqltablemodel.h"
 #include "datetimedelegate.h"
 #include "currencydelegate.h"
+#include "priceitemdelegate.h"
 
 PartsTableView::PartsTableView(QWidget *parent) :
     QTableView(parent), _tableHeaderContextMenu(0)
@@ -36,7 +37,7 @@ void PartsTableView::setModel(QAbstractItemModel * model)
     setDefaultDropAction(Qt::LinkAction);
     setSortingEnabled(true);
     //setItemDelegateForColumn(PartsSqlTableModel::ColumnCreateDate, new DateDelegate(this));
-    setItemDelegateForColumn(PartsSqlTableModel::ColumnAvgPrice, new CurrencyDelegate(this));
+    setItemDelegateForColumn(PartsSqlTableModel::ColumnAvgPrice, new PriceItemDelegate(false, this));
 
     int colCount = model->columnCount();
     for(int section = 0; section<colCount; ++section){

@@ -9,6 +9,7 @@
 #include "widgets/validatingitemdelegate.h"
 #include "widgets/comboitemdelegate.h"
 #include "widgets/currencydelegate.h"
+#include "currencyhelper.h"
 #include "constants.h"
 #include <QDebug>
 #include <QSettings>
@@ -21,13 +22,13 @@ OptionsDialog::OptionsDialog(ModelsRepository * provider, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::OptionsDialog), _modelsProvider(provider)
 {
-    ui->setupUi(this);    
-    ui->buttonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
+    ui->setupUi(this);
 
     setupModels();
     setupConnections();
     setupGeneralSettings();
     ui->pageSelectionWidget->setCurrentRow(0);
+    ui->buttonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
 }
 
 OptionsDialog::~OptionsDialog()
@@ -101,8 +102,22 @@ void OptionsDialog::setupPartConditionModel()
 
 void OptionsDialog::setupCurrenciesModel()
 {
-    const QStringList isoCodes = CurrencyDelegate::currencyCodes();
-    ui->currencyComboBox->addItems(isoCodes);
+    /*
+    QList<QLocale> locales = QLocale::matchingLocales(QLocale::AnyLanguage, QLocale::AnyScript, QLocale::AnyCountry);
+
+    foreach (QLocale locale, locales) {
+        QString isoCode = locale.currencySymbol(QLocale::CurrencyIsoCode);
+        if(!_uniqueCurrencies.contains(isoCode)){
+            _uniqueCurrencies.insert(isoCode, locale.currencySymbol(QLocale::CurrencySymbol));
+        }
+    }
+    ui->currencyComboBox->addItems(_uniqueCurrencies.keys());
+    */
+    ui->currencyComboBox->addItems(CurrencyHelper::currencies(CurrencyHelper::All));
+    QLocale defaultLocale;
+    ui->currencyFormatComboBox->addItem(defaultLocale.currencySymbol(QLocale::CurrencyIsoCode), QLocale::CurrencyIsoCode);
+    ui->currencyFormatComboBox->addItem(defaultLocale.currencySymbol(QLocale::CurrencySymbol), QLocale::CurrencySymbol);
+
 }
 
 void OptionsDialog::setupConnections()
@@ -113,6 +128,9 @@ void OptionsDialog::setupConnections()
     connect(applyButton, SIGNAL(clicked()), this, SLOT(slotApplyChanges()));
     connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
     connect(ui->buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+
+    connect(ui->currencyComboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(slotCurrencyChanged(QString)));
+    connect(ui->currencyFormatComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(slotDataChanged()));
 
     connect(ui->makeUnitDefaultButton, SIGNAL(clicked()), this, SLOT(slotMakeCurrentUnitDefault()));
     connect(ui->partUnitsTableView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),this, SLOT(slotUnitSelectionChanged(QItemSelection,QItemSelection)));
@@ -144,17 +162,30 @@ void OptionsDialog::setupConnections()
 }
 
 void OptionsDialog::setupGeneralSettings()
-{
-    QSettings settings;
-    QString currency = settings.value(CURRENCY_SYMBOL_KEY).toString();
-    bool currencyAfter = settings.value(CURRENCY_POSITION_KEY).toBool();
-    ui->currencySymbolLineEdit->setText(currency);
-    if(currencyAfter){
-        ui->currencySymbAfterRadio->setChecked(true);
+{    
+    QSettings settings;    
+    int index;
+
+    QString currency = settings.value(CURRENCY_CODE_KEY).toString();
+    if(currency.isEmpty()){
+        QLocale defaultLocale;
+        currency = defaultLocale.currencySymbol(QLocale::CurrencyIsoCode);
     }
-    else{
-     ui->currencySymbBeforeRadio->setChecked(true);
+    index = ui->currencyComboBox->findText(currency);
+    ui->currencyComboBox->setCurrentIndex(index);
+
+    switch (settings.value(CURRENCY_FORMAT_KEY).toInt()) {
+    case QLocale::CurrencyIsoCode:
+        index = 0;
+        break;
+    case QLocale::CurrencySymbol:
+        index = 1;
+        break;
+    default:
+        index = 0;
+        break;
     }
+    ui->currencyFormatComboBox->setCurrentIndex(index);
 }
 
 void OptionsDialog::slotClosePartUnitEditor(QWidget *, QAbstractItemDelegate::EndEditHint hint)
@@ -246,10 +277,8 @@ void OptionsDialog::slotDataChanged()
 void OptionsDialog::slotApplyChanges()
 {
     QSettings settings;
-    settings.setValue(CURRENCY_SYMBOL_KEY, ui->currencySymbolLineEdit->text());
     settings.setValue(CURRENCY_CODE_KEY, ui->currencyComboBox->currentText());
-    bool currencyAfter = ui->currencySymbAfterRadio->isChecked();
-    settings.setValue(CURRENCY_POSITION_KEY, currencyAfter);
+    settings.setValue(CURRENCY_FORMAT_KEY, ui->currencyFormatComboBox->currentIndex());
 
     bool res = _partUnitsModel->submitAll();
     res = res && _parameterUnitsModel->submitAll();
@@ -376,3 +405,12 @@ void OptionsDialog::slotParameterRowChanged(const QModelIndex &current, const QM
     }
     ui->deleteParameterButton->setEnabled(deleteEnabled);
 }
+
+void OptionsDialog::slotCurrencyChanged(const QString &currency)
+{
+    QString symbol = CurrencyHelper::currencySymbol(currency);
+    ui->currencyFormatComboBox->setItemText(0, currency);
+    ui->currencyFormatComboBox->setItemText(1, symbol);
+    slotDataChanged();
+}
+

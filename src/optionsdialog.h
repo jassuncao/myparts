@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QItemSelection>
 #include <QAbstractItemDelegate>
+#include <QMap>
 
 namespace Ui {
 class OptionsDialog;
@@ -47,6 +48,7 @@ private slots:
     void slotAddParameter();
     void slotDeleteParameter();
     void slotParameterRowChanged(const QModelIndex &current, const QModelIndex &);
+    void slotCurrencyChanged(const QString &currency);
 private:
     void setupModels();
     void setupPartUnitsModel();
@@ -61,7 +63,7 @@ private:
     SimpleSqlTableModel * _partUnitsModel;
     ParameterUnitModel * _parameterUnitsModel;
     PartConditionModel * _partConditionModel;
-    ParameterModel * _parameterModel;
+    ParameterModel * _parameterModel;    
 };
 
 #endif // OPTIONSDIALOG_H

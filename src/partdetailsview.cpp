@@ -1,7 +1,7 @@
 #include "partdetailsview.h"
 #include "ui_partdetailsview.h"
 #include "models/partssqltablemodel.h"
-#include "widgets/currencydelegate.h"
+#include "widgets/priceitemdelegate.h"
 #include "widgets/datetimedelegate.h"
 #include "models/partstocktablemodel.h"
 #include "models/stocktableformatproxymodel.h"
@@ -73,7 +73,7 @@ PartDetailsView::PartDetailsView(QWidget *parent) :
     proxyModel->setSourceModel(_partStockModel);
 
     ui->partStockHistoryTable->setItemDelegateForColumn(PartStockTableModel::ColumnDateTime, new DateDelegate(this));
-    ui->partStockHistoryTable->setItemDelegateForColumn(PartStockTableModel::ColumnPrice, new CurrencyDelegate(this));
+    ui->partStockHistoryTable->setItemDelegateForColumn(PartStockTableModel::ColumnPrice, new PriceItemDelegate(false, this));
     //ui->partStockHistoryTable->setItemDelegateForColumn(PartStockTableModel::ColumnChange, new StockChangeDelegate(this));
     ui->partStockHistoryTable->setModel(proxyModel);
     ui->partStockHistoryTable->resizeColumnsToContents();

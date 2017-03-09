@@ -606,7 +606,7 @@ QVariant PartDistributorTableModel2::data(const QModelIndex &index, int role) co
     if(!index.isValid()) return QVariant();
     int column = index.column();
     if(column == PartDistributorTableModel2::ColumnUnitPrice){
-        if(role == Qt::DisplayRole || role == Qt::EditRole){
+        if(role == Qt::DisplayRole){
             QVariant value = SimpleSqlTableModel::data(index, role);
             if(value.isValid()){
                 QVariant currency = SimpleSqlTableModel::index(index.row(), PartDistributorTableModel2::ColumnCurrency).data();
@@ -637,4 +637,3 @@ bool PartDistributorTableModel2::setData(const QModelIndex &index, const QVarian
 
     return res;
 }
-

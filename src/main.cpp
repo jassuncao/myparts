@@ -58,6 +58,8 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationDomain("joaoassuncao.com");
     QCoreApplication::setApplicationName("MyParts");
     //TODO: Fetch values from settings
+    QLocale locale;
+    qDebug()<<"Locale "<<locale.name();
     //QLocale curLocale(QLocale("pt_PT"));
     //QLocale::setDefault(curLocale);
 

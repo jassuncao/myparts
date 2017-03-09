@@ -172,53 +172,12 @@
            <item>
             <widget class="QGroupBox" name="groupBox">
              <property name="title">
-              <string>Currency format</string>
+              <string>Locale</string>
              </property>
              <layout class="QFormLayout" name="formLayout">
               <property name="fieldGrowthPolicy">
                <enum>QFormLayout::ExpandingFieldsGrow</enum>
               </property>
-              <item row="2" column="0">
-               <widget class="QLabel" name="label">
-                <property name="text">
-                 <string>Symbol:</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="1">
-               <widget class="QLineEdit" name="currencySymbolLineEdit">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="maxLength">
-                 <number>16</number>
-                </property>
-               </widget>
-              </item>
-              <item row="5" column="0">
-               <widget class="QLabel" name="label_2">
-                <property name="text">
-                 <string>Position:</string>
-                </property>
-               </widget>
-              </item>
-              <item row="5" column="1">
-               <widget class="QRadioButton" name="currencySymbBeforeRadio">
-                <property name="text">
-                 <string>Before</string>
-                </property>
-               </widget>
-              </item>
-              <item row="6" column="1">
-               <widget class="QRadioButton" name="currencySymbAfterRadio">
-                <property name="text">
-                 <string>After</string>
-                </property>
-               </widget>
-              </item>
               <item row="1" column="0">
                <widget class="QLabel" name="label_3">
                 <property name="text">
@@ -227,7 +186,24 @@
                </widget>
               </item>
               <item row="1" column="1">
-               <widget class="QComboBox" name="currencyComboBox"/>
+               <widget class="QComboBox" name="currencyComboBox">
+                <property name="editable">
+                 <bool>true</bool>
+                </property>
+                <property name="insertPolicy">
+                 <enum>QComboBox::NoInsert</enum>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="label">
+                <property name="text">
+                 <string>Format:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QComboBox" name="currencyFormatComboBox"/>
               </item>
              </layout>
             </widget>

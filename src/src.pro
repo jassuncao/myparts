@@ -109,7 +109,9 @@ SOURCES += main.cpp\
     widgets/savebuttonhelper.cpp \
     widgets/hintlineedit.cpp \
     price.cpp \
-    models/partdistributorproxymodel.cpp
+    models/partdistributorproxymodel.cpp \
+    widgets/priceitemdelegate.cpp \
+    currencyhelper.cpp
 
 HEADERS  += mainwindow.h \
     partdialog.h \
@@ -208,7 +210,9 @@ HEADERS  += mainwindow.h \
     widgets/savebuttonhelper.h \
     widgets/hintlineedit.h \
     price.h \
-    models/partdistributorproxymodel.h
+    models/partdistributorproxymodel.h \
+    widgets/priceitemdelegate.h \
+    currencyhelper.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \
