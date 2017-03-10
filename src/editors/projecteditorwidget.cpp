@@ -31,6 +31,76 @@
 #include "widgets/partpicker.h"
 #include "models/modelsrepository.h"
 
+#include <QStyledItemDelegate>
+#include <QRegExp>
+#include <QSpinBox>
+
+class PartQuantityDelegate : public ValidatingItemDelegate
+{
+public:
+    explicit PartQuantityDelegate(QValidator * validator, QObject *parent = 0) :
+        ValidatingItemDelegate(validator, parent),
+        _sepRegex(",|;|\\s"),
+        _rangeRegex("\\D+(\\d+)\\s*-\\s*\\D(\\d+)")
+    {}
+    virtual ~PartQuantityDelegate() {}
+
+    void setEditorData(QWidget *editor, const QModelIndex &index) const {
+        QVariant var = index.data(Qt::EditRole);
+        if(var.isNull()){//Only attempt to guess the quantity if the record is empty
+            QString s = index.model()->index(index.row(), ProjectPartTableModel::RefDes).data(Qt::EditRole).toString();
+            int quantity = guessQuantityFromRefDes(s);
+
+            QSpinBox * spinbox = dynamic_cast<QSpinBox*>(editor);
+            if(spinbox){
+                spinbox->setValue(quantity);
+                return;
+            }
+            else{
+                QLineEdit * lineEdit = dynamic_cast<QLineEdit*>(editor);
+                if(lineEdit){
+                    lineEdit->setText(QString::number(quantity));
+                    return;
+                }
+            }
+        }
+        ValidatingItemDelegate::setEditorData(editor, index);
+    }
+private:
+
+    int guessQuantityFromRefDes(const QString & s) const {
+        int count = 0;
+        QStringList tokens = s.split(_sepRegex, QString::SkipEmptyParts);
+        foreach (QString token, tokens) {
+            int incFactor = 1;
+            //Check if the token is something like "C1-C9"
+            if(token.size() >= 5 && _rangeRegex.exactMatch(token)){
+                //The regex captures the numeric portions
+                QStringList groups = _rangeRegex.capturedTexts();
+                if(groups.size()==3){//The first group matches the whole string
+                    bool ok1, ok2;
+
+                    int v1 = groups.at(1).toInt(&ok1);
+                    int v2 = groups.at(2).toInt(&ok2);
+
+                    if(ok1 && ok2){
+                        int diff = v2-v1;
+                        if(diff >= 0){
+                            incFactor = diff + 1;
+                        }
+                    }
+                }
+            }
+            count+=incFactor;
+        }
+        return count;
+    }
+
+    QRegExp _sepRegex;
+    QRegExp _rangeRegex;
+};
+
+
 ProjectEditorWidget::ProjectEditorWidget(ModelsRepository * modelsRepo, QWidget *parent) :
     AbstractEditor(parent),
     ui(new Ui::ProjectEditorForm),
@@ -63,7 +133,8 @@ ProjectEditorWidget::ProjectEditorWidget(ModelsRepository * modelsRepo, QWidget 
     ui->partsTableView->verticalHeader()->setVisible(false);
     ui->partsTableView->horizontalHeader()->setStretchLastSection(true);
     ui->partsTableView->setItemDelegate(new ComboItemDelegate(this));
-    ui->partsTableView->setItemDelegateForColumn(ProjectPartTableModel::Quantity, new ValidatingItemDelegate(new QIntValidator(), this));
+    //ui->partsTableView->setItemDelegateForColumn(ProjectPartTableModel::Quantity, new PartQuantityDelegate(this));
+    ui->partsTableView->setItemDelegateForColumn(ProjectPartTableModel::Quantity, new PartQuantityDelegate(new QIntValidator(), this));
     ui->partsTableView->setSortingEnabled(true);
 
     connect(ui->nameLineEdit, SIGNAL(textEdited(QString)), this, SLOT(slotContentChanged()));
@@ -82,6 +153,7 @@ ProjectEditorWidget::ProjectEditorWidget(ModelsRepository * modelsRepo, QWidget 
     connect(ui->deletePartButton, SIGNAL(clicked()), this, SLOT(slotRemovePart()));
     connect(ui->assignPartButton, SIGNAL(clicked(bool)), this, SLOT(slotAssignPart()));
 
+    //connect(_partsModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(slotPartDataChanged(QModelIndex,QModelIndex)));
     setFocusProxy(ui->nameLineEdit);
 }
 
@@ -174,7 +246,7 @@ void ProjectEditorWidget::slotAddPart()
 {
     int rowCount = _partsModel->rowCount();
     if(_partsModel->insertRow(rowCount)){
-        QModelIndex index = _partsModel->index(rowCount,0);
+        QModelIndex index = _partsAlignmentProxyModel->index(rowCount, ProjectPartTableModel::RefDes);
         ui->partsTableView->setCurrentIndex(index);
         ui->partsTableView->edit(index);
     }

@@ -78,7 +78,7 @@ QSqlQuery ProjectPartTableModel::prepareSelectQuery()
 TableRow * ProjectPartTableModel::createBlankItem() const
 {
     TableRow * row = new TableRow(QVector<QVariant>(FIELD_COUNT));
-    row->setData(Field_Quantity, QVariant(0));
+    //row->setData(Field_Quantity, QVariant(0));
     return row;
 }
 

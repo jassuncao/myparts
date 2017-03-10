@@ -50,6 +50,7 @@ private slots:
     void slotCurrentPartRowChanged(const QModelIndex &current, const QModelIndex &);
     void slotAttachmentDoubleClicked(const QModelIndex &index);    
     void slotPartsDoubleCkicked(const QModelIndex &index);
+    //void slotPartDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
 private:    
     Ui::ProjectEditorForm *ui;   
     ModelsRepository * _modelsRepo;

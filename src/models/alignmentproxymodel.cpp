@@ -27,3 +27,8 @@ QVariant AlignmentProxyModel::data(const QModelIndex &proxyIndex, int role) cons
     return QIdentityProxyModel::data(proxyIndex, role);
 }
 
+QVariant AlignmentProxyModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    return sourceModel()->headerData(section, orientation, role);
+}
+
