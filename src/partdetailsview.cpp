@@ -3,7 +3,7 @@
 #include "models/partssqltablemodel.h"
 #include "widgets/priceitemdelegate.h"
 #include "widgets/datetimedelegate.h"
-#include "models/partstocktablemodel.h"
+#include "models/partstocklogtablemodel.h"
 #include "models/stocktableformatproxymodel.h"
 #include "dialogs/addstockdialog.h"
 #include "dialogs/removestockdialog.h"
@@ -59,7 +59,7 @@ PartDetailsView::PartDetailsView(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::PartDetailsView),
     _partsModel(0),
-    _partStockModel(0)
+    _partStockLogModel(0)
 {
     ui->setupUi(this);
     ui->partStockHistoryTable->setWordWrap(false);
@@ -67,13 +67,13 @@ PartDetailsView::PartDetailsView(QWidget *parent) :
     _widgetMapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
     _widgetMapper->setItemDelegate(new PartDetailsDelegate(this));
 
-    _partStockModel = PartStockTableModel::createNew(this);
+    _partStockLogModel = PartStockLogTableModel::createNew(this);
 
     StockTableFormatProxyModel * proxyModel = new StockTableFormatProxyModel(this);
-    proxyModel->setSourceModel(_partStockModel);
+    proxyModel->setSourceModel(_partStockLogModel);
 
-    ui->partStockHistoryTable->setItemDelegateForColumn(PartStockTableModel::ColumnDateTime, new DateDelegate(this));
-    ui->partStockHistoryTable->setItemDelegateForColumn(PartStockTableModel::ColumnPrice, new PriceItemDelegate(false, this));
+    ui->partStockHistoryTable->setItemDelegateForColumn(PartStockLogTableModel::ColumnLastUpdate, new DateDelegate(this));
+    ui->partStockHistoryTable->setItemDelegateForColumn(PartStockLogTableModel::ColumnPrice, new PriceItemDelegate(false, this));
     //ui->partStockHistoryTable->setItemDelegateForColumn(PartStockTableModel::ColumnChange, new StockChangeDelegate(this));
     ui->partStockHistoryTable->setModel(proxyModel);
     ui->partStockHistoryTable->resizeColumnsToContents();
@@ -90,8 +90,8 @@ PartDetailsView::PartDetailsView(QWidget *parent) :
     connect(addStockButton, SIGNAL(clicked()), this, SLOT(onAddStock()));
     connect(removeStockButton, SIGNAL(clicked()), this, SLOT(onRemoveStock()));
 
-    _partStockModel->setCurrentPartId(QVariant());
-    _partStockModel->select();
+    _partStockLogModel->setCurrentPartId(QVariant());
+    _partStockLogModel->select();
 }
 
 PartDetailsView::~PartDetailsView()
@@ -107,11 +107,11 @@ void PartDetailsView::onAddStock()
     if(dlg.exec()!=QDialog::Accepted)
         return;
     _partsModel->database().transaction();
-    _partStockModel->appendRow(dlg.getStockChange(), dlg.getPartPrice(), dlg.getComment());
+    _partStockLogModel->appendRow(dlg.getStockChange(), dlg.getPartPrice(), dlg.getComment());
     _partsModel->updatePartStock(_currentIndex, dlg.getStockChange());
     _partsModel->updatePartAvgPrice(_currentIndex, dlg.getPartPrice());
 
-    if(_partStockModel->submitAll() && _partsModel->submitAll()){
+    if(_partStockLogModel->submitAll() && _partsModel->submitAll()){
         _partsModel->database().commit();
     }
     else{
@@ -131,9 +131,9 @@ void PartDetailsView::onRemoveStock()
     if(dlg.exec()!=QDialog::Accepted)
         return;
     _partsModel->database().transaction();
-    _partStockModel->appendRow(dlg.getStockChange(), QVariant(), dlg.getComment());
+    _partStockLogModel->appendRow(dlg.getStockChange(), QVariant(), dlg.getComment());
     _partsModel->updatePartStock(_currentIndex, dlg.getStockChange());
-    if(_partStockModel->submitAll() && _partsModel->submitAll()){
+    if(_partStockLogModel->submitAll() && _partsModel->submitAll()){
         _partsModel->database().commit();
     }
     else{
@@ -181,8 +181,8 @@ void PartDetailsView::updateStockView(const QModelIndex & current)
     QModelIndex primaryKeyIndex = _partsModel->index(current.row(), PartsSqlTableModel::ColumnId);
     QVariant keyValue = primaryKeyIndex.data(Qt::EditRole);
     qDebug()<<"Changing part to "<<keyValue;
-    _partStockModel->setCurrentPartId(keyValue);
-    _partStockModel->select();    
+    _partStockLogModel->setCurrentPartId(keyValue);
+    _partStockLogModel->select();
 }
 
 

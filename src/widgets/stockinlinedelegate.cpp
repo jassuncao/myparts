@@ -4,7 +4,7 @@
 #include <QItemEditorFactory>
 #include <QSpinBox>
 #include <QMessageBox>
-#include "models/partstocktablemodel.h"
+#include "models/partstocklogtablemodel.h"
 #include "models/partssqltablemodel.h"
 #include <QIdentityProxyModel>
 #include <QSqlQuery>

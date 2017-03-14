@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS db_version (db_version TEXT NOT NULL UNIQUE);
+CREATE TABLE IF NOT EXISTS db_version (version TEXT NOT NULL UNIQUE);
 
 INSERT INTO db_version VALUES ('v1.0');
 
@@ -69,12 +69,24 @@ CREATE TABLE IF NOT EXISTS part  (
     FOREIGN KEY(package) REFERENCES package(id)
 );
 
-CREATE TABLE IF NOT EXISTS stock_change  (
+CREATE TABLE IF NOT EXISTS part_stock (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    change INTEGER NOT NULL,
-    price DOUBLE ,
-    dateTime DATETIME NOT NULL,
-    comment TEXT ,
+    part INTEGER NOT NULL,
+    quantity INTEGER NOT NULL,
+    storage INTEGER NOT NULL,
+    condition INTEGER,
+    lastUpdate DATETIME NOT NULL,
+    FOREIGN KEY(part) REFERENCES part(id) ON DELETE CASCADE,
+    FOREIGN KEY(storage) REFERENCES storage(id),
+    FOREIGN KEY(condition) REFERENCES condition(id)
+);
+
+CREATE TABLE IF NOT EXISTS part_stock_log (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    change DOUBLE NOT NULL,
+    price DOUBLE,
+    lastUpdate DATETIME NOT NULL,
+    comment TEXT,
     part INTEGER NOT NULL,
     FOREIGN KEY(part) REFERENCES part(id) ON DELETE CASCADE
 );

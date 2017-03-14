@@ -7,7 +7,7 @@
 class PartsSqlTableModel;
 class ModelsRepository;
 class PartParameterTableModel;
-class PartStockTableModel;
+class PartStockLogTableModel;
 class SaveButtonHelper;
 
 namespace Ui {
@@ -41,7 +41,7 @@ private:
     Ui::QuickAddCapacitorDialog *ui;
     PartsSqlTableModel * _partsModel;
     PartParameterTableModel * _partParams;
-    PartStockTableModel * _partStockModel;
+    PartStockLogTableModel * _partStockLogModel;
     QString _capacitorNameTemplate;
     Parameter _capacitanceParam;
     Parameter _voltageRatingParam;

@@ -73,6 +73,10 @@
         <file alias="parameter">images/parameter.png</file>
         <file alias="duplicatePart">images/brick_duplicate.png</file>
         <file alias="information">images/information.png</file>
+        <file alias="stock_entry_add">images/package_add.png</file>
+        <file alias="stock_entry_remove">images/package_delete.png</file>
+        <file alias="stock_entry_move">images/package_go.png</file>
+        <file alias="stock">images/package.png</file>
     </qresource>
     <qresource prefix="/largeIcons">
         <file alias="options_general">images/cog_32x32.png</file>

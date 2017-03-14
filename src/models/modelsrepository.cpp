@@ -4,7 +4,7 @@
 #include "models/partssqltablemodel.h"
 #include "models/storagetreemodel.h"
 #include "models/customtablemodel.h"
-#include "models/partstocktablemodel.h"
+#include "models/partstocklogtablemodel.h"
 #include "models/categorytreemodel.h"
 #include "models/customtablemodel.h"
 #include "models/partsquerybuilder.h"

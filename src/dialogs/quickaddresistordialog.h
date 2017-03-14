@@ -8,7 +8,7 @@
 class PartsSqlTableModel;
 class ModelsRepository;
 class PartParameterTableModel;
-class PartStockTableModel;
+class PartStockLogTableModel;
 class SaveButtonHelper;
 
 namespace Ui {
@@ -41,7 +41,7 @@ private:
     Ui::QuickAddResistorDialog *ui;
     PartsSqlTableModel * _partsModel;
     PartParameterTableModel * _partParams;
-    PartStockTableModel * _partStockModel;
+    PartStockLogTableModel * _partStockLogModel;
     QString _resistorNameTemplate;
     Parameter _resistanceParam;
     Parameter _powerRatingParam;

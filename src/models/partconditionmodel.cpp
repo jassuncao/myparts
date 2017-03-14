@@ -30,6 +30,19 @@ void PartConditionModel::makeSelectedItemDefault(const int selectedRow)
     }
 }
 
+int PartConditionModel::columnCount(const QModelIndex &parent) const
+{
+    return SimpleSqlTableModel::columnCount(parent) + 1;
+}
+
+QVariant PartConditionModel::data(const QModelIndex &index, int role) const
+{
+    if(index.column() == ColumnId && (role == Qt::EditRole || role == Qt::DisplayRole)){
+        return getItemId(index.row());
+    }
+    return SimpleSqlTableModel::data(index, role);
+}
+
 PartConditionModel* PartConditionModel::createNew(QObject *parent)
 {
     QStringList fieldNames;

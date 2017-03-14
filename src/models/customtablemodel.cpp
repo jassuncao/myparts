@@ -294,6 +294,14 @@ void CustomTableModel::registerRelation(const int column, ModelRelation * relati
     _relations[column] = relation;
 }
 
+QVariant CustomTableModel::getItemId(int row) const
+{
+    if(row < _items.size()){
+        return _items.at(row)->id();
+    }
+    return QVariant();
+}
+
 QAbstractItemModel * CustomTableModel::relationModel(const int column) const
 {
     if(columnIsRelation(column))
@@ -366,10 +374,10 @@ SimpleSqlTableModel::SimpleSqlTableModel(const QString &tableName, const QString
 }
 
 QString SimpleSqlTableModel::generateSelectStatement(const QString & tableName,  const QStringList & fieldNames, const QString & foreignKeyField, int sortColumn, Qt::SortOrder order)
-{
-    QString selectStmt;
-    QString fieldList = fieldNames.join(", ");
-    if(!foreignKeyField.isEmpty()){
+{    
+    QString selectStmt;        
+    QString fieldList = fieldNames.join(", ");    
+    if(!foreignKeyField.isEmpty()){        
         selectStmt = QString("SELECT %2, id FROM %1 WHERE %3 = ?").arg(tableName, fieldList, foreignKeyField);
     }
     else{

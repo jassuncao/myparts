@@ -1,6 +1,6 @@
 #include "partstableproxymodel.h"
 #include "partssqltablemodel.h"
-#include "partstocktablemodel.h"
+#include "partstocklogtablemodel.h"
 #include <QColor>
 
 PartsTableProxyModel::PartsTableProxyModel(QObject *parent) :

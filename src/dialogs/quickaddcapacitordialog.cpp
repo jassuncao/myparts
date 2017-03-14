@@ -7,7 +7,7 @@
 #include "models/partconditionmodel.h"
 #include "models/partssqltablemodel.h"
 #include "models/partparametertablemodel.h"
-#include "models/partstocktablemodel.h"
+#include "models/partstocklogtablemodel.h"
 #include "models/basicentitytablemodel.h"
 #include "widgets/unitformatter.h"
 #include "widgets/unitparser.h"
@@ -51,7 +51,7 @@ QuickAddCapacitorDialog::QuickAddCapacitorDialog(ModelsRepository *modelsProvide
     _voltageRatingParam = PartParameterTableModel::findParameter("voltage_rating_dc");
     _toleranceParam = PartParameterTableModel::findParameter("capacitance_tolerance");
     _partParams = new PartParameterTableModel(this);
-    _partStockModel = PartStockTableModel::createNew(this);
+    _partStockLogModel = PartStockLogTableModel::createNew(this);
 
     //XXX: Disabled the validator to allow "auto complete" (ctrl+space) to work
     //ui->capacitanceValueLineEdit->setValidator(new ParameterValueValidator(_capacitanceParam.unitSymbol(), this));
@@ -192,9 +192,9 @@ void QuickAddCapacitorDialog::slotAddCapacitor()
             _partParams->setCurrentPartId(_partsModel->lastInsertedId());
             _partParams->submitAll();
             if(quantity != 0){
-                _partStockModel->appendRow(quantity, QVariant(), QString());
-                _partStockModel->setCurrentPartId(_partsModel->lastInsertedId());
-                _partStockModel->submitAll();
+                _partStockLogModel->appendRow(quantity, QVariant(), QString());
+                _partStockLogModel->setCurrentPartId(_partsModel->lastInsertedId());
+                _partStockLogModel->submitAll();
             }
             _partsModel->database().commit();
             saveSuccessFeedback();

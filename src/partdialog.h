@@ -17,9 +17,10 @@ class QCheckBox;
 class AttachmentTableModel3;
 class PartManufacturerTableModel2;
 class PartDistributorTableModel2;
-class PartStockTableModel;
+class PartStockLogTableModel;
 class ModelsRepository;
 class PartParameterTableModel;
+class PartStockTableModel2;
 
 class PartDialog : public QDialog
 {
@@ -58,6 +59,9 @@ private slots:
     void slotPartStorageChanged(int idx);
     void slotPartCategoryChanged(int idx);
     void slotAttachmentDoubleClicked(const QModelIndex &index);
+    void slotAddStockEntry();
+    void slotDeleteStockEntry();
+    void slotMoveStock();
 private:
     void initCombos();
     void commitChanges();
@@ -76,10 +80,10 @@ private:
     PartDistributorTableModel2 * _partDistributorModel;
     PartManufacturerTableModel2 * _partManufacturerModel;
     AttachmentTableModel3 * _partAttachmentModel;
-    PartStockTableModel * _partStockModel; 
-    QSqlQueryModel * _partConditionModel;
+    PartStockLogTableModel * _partStockLogModel;
+    PartStockTableModel2 * _partStockModel2;    
     QSqlQueryModel * _partUnitsModel;
-    QSqlQueryModel * _packagesModel;
+    QSqlQueryModel * _packagesModel;    
 
     QDataWidgetMapper * _mapper;
     QModelIndex _currentModelIndex;

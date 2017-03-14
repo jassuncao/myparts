@@ -15,6 +15,7 @@
 #include <QDateTime>
 #include <QDialogButtonBox>
 #include <QDesktopServices>
+#include <QCheckBox>
 
 #include "widgets/parametervaluedelegate.h"
 #include "widgets/currencydelegate.h"
@@ -23,14 +24,16 @@
 #include "widgets/comboitemdelegate.h"
 #include "widgets/datetimedelegate.h"
 #include "dialogs/attachmentselectiondialog.h"
+#include "dialogs/addstockentrydialog.h"
 #include "models/partssqltablemodel.h"
 #include "models/storagetreemodel.h"
 #include "models/customtablemodel.h"
-#include "models/partstocktablemodel.h"
+#include "models/partstocklogtablemodel.h"
 #include "models/modelsrepository.h"
 #include "models/categorytreemodel.h"
 #include "models/partparametertablemodel.h"
 #include "models/partdistributorproxymodel.h"
+#include "models/partstocktablemodel2.h"
 
 #include "utils.h"
 #include "constants.h"
@@ -61,7 +64,8 @@ PartDialog::PartDialog(ModelsRepository * modelsProvider, QWidget *parent) :
     _partAttachmentModel = AttachmentTableModel3::createNewPartAttachmentModel(this);
     _partDistributorModel = PartDistributorTableModel2::createNew(this);
     _partManufacturerModel = PartManufacturerTableModel2::createNew(this);
-    _partStockModel = PartStockTableModel::createNew(this);    
+    _partStockLogModel = PartStockLogTableModel::createNew(this);
+    _partStockModel2 = PartStockTableModel2::createNew(this);
 
     _nextActionCheckbox = new QCheckBox(this);
     ui->buttonBox->addButton(_nextActionCheckbox, QDialogButtonBox::ResetRole);
@@ -73,13 +77,15 @@ PartDialog::PartDialog(ModelsRepository * modelsProvider, QWidget *parent) :
 
     _mapper->addMapping(ui->partNameEdit, PartsSqlTableModel::ColumnName);
     _mapper->addMapping(ui->partDescriptionEdit, PartsSqlTableModel::ColumnDescription);
-    _mapper->addMapping(ui->minStockSpinBox, PartsSqlTableModel::ColumnMinStock);
-    _mapper->addMapping(ui->partConditionCombo, PartsSqlTableModel::ColumnConditionId, "currentKey");
+    _mapper->addMapping(ui->minStockSpinBox, PartsSqlTableModel::ColumnMinStock);    
     _mapper->addMapping(ui->partUnitCombo, PartsSqlTableModel::ColumnPartUnitId, "currentKey");
     _mapper->addMapping(ui->partPackageCombo, PartsSqlTableModel::ColumnPackageId, "currentKey");
-    _mapper->addMapping(ui->initialStockSpinBox,PartsSqlTableModel::ColumnActualStock, "value");
     _mapper->addMapping(ui->partCommentText, PartsSqlTableModel::ColumnComment);
     _mapper->addMapping(ui->partCustomPartNumberEdit, PartsSqlTableModel::ColumnCustomPartNumber);
+
+    ui->partStockTableView->setModel(_partStockModel2);
+    ui->partStockTableView->setItemDelegate(new ComboItemDelegate(this));
+    ui->partDistributorsTableView->setItemDelegateForColumn(PartStockTableModel2::ColumnLastUpdate, new DateDelegate(this));
 
     ui->partParametersTableView->setModel(_partParamsModel);
     ui->partParametersTableView->setItemDelegate(new ComboItemDelegate(this));
@@ -105,19 +111,6 @@ PartDialog::PartDialog(ModelsRepository * modelsProvider, QWidget *parent) :
     ui->partAttachmentsTableView->setModel(_partAttachmentModel);
     ui->partAttachmentsTableView->setColumnWidth(0, 512);
 
-    QSettings settings;
-    QString currency = settings.value(CURRENCY_CODE_KEY).toString();
-    int format = settings.value(CURRENCY_FORMAT_KEY).toInt();
-    if(format == QLocale::CurrencySymbol){
-        currency = CurrencyHelper::currencySymbol(currency);
-    }
-
-    CurrencyHelper::CurrencySymbolPosition position = CurrencyHelper::symbolPosition();
-    if(position == CurrencyHelper::Suffix)
-        ui->priceSpinBox->setSuffix(currency);
-    else
-        ui->priceSpinBox->setPrefix(currency);
-
     ui->deleteParameterButton->setEnabled(false);
     ui->deleteDistributorButton->setEnabled(false);
     ui->deleteManufacturerButton->setEnabled(false);
@@ -139,7 +132,8 @@ PartDialog::PartDialog(ModelsRepository * modelsProvider, QWidget *parent) :
     connect(ui->addAttachmentButton, SIGNAL(clicked()), this, SLOT(slotAddAttachment()));
     connect(ui->deleteAttachmentButton, SIGNAL(clicked()), this, SLOT(slotDeleteAttachment()));
     connect(ui->partAttachmentsTableView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)), this, SLOT(slotCurrentPartParameterRowChanged(QModelIndex,QModelIndex)));
-    connect(ui->partAttachmentsTableView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(slotAttachmentDoubleClicked(QModelIndex)));
+    connect(ui->partAttachmentsTableView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(slotAttachmentDoubleClicked(QModelIndex)));    
+    connect(ui->addStockEntryButton, SIGNAL(clicked()), this, SLOT(slotAddStockEntry()));
 }
 
 PartDialog::~PartDialog()
@@ -183,15 +177,12 @@ int PartDialog::editPart(const QModelIndex &index)
 {
     setWindowTitle(tr("Edit Part"));
     _nextActionCheckbox->setText(tr("Create copy after save"));
-    _addMode = false;
-    ui->priceLabel->setHidden(true);
-    ui->priceSpinBox->setHidden(true);
-    ui->priceSpinBox->setEnabled(false);
-    ui->pricePerItemCheckBox->setHidden(true);
-    ui->initialStockLabel->setHidden(true);
-    ui->initialStockSpinBox->setHidden(true);    
+    _addMode = false;    
     setCurrentModelIndex(index);
     _currentPartId = getColumnValue(_partsModel, index.row(), PartsSqlTableModel::ColumnId);
+
+    _partStockModel2->setCurrentPartId(_currentPartId);
+    _partStockModel2->select();
 
     _partParamsModel->setCurrentPartId(_currentPartId);
     _partParamsModel->select();
@@ -218,6 +209,12 @@ int PartDialog::duplicatePart(const QModelIndex &index, bool allData)
         QVariant partId = getColumnValue(_partsModel, index.row(), PartsSqlTableModel::ColumnId);
 
         QVariant invalidId;
+
+        _partStockModel2->setCurrentPartId(partId);
+        _partStockModel2->select();
+        _partStockModel2->cloneData();
+        _partStockModel2->setCurrentPartId(invalidId);
+
         _partParamsModel->setCurrentPartId(partId);
         _partParamsModel->select();
         _partParamsModel->cloneData();
@@ -298,53 +295,23 @@ void PartDialog::initCombos()
     ui->partCategoryCombo->setModel(_modelsProvider->partCategoryModel());
     ui->partStorageCombo->setModel(_modelsProvider->partStorageModel());
     connect(ui->partCategoryCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(slotPartCategoryChanged(int)));
-    connect(ui->partStorageCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(slotPartStorageChanged(int)));
-
-    _partConditionModel = new QSqlQueryModel(this);
-    _partConditionModel->setQuery("SELECT id, value, defaultCondition FROM condition ORDER BY value ASC");
-
-    int row = Utils::findDefaultValueRow(_partConditionModel, 2);
-    _defaultCondition = _partConditionModel->index(row,0).data(Qt::EditRole);
-
-    ui->partConditionCombo->setModel(_partConditionModel);
-    ui->partConditionCombo->setModelKeyColumn(0);
-    ui->partConditionCombo->setModelColumn(1);        
-
+    connect(ui->partStorageCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(slotPartStorageChanged(int)));    
 
     _partUnitsModel = new QSqlQueryModel(this);
     _partUnitsModel->setQuery("SELECT id, name, defaultUnit FROM part_unit ORDER BY name ASC");
 
-    row = Utils::findDefaultValueRow(_partUnitsModel, 2);
+    int row = Utils::findDefaultValueRow(_partUnitsModel, 2);
     _defaultUnit = _partUnitsModel->index(row,0).data(Qt::EditRole);
 
     ui->partUnitCombo->setModel(_partUnitsModel);
     ui->partUnitCombo->setModelKeyColumn(0);
     ui->partUnitCombo->setModelColumn(1);
 
-
     _packagesModel = new QSqlQueryModel(this);
     _packagesModel->setQuery("SELECT id, name FROM package ORDER BY name ASC");
     ui->partPackageCombo->setModel(_packagesModel);
     ui->partPackageCombo->setModelKeyColumn(0);
     ui->partPackageCombo->setModelColumn(1);
-}
-
-int PartDialog::initialStock() const
-{
-    return ui->initialStockSpinBox->value();
-}
-
-double PartDialog::partPrice() const
-{
-    double price = ui->priceSpinBox->value();
-    if(!ui->pricePerItemCheckBox->isChecked()){
-        double quantity = initialStock();
-        if(quantity!=0)
-            price = price / quantity;
-       else
-            price = 0;
-    }
-    return price;
 }
 
 static void setIndexForFkey(QComboBox * combo, QVariant fkey){
@@ -406,6 +373,9 @@ void PartDialog::accept()
             initialData = copySomeData(_currentModelIndex);
             //We discard the data from the auxiliary tables by using an invalid
             QVariant invalidId;
+            _partStockModel2->setCurrentPartId(invalidId);
+            _partStockModel2->select();
+
             _partParamsModel->setCurrentPartId(invalidId);
             _partParamsModel->select();
 
@@ -424,6 +394,10 @@ void PartDialog::accept()
             initialData = copyAllData(_currentModelIndex);
             //We "clone" the data from the auxiliary tables
             QVariant invalidId;
+
+            _partStockModel2->cloneData();
+            _partStockModel2->setCurrentPartId(invalidId);
+
             _partParamsModel->cloneData();
             _partParamsModel->setCurrentPartId(invalidId);
 
@@ -442,8 +416,6 @@ void PartDialog::accept()
         QModelIndex insertIndex = insertNewPart(initialData);
         setCurrentModelIndex(insertIndex);
 
-        ui->priceSpinBox->setValue(0.0);
-        ui->pricePerItemCheckBox->setChecked(false);
         ui->tabWidget->setCurrentIndex(0);
         ui->partNameEdit->setFocus();
     }
@@ -464,20 +436,20 @@ void PartDialog::commitChanges()
     _partsModel->database().transaction();
     _mapper->submit();
     if(_addMode){
-        qDebug("Commiting changes to new part");
-        qDebug()<<"Setting avg price as "<<partPrice();
+        qDebug("Commiting changes to new part");        
         QModelIndex priceIdx = _partsModel->index(_currentModelIndex.row(), PartsSqlTableModel::ColumnAvgPrice);
-        _partsModel->setData(priceIdx, partPrice());
+        QModelIndex actualStockIdx = _partsModel->index(_currentModelIndex.row(), PartsSqlTableModel::ColumnActualStock);
+        QVariant partPrice = _partStockLogModel->computeAveragePrice();
+        QVariant actualStock = _partStockModel2->computeCurrentStock();
+        _partsModel->setData(priceIdx, partPrice);
+        _partsModel->setData(actualStockIdx, actualStock);
         _partsModel->submitAll();
+
         QVariant partId = _partsModel->lastInsertedId();
         if(partId.isValid()){
-            qDebug()<<"New Part id is "<<partId;
-            if(initialStock()>0){
-                qDebug("Adding initial stock");
-                _partStockModel->setCurrentPartId(partId);
-                _partStockModel->appendRow(initialStock(), partPrice(), QString());
-                _partStockModel->submitAll();
-            }
+            qDebug()<<"New Part id is "<<partId;                        
+            _partStockModel2->setCurrentPartId(partId);
+            _partStockLogModel->setCurrentPartId(partId);
             _partParamsModel->setCurrentPartId(partId);      
             _partDistributorModel->setCurrentPartId(partId);
             _partManufacturerModel->setCurrentPartId(partId);
@@ -489,6 +461,10 @@ void PartDialog::commitChanges()
         qDebug()<<"Commiting changes to existing part "<<partId;
         _partsModel->submitAll();             
     }
+    qDebug("Saving part stock");
+    _partStockModel2->submitAll();
+    qDebug("Saving part stock log");
+    _partStockLogModel->submitAll();
     qDebug("Saving part manufacturers");
     _partManufacturerModel->submitAll();
     qDebug("Saving part distributors");
@@ -668,5 +644,38 @@ void PartDialog::slotAttachmentDoubleClicked(const QModelIndex &index)
         QString url = urlColIndex.data(Qt::EditRole).toString();
         QDesktopServices::openUrl(QUrl::fromUserInput(url));
     }
+}
+
+void PartDialog::slotAddStockEntry()
+{
+    AddStockEntryDialog dlg(_modelsProvider, this);
+    QString partUnit = ui->partUnitCombo->currentText();
+    dlg.setPartUnit(partUnit);
+    QModelIndex index = ui->partStockTableView->currentIndex();
+    if(index.isValid()){
+        QVariant conditionId = _partStockModel2->index(index.row(), PartStockTableModel2::ColumnCondition).data(Qt::EditRole);
+        dlg.setSelectedCondition(conditionId);
+        QVariant storageId = _partStockModel2->index(index.row(), PartStockTableModel2::ColumnStorage).data(Qt::EditRole);
+        dlg.setSelectedStorage(storageId);
+    }
+    int res = dlg.exec();
+    if(res == AddStockEntryDialog::Accepted){
+        QVariant condition = dlg.selectedCondition();
+        QVariant storage = dlg.selectedStorage();
+        int quantity = dlg.stockChange();
+        dlg.partPrice();
+        dlg.comment();
+        _partStockModel2->insertOrUpdateRow(condition, storage, quantity);
+    }
+}
+
+void PartDialog::slotDeleteStockEntry()
+{
+    //Check if the entry has quantity.
+    //If so, ask the user if he wants to "destroy" or move the items to another storage entry
+}
+
+void PartDialog::slotMoveStock()
+{
 }
 

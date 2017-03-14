@@ -97,6 +97,7 @@ void OptionsDialog::setupPartConditionModel()
 #else
     ui->partConditionTableView->horizontalHeader()->setResizeMode(PartConditionModel::ColumnDefault, QHeaderView::Fixed);
 #endif
+    ui->partConditionTableView->horizontalHeader()->setHidden(PartConditionModel::ColumnId);
     _partConditionModel->select();
 }
 

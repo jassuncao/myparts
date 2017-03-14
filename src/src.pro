@@ -71,7 +71,6 @@ SOURCES += main.cpp\
     models/treeitemmodelpersistence.cpp \
     dialogs/treeitemeditdialog.cpp \
     models/categorytreemodel.cpp \
-    models/partstocktablemodel.cpp \
     models/stocktableformatproxymodel.cpp \
     widgets/elidinglabel.cpp \
     models/partstableproxymodel.cpp \
@@ -111,7 +110,10 @@ SOURCES += main.cpp\
     price.cpp \
     models/partdistributorproxymodel.cpp \
     widgets/priceitemdelegate.cpp \
-    currencyhelper.cpp
+    currencyhelper.cpp \
+    models/partstocktablemodel2.cpp \
+    dialogs/addstockentrydialog.cpp \
+    models/partstocklogtablemodel.cpp
 
 HEADERS  += mainwindow.h \
     partdialog.h \
@@ -170,7 +172,6 @@ HEADERS  += mainwindow.h \
     models/treeitemmodelpersistence.h \
     dialogs/treeitemeditdialog.h \
     models/categorytreemodel.h \
-    models/partstocktablemodel.h \
     models/stocktableformatproxymodel.h \
     widgets/elidinglabel.h \
     models/partstableproxymodel.h \
@@ -212,7 +213,10 @@ HEADERS  += mainwindow.h \
     price.h \
     models/partdistributorproxymodel.h \
     widgets/priceitemdelegate.h \
-    currencyhelper.h
+    currencyhelper.h \
+    models/partstocktablemodel2.h \
+    dialogs/addstockentrydialog.h \
+    models/partstocklogtablemodel.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \
@@ -230,7 +234,8 @@ FORMS    += mainwindow.ui \
     dialogs/quickaddcapacitordialog.ui \
     dialogs/tableexportdialog.ui \
     editors/projecteditorform.ui \
-    dialogs/partsassignmentdialog.ui
+    dialogs/partsassignmentdialog.ui \
+    dialogs/addstockentrydialog.ui
 
 RESOURCES += \
     resources.qrc \

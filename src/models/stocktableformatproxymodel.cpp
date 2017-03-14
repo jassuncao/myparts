@@ -1,5 +1,5 @@
 #include "stocktableformatproxymodel.h"
-#include "partstocktablemodel.h"
+#include "partstocklogtablemodel.h"
 
 
 StockTableFormatProxyModel::StockTableFormatProxyModel(QObject *parent) :
@@ -15,7 +15,7 @@ QVariant StockTableFormatProxyModel::data(const QModelIndex &proxyIndex, int rol
 {
     if(!proxyIndex.isValid()) return QVariant();
     if(role==Qt::ForegroundRole){
-        if(proxyIndex.column()==PartStockTableModel::ColumnChange){
+        if(proxyIndex.column() == PartStockLogTableModel::ColumnChange){
             QVariant var = sourceModel()->data(proxyIndex, Qt::DisplayRole);
             int change = var.toInt();
             if(change<0)
@@ -25,12 +25,12 @@ QVariant StockTableFormatProxyModel::data(const QModelIndex &proxyIndex, int rol
         }
     }
     else if(role == Qt::TextAlignmentRole) {
-        if(proxyIndex.column()==PartStockTableModel::ColumnChange){
+        if(proxyIndex.column() == PartStockLogTableModel::ColumnChange){
             return Qt::AlignCenter;
         }
     }
     else if(role == Qt::ToolTipRole){
-        if(proxyIndex.column()==PartStockTableModel::ColumnComment){
+        if(proxyIndex.column() == PartStockLogTableModel::ColumnComment){
             return QIdentityProxyModel::data(proxyIndex, Qt::DisplayRole);
         }
     }

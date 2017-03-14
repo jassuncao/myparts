@@ -88,7 +88,8 @@ protected:
     virtual bool loadItems(QList<TableItem*> & dest) = 0;
     virtual bool doInsertRow(int row, TableItem* item);
     virtual void registerRelation(const int column, ModelRelation * relation);
-    bool columnIsRelation(const int column) const;    
+    virtual QVariant getItemId(int row) const;
+    bool columnIsRelation(const int column) const;
 
     const int _maxColumns;
     QList<TableItem*> _items;

@@ -8,7 +8,7 @@ namespace Ui {
 class PartDetailsView;
 }
 
-class PartStockTableModel;
+class PartStockLogTableModel;
 class PartsSqlTableModel;
 class QDataWidgetMapper;
 
@@ -31,7 +31,7 @@ private:
     Ui::PartDetailsView *ui;
     QDataWidgetMapper * _widgetMapper;
     PartsSqlTableModel * _partsModel;
-    PartStockTableModel * _partStockModel;
+    PartStockLogTableModel * _partStockLogModel;
     QModelIndex _currentIndex;
     void updateStockView(const QModelIndex & current);    
 };

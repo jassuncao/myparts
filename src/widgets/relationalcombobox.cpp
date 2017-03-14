@@ -25,9 +25,9 @@ void RelationalComboBox::setModelKeyColumn(int keyColumn)
 QVariant RelationalComboBox::currentKey() const
 {
     int row = currentIndex();
-    if(row<0){
+    if(row < 0){
         return QVariant();
-    }
+    }   
     return model()->index(row, _modelKeyColumn).data(Qt::EditRole);
 }
 
@@ -38,7 +38,7 @@ void RelationalComboBox::setCurrentKey(const QVariant & key)
         //Look up for the matching row.
         int rowCount = model()->rowCount();
         for(int i=0; i<rowCount;++i){
-            QVariant otherKey = model()->index(i,_modelKeyColumn).data();
+            QVariant otherKey = model()->index(i,_modelKeyColumn).data(Qt::EditRole);
             if(key==otherKey){
                 index = i;
                 break;
