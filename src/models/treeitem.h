@@ -24,6 +24,7 @@ public:
     int childCount() const;    
     bool insertChildren(int position, int count);
     TreeItem *parent();
+    const TreeItem * parent() const;
     bool removeChildren(int position, int count);    
     int row() const;    
     void moveChild(int from, int to);

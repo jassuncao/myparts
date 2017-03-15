@@ -56,11 +56,12 @@ private slots:
     void slotCurrentPartDistributorRowChanged(const QModelIndex &current, const QModelIndex &);
     void slotCurrentPartManufacturerRowChanged(const QModelIndex &current, const QModelIndex &);
     void slotCurrentPartAttachmentRowChanged(const QModelIndex &current, const QModelIndex &);
+    void slotCurrentStockRowChanged(const QModelIndex &current, const QModelIndex &);
     void slotPartStorageChanged(int idx);
     void slotPartCategoryChanged(int idx);
     void slotAttachmentDoubleClicked(const QModelIndex &index);
     void slotAddStockEntry();
-    void slotDeleteStockEntry();
+    void slotRemoveStockEntry();
     void slotMoveStock();
 private:
     void initCombos();

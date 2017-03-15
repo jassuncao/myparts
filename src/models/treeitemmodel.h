@@ -21,6 +21,9 @@ class TreeItemModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:   
+    enum CustomRoles {
+        FullPathRole = Qt::UserRole +1
+    };
 
     explicit TreeItemModel(TreeItemModelPersistence * modelPersistence, const QString & mimeType, QObject *parent = 0);
     ~TreeItemModel();
@@ -55,6 +58,7 @@ protected:
     QModelIndex internalFindIndex(int nodeId, const TreeItem *parentNode) const;
     TreeItem * rootItem() {return _invisibleRootItem;}
     void setDefaultIcon(const QIcon & icon) {_defaultIcon = icon;}
+    QStringList computeFullPath(const TreeItem * child) const;
 signals:
     void partsDropped(QVector<int> parts, TreeItem * item);
 public slots:

@@ -16,8 +16,8 @@ public:
     ~RemoveStockDialog();
     int exec();
     void setPartUnit(const QString & partUnit);
-    void setAvailableStock(int availableStock);
-    int getStockChange() const;
+    void setAvailableStock(double availableStock);
+    double getStockChange() const;
     QString getComment() const;
 private:
     Ui::RemoveStockDialog *ui;

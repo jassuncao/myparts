@@ -26,9 +26,14 @@ TableItem * PartStockTableModel2::createBlankItem() const
 Qt::ItemFlags PartStockTableModel2::flags(const QModelIndex& index) const
 {
     Qt::ItemFlags res = SimpleSqlTableModel::flags(index);
-    if(index.column() == PartStockTableModel2::ColumnLastUpdate){
+    res &= ~Qt::ItemIsEditable;
+/*
+    XXX: For now prevent any kind of edit using the views
+    const int col = index.column();
+    if(col == PartStockTableModel2::ColumnLastUpdate || col == PartStockTableModel2::ColumnQuantity){
         res &= ~Qt::ItemIsEditable;
     }
+    */
     return res;
 }
 

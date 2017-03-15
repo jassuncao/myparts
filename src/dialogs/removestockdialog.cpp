@@ -26,14 +26,14 @@ void RemoveStockDialog::setPartUnit(const QString & partUnit)
     ui->quantitySpinBox->setSuffix(suffix);
 }
 
-void RemoveStockDialog::setAvailableStock(int availableStock)
+void RemoveStockDialog::setAvailableStock(double availableStock)
 {
     ui->quantitySpinBox->setMaximum(availableStock);
 }
 
-int RemoveStockDialog::getStockChange() const
+double RemoveStockDialog::getStockChange() const
 {
-    return ui->quantitySpinBox->value()*-1;
+    return ui->quantitySpinBox->value();
 }
 
 QString RemoveStockDialog::getComment() const

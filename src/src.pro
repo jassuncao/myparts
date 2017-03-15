@@ -113,7 +113,8 @@ SOURCES += main.cpp\
     currencyhelper.cpp \
     models/partstocktablemodel2.cpp \
     dialogs/addstockentrydialog.cpp \
-    models/partstocklogtablemodel.cpp
+    models/partstocklogtablemodel.cpp \
+    dialogs/movestockdialog.cpp
 
 HEADERS  += mainwindow.h \
     partdialog.h \
@@ -216,7 +217,8 @@ HEADERS  += mainwindow.h \
     currencyhelper.h \
     models/partstocktablemodel2.h \
     dialogs/addstockentrydialog.h \
-    models/partstocklogtablemodel.h
+    models/partstocklogtablemodel.h \
+    dialogs/movestockdialog.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \
@@ -235,7 +237,8 @@ FORMS    += mainwindow.ui \
     dialogs/tableexportdialog.ui \
     editors/projecteditorform.ui \
     dialogs/partsassignmentdialog.ui \
-    dialogs/addstockentrydialog.ui
+    dialogs/addstockentrydialog.ui \
+    dialogs/movestockdialog.ui
 
 RESOURCES += \
     resources.qrc \

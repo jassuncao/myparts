@@ -70,6 +70,8 @@ QVariant TreeItemModel::data(const QModelIndex &index, int role) const
         return item->name();
     case Qt::ToolTipRole:
         return item->description();
+    case TreeItemModel::FullPathRole:
+        return computeFullPath(item);
     default:
         return QVariant();
         break;
@@ -435,5 +437,16 @@ bool TreeItemModel::dropMimeData(const QMimeData *data, Qt::DropAction action, i
 void TreeItemModel::setIconsRepository(IconsRepository * iconsRepository)
 {
     _iconsRepository = iconsRepository;
+}
+
+QStringList TreeItemModel::computeFullPath(const TreeItem * child) const
+{
+    QStringList path;
+    const TreeItem * current = child;
+    while(current){
+        path.insert(0, current->name().toString());
+        current = child->parent();
+    }
+    return path;
 }
 

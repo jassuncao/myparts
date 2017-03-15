@@ -25,6 +25,8 @@
 #include "widgets/datetimedelegate.h"
 #include "dialogs/attachmentselectiondialog.h"
 #include "dialogs/addstockentrydialog.h"
+#include "dialogs/removestockdialog.h"
+#include "dialogs/movestockdialog.h"
 #include "models/partssqltablemodel.h"
 #include "models/storagetreemodel.h"
 #include "models/customtablemodel.h"
@@ -59,7 +61,6 @@ PartDialog::PartDialog(ModelsRepository * modelsProvider, QWidget *parent) :
     ui->partCategoryCombo->setMinimumContentsLength(22);
     ui->partCategoryCombo->setMaxVisibleItems(40);
 
-    ui->quickStorageButton->setVisible(false);//Not supported yet
     _partParamsModel = new PartParameterTableModel(this);
     _partAttachmentModel = AttachmentTableModel3::createNewPartAttachmentModel(this);
     _partDistributorModel = PartDistributorTableModel2::createNew(this);
@@ -85,7 +86,9 @@ PartDialog::PartDialog(ModelsRepository * modelsProvider, QWidget *parent) :
 
     ui->partStockTableView->setModel(_partStockModel2);
     ui->partStockTableView->setItemDelegate(new ComboItemDelegate(this));
-    ui->partDistributorsTableView->setItemDelegateForColumn(PartStockTableModel2::ColumnLastUpdate, new DateDelegate(this));
+    ui->partStockTableView->setItemDelegateForColumn(PartStockTableModel2::ColumnLastUpdate, new DateDelegate(this));
+    ui->partStockTableView->horizontalHeader()->moveSection(PartStockTableModel2::ColumnQuantity, 0);
+    ui->partStockTableView->horizontalHeader()->moveSection(PartStockTableModel2::ColumnCondition, 1);
 
     ui->partParametersTableView->setModel(_partParamsModel);
     ui->partParametersTableView->setItemDelegate(new ComboItemDelegate(this));
@@ -133,7 +136,10 @@ PartDialog::PartDialog(ModelsRepository * modelsProvider, QWidget *parent) :
     connect(ui->deleteAttachmentButton, SIGNAL(clicked()), this, SLOT(slotDeleteAttachment()));
     connect(ui->partAttachmentsTableView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)), this, SLOT(slotCurrentPartParameterRowChanged(QModelIndex,QModelIndex)));
     connect(ui->partAttachmentsTableView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(slotAttachmentDoubleClicked(QModelIndex)));    
+    connect(ui->partStockTableView->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), this, SLOT(slotCurrentStockRowChanged(QModelIndex,QModelIndex)));
     connect(ui->addStockEntryButton, SIGNAL(clicked()), this, SLOT(slotAddStockEntry()));
+    connect(ui->removeStockButton, SIGNAL(clicked()), this, SLOT(slotRemoveStockEntry()));
+    connect(ui->moveStockButton, SIGNAL(clicked()), this, SLOT(slotMoveStock()));
 }
 
 PartDialog::~PartDialog()
@@ -183,6 +189,8 @@ int PartDialog::editPart(const QModelIndex &index)
 
     _partStockModel2->setCurrentPartId(_currentPartId);
     _partStockModel2->select();
+
+    _partStockLogModel->setCurrentPartId(_currentPartId);
 
     _partParamsModel->setCurrentPartId(_currentPartId);
     _partParamsModel->select();
@@ -292,10 +300,8 @@ QSqlRecord PartDialog::copyAllData(const QModelIndex & index)
 
 void PartDialog::initCombos()
 {
-    ui->partCategoryCombo->setModel(_modelsProvider->partCategoryModel());
-    ui->partStorageCombo->setModel(_modelsProvider->partStorageModel());
-    connect(ui->partCategoryCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(slotPartCategoryChanged(int)));
-    connect(ui->partStorageCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(slotPartStorageChanged(int)));    
+    ui->partCategoryCombo->setModel(_modelsProvider->partCategoryModel());    
+    connect(ui->partCategoryCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(slotPartCategoryChanged(int)));    
 
     _partUnitsModel = new QSqlQueryModel(this);
     _partUnitsModel->setQuery("SELECT id, name, defaultUnit FROM part_unit ORDER BY name ASC");
@@ -351,12 +357,9 @@ void PartDialog::setCurrentModelIndex(const QModelIndex &index)
     }
     else{
         ui->usePackageRadioButton->setChecked(true);
-    }
+    }    
 
-    QVariant fkey = getColumnValue(_partsModel, row, PartsSqlTableModel::ColumnStorageId);
-    setTreeViewComboBoxIndex(ui->partStorageCombo, fkey);
-
-    fkey = getColumnValue(_partsModel, row, PartsSqlTableModel::ColumnCategoryId);
+    QVariant fkey = getColumnValue(_partsModel, row, PartsSqlTableModel::ColumnCategoryId);
     setTreeViewComboBoxIndex(ui->partCategoryCombo, fkey);
 }
 
@@ -435,16 +438,17 @@ void PartDialog::commitChanges()
 {    
     _partsModel->database().transaction();
     _mapper->submit();
-    if(_addMode){
-        qDebug("Commiting changes to new part");        
-        QModelIndex priceIdx = _partsModel->index(_currentModelIndex.row(), PartsSqlTableModel::ColumnAvgPrice);
-        QModelIndex actualStockIdx = _partsModel->index(_currentModelIndex.row(), PartsSqlTableModel::ColumnActualStock);
-        QVariant partPrice = _partStockLogModel->computeAveragePrice();
-        QVariant actualStock = _partStockModel2->computeCurrentStock();
-        _partsModel->setData(priceIdx, partPrice);
-        _partsModel->setData(actualStockIdx, actualStock);
-        _partsModel->submitAll();
 
+    QModelIndex priceIdx = _partsModel->index(_currentModelIndex.row(), PartsSqlTableModel::ColumnAvgPrice);
+    QModelIndex actualStockIdx = _partsModel->index(_currentModelIndex.row(), PartsSqlTableModel::ColumnActualStock);
+    QVariant partPrice = _partStockLogModel->computeAveragePrice();
+    QVariant actualStock = _partStockModel2->computeCurrentStock();
+    _partsModel->setData(priceIdx, partPrice);
+    _partsModel->setData(actualStockIdx, actualStock);
+
+    if(_addMode){
+        qDebug("Commiting changes to new part");
+        _partsModel->submitAll();
         QVariant partId = _partsModel->lastInsertedId();
         if(partId.isValid()){
             qDebug()<<"New Part id is "<<partId;                        
@@ -663,19 +667,83 @@ void PartDialog::slotAddStockEntry()
         QVariant condition = dlg.selectedCondition();
         QVariant storage = dlg.selectedStorage();
         int quantity = dlg.stockChange();
-        dlg.partPrice();
-        dlg.comment();
+        double partPrice = dlg.partPrice();
+        QString comment = dlg.comment();
         _partStockModel2->insertOrUpdateRow(condition, storage, quantity);
+        _partStockLogModel->appendRow(quantity, partPrice, comment);
     }
 }
 
-void PartDialog::slotDeleteStockEntry()
+void PartDialog::slotRemoveStockEntry()
 {
-    //Check if the entry has quantity.
-    //If so, ask the user if he wants to "destroy" or move the items to another storage entry
+    QModelIndex index = ui->partStockTableView->currentIndex();
+    if(!index.isValid()){
+        return;
+    }
+
+    QModelIndex quantityColIndex = _partStockModel2->index(index.row(), PartStockTableModel2::ColumnQuantity);
+    double quantity = quantityColIndex.data(Qt::EditRole).toDouble();
+
+    RemoveStockDialog dlg(this);
+    QString partUnit = ui->partUnitCombo->currentText();
+    dlg.setPartUnit(partUnit);
+    dlg.setAvailableStock(quantity);
+    int res = dlg.exec();
+    if(res == RemoveStockDialog::Accepted && dlg.getStockChange() > 0){
+        double remaining = quantity - dlg.getStockChange();
+        if(remaining > 0){
+            _partStockModel2->setData(quantityColIndex, remaining);
+        }
+        else {
+            _partStockModel2->removeRow(index.row());
+        }
+        _partStockLogModel->appendRow(dlg.getStockChange() * -1, QVariant(), dlg.getComment());
+    }
 }
 
 void PartDialog::slotMoveStock()
 {
+    QModelIndex index = ui->partStockTableView->currentIndex();
+    if(!index.isValid()){
+        return;
+    }
+
+    const QModelIndex quantityColIndex = _partStockModel2->index(index.row(), PartStockTableModel2::ColumnQuantity);
+    const double originalQuantity = quantityColIndex.data(Qt::EditRole).toDouble();
+
+    QVariant originalStorageId = _partStockModel2->index(index.row(), PartStockTableModel2::ColumnStorage).data(Qt::EditRole);
+    QVariant originalCondition = _partStockModel2->index(index.row(), PartStockTableModel2::ColumnCondition).data(Qt::EditRole);
+
+    MoveStockDialog dlg(_modelsProvider, this);
+    QString partUnit = ui->partUnitCombo->currentText();
+    dlg.setPartUnit(partUnit);
+    dlg.setAvailableStock(originalQuantity);
+    dlg.setSelectedCondition(originalCondition);
+    dlg.setSelectedStorage(originalStorageId);
+    int res = dlg.exec();
+    if(res == MoveStockDialog::Accepted && dlg.stockToMove() > 0){
+        double stockToMove = dlg.stockToMove();
+        QVariant newCondition = dlg.selectedCondition();
+        QVariant newStorage = dlg.selectedStorage();
+        QString comment = dlg.comment();
+        double remaining = originalQuantity - stockToMove;
+        if(remaining > 0){
+            _partStockModel2->setData(quantityColIndex, remaining);
+        }
+        else {
+            _partStockModel2->removeRow(index.row());
+        }
+        _partStockModel2->insertOrUpdateRow(newCondition, newStorage, stockToMove);
+        if(!comment.isEmpty()){
+            _partStockLogModel->appendRow(stockToMove * -1, QVariant(), comment);
+            _partStockLogModel->appendRow(stockToMove, QVariant(), comment);
+        }
+    }
+}
+
+void PartDialog::slotCurrentStockRowChanged(const QModelIndex &current, const QModelIndex&)
+{
+    ui->removeStockButton->setEnabled(current.isValid());
+    ui->moveStockButton->setEnabled(current.isValid());
 }
 

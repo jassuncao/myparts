@@ -9,6 +9,7 @@ class PartDetailsView;
 }
 
 class PartStockLogTableModel;
+class PartStockTableModel2;
 class PartsSqlTableModel;
 class QDataWidgetMapper;
 
@@ -32,6 +33,7 @@ private:
     QDataWidgetMapper * _widgetMapper;
     PartsSqlTableModel * _partsModel;
     PartStockLogTableModel * _partStockLogModel;
+    PartStockTableModel2 * _partStockModel;
     QModelIndex _currentIndex;
     void updateStockView(const QModelIndex & current);    
 };

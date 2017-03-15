@@ -5,6 +5,7 @@
 #include "widgets/datetimedelegate.h"
 #include "models/partstocklogtablemodel.h"
 #include "models/stocktableformatproxymodel.h"
+#include "models/partstocktablemodel2.h"
 #include "dialogs/addstockdialog.h"
 #include "dialogs/removestockdialog.h"
 #include <QDebug>
@@ -59,13 +60,21 @@ PartDetailsView::PartDetailsView(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::PartDetailsView),
     _partsModel(0),
-    _partStockLogModel(0)
+    _partStockLogModel(0),
+    _partStockModel(0)
 {
     ui->setupUi(this);
     ui->partStockHistoryTable->setWordWrap(false);
     _widgetMapper = new QDataWidgetMapper(this);
     _widgetMapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
     _widgetMapper->setItemDelegate(new PartDetailsDelegate(this));
+
+    _partStockModel = PartStockTableModel2::createNew(this);
+    ui->partStockOverviewTable->setModel(_partStockModel);
+    ui->partStockOverviewTable->horizontalHeader()->swapSections(PartStockTableModel2::ColumnStorage, PartStockTableModel2::ColumnCondition);
+    ui->partStockOverviewTable->horizontalHeader()->moveSection(PartStockTableModel2::ColumnQuantity, 0);
+    ui->partStockOverviewTable->hideColumn(PartStockTableModel2::ColumnLastUpdate);
+    ui->partStockOverviewTable->resizeColumnsToContents();
 
     _partStockLogModel = PartStockLogTableModel::createNew(this);
 
@@ -92,6 +101,9 @@ PartDetailsView::PartDetailsView(QWidget *parent) :
 
     _partStockLogModel->setCurrentPartId(QVariant());
     _partStockLogModel->select();
+
+    _partStockModel->setCurrentPartId(QVariant());
+    _partStockModel->select();
 }
 
 PartDetailsView::~PartDetailsView()
@@ -161,9 +173,7 @@ void PartDetailsView::setPartsModel(PartsSqlTableModel * model)
     _widgetMapper->addMapping(ui->partMinStockLabel, PartsSqlTableModel::ColumnMinStock);
     _widgetMapper->addMapping(ui->partCustomNumberLabel, PartsSqlTableModel::ColumnCustomPartNumber);
     _widgetMapper->addMapping(ui->partCommentLabel, PartsSqlTableModel::ColumnComment);
-    _widgetMapper->addMapping(ui->partCreateDateLabel, PartsSqlTableModel::ColumnCreateDate);
-    _widgetMapper->addMapping(ui->partStorageLocationLabel, PartsSqlTableModel::ColumnStorage);
-    _widgetMapper->addMapping(ui->partConditionLabel, PartsSqlTableModel::ColumnCondition);
+    _widgetMapper->addMapping(ui->partCreateDateLabel, PartsSqlTableModel::ColumnCreateDate);    
     _widgetMapper->addMapping(ui->partPackageLabel, PartsSqlTableModel::ColumnPackageName);
     setCurrentIndex(QModelIndex());        
 }
@@ -183,6 +193,8 @@ void PartDetailsView::updateStockView(const QModelIndex & current)
     qDebug()<<"Changing part to "<<keyValue;
     _partStockLogModel->setCurrentPartId(keyValue);
     _partStockLogModel->select();
+    _partStockModel->setCurrentPartId(keyValue);
+    _partStockModel->select();
 }
 
 
