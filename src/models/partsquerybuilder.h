@@ -94,7 +94,8 @@ private:
     QString orderByClause() const;
     const QLatin1String _baseSelectClause;
     QStringList _columnNames;
-    QHash<int,Criterion*> _criterions;
+    QList<Criterion*> _criterions;
+    QHash<int,Criterion*> _criterionsMap;
     bool _criterionChanged;
     int _sortColumn;
     Qt::SortOrder _sortOrder;

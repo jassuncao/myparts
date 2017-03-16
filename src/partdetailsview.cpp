@@ -190,7 +190,6 @@ void PartDetailsView::onAddStock()
         _partStockModel->insertOrUpdateRow(condition, storage, quantity);
         _partStockLogModel->appendRow(quantity, partPrice, comment);
 
-
         QVariant totalStock = _partStockModel->computeCurrentStock();
         QModelIndex actualStockIndex = _partsModel->index(_currentIndex.row(), PartsSqlTableModel::ColumnActualStock);
         _partsModel->setData(actualStockIndex, totalStock);

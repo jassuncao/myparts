@@ -9,6 +9,7 @@ class PartsSqlTableModel;
 class ModelsRepository;
 class PartParameterTableModel;
 class PartStockLogTableModel;
+class PartStockTableModel2;
 class SaveButtonHelper;
 
 namespace Ui {
@@ -42,6 +43,7 @@ private:
     PartsSqlTableModel * _partsModel;
     PartParameterTableModel * _partParams;
     PartStockLogTableModel * _partStockLogModel;
+    PartStockTableModel2 * _partStockModel;
     QString _resistorNameTemplate;
     Parameter _resistanceParam;
     Parameter _powerRatingParam;

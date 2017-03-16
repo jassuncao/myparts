@@ -21,13 +21,13 @@ public:
         ColumnCreateDate,
         ColumnPartUnitId,
         ColumnCategoryId,
-        ColumnStorageId,
-        ColumnConditionId,
+        //ColumnStorageId,
+        //ColumnConditionId,
         ColumnPackageId,
         ColumnPartUnit,
         ColumnCategoryName,
-        ColumnStorage,
-        ColumnCondition,
+        //ColumnStorage,
+        //ColumnCondition,
         ColumnPackageName,
         LAST_COLUMN
     };
@@ -53,7 +53,7 @@ public:
     //Sets the part stock and logs an empty entry in stock_change.
     //bool setPartStock(const QModelIndex & currentIndex, int newStockValue);
     void updatePartsCategory(QVector<int> parts, int categoryId);
-    void updatePartsStorage(QVector<int> parts, int storageId);    
+    //void updatePartsStorage(QVector<int> parts, int storageId);
     void setSort(int column, Qt::SortOrder order);
     QModelIndex findIndex(QVariant partId);
     PartsQueryBuilder * queryBuilder() const;

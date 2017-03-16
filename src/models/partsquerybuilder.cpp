@@ -4,17 +4,28 @@
 #include <QStringBuilder>
 
 static const char * BASE_CLAUSE = "SELECT part.id, part.name, part.description, part.actualStock, part.minimumStock, part.averagePrice, part.comment, part.customPartNumber, "
-"part.createDate, part.partUnit, part.category, part.storage, part.condition, "
-"part.package, u.name AS unitName, c.name AS categoryName, s.name AS storageName, cond.value AS conditionValue, "
+"part.createDate, part.partUnit, part.category, "
+"part.package, u.name AS unitName, c.name AS categoryName, "
 "package.name as packageName "
 "FROM part LEFT JOIN category c ON part.category=c.id "
 "LEFT JOIN part_unit u ON part.partUnit=u.id "
-"LEFT JOIN storage s ON part.storage=s.id "
-"LEFT JOIN condition cond ON part.condition=cond.id "
 "LEFT JOIN package package ON part.package=package.id ";
 
-static const char * DISTRIBUTOR_JOIN_CLAUSE = "INNER JOIN part_distributor d ON part.id=d.part ";
-static const char * MANUFACTURER_JOIN_CLAUSE = "INNER JOIN part_manufacturer m ON part.id=m.part ";
+
+/*Possible query to obtain the storage and the conditions for a part
+(select group_concat(storage_name)
+     from (select stor.name AS storage_name from part_stock as pstock
+      inner join storage stor
+      ON pstock.storage = stor.id
+      where pstock.part=part.id limit 10)
+) as storage,
+(select group_concat(condition_value)
+     from (select cond.value AS condition_value from part_stock as pstock
+      inner join condition cond
+      ON pstock.condition = cond.id
+      where pstock.part=part.id limit 10)
+) as condition
+*/
 
 DateCriterionValue::DateCriterionValue() :
     _mode(DateFilterNone), _dateTimeUtc(QDateTime())
@@ -136,7 +147,7 @@ void BasicForeignKeyCriterion::setValue(const QVariant & value)
 QString BasicForeignKeyCriterion::clause() const
 {
     if(_foreignKeyValue.isValid() && _foreignKeyValue.canConvert(QVariant::Int)){
-        return QString("part.%1 = %2").arg(_foreignKeyName).arg(_foreignKeyValue.toInt());
+        return QString("%1 = %2").arg(_foreignKeyName).arg(_foreignKeyValue.toInt());
     }
     return QString();
 }
@@ -146,15 +157,12 @@ class DistributorCriterion : public Criterion
 public:
     explicit DistributorCriterion();
     QString clause() const;
-    QString joinClause() const;
     void setValue(const QVariant & value);
 private:
-    const QLatin1String _joinClause;
     QVariant _distributorId;
 };
 
 DistributorCriterion::DistributorCriterion() :
-    _joinClause(DISTRIBUTOR_JOIN_CLAUSE),
     _distributorId(QVariant())
 {
 }
@@ -167,15 +175,7 @@ void DistributorCriterion::setValue(const QVariant & distributorId)
 QString DistributorCriterion::clause() const
 {
     if(_distributorId.isValid() && _distributorId.canConvert(QVariant::Int)){
-        return QString("d.distributor = %1").arg(_distributorId.toInt());
-    }
-    return QString();
-}
-
-QString DistributorCriterion::joinClause() const
-{
-    if(_distributorId.isValid() && _distributorId.canConvert(QVariant::Int)){
-        return _joinClause;
+        return QString("part.id IN (SELECT part FROM part_distributor WHERE part_distributor.distributor = %1)").arg(_distributorId.toInt());
     }
     return QString();
 }
@@ -185,15 +185,12 @@ class ManufacturerCriterion : public Criterion
 public:
     explicit ManufacturerCriterion();
     QString clause() const;
-    QString joinClause() const;
     void setValue(const QVariant & value);
 private:
-    const QLatin1String _joinClause;
     QVariant _manufacturerId;
 };
 
 ManufacturerCriterion::ManufacturerCriterion() :
-    _joinClause(MANUFACTURER_JOIN_CLAUSE),
     _manufacturerId(QVariant())
 {}
 
@@ -205,15 +202,7 @@ void ManufacturerCriterion::setValue(const QVariant & value)
 QString ManufacturerCriterion::clause() const
 {
     if(_manufacturerId.isValid() && _manufacturerId.canConvert(QVariant::Int)){
-        return QString("m.manufacturer = %1").arg(_manufacturerId.toInt());
-    }
-    return QString();
-}
-
-QString ManufacturerCriterion::joinClause() const
-{
-    if(_manufacturerId.isValid() && _manufacturerId.canConvert(QVariant::Int)){
-        return _joinClause;
+        return QString("part.id IN (SELECT part FROM part_manufacturer WHERE part_manufacturer.manufacturer = %1)").arg(_manufacturerId.toInt());
     }
     return QString();
 }
@@ -352,6 +341,52 @@ QString NodeCriterion::clause() const
     return QString();
 }
 
+class StockStorageConditionCriterion : public Criterion
+{
+public:
+    explicit StockStorageConditionCriterion();
+    virtual ~StockStorageConditionCriterion();
+    QString clause() const;
+    void setValue(const QVariant &);
+    Criterion * storageInnerCriterion() { return _storageInnerCriterion; }
+    Criterion * conditionInnerCriterion() { return _conditionInnerCriterion; }
+private:
+    NodeCriterion * _storageInnerCriterion;
+    BasicForeignKeyCriterion * _conditionInnerCriterion;
+};
+
+StockStorageConditionCriterion::StockStorageConditionCriterion() :
+    _storageInnerCriterion(new NodeCriterion("part_stock.storage")),
+    _conditionInnerCriterion(new BasicForeignKeyCriterion("part_stock.condition"))
+{
+}
+
+StockStorageConditionCriterion::~StockStorageConditionCriterion()
+{
+    delete _storageInnerCriterion;
+    delete _conditionInnerCriterion;
+}
+
+void StockStorageConditionCriterion::setValue(const QVariant &)
+{}
+
+QString StockStorageConditionCriterion::clause() const {
+    QString storageClause = _storageInnerCriterion->clause();
+    QString conditionClause = _conditionInnerCriterion->clause();
+    if(storageClause.isEmpty() && conditionClause.isEmpty()){
+        return QString();
+    }
+    if(storageClause.isEmpty()){
+        storageClause = QString("1");
+    }
+    if(conditionClause.isEmpty()){
+        conditionClause = QString("1");
+    }
+
+    return QString("part.id IN (SELECT part FROM part_stock WHERE %1 AND %2)").arg(conditionClause, storageClause);
+
+}
+
 PartsQueryBuilder::PartsQueryBuilder() :
     _baseSelectClause(BASE_CLAUSE),
     _criterionChanged(true),
@@ -378,14 +413,34 @@ PartsQueryBuilder::PartsQueryBuilder() :
     _columnNames.append(QLatin1String("cond.value"));
     _columnNames.append(QLatin1String("package.name"));
 
-    _criterions[FilterByStock] = new StockCriterion();
-    _criterions[FilterByCondition] = new BasicForeignKeyCriterion("condition");
-    _criterions[FilterByDistributor] = new DistributorCriterion();
-    _criterions[FilterByManufacturer] = new ManufacturerCriterion();
-    _criterions[FilterByPackage] = new BasicForeignKeyCriterion("package");
-    _criterions[FilterByText] = new TextCriterion();
-    _criterions[FilterByCategory] = new NodeCriterion("part.category");
-    _criterions[FilterByStorage] = new NodeCriterion("part.storage");
+    StockStorageConditionCriterion * storageConditionCriterion = new StockStorageConditionCriterion;
+    _criterions.append(storageConditionCriterion);
+    _criterionsMap[FilterByCondition] = storageConditionCriterion->conditionInnerCriterion();
+    _criterionsMap[FilterByStorage] = storageConditionCriterion->storageInnerCriterion();
+
+    Criterion * criterion = new StockCriterion();
+    _criterions.append(criterion);
+    _criterionsMap[FilterByStock] = criterion;
+
+    criterion = new DistributorCriterion();
+    _criterions.append(criterion);
+    _criterionsMap[FilterByDistributor] = criterion;
+
+    criterion = new ManufacturerCriterion();
+    _criterions.append(criterion);
+    _criterionsMap[FilterByManufacturer] = criterion;
+
+    criterion = new BasicForeignKeyCriterion("part.package");
+    _criterions.append(criterion);
+    _criterionsMap[FilterByPackage] = criterion;
+
+    criterion = new TextCriterion();
+    _criterions.append(criterion);
+    _criterionsMap[FilterByText] = criterion;
+
+    criterion = new NodeCriterion("part.category");
+    _criterions.append(criterion);
+    _criterionsMap[FilterByCategory] = criterion;
 }
 
 PartsQueryBuilder::~PartsQueryBuilder()
@@ -394,8 +449,8 @@ PartsQueryBuilder::~PartsQueryBuilder()
 }
 
 void PartsQueryBuilder::setFilter(SupportedFilters type, const QVariant & value)
-{
-    Criterion* criterion = _criterions.value((int)type, 0);
+{    
+    Criterion* criterion = _criterionsMap.value((int)type, 0);
     if(criterion){
         criterion->setValue(value);
         _criterionChanged = true;

@@ -57,7 +57,7 @@ private slots:
     void slotCurrentPartManufacturerRowChanged(const QModelIndex &current, const QModelIndex &);
     void slotCurrentPartAttachmentRowChanged(const QModelIndex &current, const QModelIndex &);
     void slotCurrentStockRowChanged(const QModelIndex &current, const QModelIndex &);
-    void slotPartStorageChanged(int idx);
+    //void slotPartStorageChanged(int idx);
     void slotPartCategoryChanged(int idx);
     void slotAttachmentDoubleClicked(const QModelIndex &index);
     void slotAddStockEntry();

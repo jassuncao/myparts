@@ -74,12 +74,14 @@ CREATE TABLE IF NOT EXISTS part_stock (
     part INTEGER NOT NULL,
     quantity INTEGER NOT NULL,
     storage INTEGER NOT NULL,
-    condition INTEGER,
+    condition INTEGER NOT NULL,
     lastUpdate DATETIME NOT NULL,
     FOREIGN KEY(part) REFERENCES part(id) ON DELETE CASCADE,
     FOREIGN KEY(storage) REFERENCES storage(id),
     FOREIGN KEY(condition) REFERENCES condition(id)
 );
+
+CREATE UNIQUE INDEX IF NOT EXISTS part_stock_idx on part_stock (part, storage, condition);
 
 CREATE TABLE IF NOT EXISTS part_stock_log (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

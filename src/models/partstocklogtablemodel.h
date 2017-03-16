@@ -19,7 +19,7 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     QVariant computeAveragePrice() const;
     static PartStockLogTableModel * createNew(QObject *parent);
-
+    bool rawInsert(const QVariant & partId, const QVariant & quantity, const QVariant & price, const QString & comment);
 protected:
     explicit PartStockLogTableModel(const QStringList & fieldNames, const QStringList & columnNames, QObject *parent = 0);
 };

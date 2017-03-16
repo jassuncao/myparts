@@ -16,9 +16,10 @@ public:
 
     inline void setCurrentPartId(const QVariant & partId) { setCurrentForeignKey(partId); }
     Qt::ItemFlags flags(const QModelIndex &index) const;
-    bool insertOrUpdateRow(const QVariant & condition, const QVariant & storage, double quantiy);
+    bool insertOrUpdateRow(const QVariant & condition, const QVariant & storage, QVariant quantiy);
     QVariant computeCurrentStock() const;
-    static PartStockTableModel2 * createNew(QObject *parent);
+    bool rawInsert(const QVariant & partId, const QVariant & condition, const QVariant & storage, QVariant quantiy);
+    static PartStockTableModel2 * createNew(QObject *parent);    
 protected:
     explicit PartStockTableModel2(const QStringList & fieldNames, const QStringList & columnNames, QObject *parent = 0);
     TableItem * createBlankItem() const;

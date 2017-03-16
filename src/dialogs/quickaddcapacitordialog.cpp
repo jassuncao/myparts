@@ -8,6 +8,7 @@
 #include "models/partssqltablemodel.h"
 #include "models/partparametertablemodel.h"
 #include "models/partstocklogtablemodel.h"
+#include "models/partstocktablemodel2.h"
 #include "models/basicentitytablemodel.h"
 #include "widgets/unitformatter.h"
 #include "widgets/unitparser.h"
@@ -176,10 +177,10 @@ void QuickAddCapacitorDialog::slotAddCapacitor()
     QSqlRecord initialData = _partsModel->record();
 
     initialData.setValue(PartsSqlTableModel::ColumnName, partName);
-    initialData.setValue(PartsSqlTableModel::ColumnConditionId, condition);
+    //initialData.setValue(PartsSqlTableModel::ColumnConditionId, condition);
     initialData.setValue(PartsSqlTableModel::ColumnPartUnitId, 1);//XXX
     initialData.setValue(PartsSqlTableModel::ColumnCategoryId, category);
-    initialData.setValue(PartsSqlTableModel::ColumnStorageId, storage);
+    //initialData.setValue(PartsSqlTableModel::ColumnStorageId, storage);
     initialData.setValue(PartsSqlTableModel::ColumnCreateDate, createDate);
     initialData.setValue(PartsSqlTableModel::ColumnActualStock, quantity);
     initialData.setValue(PartsSqlTableModel::ColumnPackageId, package);
@@ -192,9 +193,9 @@ void QuickAddCapacitorDialog::slotAddCapacitor()
             _partParams->setCurrentPartId(_partsModel->lastInsertedId());
             _partParams->submitAll();
             if(quantity != 0){
-                _partStockLogModel->appendRow(quantity, QVariant(), QString());
-                _partStockLogModel->setCurrentPartId(_partsModel->lastInsertedId());
-                _partStockLogModel->submitAll();
+                QVariant partId = _partsModel->lastInsertedId();
+                _partStockModel->rawInsert(partId, condition, storage, quantity);
+                _partStockLogModel->rawInsert(partId, quantity, QVariant(), QString());
             }
             _partsModel->database().commit();
             saveSuccessFeedback();

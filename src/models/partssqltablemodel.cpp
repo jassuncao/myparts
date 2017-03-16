@@ -25,8 +25,8 @@ PartsSqlTableModel::PartsSqlTableModel(PartsQueryBuilder * partsQueryBuilder, QO
     setColumnName(ColumnComment,tr("Comment"));
     setColumnName(ColumnCreateDate,tr("Create Date"));
     setColumnName(ColumnCategoryName,tr("Category"));
-    setColumnName(ColumnStorage,tr("Storage Location"));
-    setColumnName(ColumnCondition,tr("Condition"));
+    //setColumnName(ColumnStorage,tr("Storage Location"));
+    //setColumnName(ColumnCondition,tr("Condition"));
     setColumnName(ColumnPackageName,tr("Package"));
 }
 
@@ -215,6 +215,7 @@ void PartsSqlTableModel::updatePartsCategory(QVector<int> parts, int categoryId)
     database().commit();
 }
 
+/*
 void PartsSqlTableModel::updatePartsStorage(QVector<int> parts, int storageId)
 {
     QSqlQuery query(database());
@@ -228,6 +229,7 @@ void PartsSqlTableModel::updatePartsStorage(QVector<int> parts, int storageId)
     }
     database().commit();
 }
+*/
 
 QModelIndex PartsSqlTableModel::findIndex(QVariant partId)
 {

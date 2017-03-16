@@ -170,10 +170,10 @@ int PartDialog::addNewPart()
     _nextActionCheckbox->setText(tr("Create blank item after save"));
 
     QSqlRecord initialData = _partsModel->record();
-    initialData.setValue(PartsSqlTableModel::ColumnConditionId, _defaultCondition);
+    //initialData.setValue(PartsSqlTableModel::ColumnConditionId, _defaultCondition);
     initialData.setValue(PartsSqlTableModel::ColumnPartUnitId, _defaultUnit);
     initialData.setValue(PartsSqlTableModel::ColumnCategoryId, _currentCategory);
-    initialData.setValue(PartsSqlTableModel::ColumnStorageId, _currentStorage);
+    //initialData.setValue(PartsSqlTableModel::ColumnStorageId, _currentStorage);
     const QModelIndex insertedIndex = insertNewPart(initialData);
     setCurrentModelIndex(insertedIndex);
     return exec();
@@ -273,20 +273,20 @@ QSqlRecord PartDialog::copySomeData(const QModelIndex & index)
 {
     QVariant name = getColumnValue(_partsModel, index.row(), PartsSqlTableModel::ColumnName);
     QVariant description = getColumnValue(_partsModel, index.row(), PartsSqlTableModel::ColumnDescription);
-    QVariant storageId = getColumnValue(_partsModel, index.row(), PartsSqlTableModel::ColumnStorageId);
+    //QVariant storageId = getColumnValue(_partsModel, index.row(), PartsSqlTableModel::ColumnStorageId);
     QVariant categoryId = getColumnValue(_partsModel, index.row(), PartsSqlTableModel::ColumnCategoryId);
     QVariant partUnitId = getColumnValue(_partsModel, index.row(), PartsSqlTableModel::ColumnPartUnitId);
     QVariant packageId = getColumnValue(_partsModel, index.row(), PartsSqlTableModel::ColumnPackageId);
-    QVariant conditionId = getColumnValue(_partsModel, index.row(), PartsSqlTableModel::ColumnConditionId);
+    //QVariant conditionId = getColumnValue(_partsModel, index.row(), PartsSqlTableModel::ColumnConditionId);
 
     QSqlRecord initialData =_partsModel->record();
-    initialData.setValue(PartsSqlTableModel::ColumnStorageId, name);
-    initialData.setValue(PartsSqlTableModel::ColumnStorageId, description);
-    initialData.setValue(PartsSqlTableModel::ColumnStorageId, storageId);
+    initialData.setValue(PartsSqlTableModel::ColumnName, name);
+    initialData.setValue(PartsSqlTableModel::ColumnDescription, description);
+    //initialData.setValue(PartsSqlTableModel::ColumnStorageId, storageId);
     initialData.setValue(PartsSqlTableModel::ColumnCategoryId, categoryId);
     initialData.setValue(PartsSqlTableModel::ColumnPartUnitId, partUnitId);
     initialData.setValue(PartsSqlTableModel::ColumnPackageId, packageId);
-    initialData.setValue(PartsSqlTableModel::ColumnConditionId, conditionId);
+    //initialData.setValue(PartsSqlTableModel::ColumnConditionId, conditionId);
     return initialData;
 }
 
@@ -604,6 +604,7 @@ void PartDialog::slotCurrentPartAttachmentRowChanged(const QModelIndex &current,
     ui->viewAttachmentButton->setEnabled(current.isValid());
 }
 
+/*
 void PartDialog::slotPartStorageChanged(int idx)
 {
     qDebug()<<"IDX:"<<idx;
@@ -620,6 +621,7 @@ void PartDialog::slotPartStorageChanged(int idx)
     QModelIndex storageColIdx = _partsModel->index(_currentModelIndex.row(),PartsSqlTableModel::ColumnStorageId);
     _partsModel->setData(storageColIdx, value);
 }
+*/
 
 void PartDialog::slotPartCategoryChanged(int idx)
 {

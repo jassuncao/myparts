@@ -1,5 +1,8 @@
 #include "partstocktablemodel2.h"
 #include <QDateTime>
+#include <QDebug>
+#include <QSqlQuery>
+#include <QSqlError>
 
 PartStockTableModel2::PartStockTableModel2(const QStringList &fieldNames, const QStringList &columnNames, QObject *parent)
     : SimpleSqlTableModel("part_stock", fieldNames, columnNames, "part", parent)
@@ -33,7 +36,7 @@ Qt::ItemFlags PartStockTableModel2::flags(const QModelIndex& index) const
     if(col == PartStockTableModel2::ColumnLastUpdate || col == PartStockTableModel2::ColumnQuantity){
         res &= ~Qt::ItemIsEditable;
     }
-    */
+    */    
     return res;
 }
 
@@ -44,7 +47,7 @@ bool PartStockTableModel2::saveItem(TableItem* item)
     return SimpleSqlTableModel::saveItem(item);
 }
 
-bool PartStockTableModel2::insertOrUpdateRow(const QVariant & condition, const QVariant & storage, double quantiy)
+bool PartStockTableModel2::insertOrUpdateRow(const QVariant & condition, const QVariant & storage, QVariant quantiy)
 {
     bool res = false;
     int count = rowCount();
@@ -60,7 +63,7 @@ bool PartStockTableModel2::insertOrUpdateRow(const QVariant & condition, const Q
     if(matchingRow >=0 ){
         const QModelIndex idx = index(matchingRow, ColumnQuantity);
         double existing = data(idx, Qt::EditRole).toDouble();
-        existing+=quantiy;
+        existing+=quantiy.toDouble();
         res = setData(idx, existing);
     }
     else{
@@ -81,6 +84,23 @@ QVariant PartStockTableModel2::computeCurrentStock() const
         sum += item->data(ColumnQuantity).toDouble();
     }
     return QVariant(sum);
+}
+
+
+bool PartStockTableModel2::rawInsert(const QVariant & partId, const QVariant & condition, const QVariant & storage, QVariant quantiy)
+{
+    QDateTime lastUpdate = QDateTime::currentDateTimeUtc();
+    _insertQuery.bindValue(0, storage);
+    _insertQuery.bindValue(1, condition);
+    _insertQuery.bindValue(2, quantiy);
+    _insertQuery.bindValue(3, lastUpdate);
+    _insertQuery.bindValue(4, partId);
+    bool res = _insertQuery.exec();
+    if(!res){
+        qWarning()<<"Failed to insert part stock. Reason:"<<_insertQuery.lastError();
+        return false;
+    }
+    return res;
 }
 
 

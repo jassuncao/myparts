@@ -1,5 +1,8 @@
 #include "partstocklogtablemodel.h"
 #include <QDateTime>
+#include <QDebug>
+#include <QSqlError>
+#include <QSqlQuery>
 
 PartStockLogTableModel::PartStockLogTableModel(const QStringList &fieldNames, const QStringList &columnNames, QObject *parent)
     : SimpleSqlTableModel("part_stock_log", fieldNames, columnNames, "part", parent)
@@ -53,4 +56,20 @@ PartStockLogTableModel * PartStockLogTableModel::createNew(QObject * parent)
     fieldNames<<"lastUpdate"<<"change"<<"price"<<"comment";
     columnNames<<tr("Date")<<tr("Amount")<<tr("Price")<<tr("Comment");
     return new PartStockLogTableModel(fieldNames, columnNames, parent);
+}
+
+bool PartStockLogTableModel::rawInsert(const QVariant & partId, const QVariant & quantity, const QVariant & price, const QString & comment)
+{
+    QDateTime lastUpdate = QDateTime::currentDateTimeUtc();
+    _insertQuery.bindValue(0, lastUpdate);
+    _insertQuery.bindValue(1, quantity);
+    _insertQuery.bindValue(2, price);
+    _insertQuery.bindValue(3, comment);
+    _insertQuery.bindValue(4, partId);
+    bool res = _insertQuery.exec();
+    if(!res){
+        qWarning()<<"Failed to insert stock log. Reason:"<<_insertQuery.lastError();
+        return false;
+    }
+    return res;
 }
