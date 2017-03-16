@@ -41,10 +41,10 @@ int main(int argc, char *argv[])
     bool fusionFound = false;
     bool plastiqueFound = false;
     for(int i=0; i<keys.size(); ++i){
-        if(keys.at(i)==fusionStyleName){
+        if(keys.at(i) == fusionStyleName){
            fusionFound=true;
         }
-        else if(keys.at(i)==plastiqueStyleName){
+        else if(keys.at(i) == plastiqueStyleName){
             plastiqueFound = true;
         }
         qDebug()<<"Style: "<< keys.at(i);
@@ -68,14 +68,17 @@ int main(int argc, char *argv[])
     QDir::addSearchPath("tmp","/home/jassuncao/MyProjects/myparts/images/tmp");  
 
     MainWindow w;
+
     if(fusionFound){
         QApplication::setStyle(fusionStyleName);
     }
     else if(plastiqueFound){
          QApplication::setStyle(plastiqueStyleName);
     }
+
     //QApplication::setStyle(QLatin1String("fusion"));
     //QApplication::setStyle(QLatin1String("Plastique"));
+
     ManhattanStyle * style = new ManhattanStyle(QApplication::style()->objectName());
     Manhattan::Utils::StyleHelper::setBaseColor(QColor(0x66,0x66,0x66));
     QApplication::setStyle(style);

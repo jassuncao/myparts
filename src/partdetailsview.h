@@ -12,6 +12,7 @@ class PartStockLogTableModel;
 class PartStockTableModel2;
 class PartsSqlTableModel;
 class QDataWidgetMapper;
+class ModelsRepository;
 
 class PartDetailsView : public QWidget
 {
@@ -19,7 +20,7 @@ class PartDetailsView : public QWidget
 public:
     explicit PartDetailsView(QWidget *parent = 0);
     ~PartDetailsView();
-    void setPartsModel(PartsSqlTableModel *model);
+    void setModelsRepository(ModelsRepository * repository);
 signals:    
     void editPartSelected();
 public slots:
@@ -29,8 +30,10 @@ private slots:
     void onRemoveStock();
     void onEditPart();
 private:
+    void setPartsModel(PartsSqlTableModel *model);
     Ui::PartDetailsView *ui;
     QDataWidgetMapper * _widgetMapper;
+    ModelsRepository * _modelsRepository;
     PartsSqlTableModel * _partsModel;
     PartStockLogTableModel * _partStockLogModel;
     PartStockTableModel2 * _partStockModel;

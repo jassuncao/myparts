@@ -41,7 +41,8 @@ void StockInlineDelegate::setModelData(QWidget *editor, QAbstractItemModel *mode
         }
     }
     if(partsModel){
-        partsModel->setPartStock(index, newValue);
+        //XXX:
+        //partsModel->setPartStock(index, newValue);
     }
     else{
         //XXX: Handle

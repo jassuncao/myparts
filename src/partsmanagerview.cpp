@@ -159,7 +159,7 @@ PartsManagerView::PartsManagerView(ModelsRepository * modelsProvider, QWidget *p
     centerPane->setLayout(centerLayout);
 
     _partDetailsView = new PartDetailsView(this);
-    _partDetailsView->setPartsModel(partsModel);
+    _partDetailsView->setModelsRepository(_modelsRepository);
 
     _hideDetailsPaneButton = new QToolButton;
     _hideDetailsPaneButton->setIcon(QIcon(QLatin1String(":/icons/splitbutton_closeright")));
@@ -231,7 +231,8 @@ void PartsManagerView::initModels()
 void PartsManagerView::initPartsTableView(){
     //_partsTableView->setModel(_modelsProvider->partsModel());    
     _partsTableView->setModel(_partsTableProxyModel);
-    _partsTableView->setItemDelegateForColumn(PartsSqlTableModel::ColumnActualStock, new StockInlineDelegate(this));
+    //Disable the stock inline feature...
+    //_partsTableView->setItemDelegateForColumn(PartsSqlTableModel::ColumnActualStock, new StockInlineDelegate(this));
     _partsTableView->setEditTriggers(QAbstractItemView::DoubleClicked | QAbstractItemView::EditKeyPressed | QAbstractItemView::AnyKeyPressed);
     connect(_partsTableView->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
             this, SLOT(slotPartTableCurrentRowChanged(QModelIndex,QModelIndex)));

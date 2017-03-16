@@ -6,7 +6,9 @@
 #include "models/partstocklogtablemodel.h"
 #include "models/stocktableformatproxymodel.h"
 #include "models/partstocktablemodel2.h"
+#include "models/modelsrepository.h"
 #include "dialogs/addstockdialog.h"
+#include "dialogs/addstockentrydialog.h"
 #include "dialogs/removestockdialog.h"
 #include <QDebug>
 #include <QPushButton>
@@ -59,6 +61,7 @@ void PartDetailsDelegate::setEditorData(QWidget *editor, const QModelIndex &inde
 PartDetailsView::PartDetailsView(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::PartDetailsView),
+    _modelsRepository(0),
     _partsModel(0),
     _partStockLogModel(0),
     _partStockModel(0)
@@ -111,9 +114,35 @@ PartDetailsView::~PartDetailsView()
     delete ui;
 }
 
+
+void PartDetailsView::setModelsRepository(ModelsRepository * repository)
+{
+    _modelsRepository = repository;
+    setPartsModel(repository->partsModel());
+}
+
+
+void PartDetailsView::setPartsModel(PartsSqlTableModel * model)
+{
+    if(_partsModel==model)
+        return;
+    _partsModel = model;
+    _widgetMapper->setModel(model);
+    _widgetMapper->addMapping(ui->partNameLabel, PartsSqlTableModel::ColumnName);
+    _widgetMapper->addMapping(ui->partDescriptionLabel, PartsSqlTableModel::ColumnDescription);
+    _widgetMapper->addMapping(ui->partCategoryLabel, PartsSqlTableModel::ColumnCategoryName);
+    _widgetMapper->addMapping(ui->partStockLevelLabel, PartsSqlTableModel::ColumnActualStock);
+    _widgetMapper->addMapping(ui->partMinStockLabel, PartsSqlTableModel::ColumnMinStock);
+    _widgetMapper->addMapping(ui->partCustomNumberLabel, PartsSqlTableModel::ColumnCustomPartNumber);
+    _widgetMapper->addMapping(ui->partCommentLabel, PartsSqlTableModel::ColumnComment);
+    _widgetMapper->addMapping(ui->partCreateDateLabel, PartsSqlTableModel::ColumnCreateDate);
+    _widgetMapper->addMapping(ui->partPackageLabel, PartsSqlTableModel::ColumnPackageName);
+    setCurrentIndex(QModelIndex());
+}
+
 void PartDetailsView::onAddStock()
 {    
-    QVariant partUnit = _partsModel->index(_currentIndex.row(), PartsSqlTableModel::ColumnPartUnit).data();
+    /*
     AddStockDialog dlg(this);
     dlg.setPartUnit(partUnit.toString());
     if(dlg.exec()!=QDialog::Accepted)
@@ -130,52 +159,103 @@ void PartDetailsView::onAddStock()
         _partsModel->database().rollback();
         //TODO: Display some warning
         qWarning("Failed to insert stock change (addition) in database");
-    }   
+    }
+*/
+
+    AddStockEntryDialog dlg(_modelsRepository, this);
+
+    QVariant partUnit = _partsModel->index(_currentIndex.row(), PartsSqlTableModel::ColumnPartUnit).data();
+    dlg.setPartUnit(partUnit.toString());
+    QModelIndex index = ui->partStockOverviewTable->currentIndex();
+    if(index.isValid()){
+        QVariant conditionId = _partStockModel->index(index.row(), PartStockTableModel2::ColumnCondition).data(Qt::EditRole);
+        dlg.setSelectedCondition(conditionId);
+        QVariant storageId = _partStockModel->index(index.row(), PartStockTableModel2::ColumnStorage).data(Qt::EditRole);
+        dlg.setSelectedStorage(storageId);
+    }
+    int res = dlg.exec();
+    if(res == AddStockEntryDialog::Accepted){
+        QVariant condition = dlg.selectedCondition();
+        QVariant storage = dlg.selectedStorage();
+        int quantity = dlg.stockChange();
+        double partPrice = dlg.partPrice();
+        QString comment = dlg.comment();
+
+        _partsModel->database().transaction();
+
+        _partStockModel->insertOrUpdateRow(condition, storage, quantity);
+        _partStockLogModel->appendRow(quantity, partPrice, comment);
+
+
+        QVariant totalStock = _partStockModel->computeCurrentStock();
+        QModelIndex actualStockIndex = _partsModel->index(_currentIndex.row(), PartsSqlTableModel::ColumnActualStock);
+        _partsModel->setData(actualStockIndex, totalStock);
+
+        if(partPrice > 0){
+            QVariant avgPrice = _partStockLogModel->computeAveragePrice();
+            QModelIndex avgPriceIndex = _partsModel->index(_currentIndex.row(), PartsSqlTableModel::ColumnAvgPrice);
+            _partsModel->setData(avgPriceIndex, avgPrice);
+        }
+
+        if(_partStockModel->submitAll() && _partStockLogModel->submitAll() && _partsModel->submitAll()){
+            _partsModel->database().commit();
+        }
+        else{
+            _partsModel->database().rollback();
+            //TODO: Display some warning
+            qWarning("Failed to insert stock change (removal) in database");
+        }
+    }
+
 }
 
 void PartDetailsView::onRemoveStock()
 {
-    QVariant partUnit = _partsModel->index(_currentIndex.row(), PartsSqlTableModel::ColumnPartUnit).data();
-    QVariant availableStock = _partsModel->index(_currentIndex.row(), PartsSqlTableModel::ColumnActualStock).data();
-    RemoveStockDialog dlg(this);
-    dlg.setPartUnit(partUnit.toString());
-    dlg.setAvailableStock(availableStock.toInt());
-    if(dlg.exec()!=QDialog::Accepted)
+    QModelIndex stockIndex = ui->partStockOverviewTable->currentIndex();
+    if(!stockIndex.isValid()){
         return;
-    _partsModel->database().transaction();
-    _partStockLogModel->appendRow(dlg.getStockChange(), QVariant(), dlg.getComment());
-    _partsModel->updatePartStock(_currentIndex, dlg.getStockChange());
-    if(_partStockLogModel->submitAll() && _partsModel->submitAll()){
-        _partsModel->database().commit();
     }
-    else{
-        _partsModel->database().rollback();
-        //TODO: Display some warning
-        qWarning("Failed to insert stock change (removal) in database");
+    QModelIndex partUnitIndex = _partsModel->index(_currentIndex.row(), PartsSqlTableModel::ColumnPartUnit);
+    QString partUnit = partUnitIndex.data(Qt::EditRole).toString();
+
+    QModelIndex availableStockColIndex = _partStockModel->index(stockIndex.row(), PartStockTableModel2::ColumnQuantity);
+    double availableStock = availableStockColIndex.data(Qt::EditRole).toDouble();
+
+    RemoveStockDialog dlg(this);
+    dlg.setPartUnit(partUnit);
+    dlg.setAvailableStock(availableStock);
+    if(dlg.exec()==QDialog::Accepted && dlg.getStockChange() > 0) {
+        double stockChange = dlg.getStockChange() * -1;
+        double remaining = availableStock + stockChange;
+
+        _partsModel->database().transaction();
+        if(remaining > 0){
+            _partStockModel->setData(availableStockColIndex, remaining);
+        }
+        else {
+            _partStockModel->removeRow(stockIndex.row());
+        }
+
+        _partStockLogModel->appendRow(stockChange, QVariant(), dlg.getComment());
+
+        QVariant totalStock = _partStockModel->computeCurrentStock();
+        QModelIndex actualStockIndex = _partsModel->index(_currentIndex.row(), PartsSqlTableModel::ColumnActualStock);
+        _partsModel->setData(actualStockIndex, totalStock);
+
+        if(_partStockModel->submitAll() && _partStockLogModel->submitAll() && _partsModel->submitAll()){
+            _partsModel->database().commit();
+        }
+        else{
+            _partsModel->database().rollback();
+            //TODO: Display some warning
+            qWarning("Failed to insert stock change (removal) in database");
+        }
     }
 }
 
 void PartDetailsView::onEditPart()
 {
     emit editPartSelected();
-}
-
-void PartDetailsView::setPartsModel(PartsSqlTableModel * model)
-{
-    if(_partsModel==model)
-        return;   
-    _partsModel = model;    
-    _widgetMapper->setModel(model);
-    _widgetMapper->addMapping(ui->partNameLabel, PartsSqlTableModel::ColumnName);
-    _widgetMapper->addMapping(ui->partDescriptionLabel, PartsSqlTableModel::ColumnDescription);
-    _widgetMapper->addMapping(ui->partCategoryLabel, PartsSqlTableModel::ColumnCategoryName);
-    _widgetMapper->addMapping(ui->partStockLevelLabel, PartsSqlTableModel::ColumnActualStock);
-    _widgetMapper->addMapping(ui->partMinStockLabel, PartsSqlTableModel::ColumnMinStock);
-    _widgetMapper->addMapping(ui->partCustomNumberLabel, PartsSqlTableModel::ColumnCustomPartNumber);
-    _widgetMapper->addMapping(ui->partCommentLabel, PartsSqlTableModel::ColumnComment);
-    _widgetMapper->addMapping(ui->partCreateDateLabel, PartsSqlTableModel::ColumnCreateDate);    
-    _widgetMapper->addMapping(ui->partPackageLabel, PartsSqlTableModel::ColumnPackageName);
-    setCurrentIndex(QModelIndex());        
 }
 
 void PartDetailsView::setCurrentIndex(const QModelIndex &current)
