@@ -67,6 +67,10 @@ PartDetailsView::PartDetailsView(QWidget *parent) :
     _partStockModel(0)
 {
     ui->setupUi(this);
+    //By default the Manhattan style adjusts the size of the first tab. This is causing a visual artifact
+    //If the "noTabBarShapeAdjustment" property is set, the adjustment won't be applied
+    ui->tabWidget->setProperty("noTabBarShapeAdjustment","xx");
+
     ui->partStockHistoryTable->setWordWrap(false);
     _widgetMapper = new QDataWidgetMapper(this);
     _widgetMapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
