@@ -40,7 +40,7 @@ void PartDetailsDelegate::setEditorData(QWidget *editor, const QModelIndex &inde
             QLocale locale;
             text = locale.toString(date, QLocale::ShortFormat);
         }
-        else if(column==PartsSqlTableModel::ColumnActualStock || column==PartsSqlTableModel::ColumnMinStock){
+        else if(column==PartsSqlTableModel::ColumnTotalStock || column==PartsSqlTableModel::ColumnMinStock){
             QVariant stockVar = index.data(Qt::EditRole);
             if(stockVar.isValid()){
                 QVariant partUnitVar = index.model()->index(index.row(), PartsSqlTableModel::ColumnPartUnit).data();
@@ -135,7 +135,7 @@ void PartDetailsView::setPartsModel(PartsSqlTableModel * model)
     _widgetMapper->addMapping(ui->partNameLabel, PartsSqlTableModel::ColumnName);
     _widgetMapper->addMapping(ui->partDescriptionLabel, PartsSqlTableModel::ColumnDescription);
     _widgetMapper->addMapping(ui->partCategoryLabel, PartsSqlTableModel::ColumnCategoryName);
-    _widgetMapper->addMapping(ui->partStockLevelLabel, PartsSqlTableModel::ColumnActualStock);
+    _widgetMapper->addMapping(ui->partStockLevelLabel, PartsSqlTableModel::ColumnTotalStock);
     _widgetMapper->addMapping(ui->partMinStockLabel, PartsSqlTableModel::ColumnMinStock);
     _widgetMapper->addMapping(ui->partCustomNumberLabel, PartsSqlTableModel::ColumnCustomPartNumber);
     _widgetMapper->addMapping(ui->partCommentLabel, PartsSqlTableModel::ColumnComment);
@@ -191,7 +191,7 @@ void PartDetailsView::onAddStock()
         _partStockLogModel->appendRow(quantity, partPrice, comment);
 
         QVariant totalStock = _partStockModel->computeCurrentStock();
-        QModelIndex actualStockIndex = _partsModel->index(_currentIndex.row(), PartsSqlTableModel::ColumnActualStock);
+        QModelIndex actualStockIndex = _partsModel->index(_currentIndex.row(), PartsSqlTableModel::ColumnTotalStock);
         _partsModel->setData(actualStockIndex, totalStock);
 
         if(partPrice > 0){
@@ -242,7 +242,7 @@ void PartDetailsView::onRemoveStock()
         _partStockLogModel->appendRow(stockChange, QVariant(), dlg.getComment());
 
         QVariant totalStock = _partStockModel->computeCurrentStock();
-        QModelIndex actualStockIndex = _partsModel->index(_currentIndex.row(), PartsSqlTableModel::ColumnActualStock);
+        QModelIndex actualStockIndex = _partsModel->index(_currentIndex.row(), PartsSqlTableModel::ColumnTotalStock);
         _partsModel->setData(actualStockIndex, totalStock);
 
         if(_partStockModel->submitAll() && _partStockLogModel->submitAll() && _partsModel->submitAll()){

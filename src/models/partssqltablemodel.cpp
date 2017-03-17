@@ -18,7 +18,7 @@ PartsSqlTableModel::PartsSqlTableModel(PartsQueryBuilder * partsQueryBuilder, QO
     qDebug()<<"Column Count "<<columnCount();
     setColumnName(ColumnName,tr("Name"));
     setColumnName(ColumnDescription,tr("Description"));
-    setColumnName(ColumnActualStock,tr("Stock"));
+    setColumnName(ColumnTotalStock,tr("Stock"));
     setColumnName(ColumnMinStock,tr("Min. Stock"));
     setColumnName(ColumnAvgPrice,tr("Avg. Price"));
     setColumnName(ColumnCustomPartNumber,tr("Custom Part#"));
@@ -161,7 +161,7 @@ bool PartsSqlTableModel::updatePartAvgPrice(const QModelIndex & currentIndex, do
 bool PartsSqlTableModel::updatePartStock(const QModelIndex & currentIndex, int stockChange)
 {
     int row = currentIndex.row();
-    const QModelIndex & colIndex = index(row, ColumnActualStock);
+    const QModelIndex & colIndex = index(row, ColumnTotalStock);
     QVariant value = data(colIndex, Qt::EditRole);
     int currentStock = value.toInt();
     currentStock+=stockChange;

@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS part  (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     description TEXT ,
-    actualStock INTEGER ,
+    totalStock INTEGER ,
     minimumStock INTEGER ,
     averagePrice DOUBLE ,
     comment TEXT ,
@@ -59,13 +59,9 @@ CREATE TABLE IF NOT EXISTS part  (
     createDate DATETIME NOT NULL,
     partUnit INTEGER NOT NULL,
     category INTEGER NOT NULL,
-    storage INTEGER NOT NULL,
-    condition INTEGER ,
     package INTEGER ,
     FOREIGN KEY(partUnit) REFERENCES part_unit(id),
-    FOREIGN KEY(category) REFERENCES category(id),
-    FOREIGN KEY(storage) REFERENCES storage(id),
-    FOREIGN KEY(condition) REFERENCES condition(id),
+    FOREIGN KEY(category) REFERENCES category(id),    
     FOREIGN KEY(package) REFERENCES package(id)
 );
 

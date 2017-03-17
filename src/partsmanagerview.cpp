@@ -387,7 +387,7 @@ void PartsManagerView::slotAddPart()
 void PartsManagerView::slotEditPart()
 {
     QModelIndex index = _partsTableView->currentIndex();
-    if(!index.isValid() || index.column()==PartsSqlTableModel::ColumnActualStock)
+    if(!index.isValid() || index.column()==PartsSqlTableModel::ColumnTotalStock)
         return;   
     PartDialog dlg(_modelsRepository, this);
     dlg.editPart(_partsTableProxyModel->mapToSource(index));

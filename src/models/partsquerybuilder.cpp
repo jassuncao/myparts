@@ -3,7 +3,7 @@
 #include <QStringList>
 #include <QStringBuilder>
 
-static const char * BASE_CLAUSE = "SELECT part.id, part.name, part.description, part.actualStock, part.minimumStock, part.averagePrice, part.comment, part.customPartNumber, "
+static const char * BASE_CLAUSE = "SELECT part.id, part.name, part.description, part.totalStock, part.minimumStock, part.averagePrice, part.comment, part.customPartNumber, "
 "part.createDate, part.partUnit, part.category, "
 "part.package, u.name AS unitName, c.name AS categoryName, "
 "package.name as packageName "
@@ -115,11 +115,11 @@ QString StockCriterion::clause() const
         case PartsQueryBuilder::AnyStockLevel:
             return QString();
         case PartsQueryBuilder::StockLevelZero:
-            return QLatin1String("part.actualStock=0");
+            return QLatin1String("part.totalStock=0");
         case PartsQueryBuilder::StockLevelGreaterZero:
-            return QLatin1String("part.actualStock>0");
+            return QLatin1String("part.totalStock>0");
         case PartsQueryBuilder::StockLevelBelowMin:
-            return QLatin1String("part.actualStock<part.minimumStock");
+            return QLatin1String("part.totalStock<part.minimumStock");
     }
     return QString();
 }
@@ -396,7 +396,7 @@ PartsQueryBuilder::PartsQueryBuilder() :
     _columnNames.append(QLatin1String("part.id"));
     _columnNames.append(QLatin1String("part.name"));
     _columnNames.append(QLatin1String("part.description"));
-    _columnNames.append(QLatin1String("part.actualStock"));
+    _columnNames.append(QLatin1String("part.totalStock"));
     _columnNames.append(QLatin1String("part.minimumStock"));
     _columnNames.append(QLatin1String("part.averagePrice"));
     _columnNames.append(QLatin1String("part.comment"));

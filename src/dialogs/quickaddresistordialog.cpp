@@ -172,12 +172,6 @@ static void resetCombo(QComboBox * combo)
 
 void QuickAddResistorDialog::slotReset()
 {
-    _partStockLogModel->setCurrentPartId(QVariant());
-    _partStockLogModel->select();
-
-    _partStockModel->setCurrentPartId(QVariant());
-    _partStockModel->select();
-
     resetCombo(ui->band1ComboBox);
     resetCombo(ui->band2ComboBox);
     resetCombo(ui->band3ComboBox);
@@ -257,7 +251,7 @@ void QuickAddResistorDialog::slotAddResistor()
     initialData.setValue(PartsSqlTableModel::ColumnCategoryId, category);
     //initialData.setValue(PartsSqlTableModel::ColumnStorageId, storage);
     initialData.setValue(PartsSqlTableModel::ColumnCreateDate, createDate);
-    initialData.setValue(PartsSqlTableModel::ColumnActualStock, quantity);        
+    initialData.setValue(PartsSqlTableModel::ColumnTotalStock, quantity);
     initialData.setValue(PartsSqlTableModel::ColumnPackageId, package);
 
     int newRow = _partsModel->rowCount();
@@ -269,13 +263,8 @@ void QuickAddResistorDialog::slotAddResistor()
             _partParams->submitAll();
             if(quantity != 0){
                 QVariant partId = _partsModel->lastInsertedId();
-                _partStockModel->insertOrUpdateRow(condition, storage, condition);
-                _partStockModel->setCurrentPartId(partId);
-                _partStockModel->submitAll();
-
-                _partStockLogModel->appendRow(quantity, QVariant(), QString());
-                _partStockLogModel->setCurrentPartId(partId);
-                _partStockLogModel->submitAll();
+                _partStockModel->rawInsert(partId, condition, storage, quantity);
+                _partStockLogModel->rawInsert(partId, quantity, QVariant(), QString());
             }
             _partsModel->database().commit();
             //showSuccess(tr("Resistor saved!"));

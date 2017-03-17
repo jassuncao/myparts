@@ -53,6 +53,7 @@ QuickAddCapacitorDialog::QuickAddCapacitorDialog(ModelsRepository *modelsProvide
     _toleranceParam = PartParameterTableModel::findParameter("capacitance_tolerance");
     _partParams = new PartParameterTableModel(this);
     _partStockLogModel = PartStockLogTableModel::createNew(this);
+    _partStockModel = PartStockTableModel2::createNew(this);
 
     //XXX: Disabled the validator to allow "auto complete" (ctrl+space) to work
     //ui->capacitanceValueLineEdit->setValidator(new ParameterValueValidator(_capacitanceParam.unitSymbol(), this));
@@ -182,7 +183,7 @@ void QuickAddCapacitorDialog::slotAddCapacitor()
     initialData.setValue(PartsSqlTableModel::ColumnCategoryId, category);
     //initialData.setValue(PartsSqlTableModel::ColumnStorageId, storage);
     initialData.setValue(PartsSqlTableModel::ColumnCreateDate, createDate);
-    initialData.setValue(PartsSqlTableModel::ColumnActualStock, quantity);
+    initialData.setValue(PartsSqlTableModel::ColumnTotalStock, quantity);
     initialData.setValue(PartsSqlTableModel::ColumnPackageId, package);
 
     int newRow = _partsModel->rowCount();

@@ -294,7 +294,7 @@ QSqlRecord PartDialog::copyAllData(const QModelIndex & index)
 {
     QSqlRecord initialData = _partsModel->record(index.row());
     initialData.setNull(PartsSqlTableModel::ColumnId);
-    initialData.setNull(PartsSqlTableModel::ColumnActualStock);
+    initialData.setNull(PartsSqlTableModel::ColumnTotalStock);
     return initialData;
 }
 
@@ -318,18 +318,6 @@ void PartDialog::initCombos()
     ui->partPackageCombo->setModel(_packagesModel);
     ui->partPackageCombo->setModelKeyColumn(0);
     ui->partPackageCombo->setModelColumn(1);
-}
-
-static void setIndexForFkey(QComboBox * combo, QVariant fkey){
-    int comboIdx = -1;
-    if(!fkey.isNull() ){
-        QModelIndex start = combo->model()->index(0,0);
-        QModelIndexList res = combo->model()->match(start, Qt::EditRole, fkey);
-        if(!res.isEmpty()){
-            comboIdx = res.first().row();
-        }
-    }
-    combo->setCurrentIndex(comboIdx);
 }
 
 static void setTreeViewComboBoxIndex(TreeViewComboBox * combo, QVariant key)
@@ -440,7 +428,7 @@ void PartDialog::commitChanges()
     _mapper->submit();
 
     QModelIndex priceIdx = _partsModel->index(_currentModelIndex.row(), PartsSqlTableModel::ColumnAvgPrice);
-    QModelIndex actualStockIdx = _partsModel->index(_currentModelIndex.row(), PartsSqlTableModel::ColumnActualStock);
+    QModelIndex actualStockIdx = _partsModel->index(_currentModelIndex.row(), PartsSqlTableModel::ColumnTotalStock);
     QVariant partPrice = _partStockLogModel->computeAveragePrice();
     QVariant actualStock = _partStockModel2->computeCurrentStock();
     _partsModel->setData(priceIdx, partPrice);

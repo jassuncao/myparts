@@ -22,7 +22,7 @@ QVariant PartsTableProxyModel::headerData(int section, Qt::Orientation orientati
 Qt::ItemFlags PartsTableProxyModel::flags(const QModelIndex& index) const
 {
     Qt::ItemFlags res = QIdentityProxyModel::flags(index);
-    if(index.column() != PartsSqlTableModel::ColumnActualStock){
+    if(index.column() != PartsSqlTableModel::ColumnTotalStock){
         res &= ~Qt::ItemIsEditable;
     }
     return res;
@@ -32,7 +32,7 @@ QVariant PartsTableProxyModel::data(const QModelIndex &proxyIndex, int role) con
 {
     if(!proxyIndex.isValid()) return QVariant();
     if(role==Qt::ForegroundRole){
-        if(proxyIndex.column() == PartsSqlTableModel::ColumnActualStock){
+        if(proxyIndex.column() == PartsSqlTableModel::ColumnTotalStock){
             QVariant minStockVar = sourceModel()->index(proxyIndex.row(), PartsSqlTableModel::ColumnMinStock).data();
             int minStock = minStockVar.toInt();
             if(minStock > 0){
@@ -48,7 +48,7 @@ QVariant PartsTableProxyModel::data(const QModelIndex &proxyIndex, int role) con
         }
     }
     else if(role == Qt::TextAlignmentRole) {
-        if(proxyIndex.column()==PartsSqlTableModel::ColumnActualStock
+        if(proxyIndex.column()==PartsSqlTableModel::ColumnTotalStock
                 || proxyIndex.column()==PartsSqlTableModel::ColumnMinStock){
             return Qt::AlignCenter;
         }

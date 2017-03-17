@@ -13,7 +13,7 @@ public:
         ColumnId = 0,
         ColumnName,
         ColumnDescription,
-        ColumnActualStock,
+        ColumnTotalStock,
         ColumnMinStock,
         ColumnAvgPrice,
         ColumnComment,

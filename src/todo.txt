@@ -16,13 +16,17 @@ Based on a user action, the part name is looked up in octopart and the user can 
 
 === Doing ===
 
+* Reenable drag & drop of parts into storage nodes
+- When dragging a part check if the part has stock in multiple storage. If so, ask if the user want's to move all of them into the same storage
+- When dragging a stock entry from the detail view
+
+
+=== Done ===
 * Change the following part associations: storage and condition.
 - Allow a part to have multiple storage locations
 - Remove the part condition association. Move the condition to association with storage location.
 - Update price avg when stock log changes
 - Update quantity when stock changes
-
-=== Done ===
 * Support Projects. A project has name, description, remarks/notes, parts and attachments.
 Each part entry has the following fields: refDes, quantity, part, remarks.
 * Prices should support currency
