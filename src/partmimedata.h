@@ -7,6 +7,8 @@ class PartMimeData : public QMimeData
 {
     Q_OBJECT
 public:
+    static const char * PART_MIME_TYPE;
+
     explicit PartMimeData();
     QStringList formats() const;
     

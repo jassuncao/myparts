@@ -3,13 +3,13 @@
 #include "treeitemmodelpersistence.h"
 #include "treemodelmimedata.h"
 #include "iconsrepository.h"
+#include "partmimedata.h"
+#include "partstockmimedata.h"
 #include <QDebug>
 #include <QMimeData>
 #include <limits>
 #include <algorithm>
 
-
-const char * PART_MIME_TYPE= "myparts/part";
 
 static const int COLUMN_COUNT = 1;
 
@@ -342,7 +342,7 @@ Qt::DropActions TreeItemModel::supportedDropActions() const
 QStringList TreeItemModel::mimeTypes() const
 {
     QStringList types;
-    types << _mimeType << PART_MIME_TYPE;
+    types << _mimeType << PartMimeData::PART_MIME_TYPE;
     return types;
 }
 
@@ -422,15 +422,14 @@ bool TreeItemModel::dropMimeData(const QMimeData *data, Qt::DropAction action, i
         }
         return true;
     }
-    else if(data->hasFormat(PART_MIME_TYPE)){
-        QByteArray encodedData = data->data(PART_MIME_TYPE);
+    else if(data->hasFormat(PartMimeData::PART_MIME_TYPE)){
+        QByteArray encodedData = data->data(PartMimeData::PART_MIME_TYPE);
         QDataStream stream(&encodedData, QIODevice::ReadOnly);
         QVector<int> parts;
         stream >> parts;
         emit partsDropped(parts, targetNode);
         return true;
-    }
-
+    }    
     return false;
 }
 

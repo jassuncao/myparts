@@ -18,7 +18,7 @@ Based on a user action, the part name is looked up in octopart and the user can 
 
 * Reenable drag & drop of parts into storage nodes
 - When dragging a part check if the part has stock in multiple storage. If so, ask if the user want's to move all of them into the same storage
-- When dragging a stock entry from the detail view
+- (DONE) When dragging a stock entry from the detail view
 
 
 === Done ===

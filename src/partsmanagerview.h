@@ -67,14 +67,7 @@ private:
 
     NavigationSubWidget * _navWidget;
     PartsTableView * _partsTableView;
-    PartDetailsView * _partDetailsView;
-    //PartsSqlTableModel * _partsModel;
-
-    /*
-    CategoryTreeModel * _categoriesTreeModel;
-    StorageTreeModel * _storageTreeModel;
-    PartsQueryBuilder * _partsQueryBuilder;
-    */
+    PartDetailsView * _partDetailsView;  
     PartsFilterWidget * _partsFilterWidget;
     QPushButton * _deletePartButton;
     QPushButton * _duplicatePartButton;

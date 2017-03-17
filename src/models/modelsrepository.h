@@ -7,6 +7,7 @@
 #include <QIcon>
 
 #include "models/projecttablemodel.h"
+#include "partstockmimedata.h"
 
 class CategoryTreeModel;
 class StorageTreeModel;
@@ -21,6 +22,7 @@ class PackageTableModel;
 class QStandardItemModel;
 class IconsRepository;
 class QAbstractItemModel;
+class PartStockTableModel2;
 
 class ModelsRepository : public QObject
 {
@@ -44,6 +46,7 @@ signals:
 private slots:
     void slotPartsDroppedInCategory(QVector<int> parts, TreeItem* item);
     void slotPartsDroppedInStorage(QVector<int> parts, TreeItem* item);
+    void slotStockDroppedInStorage(const QList<PartStockItem> & items, const QVariant & storageId);
 private:
     void loadTreeIcons();
     CategoryTreeModel * _categoriesModel;
@@ -59,8 +62,7 @@ private:
     ProjectTableModel * _projectModel;
     IconsRepository * _categoryIconsRepository;
     IconsRepository * _storageIconsRepository;
-//    QAbstractItemModel * _storageIconsModel;
-//    QAbstractItemModel * _categoryIconsModel;
+    PartStockTableModel2 * _stockModelHelper;
 };
 
 #endif // MODELSPROVIDER_H

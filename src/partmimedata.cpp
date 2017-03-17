@@ -1,6 +1,8 @@
 #include <QtGui>
 #include "partmimedata.h"
 
+const char * PartMimeData::PART_MIME_TYPE= "myparts/part";
+
 PartMimeData::PartMimeData() :
     QMimeData()
 {

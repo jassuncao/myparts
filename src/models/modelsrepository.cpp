@@ -13,6 +13,7 @@
 #include "models/basicentitytablemodel.h"
 #include "models/iconsrepository.h"
 #include "models/projecttablemodel.h"
+#include "models/partstocktablemodel2.h"
 
 
 ModelsRepository::ModelsRepository(QObject *parent) : QObject(parent)
@@ -50,8 +51,11 @@ ModelsRepository::ModelsRepository(QObject *parent) : QObject(parent)
     _categoryIconsRepository = new IconsRepository(":/parts/category.xml");
     _categoriesModel->setIconsRepository(_categoryIconsRepository);
 
+    _stockModelHelper = PartStockTableModel2::createNew(this);
+
     connect(_categoriesModel, SIGNAL(partsDropped(QVector<int>,TreeItem*)), this, SLOT(slotPartsDroppedInCategory(QVector<int>,TreeItem*)));
     connect(_storageModel, SIGNAL(partsDropped(QVector<int>,TreeItem*)), this, SLOT(slotPartsDroppedInStorage(QVector<int>,TreeItem*)));
+    connect(_storageModel, SIGNAL(stockDropped(QList<PartStockItem>,QVariant)), this, SLOT(slotStockDroppedInStorage(QList<PartStockItem>,QVariant)));
 }
 
 ModelsRepository::~ModelsRepository()
@@ -110,24 +114,6 @@ IconsRepository * ModelsRepository::storageIconsRepository() const
     return _storageIconsRepository;
 }
 
-/*
-QAbstractItemModel * ModelsRepository::storageIconsModel()
-{
-    if(_storageIconsModel == 0){
-        _storageIconsModel = _storageIconsRepository->model(this);
-    }
-    return _storageIconsModel;
-}
-
-QAbstractItemModel * ModelsRepository::categoriesIconsModel()
-{
-    if(_categoryIconsModel == 0){
-        _categoryIconsModel = _categoryIconsRepository->model(this);
-    }
-    return _categoryIconsModel;
-}
-*/
-
 void ModelsRepository::initModels()
 {    
     _storageModel->select();
@@ -137,7 +123,6 @@ void ModelsRepository::initModels()
     _partManufacturerModel->select();
 }
 
-
 void ModelsRepository::slotPartsDroppedInCategory(QVector<int> parts, TreeItem* item)
 {
     _partsModel->updatePartsCategory(parts, item->id());
@@ -145,10 +130,21 @@ void ModelsRepository::slotPartsDroppedInCategory(QVector<int> parts, TreeItem* 
 }
 
 void ModelsRepository::slotPartsDroppedInStorage(QVector<int> parts, TreeItem* item)
-{
+{    
     //XXX: Show a dialog prompting the user to choose between moving all the stock to the target location or just some
     //_partsModel->updatePartsStorage(parts, item->id());
     //_partsModel->select();
+}
+
+void ModelsRepository::slotStockDroppedInStorage(const QList<PartStockItem> & items, const QVariant & storageId)
+{
+    bool res = false;
+    foreach (PartStockItem item, items) {
+        res = res | _stockModelHelper->rawMoveStockToStorage(item, storageId);
+    }
+    if(res){
+        _partsModel->select();
+    }
 }
 
 void ModelsRepository::loadTreeIcons()

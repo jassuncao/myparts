@@ -28,16 +28,54 @@ TableItem * PartStockTableModel2::createBlankItem() const
 
 Qt::ItemFlags PartStockTableModel2::flags(const QModelIndex& index) const
 {
-    Qt::ItemFlags res = SimpleSqlTableModel::flags(index);
-    res &= ~Qt::ItemIsEditable;
+    Qt::ItemFlags flags = SimpleSqlTableModel::flags(index);
+    flags &= ~Qt::ItemIsEditable;
+    flags = flags | Qt::ItemIsDragEnabled;
 /*
     XXX: For now prevent any kind of edit using the views
     const int col = index.column();
     if(col == PartStockTableModel2::ColumnLastUpdate || col == PartStockTableModel2::ColumnQuantity){
-        res &= ~Qt::ItemIsEditable;
+        flags &= ~Qt::ItemIsEditable;
     }
     */    
-    return res;
+    return flags;
+}
+
+
+Qt::DropActions PartStockTableModel2::supportedDropActions() const
+{
+    return Qt::CopyAction | Qt::LinkAction | Qt::MoveAction;
+}
+
+QStringList PartStockTableModel2::mimeTypes() const
+{
+    QStringList types;
+    types << PartStockMimeData::PART_STOCK_MIMETYPE;
+    return types;
+}
+
+QMimeData * PartStockTableModel2::mimeData(const QModelIndexList &indexes) const
+{
+    QVector<int> uniqueRows;
+    foreach (const QModelIndex &index, indexes) {
+        if (index.isValid()) {
+            int row = index.row();
+            if(!uniqueRows.contains(row)){
+                uniqueRows.append(row);
+            }
+        }
+    }
+    QVariant partId = currentForeignKey();
+    QList<PartStockItem> items;
+    foreach (int row, uniqueRows) {
+        TableItem * item = _items.at(row);
+        QVariant storage = item->data(ColumnStorage);
+        QVariant condition = item->data(ColumnCondition);
+        QVariant quantity = item->data(ColumnQuantity);
+        items.append(PartStockItem(partId, storage, condition, quantity));
+    }
+    PartStockMimeData * mimeData = new PartStockMimeData(items);
+    return mimeData;
 }
 
 bool PartStockTableModel2::saveItem(TableItem* item)
@@ -103,4 +141,46 @@ bool PartStockTableModel2::rawInsert(const QVariant & partId, const QVariant & c
     return res;
 }
 
+bool PartStockTableModel2::rawMoveStockToStorage(const PartStockItem & stockItem, const QVariant & newStorage)
+{
+    database().transaction();
+
+    QString mergeStockQuerySQL("UPDATE part_stock SET quantity = quantity + ? "
+    "WHERE part = ? AND storage = ? AND condition = ?");
+
+    QString deletePreviousStockQuerySQL("DELETE FROM part_stock "
+    "WHERE part = ? AND storage = ? AND condition = ?");
+
+    bool res;
+    QSqlQuery mergeExistingQuery(mergeStockQuerySQL);
+    mergeExistingQuery.bindValue(0, stockItem.quantity);
+    mergeExistingQuery.bindValue(1, stockItem.partId);
+    mergeExistingQuery.bindValue(2, newStorage);
+    mergeExistingQuery.bindValue(3, stockItem.conditionId);
+    res = mergeExistingQuery.exec();
+    if(!res){
+        qWarning()<<"Failed to execute stock merge query. Reason:"<<mergeExistingQuery.lastError();
+        database().rollback();
+        return false;
+    }
+    res = mergeExistingQuery.numRowsAffected() > 0;
+    if(!res){
+        res = rawInsert(stockItem.partId, stockItem.conditionId, newStorage, stockItem.quantity);
+    }
+
+    if(res){
+        QSqlQuery deletePreviousStockEntryQuery(deletePreviousStockQuerySQL);
+        deletePreviousStockEntryQuery.bindValue(0, stockItem.partId);
+        deletePreviousStockEntryQuery.bindValue(1, stockItem.storageId);
+        deletePreviousStockEntryQuery.bindValue(2, stockItem.conditionId);
+        res = deletePreviousStockEntryQuery.exec();
+        if(res){
+            database().commit();
+        }
+        else{
+            qWarning()<<"Failed to execute stock delete query. Reason:"<<deletePreviousStockEntryQuery.lastError();
+        }
+    }
+    return res;
+}
 

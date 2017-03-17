@@ -276,7 +276,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QTableView" name="partStockOverviewTable">
+          <widget class="ExtendedTableView" name="partStockOverviewTable">
            <property name="sizePolicy">
             <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
              <horstretch>0</horstretch>
@@ -398,6 +398,11 @@
    <class>ElidingLabel</class>
    <extends>QLabel</extends>
    <header>widgets/elidinglabel.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ExtendedTableView</class>
+   <extends>QTableView</extends>
+   <header>widgets/extendedtableview.h</header>
   </customwidget>
  </customwidgets>
  <resources>

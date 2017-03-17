@@ -2,6 +2,7 @@
 #include "models/treeitem.h"
 #include "models/treemodelmimedata.h"
 #include "models/treeitemmodelpersistence.h"
+#include "partstockmimedata.h"
 #include <QDebug>
 #include <QSqlQuery>
 
@@ -49,3 +50,30 @@ StorageTreeModel::StorageTreeModel(QObject *parent) :
 StorageTreeModel::~StorageTreeModel()
 {
 }
+
+
+QStringList StorageTreeModel::mimeTypes() const
+{
+    QStringList types = TreeItemModel::mimeTypes();
+    types.append(PartStockMimeData::PART_STOCK_MIMETYPE);
+    return types;
+}
+
+bool StorageTreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent)
+{
+    if (action == Qt::IgnoreAction){
+        return true;
+    }
+
+    if(data->hasFormat(PartStockMimeData::PART_STOCK_MIMETYPE)){
+        const PartStockMimeData *stockData = qobject_cast<const PartStockMimeData *>(data);
+        if(stockData){
+            TreeItem* targetNode = getItem(parent);
+            int storageId = targetNode->id();
+            emit stockDropped(stockData->items(), storageId);
+            return true;
+        }
+    }
+    return TreeItemModel::dropMimeData(data, action, row, column, parent);
+}
+

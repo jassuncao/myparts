@@ -78,10 +78,17 @@ PartDetailsView::PartDetailsView(QWidget *parent) :
 
     _partStockModel = PartStockTableModel2::createNew(this);
     ui->partStockOverviewTable->setModel(_partStockModel);
+    ui->partStockOverviewTable->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->partStockOverviewTable->horizontalHeader()->swapSections(PartStockTableModel2::ColumnStorage, PartStockTableModel2::ColumnCondition);
     ui->partStockOverviewTable->horizontalHeader()->moveSection(PartStockTableModel2::ColumnQuantity, 0);
     ui->partStockOverviewTable->hideColumn(PartStockTableModel2::ColumnLastUpdate);
     ui->partStockOverviewTable->resizeColumnsToContents();
+    ui->partStockOverviewTable->setDragEnabled(true);
+    ui->partStockOverviewTable->setDragDropMode(QAbstractItemView::DragOnly);
+    ui->partStockOverviewTable->setDefaultDropAction(Qt::MoveAction);
+    ui->partStockOverviewTable->setDragPixmap(QPixmap(":/icons/stock"));
+    ui->partStockOverviewTable->setDragDropOverwriteMode(false);
+
 
     _partStockLogModel = PartStockLogTableModel::createNew(this);
 
@@ -146,26 +153,6 @@ void PartDetailsView::setPartsModel(PartsSqlTableModel * model)
 
 void PartDetailsView::onAddStock()
 {    
-    /*
-    AddStockDialog dlg(this);
-    dlg.setPartUnit(partUnit.toString());
-    if(dlg.exec()!=QDialog::Accepted)
-        return;
-    _partsModel->database().transaction();
-    _partStockLogModel->appendRow(dlg.getStockChange(), dlg.getPartPrice(), dlg.getComment());
-    _partsModel->updatePartStock(_currentIndex, dlg.getStockChange());
-    _partsModel->updatePartAvgPrice(_currentIndex, dlg.getPartPrice());
-
-    if(_partStockLogModel->submitAll() && _partsModel->submitAll()){
-        _partsModel->database().commit();
-    }
-    else{
-        _partsModel->database().rollback();
-        //TODO: Display some warning
-        qWarning("Failed to insert stock change (addition) in database");
-    }
-*/
-
     AddStockEntryDialog dlg(_modelsRepository, this);
 
     QVariant partUnit = _partsModel->index(_currentIndex.row(), PartsSqlTableModel::ColumnPartUnit).data();

@@ -2,6 +2,7 @@
 #define PARTSTOCKTABLEMODEL2_H
 
 #include "customtablemodel.h"
+#include <partstockmimedata.h>
 
 class PartStockTableModel2 : public SimpleSqlTableModel
 {
@@ -16,9 +17,13 @@ public:
 
     inline void setCurrentPartId(const QVariant & partId) { setCurrentForeignKey(partId); }
     Qt::ItemFlags flags(const QModelIndex &index) const;
+    Qt::DropActions supportedDropActions() const;
+    QStringList mimeTypes() const;
+    QMimeData * mimeData(const QModelIndexList &indexes) const;
     bool insertOrUpdateRow(const QVariant & condition, const QVariant & storage, QVariant quantiy);
     QVariant computeCurrentStock() const;
     bool rawInsert(const QVariant & partId, const QVariant & condition, const QVariant & storage, QVariant quantiy);
+    bool rawMoveStockToStorage(const PartStockItem & stockItem, const QVariant & newStorage);
     static PartStockTableModel2 * createNew(QObject *parent);    
 protected:
     explicit PartStockTableModel2(const QStringList & fieldNames, const QStringList & columnNames, QObject *parent = 0);

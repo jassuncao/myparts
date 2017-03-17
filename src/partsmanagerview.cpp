@@ -363,7 +363,6 @@ void PartsManagerView::slotSelectedStorageChanged(const QList<int> selectedIds)
     queryBuilder->setFilter(PartsQueryBuilder::FilterByStorage, QVariant::fromValue(value));
     queryBuilder->setFilter(PartsQueryBuilder::FilterByCategory, QVariant::fromValue(NodeCriterionValue()));
     partsModel->select();
-    //slotFilterChanged();
 }
 
 QVariant PartsManagerView::selectedStorage() const

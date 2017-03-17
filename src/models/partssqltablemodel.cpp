@@ -9,6 +9,7 @@
 #include <QSqlQuery>
 #include <QHash>
 #include "partsquerybuilder.h"
+#include "partmimedata.h"
 
 PartsSqlTableModel::PartsSqlTableModel(PartsQueryBuilder * partsQueryBuilder, QObject *parent) :
     QSqlTableModel(parent),
@@ -24,9 +25,7 @@ PartsSqlTableModel::PartsSqlTableModel(PartsQueryBuilder * partsQueryBuilder, QO
     setColumnName(ColumnCustomPartNumber,tr("Custom Part#"));
     setColumnName(ColumnComment,tr("Comment"));
     setColumnName(ColumnCreateDate,tr("Create Date"));
-    setColumnName(ColumnCategoryName,tr("Category"));
-    //setColumnName(ColumnStorage,tr("Storage Location"));
-    //setColumnName(ColumnCondition,tr("Condition"));
+    setColumnName(ColumnCategoryName,tr("Category")); 
     setColumnName(ColumnPackageName,tr("Package"));
 }
 
@@ -119,8 +118,8 @@ Qt::DropActions PartsSqlTableModel::supportedDropActions() const
 
 QStringList PartsSqlTableModel::mimeTypes() const
 {
-    QStringList types;
-    types << "myparts/part" << "text/plain" << "text/html";
+    QStringList types;    
+    types << PartMimeData::PART_MIME_TYPE << "text/plain" << "text/html";
     return types;
 }
 

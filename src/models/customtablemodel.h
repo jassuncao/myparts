@@ -7,6 +7,7 @@
 #include <QVector>
 #include <QHash>
 #include <QMap>
+#include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QStyledItemDelegate>
 #include <QComboBox>
@@ -103,14 +104,17 @@ class SimpleSqlTableModel : public CustomTableModel
     Q_OBJECT
 public:
     explicit SimpleSqlTableModel(const QString &tableName, const QStringList & fieldNames,
-                                 const QStringList & columnNames, const QString & foreignKeyField = QString(), QObject *parent = 0);
+                                 const QStringList & columnNames, const QString & foreignKeyField = QString(), QObject *parent = 0, QSqlDatabase db = QSqlDatabase());
     void setCurrentForeignKey(const QVariant & foreignKey);
+    inline QVariant currentForeignKey() const  {return _foreignKey;}
     void sort(int column, Qt::SortOrder order = Qt::AscendingOrder);
 protected:
     virtual bool deleteItem(QVariant id);
     virtual bool saveItem(TableItem* item) ;
     virtual bool loadItems(QList<TableItem *> &dest);
     QString generateSelectStatement(const QString & tableName,  const QStringList & fieldNames, const QString & foreignKeyField, int sortColumn, Qt::SortOrder order);
+    QSqlDatabase database() const { return _database;}
+    QSqlDatabase _database;
     const QString _tableName;
     const QStringList _fieldNames;    
     const QString _foreignKeyField;

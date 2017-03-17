@@ -114,7 +114,8 @@ SOURCES += main.cpp\
     models/partstocktablemodel2.cpp \
     dialogs/addstockentrydialog.cpp \
     models/partstocklogtablemodel.cpp \
-    dialogs/movestockdialog.cpp
+    dialogs/movestockdialog.cpp \
+    partstockmimedata.cpp
 
 HEADERS  += mainwindow.h \
     partdialog.h \
@@ -218,7 +219,8 @@ HEADERS  += mainwindow.h \
     models/partstocktablemodel2.h \
     dialogs/addstockentrydialog.h \
     models/partstocklogtablemodel.h \
-    dialogs/movestockdialog.h
+    dialogs/movestockdialog.h \
+    partstockmimedata.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \
