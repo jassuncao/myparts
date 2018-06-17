@@ -17,7 +17,9 @@ class PartParameterTableModel : public QAbstractTableModel, public IModelWithFor
 public:
     enum ColumnsIndex {
         ColumnParameter,
-        ColumnParameterValue
+        ColumnParameterMinValue,
+        ColumnParameterValue,        
+        ColumnParameterMaxValue,
     };
     explicit PartParameterTableModel(QObject *parent = 0);
     virtual ~PartParameterTableModel();
@@ -34,7 +36,7 @@ public:
     void setCurrentPartId(const QVariant& partId);
     void cloneData();
     QAbstractListModel * relationModel(const int column) const;
-    bool appendParameter(int paramId, const QVariant& value);
+    bool appendParameter(int paramId, const QVariant& value, const QVariant &minValue = QVariant(), const QVariant &maxValue = QVariant());
 protected:
     bool loadParameters();
     virtual bool deleteItem(QVariant id);

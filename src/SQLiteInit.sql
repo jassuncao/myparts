@@ -117,8 +117,9 @@ CREATE TABLE IF NOT EXISTS part_parameter  (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     part INTEGER NOT NULL,
     parameter INTEGER NOT NULL,
-    numericValue DOUBLE ,
-    textValue TEXT ,
+    value NUMERIC,
+    minValue NUMERIC,
+    maxValue NUMERIC,
     FOREIGN KEY(part) REFERENCES part(id) ON DELETE CASCADE,
     FOREIGN KEY(parameter) REFERENCES parameter(id)
 );

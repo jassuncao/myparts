@@ -1,5 +1,6 @@
 #include <QSqlQueryModel>
 #include <QStandardItemModel>
+#include <QMessageBox>
 #include "modelsrepository.h"
 #include "models/partssqltablemodel.h"
 #include "models/storagetreemodel.h"
@@ -54,7 +55,7 @@ ModelsRepository::ModelsRepository(QObject *parent) : QObject(parent)
     _stockModelHelper = PartStockTableModel2::createNew(this);
 
     connect(_categoriesModel, SIGNAL(partsDropped(QVector<int>,TreeItem*)), this, SLOT(slotPartsDroppedInCategory(QVector<int>,TreeItem*)));
-    connect(_storageModel, SIGNAL(partsDropped(QVector<int>,TreeItem*)), this, SLOT(slotPartsDroppedInStorage(QVector<int>,TreeItem*)));
+    //connect(_storageModel, SIGNAL(partsDropped(QVector<int>,TreeItem*)), this, SLOT(slotPartsDroppedInStorage(QVector<int>,TreeItem*)));
     connect(_storageModel, SIGNAL(stockDropped(QList<PartStockItem>,QVariant)), this, SLOT(slotStockDroppedInStorage(QList<PartStockItem>,QVariant)));
 }
 
@@ -129,11 +130,20 @@ void ModelsRepository::slotPartsDroppedInCategory(QVector<int> parts, TreeItem* 
     _partsModel->select();
 }
 
-void ModelsRepository::slotPartsDroppedInStorage(QVector<int> parts, TreeItem* item)
+void ModelsRepository::partsDroppedInStorage(QVector<int> parts, TreeItem* item)
 {    
+
     //XXX: Show a dialog prompting the user to choose between moving all the stock to the target location or just some
     //_partsModel->updatePartsStorage(parts, item->id());
     //_partsModel->select();
+    bool res = false;
+    QVariant storageId = item->id();
+    foreach (int partId, parts) {
+        res = res | _stockModelHelper->rawMovePartToStorage(partId, storageId);
+    }
+    if(res){
+        _partsModel->select();
+    }
 }
 
 void ModelsRepository::slotStockDroppedInStorage(const QList<PartStockItem> & items, const QVariant & storageId)

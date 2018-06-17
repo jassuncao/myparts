@@ -55,13 +55,12 @@ protected slots:
     void slotSelectedStorageChanged(const QList<int> selectedIds);
     /*
     void slotPartsDroppedInCategory(QVector<int> parts, TreeItem* item);
-    void slotPartsDroppedInStorage(QVector<int> parts, TreeItem* item);
     */
+    void slotPartsDroppedInStorage(QVector<int> parts, TreeItem* item);    
     void slotShowDetailsPane();
     void slotHideDetailsPane();
     void slotExportTable();
 private:
-    void initModels();
     void initPartsTableView();
     void duplicatePart(bool allData);
 

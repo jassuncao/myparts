@@ -14,7 +14,11 @@ Based on a user action, the part name is looked up in octopart and the user can 
 
 * Add a merge part dialog
 
+* Save options dialog window settings (width and height)
+
 === Doing ===
+
+* Restructering part_parameters. Adds two new columns for min and max values. Taking advantage of sqlite datatypes to unify numeric and text values
 
 * Reenable drag & drop of parts into storage nodes
 - When dragging a part check if the part has stock in multiple storage. If so, ask if the user want's to move all of them into the same storage

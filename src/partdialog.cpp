@@ -92,8 +92,13 @@ PartDialog::PartDialog(ModelsRepository * modelsProvider, QWidget *parent) :
 
     ui->partParametersTableView->setModel(_partParamsModel);
     ui->partParametersTableView->setItemDelegate(new ComboItemDelegate(this));
-    ui->partParametersTableView->setItemDelegateForColumn(PartParameterTableModel::ColumnParameterValue, new ParameterValueDelegate(this));
+    ParameterValueDelegate * paramValueDelegate = new ParameterValueDelegate(this);
+    ui->partParametersTableView->setItemDelegateForColumn(PartParameterTableModel::ColumnParameterValue, paramValueDelegate);
+    ui->partParametersTableView->setItemDelegateForColumn(PartParameterTableModel::ColumnParameterMinValue, paramValueDelegate);
+    ui->partParametersTableView->setItemDelegateForColumn(PartParameterTableModel::ColumnParameterMaxValue, paramValueDelegate);
     ui->partParametersTableView->setColumnWidth(PartParameterTableModel::ColumnParameter, 180);
+    ui->partParametersTableView->horizontalHeader()->setResizeMode(PartParameterTableModel::ColumnParameterValue, QHeaderView::Stretch);
+    ui->partParametersTableView->horizontalHeader()->setStretchLastSection(false);
 
     ui->partDistributorsTableView->setModel(_partDistributorModel);
     ui->partDistributorsTableView->setItemDelegateForColumn(PartDistributorTableModel2::ColumnUnitPrice, new PriceItemDelegate(false, this));

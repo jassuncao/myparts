@@ -41,11 +41,11 @@ public:
     ProjectTableModel * projectModel() const;
     IconsRepository * storageIconsRepository() const;
     IconsRepository * categoryIconsRepository() const;
+    void partsDroppedInStorage(QVector<int> parts, TreeItem* item);
 signals:
 
 private slots:
-    void slotPartsDroppedInCategory(QVector<int> parts, TreeItem* item);
-    void slotPartsDroppedInStorage(QVector<int> parts, TreeItem* item);
+    void slotPartsDroppedInCategory(QVector<int> parts, TreeItem* item);    
     void slotStockDroppedInStorage(const QList<PartStockItem> & items, const QVariant & storageId);
 private:
     void loadTreeIcons();

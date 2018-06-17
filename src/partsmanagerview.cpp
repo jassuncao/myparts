@@ -65,24 +65,8 @@ PartsManagerView::PartsManagerView(ModelsRepository * modelsProvider, QWidget *p
     : MiniSplitter(parent),
       _modelsRepository(modelsProvider)
 {
-    /*
-    _partsQueryBuilder = new PartsQueryBuilder();
-    _partsModel = new PartsSqlTableModel(_partsQueryBuilder, this);
-    _partsModel->setEditStrategy(QSqlTableModel::OnManualSubmit);        
-    connect(_partsModel, SIGNAL(beforeSubmit()), this, SLOT(slotBeforeSubmit()));
-    connect(_partsModel, SIGNAL(afterSubmit()), this, SLOT(slotAfterSubmit()));
-
-    _categoriesTreeModel = new CategoryTreeModel(this);
-    _categoriesTreeModel->select();
-
-    _storageTreeModel = new StorageTreeModel(this);
-    _storageTreeModel->select();
-*/
-
-    _partsTableProxyModel = new PartsTableProxyModel(this);
-    PartsSqlTableModel * partsModel = _modelsRepository->partsModel();
-    _partsTableProxyModel->setSourceModel(partsModel);
-
+    _partsTableProxyModel = new PartsTableProxyModel(this);    
+    _partsTableProxyModel->setSourceModel(_modelsRepository->partsModel());
     _navWidget = new NavigationSubWidget(this);    
 
     _categoryNavigator = new CategoryNavigator(_modelsRepository, _navWidget);
@@ -142,7 +126,7 @@ PartsManagerView::PartsManagerView(ModelsRepository * modelsProvider, QWidget *p
     hLine->setFrameShadow(QFrame::Sunken);
 
     _partsFilterWidget = new PartsFilterWidget(_modelsRepository, this);
-    _partsFilterWidget->setPartsQueryBuilder(partsModel->queryBuilder());
+    _partsFilterWidget->setPartsQueryBuilder(_modelsRepository->partsModel()->queryBuilder());
 
     _partsTableView = new PartsTableView(this);
 
@@ -205,28 +189,13 @@ PartsManagerView::PartsManagerView(ModelsRepository * modelsProvider, QWidget *p
     _navWidget->setMinimumWidth(_navWidget->minimumSizeHint().width());
     _navWidget->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-    initModels();
     initPartsTableView();
+    connect(_modelsRepository->partStorageModel(), SIGNAL(partsDropped(QVector<int>,TreeItem*)), this, SLOT(slotPartsDroppedInStorage(QVector<int>,TreeItem*)));
 }
 
 PartsManagerView::~PartsManagerView()
 {    
 }
-
-void PartsManagerView::initModels()
-{
-    /*
-    _categoryNavigator->setModel(_modelsProvider->partCategoryModel());
-    _storageNavigator->setModel(_modelsProvider->storageTreeModel());
-
-    PartsSqlTableModel * partsModel = _modelsProvider->partsModel();
-    _partsFilterWidget->setPartsQueryBuilder(partsModel->queryBuilder());
-    _partsTableProxyModel->setSourceModel(partsModel);
-    _partDetailsView->setPartsModel(partsModel);
-    */
-}
-
-
 
 void PartsManagerView::initPartsTableView(){
     //_partsTableView->setModel(_modelsProvider->partsModel());    
@@ -454,6 +423,14 @@ void PartsManagerView::slotExportTable()
         csvExporter.setTable(_partsTableView);
         csvExporter.toCSV(dlg.filename());
         QMessageBox::information(this, tr("File saved"), tr("CSV file saved"));
+    }
+}
+
+void PartsManagerView::slotPartsDroppedInStorage(QVector<int> parts, TreeItem* item)
+{
+    int res = QMessageBox::information(this, tr("Confirmation"), tr("This action will move all the stock to the same stock location.\n Are you sure ?"), QMessageBox::Yes, QMessageBox::No);
+    if(res & (QMessageBox::Ok | QMessageBox::Yes)){
+        _modelsRepository->partsDroppedInStorage(parts, item);
     }
 }
 

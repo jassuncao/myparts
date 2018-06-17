@@ -17,6 +17,7 @@ public:
 
     inline void setCurrentPartId(const QVariant & partId) { setCurrentForeignKey(partId); }
     Qt::ItemFlags flags(const QModelIndex &index) const;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     Qt::DropActions supportedDropActions() const;
     QStringList mimeTypes() const;
     QMimeData * mimeData(const QModelIndexList &indexes) const;
@@ -24,6 +25,7 @@ public:
     QVariant computeCurrentStock() const;
     bool rawInsert(const QVariant & partId, const QVariant & condition, const QVariant & storage, QVariant quantiy);
     bool rawMoveStockToStorage(const PartStockItem & stockItem, const QVariant & newStorage);
+    bool rawMovePartToStorage(int partId, const QVariant & newStorage);
     static PartStockTableModel2 * createNew(QObject *parent);    
 protected:
     explicit PartStockTableModel2(const QStringList & fieldNames, const QStringList & columnNames, QObject *parent = 0);

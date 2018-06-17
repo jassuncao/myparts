@@ -41,6 +41,15 @@ Qt::ItemFlags PartStockTableModel2::flags(const QModelIndex& index) const
     return flags;
 }
 
+QVariant PartStockTableModel2::data(const QModelIndex &index, int role) const
+{
+    const QVariant & value = SimpleSqlTableModel::data(index, role);
+    if(index.column()==ColumnLastUpdate && value.isValid() && (role==Qt::EditRole || role==Qt::DisplayRole)){
+        return QDateTime::fromTime_t(value.toUInt());
+    }
+    return value;
+}
+
 
 Qt::DropActions PartStockTableModel2::supportedDropActions() const
 {
@@ -81,7 +90,7 @@ QMimeData * PartStockTableModel2::mimeData(const QModelIndexList &indexes) const
 bool PartStockTableModel2::saveItem(TableItem* item)
 {
     QDateTime now = QDateTime::currentDateTimeUtc();
-    item->setData(PartStockTableModel2::ColumnLastUpdate, now);
+    item->setData(PartStockTableModel2::ColumnLastUpdate, now.toTime_t());
     return SimpleSqlTableModel::saveItem(item);
 }
 
@@ -143,8 +152,6 @@ bool PartStockTableModel2::rawInsert(const QVariant & partId, const QVariant & c
 
 bool PartStockTableModel2::rawMoveStockToStorage(const PartStockItem & stockItem, const QVariant & newStorage)
 {
-    database().transaction();
-
     QString mergeStockQuerySQL("UPDATE part_stock SET quantity = quantity + ? "
     "WHERE part = ? AND storage = ? AND condition = ?");
 
@@ -152,6 +159,9 @@ bool PartStockTableModel2::rawMoveStockToStorage(const PartStockItem & stockItem
     "WHERE part = ? AND storage = ? AND condition = ?");
 
     bool res;
+
+    database().transaction();
+
     QSqlQuery mergeExistingQuery(mergeStockQuerySQL);
     mergeExistingQuery.bindValue(0, stockItem.quantity);
     mergeExistingQuery.bindValue(1, stockItem.partId);
@@ -178,9 +188,112 @@ bool PartStockTableModel2::rawMoveStockToStorage(const PartStockItem & stockItem
             database().commit();
         }
         else{
+            database().rollback();
             qWarning()<<"Failed to execute stock delete query. Reason:"<<deletePreviousStockEntryQuery.lastError();
         }
     }
     return res;
+}
+
+bool PartStockTableModel2::rawMovePartToStorage(int partId, const QVariant & newStorage)
+{
+    //merge the quantity from other storages that have records with conditions already present in the target storage
+    QString mergeQuantityExistingConditionSQL(
+                "UPDATE part_stock SET quantity = quantity + coalesce(0, "
+                "(SELECT SUM(s1.quantity) FROM part_stock s1 "
+                    "WHERE s1.condition = part_stock.condition AND s1.storage <> part_stock.storage AND s1.part = part_stock.part) ) "
+                "WHERE part = ? AND storage = ?");
+
+
+    QString insertRecsWithOtherConditionsSQL(
+                "INSERT INTO part_stock (part, quantity, storage, condition, lastUpdate) "
+                "SELECT s1.part, SUM(s1.quantity), :dst1 , s1.condition, strftime('%s','now') FROM part_stock s1 "
+                "WHERE s1.part = :part1 AND s1.storage <> :dst2 "
+                "AND s1.condition NOT IN "
+                "(SELECT s2.condition FROM part_stock s2 WHERE s2.part = :part2 AND s2.storage = :dst3) "
+                "GROUP BY s1.condition");
+
+
+    QString deleteRecsFromOtherStorages("DELETE FROM part_stock WHERE part = :part AND storage <> :dst");
+
+    bool res;
+    QSqlQuery query;
+    query.prepare(mergeQuantityExistingConditionSQL);
+    query.bindValue(0, partId);
+    query.bindValue(1, newStorage);   
+    res = query.exec();
+
+    if(!res){
+        qWarning()<<"Failed to execute stock merge query. Reason:"<<query.lastError();
+        qWarning()<<"Query:"<<query.lastQuery();
+        QMap<QString,QVariant> values = query.boundValues();
+        QMapIterator<QString, QVariant> it(values);
+        while (it.hasNext()) {
+            it.next();
+            qWarning() << it.key() << " = " << it.value();
+        }
+        database().rollback();
+        return false;
+    }
+
+    query.prepare(insertRecsWithOtherConditionsSQL);
+    query.bindValue(":dst1", newStorage);
+    query.bindValue(":part1", partId);
+    query.bindValue(":dst2", newStorage);
+    query.bindValue(":part2", partId);
+    query.bindValue(":dst3", newStorage);
+
+    res = query.exec();
+
+    if(!res){
+        qWarning()<<"Failed to execute stock insert query. Reason:"<<query.lastError();
+        database().rollback();
+        return false;
+    }
+
+    query.prepare(deleteRecsFromOtherStorages);
+    query.bindValue(":part", partId);
+    query.bindValue(":dst", newStorage);
+    res = query.exec();
+
+    if(!res){
+        qWarning()<<"Failed to execute stock delete query. Reason:"<<query.lastError();
+        database().rollback();
+        return false;
+    }
+    database().commit();
+    return true;
+
+    /*
+     *
+
+    UPDATE part_stock SET quantity=quantity +
+        (SELECT SUM(s1.quantity) FROM part_stock s1 WHERE s1.condition = part_stock.condition AND s1.storage <> part_stock.storage AND s1.part = part_stock.part)
+    WHERE part = 3 AND storage=4;
+
+    UPDATE part_stock SET quantity=quantity +
+        (SELECT SUM(s1.quantity) FROM part_stock s1 WHERE s1.condition = part_stock.condition AND s1.storage <> part_stock.storage AND s1.part = 3)
+    WHERE part = 3 AND storage=4;
+
+    UPDATE part_stock SET quantity = quantity + coalesce(0,
+    (SELECT SUM(s1.quantity) FROM part_stock s1 WHERE s1.condition = part_stock.condition AND s1.storage <> part_stock.storage AND s1.part = part_stock.part))
+    WHERE part_stock.part = 3 AND part_stock.storage = 4;
+
+    SELECT s1.part, s1.condition, SUM(s1.quantity) FROM part_stock s1 WHERE s1.condition = part_stock.condition AND s1.storage <> part_stock.storage AND s1.part = part_stock.part;
+
+    SELECT part_stock.condition, part_stock.quantity + coalesce(0, (SELECT SUM(s1.quantity) FROM part_stock s1 WHERE s1.condition = part_stock.condition AND s1.storage <> part_stock.storage AND s1.part = part_stock.part)) FROM part_stock WHERE part = 3 AND storage=4;
+
+
+    SELECT part_stock.quantity + (SELECT SUM(s1.quantity) FROM part_stock s1 WHERE s1.condition = part_stock.condition AND s1.storage <> part_stock.storage AND s1.part = part_stock.part) FROM part_stock WHERE part = 3 AND storage=7;
+    SELECT SUM(s1.quantity), s1.condition FROM part_stock s1 WHERE s1.part = 3 AND s1.storage <> 7 GROUP BY s1.condition;
+
+    INSERT INTO part_stock (part, quantity, storage, condition, lastUpdate)
+    SELECT s1.part, SUM(s1.quantity), 7, s1.condition, strftime('%s','now') FROM part_stock s1
+            WHERE s1.part = 3 AND s1.storage <> 7
+            AND s1.condition NOT IN (SELECT s2.condition FROM part_stock s2 WHERE s2.storage = 7)
+            GROUP BY s1.condition;
+
+    DELETE FROM part_stock WHERE part = 3 AND storage <> 7;
+    */
 }
 
