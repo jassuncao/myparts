@@ -11,14 +11,12 @@ private slots:
     void initTestCase();
     void testPartsMatchParsing();
     void testPartsMatchRequest();
-    void testPartParsing();
-    void testPartsGetRequest();
-    void _partsMatchResultFinished(int id, Octopart::PartsMatchResult res);
-    void _partsGetFinished(int id, Octopart::PartFull res);
+    void testPartGetParsing();
+    void testPartsGetRequest();   
+    void _requestFinished(const Octopart::RequestResult& result);
 private:
     QString _apiKey;
-    Octopart::PartsMatchResult _lastPartsMatchResult;
-    Octopart::PartFull _lastPart;
+    Octopart::RequestResult _lastRequestResult;
 };
 
 #endif // TESTOCTOPARTAPI_H

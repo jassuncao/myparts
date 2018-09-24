@@ -18,9 +18,15 @@ public:
     UrlQueryBuilder(const QString &queryString) :
         _urlQuery(queryString)
     {}
+
     void addQueryItem(const QString &key, const QString &value)
     {
         _urlQuery.addQueryItem(key, value);
+    }
+
+    void addQueryItem(const QString &key, const int value)
+    {
+        addQueryItem(key, QString::number(value));
     }
 
     QUrl url(){
@@ -40,9 +46,15 @@ public:
     UrlQueryBuilder(const QString &queryString) :
         _url(queryString)
     {}
+
     void addQueryItem(const QString &key, const QString &value)
     {
         _url.addQueryItem(key, value);
+    }
+
+    void addQueryItem(const QString &key, const int value)
+    {
+        addQueryItem(key, QString::number(value));
     }
 
     QUrl url(){
@@ -61,11 +73,13 @@ namespace Octopart {
 
 enum RequestType {
     PartsMatch,
+    PartsSearch,
     PartsGet
 };
 
+namespace {
 
-static QString readStringValue(const QJsonObject & json, const QString & key, bool * ok){
+ QString readStringValue(const QJsonObject & json, const QString & key, bool * ok){
     Q_ASSERT(ok);
     QString strValue;
     const QJsonValue & jsonValue = json[key];
@@ -80,7 +94,7 @@ static QString readStringValue(const QJsonObject & json, const QString & key, bo
     return strValue;
 }
 
-static int readIntValue(const QJsonObject & json, const QString & key, bool * ok){
+int readIntValue(const QJsonObject & json, const QString & key, bool * ok){
     Q_ASSERT(ok);
     int value(-1);
     const QJsonValue & jsonValue = json[key];
@@ -95,7 +109,7 @@ static int readIntValue(const QJsonObject & json, const QString & key, bool * ok
     return value;
 }
 
-static QVariant readNumberValue(const QJsonObject & json, const QString & key)
+QVariant readNumberValue(const QJsonObject & json, const QString & key)
 {
     const QJsonValue & jsonValue = json.value(key);
     if(jsonValue.isDouble()){
@@ -105,7 +119,7 @@ static QVariant readNumberValue(const QJsonObject & json, const QString & key)
 }
 
 ///Accepts a Datasheet or SpecValue and returns the first source name
-static QString readSourceName(const QJsonObject & json, bool * ok){
+QString readSourceName(const QJsonObject & json, bool * ok){
     Q_ASSERT(ok);
     const QJsonValue & attribution = json.value("attribution");
     if(attribution.isObject()){
@@ -120,6 +134,66 @@ static QString readSourceName(const QJsonObject & json, bool * ok){
     }
     *ok = false;
     return QString();
+}
+
+
+QString parseClientErrorResponse(const QByteArray &json)
+{
+    QJsonParseError localError;
+    QJsonDocument doc = QJsonDocument::fromJson(json, &localError);
+    if(doc.isEmpty()){
+        return localError.errorString();
+    }
+    return doc.object()["message"].toString();
+}
+
+PartsQueryResult processPartsMatchResult(const QJsonObject &json);
+
+
+
+PartsQueryResult processPartsMatchResult(const QJsonObject &json)
+{
+    bool ok = true;
+
+    const QString error = readStringValue(json, "error", &ok);
+    const int count = readIntValue(json, "hits", &ok);
+
+    if(!ok){
+        return PartsQueryResult(error);
+    }
+
+    const QJsonArray & items = json["items"].toArray();
+    QList<PartBrief> partList;
+    for (QJsonArray::const_iterator it = items.begin(); it != items.end(); ++it){
+        const QJsonObject item = (*it).toObject();
+        PartBrief part;
+        part.read(item);
+        partList.append(part);
+    }
+    return PartsQueryResult(error, count, partList);
+}
+
+}  // namespace
+
+PartsQueryResult parsePartsMatchResponse(const QJsonDocument &doc)
+{
+    const QJsonObject obj = doc.object();
+    const QJsonArray results =  obj["results"].toArray();
+    if(results.isEmpty()){
+        qWarning("Query returned no results");
+        return PartsQueryResult();
+    }
+
+    const QJsonObject partsMatchResultJson = results.at(0).toObject();
+    return processPartsMatchResult(partsMatchResultJson);
+}
+
+PartFull parsePartGetResponse(const QJsonDocument &doc)
+{
+
+    PartFull result;
+    result.read(doc.object());
+    return result;
 }
 
 
@@ -339,81 +413,24 @@ bool PartFull::read(const QJsonObject & json)
     return ok;
 }
 
-PartsMatchResult::PartsMatchResult()
+PartsQueryResult::PartsQueryResult() : _count(0)
 {
 }
 
-PartsMatchResult::~PartsMatchResult()
+PartsQueryResult::PartsQueryResult(const QString& error, int count, const QList<PartBrief> items) :
+    _error(error), _count(count), _items(items)
+{
+}
+
+PartsQueryResult::~PartsQueryResult()
 { }
 
-bool PartsMatchResult::read(const QJsonObject & json)
-{
-    bool ok = true;
-    _error = readStringValue(json, "error", &ok);
-    _count = readIntValue(json, "hits", &ok);
-    const QJsonValue & items = json["items"];
+RequestResult::RequestResult() : requestId(0), result(QVariant()), errorMessage(QString())
+{}
 
-    if(items.isArray()){
-
-        QJsonArray itemsArray = items.toArray();
-        for (int i = 0; i < itemsArray.size(); ++i) {
-            QJsonObject itemObject = itemsArray[i].toObject();
-            PartBrief part;
-            part.read(itemObject);
-            _items.append(part);
-        }
-    }
-    else{
-       qWarning("Items array missing");
-       ok = false;
-    }
-    return ok;
-}
-
-PartsMatchResult parsePartsMatchResult(const QByteArray &json, QJsonParseError *error)
-{
-    PartsMatchResult result;
-    QJsonParseError localError;
-    QJsonDocument doc = QJsonDocument::fromJson(json, &localError);
-    if(localError.error == QJsonParseError::NoError) {
-        QJsonObject obj = doc.object();
-        QJsonValue results =  obj["results"];
-        if(results.isArray()){
-            QJsonArray resArray = results.toArray();
-            if(resArray.size()>0){
-                result.read(resArray.at(0).toObject());
-            }
-            else{
-                qWarning("Query returned no results");
-            }
-        }
-    }
-    else{
-        qWarning("Error parsing PartsMatchResponse. %s", qPrintable(localError.errorString()));
-    }
-    if(error){
-        *error = localError;
-    }
-    return result;
-}
-
-PartFull parsePartObject(const QByteArray &json, QJsonParseError *error)
-{
-    PartFull result;
-    QJsonParseError localError;
-    QJsonDocument doc = QJsonDocument::fromJson(json, &localError);
-    if(localError.error == QJsonParseError::NoError) {
-        result.read(doc.object());
-    }
-    else{
-        qWarning("Error parsing PartObject. %s", qPrintable(localError.errorString()));
-        qWarning("Offset. %d", localError.offset);
-    }
-    if(error){
-        *error = localError;
-    }
-    return result;
-}
+RequestResult::RequestResult(int requestId, const QVariant & result, const QString& errorMsg) :
+    requestId(requestId), result(result), errorMessage(errorMsg)
+{}
 
 OctopartAPI::OctopartAPI(const QString & apiKey, QObject * parent) :
     QObject(parent),
@@ -424,14 +441,31 @@ OctopartAPI::OctopartAPI(const QString & apiKey, QObject * parent) :
     connect(_manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotReplyFinished(QNetworkReply*)));
 }
 
-QString OctopartAPI::parseClientErrorResponse(const QByteArray &json) const
+int OctopartAPI::partsSearch(const QString & text, int start, int limit)
 {
-    QJsonParseError localError;
-    QJsonDocument doc = QJsonDocument::fromJson(json, &localError);
-    if(localError.error == QJsonParseError::NoError) {
-        return doc.object()["message"].toString();
-    }
-    return QString();
+    UrlQueryBuilder queryBuilder(_apiUrl+"parts/search");
+    queryBuilder.addQueryItem("apikey", _apiKey);
+    queryBuilder.addQueryItem("q", text);
+    queryBuilder.addQueryItem("start", start);
+    queryBuilder.addQueryItem("limit", limit);
+    /*
+    queryBuilder.addQueryItem("include[]", "short_description");
+    queryBuilder.addQueryItem("show[]", "mpn");
+    queryBuilder.addQueryItem("show[]", "brand.name");
+    queryBuilder.addQueryItem("show[]", "octopart_url");
+    queryBuilder.addQueryItem("show[]", "short_description");
+    queryBuilder.addQueryItem("show[]", "uid");
+    */
+
+    QUrl url = queryBuilder.url();
+    qDebug()<<"Request URL "<<qPrintable(url.toEncoded());
+
+    int id = _requestCounter.fetchAndAddRelaxed(1);
+    QNetworkRequest request(url);
+    QNetworkReply *reply = _manager->get(request);
+    reply->setProperty("type", PartsSearch);
+    reply->setProperty("id", id);
+    return id;
 }
 
 int OctopartAPI::partsMatch(const QString & mpn, int start, int limit)
@@ -489,35 +523,56 @@ int OctopartAPI::partsGet(const QString & partUid)
 
 void OctopartAPI::slotReplyFinished(QNetworkReply *reply)
 {
-    QByteArray json = reply->readAll();
+    QString errorMsg;
+    QVariant result;
+
+    const int requestId = reply->property("id").toInt();
+    qDebug()<<"Processing reply for requestId "<<requestId;
+
+    QByteArray jsonData = reply->readAll();
     if(reply->error()){
-        QString errorMessage = parseClientErrorResponse(json);
-        if(errorMessage.isEmpty()){
-           errorMessage = reply->errorString();
+        qDebug("Response error %s", qPrintable(reply->errorString()));
+
+        errorMsg = parseClientErrorResponse(jsonData);
+        //Use the HTTP error message if the json error msg is unvailable
+        if(errorMsg.isEmpty()){
+           errorMsg = reply->errorString();
         }
-        qWarning("Request failed with error %s ", qPrintable(errorMessage));
+        qWarning("Request failed with error %s", qPrintable(errorMsg));
     }
     else {
-        int type = reply->property("type").toInt();
-        int id = reply->property("id").toInt();
-        qDebug()<<"Got reply with id "<<id;
-
-        if(type == PartsMatch){
-            QJsonParseError parseError;
-            PartsMatchResult result = parsePartsMatchResult(json, &parseError);
-            int count = result.count();
-            int size = result.items().size();
-            qDebug("Query returned %d of %d", size, count);
-            emit partsMatchResultFinished(id, result);
+        QJsonParseError parseError;
+        const QJsonDocument jsonDoc = QJsonDocument::fromJson(jsonData, &parseError);
+        if(jsonDoc.isEmpty()){
+            qWarning("Error parsing json response. %s", qPrintable(parseError.errorString()));
+            qWarning("Offset. %d", parseError.offset);
+            errorMsg = parseError.errorString();
         }
-        else if(type == PartsGet){
-            QJsonParseError parseError;
-            PartFull result = parsePartObject(json, &parseError);
-            emit partsGetFinished(id, result);
+        else {
+            const int type = reply->property("type").toInt();
+            switch (type) {
+            case PartsMatch:
+            {
+                const PartsQueryResult queryResult = parsePartsMatchResponse(jsonDoc);
+                result = QVariant::fromValue(queryResult);
+                break;
+            }
+            case PartsGet:
+            {
+                const PartFull partFull = parsePartGetResponse(jsonDoc);
+                result = QVariant::fromValue(partFull);
+                break;
+            }
+            default:
+                qWarning("Invalid reply type: %d", type);
+                errorMsg = QString("Invalid reply");
+                break;
+            }
         }
-
     }
     reply->deleteLater();
+    const RequestResult requestResult(requestId, result, errorMsg);
+    emit requestFinished(requestResult);
 }
 
 }

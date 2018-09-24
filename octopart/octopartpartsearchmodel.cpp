@@ -106,31 +106,43 @@ void OctopartPartSearchModel::searchByMpn(const QString & mpn)
     endResetModel();
 }
 
-void OctopartPartSearchModel::slotPartsMatchResultFinished(int id, Octopart::PartsMatchResult result)
+void OctopartPartSearchModel::searchByText(const QString & text)
 {
-    if(id != _activeRequest){
+
+}
+
+void OctopartPartSearchModel::slotRequestFinished(const RequestResult& requestResult)
+{
+
+    if(requestResult.requestId != _activeRequest){
         return;
     }
-
     _activeRequest = -1;
-    if(_state == Initializing){
-        _parts.clear();
-        _hits = result.count();
-        _rows = qMin(_hits, 100);
-        _state = Ready;
-        if(_hits == 0){
-            emit noMatchesFound();
+    if(requestResult.result.isValid()){
+        const PartsQueryResult result = qvariant_cast<PartsQueryResult>(requestResult.result);
+        if(_state == Initializing){
+            _parts.clear();
+            _hits = result.count();
+            _rows = qMin(_hits, 100);
+            _state = Ready;
+            if(_hits == 0){
+                emit noMatchesFound();
+            }
+        }
+
+        if(result.items().size() > 0){
+            int first = _parts.size();
+            int last = first + result.items().size() - 1;
+            beginInsertRows(QModelIndex(), first, last);
+            _parts.append(result.items());
+            endInsertRows();
         }
     }
-
-    if(result.items().size() > 0){
-        int first = _parts.size();
-        int last = first + result.items().size() - 1;
-        beginInsertRows(QModelIndex(), first, last);
-        _parts.append(result.items());
-        endInsertRows();
+    else{
+        //TODO: Report possible error
     }
-    emit ready();
+
+    //emit ready();
 
 }
 
@@ -149,8 +161,8 @@ void OctopartPartSearchModel::fetchMore(const QModelIndex &)
         start = _parts.size();
         limit = qMin(10, remainder);
     }
-
-    _activeRequest = _api->partsMatch(_query, start, limit);
+    _activeRequest = _api->partsSearch(_query, start, limit);
+    //_activeRequest = _api->partsMatch(_query, start, limit);
     emit busy();
 }
 

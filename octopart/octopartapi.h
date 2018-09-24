@@ -121,48 +121,57 @@ private:
     QList<Offer> _offers;
 };
 
-class PartsMatchResult {
+class PartsQueryResult {
 public:
-    explicit PartsMatchResult();
-    virtual ~PartsMatchResult();
-    bool read(const QJsonObject & json);
+    explicit PartsQueryResult();
+    explicit PartsQueryResult(const QString& error, int count=0, const QList<PartBrief> items = QList<PartBrief>());
+    virtual ~PartsQueryResult();
     inline int count() const { return _count;}
     inline QList<PartBrief> items() const { return _items;}
     inline QString error() const { return _error;}
-private:
-    int _start;
-    int _limit;
+private:   
+    QString _error;
     int _count;
     QList<PartBrief> _items;
-    QString _error;
 };
 
-PartsMatchResult parsePartsMatchResult(const QByteArray &json, QJsonParseError *error);
-PartFull parsePartObject(const QByteArray &json, QJsonParseError *error);
+struct RequestResult {
+    int requestId;
+    QVariant result;
+    QString errorMessage;
+    RequestResult();
+    RequestResult(int requestId, const QVariant & result, const QString& errorMsg = QString());
+};
 
 class OctopartAPI : public QObject
 {
     Q_OBJECT
 public:
     OctopartAPI(const QString &apiKey, QObject * parent = 0);
+    int partsSearch(const QString & text, int start=0, int limit=10);
     int partsMatch(const QString & mpn, int start=0, int limit=10);
     int partsGet(const QString & partUid);
 signals:
-    void partsMatchResultFinished(int id, Octopart::PartsMatchResult result);
+    void partsMatchResultFinished(int id, Octopart::PartsQueryResult result);
     void partsGetFinished(int id, Octopart::PartFull result);
+    void requestFinished(const Octopart::RequestResult& result);
 private slots:
     void slotReplyFinished(QNetworkReply *reply);
 private:
-    QString parseClientErrorResponse(const QByteArray &json) const;
+    void handlePartsMatchResponse(const QByteArray &json);
     QString _apiUrl;
     QString _apiKey;
     QNetworkAccessManager * _manager;
     QAtomicInt _requestCounter;
 };
 
+PartsQueryResult parsePartsMatchResponse(const QJsonDocument &doc);
+PartFull parsePartGetResponse(const QJsonDocument &doc);
 
 }
 
-Q_DECLARE_METATYPE(Octopart::PartsMatchResult)
+Q_DECLARE_METATYPE(Octopart::PartsQueryResult)
+Q_DECLARE_METATYPE(Octopart::RequestResult)
+Q_DECLARE_METATYPE(Octopart::PartFull)
 
 #endif // OCTOPARTAPI_H

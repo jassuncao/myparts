@@ -33,12 +33,14 @@ public:
     int hits() const { return _hits;}
 signals:
     void busy();
-    void ready();
+    //void ready();
     void noMatchesFound();
 public slots:
+    void searchByText(const QString & text);
     void searchByMpn(const QString & mpn);
 private slots:
-    void slotPartsMatchResultFinished(int id, Octopart::PartsMatchResult result);
+    void slotRequestFinished(const RequestResult& requestResult);
+    //void slotPartsMatchResultFinished(int id, Octopart::PartsQueryResult result);
 private:
     enum ModelState {
         Initializing,
