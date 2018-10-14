@@ -23,10 +23,24 @@ lessThan(QT_MAJOR_VERSION, 5){
 }
 
 SOURCES += octopartapi.cpp \
-    octopartpartsearchmodel.cpp
+    octopartpartsearchmodel.cpp \
+    datasheet.cpp \
+    partspec.cpp \
+    part.cpp \
+    offer.cpp \
+    seller.cpp \
+    partsnippet.cpp \
+    partsqueryresult.cpp
 
 HEADERS += octopartapi.h \
-    octopartpartsearchmodel.h
+    octopartpartsearchmodel.h \
+    datasheet.h \
+    partspec.h \
+    part.h \
+    offer.h \
+    seller.h \
+    partsnippet.h \
+    partsqueryresult.h
 unix {
     target.path = /usr/lib
     INSTALLS += target

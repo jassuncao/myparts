@@ -26,7 +26,8 @@ DEFINES += SRCDIR=\\\"$$PWD/\\\"
 DISTFILES += \
     octopart_query_response.json \
     api_key.txt \
-    octopart_part_response.json
+    octopart_part_response.json \
+    octopart_search_response.json
 
 HEADERS += \
     testoctopartapi.h

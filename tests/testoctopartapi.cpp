@@ -26,9 +26,27 @@ void TestOctopartApi::testPartsMatchParsing()
     QJsonParseError parseError;
     const QJsonDocument jsonDoc = QJsonDocument::fromJson(contents, &parseError);
     Q_ASSERT(QJsonParseError::NoError == parseError.error);
-    Octopart::PartsQueryResult res = Octopart::parsePartsMatchResponse(jsonDoc);
+    Octopart::PartsQueryResult res = Octopart::OctopartAPI::parsePartsMatchResponse(jsonDoc);
     QCOMPARE(res.count(), 5);
     QCOMPARE(res.items().size(), 3);
+
+}
+
+void TestOctopartApi::testPartsSearchParsing()
+{
+
+    QFile file("://octopart_search_response.json");
+    if(!file.open(QIODevice::ReadOnly | QIODevice::Text)){
+        QFAIL("JSON test resource not available");
+    }
+    QByteArray contents = file.readAll();
+    //qDebug()<<"Contents "<<qPrintable(contents);
+    QJsonParseError parseError;
+    const QJsonDocument jsonDoc = QJsonDocument::fromJson(contents, &parseError);
+    Q_ASSERT(QJsonParseError::NoError == parseError.error);
+    Octopart::PartsQueryResult res = Octopart::OctopartAPI::parsePartsSearchResponse(jsonDoc);
+    QCOMPARE(res.count(), 199);
+    QCOMPARE(res.items().size(), 10);
 
 }
 
@@ -42,8 +60,8 @@ void TestOctopartApi::testPartsMatchRequest()
     QTest::qWait(1000);
 
     QCOMPARE(spy.count(), 1);
-    QCOMPARE(_lastRequestResult.requestId, id);
-    const Octopart::PartsQueryResult queryResult = qvariant_cast<Octopart::PartsQueryResult>(_lastRequestResult.result);
+    QCOMPARE(_lastQueryResponse.requestId, id);
+    const Octopart::PartsQueryResult queryResult = _lastQueryResponse.result;
     QCOMPARE(queryResult.count(), 5);
     QCOMPARE(queryResult.items().size(), 3);
 }
@@ -60,7 +78,7 @@ void TestOctopartApi::testPartGetParsing()
     const QJsonDocument jsonDoc = QJsonDocument::fromJson(contents, &parseError);
     Q_ASSERT(QJsonParseError::NoError == parseError.error);
 
-    Octopart::PartFull res = Octopart::parsePartGetResponse(jsonDoc);
+    Octopart::Part res = Octopart::OctopartAPI::parsePartGetResponse(jsonDoc);
     QCOMPARE(res.brandName(), QString("Texas Instruments"));
 
 }
@@ -73,13 +91,19 @@ void TestOctopartApi::testPartsGetRequest()
     int id = api.partsGet("7a97b39d1223a550");
     QTest::qWait(1000);
     QCOMPARE(spy.count(), 1);
-    QCOMPARE(_lastRequestResult.requestId, id);
-    const Octopart::PartFull partData = qvariant_cast<Octopart::PartFull>(_lastRequestResult.result);
+    QCOMPARE(_lastPartResponse.requestId, id);
+    const Octopart::Part partData = _lastPartResponse.result;
     QCOMPARE(partData.uid(), QString("7a97b39d1223a550"));
     QCOMPARE(partData.offers().at(0).seller().name(), QString("Digi-Key"));
 }
 
-void TestOctopartApi::_requestFinished(const Octopart::RequestResult& result)
+void TestOctopartApi::_requestFinished(const Octopart::PartsQueryResponse &response)
 {
-    _lastRequestResult = result;
+    _lastQueryResponse = response;
 }
+
+void TestOctopartApi::_requestFinished(const Octopart::PartFullResponse &response)
+{
+    _lastPartResponse = response;
+}
+

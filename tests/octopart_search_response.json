@@ -1,0 +1,293 @@
+
+{
+  "__class__": "SearchResponse",
+  "facet_results": {
+    "fields": {},
+    "queries": {}
+  },
+  "hits": 199,
+  "msec": 75,
+  "request": {
+    "__class__": "SearchRequest",
+    "facet": {
+      "fields": {},
+      "queries": []
+    },
+    "filter": {
+      "fields": {},
+      "queries": []
+    },
+    "limit": 10,
+    "q": "NE555",
+    "sortby": "score desc",
+    "start": 0,
+    "stats": {}
+  },
+  "results": [
+    {
+      "__class__": "SearchResult",
+      "item": {
+        "__class__": "Part",
+        "brand": {
+          "__class__": "Brand",
+          "homepage_url": "http://ti.com",
+          "name": "Texas Instruments",
+          "uid": "2239e3330e2df5fe"
+        },
+        "manufacturer": {
+          "__class__": "Manufacturer",
+          "homepage_url": "http://ti.com",
+          "name": "Texas Instruments",
+          "uid": "40f985f368ed933e"
+        },
+        "mpn": "NE555D",
+        "octopart_url": "https://octopart.com/ne555d-texas+instruments-19922",
+        "redirected_uids": [
+          "5e48940d6095818f",
+          "fc9d3519a0fa235a"
+        ],
+        "short_description": "Single Precision Timer 8-SOIC 0 to 70",
+        "uid": "7a97b39d1223a550"
+      },
+      "snippet": "Single Precision Timer 8-SOIC 0 to 70"
+    },
+    {
+      "__class__": "SearchResult",
+      "item": {
+        "__class__": "Part",
+        "brand": {
+          "__class__": "Brand",
+          "homepage_url": "http://ti.com",
+          "name": "Texas Instruments",
+          "uid": "2239e3330e2df5fe"
+        },
+        "manufacturer": {
+          "__class__": "Manufacturer",
+          "homepage_url": "http://ti.com",
+          "name": "Texas Instruments",
+          "uid": "40f985f368ed933e"
+        },
+        "mpn": "NE555P",
+        "octopart_url": "https://octopart.com/ne555p-texas+instruments-55400998",
+        "redirected_uids": [
+          "b47a7dfd8dbb6bbd",
+          "e4b62daf3d1c3b71"
+        ],
+        "short_description": "555 Type, Timer/Oscillator (Single) Through Hole 8-PDIP",
+        "uid": "8f734534f03350b4"
+      },
+      "snippet": "555 Type, Timer/Oscillator (Single) Through Hole 8-PDIP"
+    },
+    {
+      "__class__": "SearchResult",
+      "item": {
+        "__class__": "Part",
+        "brand": {
+          "__class__": "Brand",
+          "homepage_url": "http://ti.com",
+          "name": "Texas Instruments",
+          "uid": "2239e3330e2df5fe"
+        },
+        "manufacturer": {
+          "__class__": "Manufacturer",
+          "homepage_url": "http://ti.com",
+          "name": "Texas Instruments",
+          "uid": "40f985f368ed933e"
+        },
+        "mpn": "NE555DR",
+        "octopart_url": "https://octopart.com/ne555dr-texas+instruments-516581",
+        "redirected_uids": [
+          "2e02e4ea251af1c5",
+          "f48e3e66ff952b49"
+        ],
+        "short_description": "555 Type, Timer/Oscillator (Single) Surface Mount 8-SOIC",
+        "uid": "d4781d7510fb0bbf"
+      },
+      "snippet": "555 Type, Timer/Oscillator (Single) Surface Mount 8-SOIC"
+    },
+    {
+      "__class__": "SearchResult",
+      "item": {
+        "__class__": "Part",
+        "brand": {
+          "__class__": "Brand",
+          "homepage_url": "http://ti.com",
+          "name": "Texas Instruments",
+          "uid": "2239e3330e2df5fe"
+        },
+        "manufacturer": {
+          "__class__": "Manufacturer",
+          "homepage_url": "http://ti.com",
+          "name": "Texas Instruments",
+          "uid": "40f985f368ed933e"
+        },
+        "mpn": "NE555PSR",
+        "octopart_url": "https://octopart.com/ne555psr-texas+instruments-46627185",
+        "redirected_uids": [
+          "f6ed3fe0326d292a"
+        ],
+        "short_description": "Single Precision Timer 8-SO 0 to 70",
+        "uid": "e3ab2866bfbc3c6c"
+      },
+      "snippet": "Single Precision Timer 8-SO 0 to 70"
+    },
+    {
+      "__class__": "SearchResult",
+      "item": {
+        "__class__": "Part",
+        "brand": {
+          "__class__": "Brand",
+          "homepage_url": "http://diodes.com/",
+          "name": "Diodes Inc.",
+          "uid": "09e2c8e82549de25"
+        },
+        "manufacturer": {
+          "__class__": "Manufacturer",
+          "homepage_url": "http://diodes.com/",
+          "name": "Diodes Inc.",
+          "uid": "bad47fde927f6913"
+        },
+        "mpn": "NE555S-13",
+        "octopart_url": "https://octopart.com/ne555s-13-diodes+inc.-21835691",
+        "redirected_uids": [
+          "0edac6a8c709d11d",
+          "ef3c2244e6fa30fb"
+        ],
+        "short_description": "Standard Timer Single 8-Pin SO T/R",
+        "uid": "6651ae166c9cb996"
+      },
+      "snippet": "Standard Timer Single 8-Pin SO T/R"
+    },
+    {
+      "__class__": "SearchResult",
+      "item": {
+        "__class__": "Part",
+        "brand": {
+          "__class__": "Brand",
+          "homepage_url": "http://ti.com",
+          "name": "Texas Instruments",
+          "uid": "2239e3330e2df5fe"
+        },
+        "manufacturer": {
+          "__class__": "Manufacturer",
+          "homepage_url": "http://ti.com",
+          "name": "Texas Instruments",
+          "uid": "40f985f368ed933e"
+        },
+        "mpn": "NE555PW",
+        "octopart_url": "https://octopart.com/ne555pw-texas+instruments-516577",
+        "redirected_uids": [
+          "d81e11edd29e07d9"
+        ],
+        "short_description": "Single Precision Timer 8-TSSOP 0 to 70",
+        "uid": "86d74fda42505910"
+      },
+      "snippet": "Single Precision Timer 8-TSSOP 0 to 70"
+    },
+    {
+      "__class__": "SearchResult",
+      "item": {
+        "__class__": "Part",
+        "brand": {
+          "__class__": "Brand",
+          "homepage_url": "http://ti.com",
+          "name": "Texas Instruments",
+          "uid": "2239e3330e2df5fe"
+        },
+        "manufacturer": {
+          "__class__": "Manufacturer",
+          "homepage_url": "http://ti.com",
+          "name": "Texas Instruments",
+          "uid": "40f985f368ed933e"
+        },
+        "mpn": "NE555PWR",
+        "octopart_url": "https://octopart.com/ne555pwr-texas+instruments-2872058",
+        "redirected_uids": [
+          "77f9bfd23404a83e"
+        ],
+        "short_description": "Single Precision Timer 8-TSSOP 0 to 70",
+        "uid": "4e068727b99a91c1"
+      },
+      "snippet": "Single Precision Timer 8-TSSOP 0 to 70"
+    },
+    {
+      "__class__": "SearchResult",
+      "item": {
+        "__class__": "Part",
+        "brand": {
+          "__class__": "Brand",
+          "homepage_url": "http://ti.com",
+          "name": "Texas Instruments",
+          "uid": "2239e3330e2df5fe"
+        },
+        "manufacturer": {
+          "__class__": "Manufacturer",
+          "homepage_url": "http://ti.com",
+          "name": "Texas Instruments",
+          "uid": "40f985f368ed933e"
+        },
+        "mpn": "NE555DRG4",
+        "octopart_url": "https://octopart.com/ne555drg4-texas+instruments-841604",
+        "redirected_uids": [],
+        "short_description": "Single Precision Timer 8-SOIC 0 to 70",
+        "uid": "1930d036ebd2c6f7"
+      },
+      "snippet": "Single Precision Timer 8-SOIC 0 to 70"
+    },
+    {
+      "__class__": "SearchResult",
+      "item": {
+        "__class__": "Part",
+        "brand": {
+          "__class__": "Brand",
+          "homepage_url": "http://www.st.com",
+          "name": "STMicroelectronics",
+          "uid": "80894183ac8c574e"
+        },
+        "manufacturer": {
+          "__class__": "Manufacturer",
+          "homepage_url": "http://www.st.com",
+          "name": "STMicroelectronics",
+          "uid": "e9a52cafc1a03a62"
+        },
+        "mpn": "NE555DT",
+        "octopart_url": "https://octopart.com/ne555dt-stmicroelectronics-44104215",
+        "redirected_uids": [
+          "76b7beda55aaa970",
+          "bcfd75f07877633a"
+        ],
+        "short_description": "IC Osc Mono Timing 500KHZ 8SOIC",
+        "uid": "e57a2ed03a0b3abd"
+      },
+      "snippet": "IC Osc Mono Timing 500KHZ 8SOIC"
+    },
+    {
+      "__class__": "SearchResult",
+      "item": {
+        "__class__": "Part",
+        "brand": {
+          "__class__": "Brand",
+          "homepage_url": "http://ti.com",
+          "name": "Texas Instruments",
+          "uid": "2239e3330e2df5fe"
+        },
+        "manufacturer": {
+          "__class__": "Manufacturer",
+          "homepage_url": "http://ti.com",
+          "name": "Texas Instruments",
+          "uid": "40f985f368ed933e"
+        },
+        "mpn": "NE555DG4",
+        "octopart_url": "https://octopart.com/ne555dg4-texas+instruments-883042",
+        "redirected_uids": [],
+        "short_description": "Single Precision Timer 8-SOIC 0 to 70",
+        "uid": "fcbc35bba0b8237b"
+      },
+      "snippet": "Single Precision Timer 8-SOIC 0 to 70"
+    }
+  ],
+  "spec_metadata": {},
+  "stats_results": {},
+  "user_country": "PT",
+  "user_currency": "EUR"
+}

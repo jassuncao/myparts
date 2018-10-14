@@ -73,7 +73,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(model, SIGNAL(busy()), this, SLOT(slotBusy()));
     connect(model, SIGNAL(ready()), this, SLOT(slotReady()));
     connect(_tableView, SIGNAL(activated(QModelIndex)), this, SLOT(slotPartSelected(QModelIndex)));
-    connect(_api, SIGNAL(partsGetFinished(int,Octopart::PartFull)), this, SLOT(slotPartsGetFinished(int,Octopart::PartFull)));
+    //connect(_api, SIGNAL(requestFinished(Octopart::RequestResult)), this, SLOT(slotRequestFinished(Octopart::RequestResult)));
+    //connect(_api, SIGNAL(partsGetFinished(int,Octopart::PartFull)), this, SLOT(slotPartsGetFinished(int,Octopart::PartFull)));
+    connect(_api, SIGNAL(requestFinished(Octopart::PartFullResponse)),this, SLOT(slotPartsGetFinished(Octopart::PartFullResponse)));
 }
 
 MainWindow::~MainWindow()
@@ -83,6 +85,7 @@ MainWindow::~MainWindow()
 void MainWindow::slotSearch()
 {
     _logViewer->clear();
+    //model->searchByText(lineEdit->text());
     model->searchByMpn(lineEdit->text());
 }
 
@@ -109,9 +112,10 @@ void MainWindow::slotPartSelected(const QModelIndex &index)
     }
 }
 
-void MainWindow::slotPartsGetFinished(int id, Octopart::PartFull result)
+void MainWindow::slotPartsGetFinished(const Octopart::PartFullResponse& response)
 {
-    QList<Datasheet> datasheets = result.datasheets();
+
+    QList<Datasheet> datasheets = response.result.datasheets();
     _datasheetsModel->setRowCount(0);
 
     for(int i=0; i<datasheets.size(); ++i){
@@ -123,7 +127,7 @@ void MainWindow::slotPartsGetFinished(int id, Octopart::PartFull result)
         _datasheetsModel->appendRow(items);
     }
 
-    QList<Offer> offers = result.offers();
+    QList<Offer> offers = response.result.offers();
     _offersModel->setRowCount(0);
 
     for(int i=0; i<offers.size(); ++i){
@@ -137,7 +141,7 @@ void MainWindow::slotPartsGetFinished(int id, Octopart::PartFull result)
         _offersModel->appendRow(items);
     }
 
-    QList<PartSpec> specs = result.specs();
+    QList<PartSpec> specs = response.result.specs();
     _specsModel->setRowCount(0);
 
     for(int i=0; i<specs.size(); ++i){

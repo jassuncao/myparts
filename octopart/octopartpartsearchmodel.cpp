@@ -10,8 +10,8 @@ OctopartPartSearchModel::OctopartPartSearchModel(OctopartAPI * api, QObject *par
     _activeRequest(-1),
     _state(Initializing)
 {
-
-    connect(_api, SIGNAL(partsMatchResultFinished(int,Octopart::PartsMatchResult)), this, SLOT(slotPartsMatchResultFinished(int,Octopart::PartsMatchResult)));
+    connect(_api, SIGNAL(requestFinished(Octopart::PartsQueryResponse)), this, SLOT(slotRequestFinished(Octopart::PartsQueryResponse)));
+    connect(_api, SIGNAL(requestError(Octopart::ErrorResponse)), this, SLOT(slotRequestError(Octopart::ErrorResponse)));
 }
 
 OctopartPartSearchModel::~OctopartPartSearchModel()
@@ -70,7 +70,7 @@ QVariant OctopartPartSearchModel::data(const QModelIndex &index, int role) const
         return QVariant();
 
     if (role == Qt::DisplayRole) {
-        const PartBrief & part = _parts.at(index.row());
+        const PartSnippet & part = _parts.at(index.row());
         int column = index.column();
         switch (column) {
         case ColumnMpn:
@@ -111,39 +111,45 @@ void OctopartPartSearchModel::searchByText(const QString & text)
 
 }
 
-void OctopartPartSearchModel::slotRequestFinished(const RequestResult& requestResult)
+void OctopartPartSearchModel::slotRequestFinished(const PartsQueryResponse &response)
 {
 
-    if(requestResult.requestId != _activeRequest){
+    if(response.requestId != _activeRequest){
         return;
     }
     _activeRequest = -1;
-    if(requestResult.result.isValid()){
-        const PartsQueryResult result = qvariant_cast<PartsQueryResult>(requestResult.result);
-        if(_state == Initializing){
-            _parts.clear();
-            _hits = result.count();
-            _rows = qMin(_hits, 100);
-            _state = Ready;
-            if(_hits == 0){
-                emit noMatchesFound();
-            }
-        }
+    emit ready();
 
-        if(result.items().size() > 0){
-            int first = _parts.size();
-            int last = first + result.items().size() - 1;
-            beginInsertRows(QModelIndex(), first, last);
-            _parts.append(result.items());
-            endInsertRows();
+    const PartsQueryResult result = response.result;
+    if(_state == Initializing){
+        _parts.clear();
+        _hits = result.count();
+        _rows = qMin(_hits, 100);
+        _state = Ready;
+        if(_hits == 0){
+            emit noMatchesFound();
         }
     }
-    else{
-        //TODO: Report possible error
+
+    if(result.items().size() > 0){
+        int first = _parts.size();
+        int last = first + result.items().size() - 1;
+        beginInsertRows(QModelIndex(), first, last);
+        _parts.append(result.items());
+        endInsertRows();
     }
 
-    //emit ready();
 
+}
+
+void OctopartPartSearchModel::slotRequestError(const Octopart::ErrorResponse& response)
+{
+    if(response.requestId != _activeRequest){
+        return;
+    }
+    _activeRequest = -1;
+    emit ready();
+    emit error(response.result);
 }
 
 void OctopartPartSearchModel::fetchMore(const QModelIndex &)

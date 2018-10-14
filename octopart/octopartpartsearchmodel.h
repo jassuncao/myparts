@@ -5,6 +5,7 @@
 #include <QVector>
 #include <QList>
 #include "octopartapi.h"
+#include "partsnippet.h"
 
 namespace Octopart {
 
@@ -33,13 +34,15 @@ public:
     int hits() const { return _hits;}
 signals:
     void busy();
-    //void ready();
+    void ready();
     void noMatchesFound();
+    void error(const QString &errorMsg);
 public slots:
     void searchByText(const QString & text);
     void searchByMpn(const QString & mpn);
 private slots:
-    void slotRequestFinished(const RequestResult& requestResult);
+    void slotRequestFinished(const Octopart::PartsQueryResponse& response);
+    void slotRequestError(const Octopart::ErrorResponse& response);
     //void slotPartsMatchResultFinished(int id, Octopart::PartsQueryResult result);
 private:
     enum ModelState {
@@ -52,7 +55,7 @@ private:
     int _rows;//The maximum number of parts we can fetch (up to 100)
     QVector<QHash<int, QVariant> > _headers;
     int _activeRequest;
-    QList<PartBrief> _parts;
+    QList<PartSnippet> _parts;
     ModelState _state;
     QString _query;
 };

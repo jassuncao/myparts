@@ -10,13 +10,16 @@ class TestOctopartApi : public QObject
 private slots:
     void initTestCase();
     void testPartsMatchParsing();
+    void testPartsSearchParsing();
     void testPartsMatchRequest();
     void testPartGetParsing();
     void testPartsGetRequest();   
-    void _requestFinished(const Octopart::RequestResult& result);
+    void _requestFinished(const Octopart::PartsQueryResponse& response);
+    void _requestFinished(const Octopart::PartFullResponse& response);
 private:
     QString _apiKey;
-    Octopart::RequestResult _lastRequestResult;
+    Octopart::PartsQueryResponse _lastQueryResponse;
+    Octopart::PartFullResponse _lastPartResponse;
 };
 
 #endif // TESTOCTOPARTAPI_H

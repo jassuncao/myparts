@@ -29,7 +29,7 @@ private slots:
     void slotReady();
     void slotSearch();
     void slotPartSelected(const QModelIndex &index);
-    void slotPartsGetFinished(int id, Octopart::PartFull result);
+    void slotPartsGetFinished(const Octopart::PartFullResponse &response);
 private:
     Octopart::OctopartAPI * _api;
     QTextBrowser * _logViewer;
