@@ -13,6 +13,7 @@
 #include <QGraphicsDropShadowEffect>
 #include <QScrollBar>
 #include <QStandardItemModel>
+#include "qsearchlineedit2.h"
 
 using namespace Octopart;
 
@@ -25,7 +26,8 @@ MainWindow::MainWindow(QWidget *parent)
     _tableView->setModel(model);
     model->setHeaderData(OctopartPartSearchModel::ColumnMpn, Qt::Horizontal, "MPN");
 
-    lineEdit = new QLineEdit;
+    lineEdit = new QSearchLineEdit2(this);
+    lineEdit->setPlaceholderText("Search");
 
     _progress = new QProgressIndicator;
     _logViewer = new QTextBrowser;
@@ -93,11 +95,13 @@ void MainWindow::slotBusy()
 {        
     _progress->startAnimation();
     _logViewer->append("Busy...");
+    lineEdit->setBusy(true);
 }
 
 void MainWindow::slotReady()
 {  
     _progress->stopAnimation();
+    lineEdit->setBusy(false);
     _logViewer->append("Ready.");    
 }
 

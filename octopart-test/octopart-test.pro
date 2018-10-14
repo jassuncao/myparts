@@ -16,10 +16,14 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    qtableviewwithprogress.cpp
+    qtableviewwithprogress.cpp \
+    octopartimportdialog.cpp \
+    qsearchlineedit2.cpp
 
 HEADERS  += mainwindow.h \
-    qtableviewwithprogress.h
+    qtableviewwithprogress.h \
+    octopartimportdialog.h \
+    qsearchlineedit2.h
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../octopart/release/ -loctopart
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../octopart/debug/ -loctopart
@@ -44,3 +48,9 @@ lessThan(QT_MAJOR_VERSION, 5){
  else:unix: LIBS += -L$$OUT_PWD/../qjson-backport/ -lqjson-backport
 
 }
+
+FORMS += \
+    octopartimportdialog.ui
+
+RESOURCES += \
+    resources.qrc

@@ -12,6 +12,7 @@ class QProgressIndicator;
 class QTableView;
 class QGraphicsEffect;
 class QStandardItemModel;
+class QSearchLineEdit2;
 
 namespace Octopart {
     class OctopartPartSearchModel;
@@ -33,7 +34,8 @@ private slots:
 private:
     Octopart::OctopartAPI * _api;
     QTextBrowser * _logViewer;
-    QLineEdit * lineEdit;
+    QSearchLineEdit2 * lineEdit;
+
     Octopart::OctopartPartSearchModel * model;
     QTableView * _tableView;
 

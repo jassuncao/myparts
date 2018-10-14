@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>find.png</file>
+        <file>edit-clear-locationbar-rtl.png</file>
+    </qresource>
+</RCC>
