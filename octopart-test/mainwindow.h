@@ -13,6 +13,7 @@ class QTableView;
 class QGraphicsEffect;
 class QStandardItemModel;
 class QSearchLineEdit2;
+class QSearchLineEdit;
 
 namespace Octopart {
     class OctopartPartSearchModel;
@@ -34,7 +35,7 @@ private slots:
 private:
     Octopart::OctopartAPI * _api;
     QTextBrowser * _logViewer;
-    QSearchLineEdit2 * lineEdit;
+    QSearchLineEdit * lineEdit;
 
     Octopart::OctopartPartSearchModel * model;
     QTableView * _tableView;

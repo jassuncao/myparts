@@ -2,5 +2,7 @@
     <qresource prefix="/icons">
         <file>find.png</file>
         <file>edit-clear-locationbar-rtl.png</file>
+        <file>stop.png</file>
     </qresource>
+    <qresource prefix="/"/>
 </RCC>

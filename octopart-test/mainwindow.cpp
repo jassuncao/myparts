@@ -7,13 +7,14 @@
 #include <QPushButton>
 #include "octopartpartsearchmodel.h"
 #include "qtableviewwithprogress.h"
-#include <QProgressIndicator>
 #include <QGraphicsBlurEffect>
 #include <QGraphicsOpacityEffect>
 #include <QGraphicsDropShadowEffect>
 #include <QScrollBar>
 #include <QStandardItemModel>
-#include "qsearchlineedit2.h"
+#include <QSearchLineEdit>
+#include <QProgressIndicator>
+
 
 using namespace Octopart;
 
@@ -26,8 +27,10 @@ MainWindow::MainWindow(QWidget *parent)
     _tableView->setModel(model);
     model->setHeaderData(OctopartPartSearchModel::ColumnMpn, Qt::Horizontal, "MPN");
 
-    lineEdit = new QSearchLineEdit2(this);
+    lineEdit = new QSearchLineEdit(this);
     lineEdit->setPlaceholderText("Search");
+    lineEdit->setSearchIcon(QIcon(QString(":/icons/find")));    
+    lineEdit->setClearIcon(QIcon(QString(":/icons/edit-clear-locationbar-rtl")));
 
     _progress = new QProgressIndicator;
     _logViewer = new QTextBrowser;
@@ -116,6 +119,9 @@ void MainWindow::slotPartSelected(const QModelIndex &index)
     }
 }
 
+static const QString priceFormat("%1 (%2)");
+
+
 void MainWindow::slotPartsGetFinished(const Octopart::PartFullResponse& response)
 {
 
@@ -136,12 +142,15 @@ void MainWindow::slotPartsGetFinished(const Octopart::PartFullResponse& response
 
     for(int i=0; i<offers.size(); ++i){
         const Offer offer = offers.at(i);
+        QString price = priceFormat.arg(offer.moqPrice().toString()).arg(offer.currency());
+
         QList<QStandardItem*> items;
         items.append(new QStandardItem(offer.seller().name()));
         items.append(new QStandardItem(offer.sku()));
         items.append(new QStandardItem(offer.packaging()));
         items.append(new QStandardItem(offer.moq().toString()));
-        items.append(new QStandardItem(offer.moqPrice().toString()));
+        items.append(new QStandardItem(price));
+
         _offersModel->appendRow(items);
     }
 

@@ -265,6 +265,7 @@ int OctopartAPI::partsSearch(const QString & text, int start, int limit)
     QNetworkReply *reply = _manager->get(request);
     reply->setProperty("type", PartsSearch);
     reply->setProperty("id", id);
+    _activeRequests.append(reply);
     return id;
 }
 
@@ -297,7 +298,8 @@ int OctopartAPI::partsMatch(const QString & mpn, int start, int limit)
     QNetworkRequest request(url);    
     QNetworkReply *reply = _manager->get(request);
     reply->setProperty("type", PartsMatch);
-    reply->setProperty("id", id);
+    reply->setProperty("id", id);    
+    _activeRequests.append(reply);
     return id;
 }
 
@@ -318,21 +320,41 @@ int OctopartAPI::partsGet(const QString & partUid)
     QNetworkReply *reply = _manager->get(request);
     reply->setProperty("type", PartsGet);
     reply->setProperty("id", id);
+    _activeRequests.append(reply);
     return id;
+}
+
+void OctopartAPI::abortRequest(const int requestId)
+{
+    for (int i = 0; i < _activeRequests.size(); ++i) {
+        QNetworkReply* reply = _activeRequests.at(i);
+        if(reply->property("id").toInt() == requestId){
+            reply->abort();
+        }
+    }
+}
+
+void OctopartAPI::abortAll()
+{
+    for (int i = 0; i < _activeRequests.size(); ++i) {
+        QNetworkReply* reply = _activeRequests.at(i);
+        reply->abort();
+    }
 }
 
 void OctopartAPI::slotReplyFinished(QNetworkReply *reply)
 {
     QString errorMsg;
-
+    _activeRequests.removeOne(reply);
     const int requestId = reply->property("id").toInt();
     qDebug()<<"Processing reply for requestId "<<requestId;
 
     QByteArray jsonData = reply->readAll();
     if(reply->error()){
         qDebug("Response error %s", qPrintable(reply->errorString()));
-
-        errorMsg = parseClientErrorResponse(jsonData);
+        if(reply->error() > 400){
+            errorMsg = parseClientErrorResponse(jsonData);
+        }
         //Use the HTTP error message if the json error msg is unvailable
         if(errorMsg.isEmpty()){
            errorMsg = reply->errorString();
@@ -620,8 +642,7 @@ QVariant OctopartAPI::findMoqPrice(const QJsonArray & pairs, QVariant moq)
 Seller OctopartAPI::readSeller(const QJsonObject & json, bool * okOut)
 {
     qDebug("Reading Seller object");
-    bool ok = true;
-
+    bool ok = true;   
     Seller seller;
     seller.setName(readStringValue(json, "name", &ok));
     seller.setUid(readStringValue(json, "uid", &ok));

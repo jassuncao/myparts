@@ -41,6 +41,8 @@
 #include "constants.h"
 #include "currencyhelper.h"
 
+#include "octopart/octopartimportdialog.h"
+
 
 inline static QVariant getColumnValue(QAbstractItemModel * model, int row, int column){
     return model->index(row, column).data(Qt::EditRole);
@@ -145,6 +147,8 @@ PartDialog::PartDialog(ModelsRepository * modelsProvider, QWidget *parent) :
     connect(ui->addStockEntryButton, SIGNAL(clicked()), this, SLOT(slotAddStockEntry()));
     connect(ui->removeStockButton, SIGNAL(clicked()), this, SLOT(slotRemoveStockEntry()));
     connect(ui->moveStockButton, SIGNAL(clicked()), this, SLOT(slotMoveStock()));
+
+    connect(ui->importButton, SIGNAL(clicked()), this, SLOT(slotImport()));
 }
 
 PartDialog::~PartDialog()
@@ -734,6 +738,14 @@ void PartDialog::slotMoveStock()
             _partStockLogModel->appendRow(stockToMove, QVariant(), comment);
         }
     }
+}
+
+void PartDialog::slotImport()
+{
+    OctopartImportDialog * dlg = new OctopartImportDialog(this);
+    dlg->setModal(true);
+    dlg->search(ui->partNameEdit->text());
+    dlg->exec();
 }
 
 void PartDialog::slotCurrentStockRowChanged(const QModelIndex &current, const QModelIndex&)

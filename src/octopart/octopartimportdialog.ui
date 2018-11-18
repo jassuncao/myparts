@@ -83,8 +83,8 @@
            <string>...</string>
           </property>
           <property name="icon">
-           <iconset>
-            <normaloff>cancel.png</normaloff>cancel.png</iconset>
+           <iconset resource="../../octopart-test/resources.qrc">
+            <normaloff>:/icons/stop.png</normaloff>:/icons/stop.png</iconset>
           </property>
           <property name="autoRaise">
            <bool>true</bool>
@@ -265,7 +265,9 @@
    <header>qsearchlineedit.h</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../../octopart-test/resources.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>buttonBox</sender>

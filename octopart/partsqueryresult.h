@@ -1,6 +1,7 @@
 #ifndef PARTSQUERYRESULT_H
 #define PARTSQUERYRESULT_H
 
+#include "octopart_global.h"
 #include <QSharedDataPointer>
 #include <QList>
 #include "partsnippet.h"
@@ -8,7 +9,7 @@
 namespace Octopart
 {
 
-class PartsQueryResult
+class OCTOPART_SHARED_EXPORT PartsQueryResult
 {
 public:
     PartsQueryResult();

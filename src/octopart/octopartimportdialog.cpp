@@ -18,9 +18,9 @@ OctopartImportDialog::OctopartImportDialog(QWidget *parent) :
     _ui(new Ui::OctopartImportDialog)
 {
     _ui->setupUi(this);
-    _ui->lineEdit->setPlaceholderText("Search");
+    _ui->lineEdit->setPlaceholderText("Search");        
     _ui->lineEdit->setSearchIcon(QIcon(QString(":/icons/find")));
-    _ui->lineEdit->setClearIcon(QIcon(QString(":/icons/edit-clear-locationbar-rtl")));
+    _ui->lineEdit->setClearIcon(QIcon(QString(":/icons/edit-clear-location-rtl")));
     connect(_ui->lineEdit, SIGNAL(returnPressed()), this, SLOT(slotDoSearch()));
 
     _api = new OctopartAPI("12621337",this);
@@ -57,7 +57,7 @@ OctopartImportDialog::OctopartImportDialog(QWidget *parent) :
 
     connect(_ui->abortButton, SIGNAL(clicked()), _api, SLOT(abortAll()));
     connect(_api, SIGNAL(requestFinished(Octopart::PartFullResponse)), this, SLOT(slotRequestFinished(Octopart::PartFullResponse)));
-
+    setModal(true);
 }
 
 OctopartImportDialog::~OctopartImportDialog()
@@ -89,6 +89,12 @@ void OctopartImportDialog::initParametersTable()
     checkboxHeader->setStretchLastSection(true);
     connect(checkboxHeader, SIGNAL(stateChanged(Qt::CheckState)), this, SLOT(slotToggleParameterCheckboxes(Qt::CheckState)));
 
+}
+
+void OctopartImportDialog::search(const QString &searchTerm)
+{
+    _ui->lineEdit->setText(searchTerm);
+    slotDoSearch();
 }
 
 void OctopartImportDialog::on_searchButton_clicked()

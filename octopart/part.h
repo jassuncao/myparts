@@ -1,6 +1,7 @@
 #ifndef PART_H
 #define PART_H
 
+#include "octopart_global.h"
 #include <QSharedDataPointer>
 #include <QList>
 #include "datasheet.h"
@@ -9,7 +10,7 @@
 
 namespace Octopart {
 
-    class Part
+    class OCTOPART_SHARED_EXPORT Part
     {
     public:
         Part();

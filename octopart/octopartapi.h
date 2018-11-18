@@ -1,6 +1,7 @@
 #ifndef OCTOPARTAPI_H
 #define OCTOPARTAPI_H
 
+#include "octopart_global.h"
 #include <QObject>
 #include <QList>
 #include <QtNetwork/QNetworkReply>
@@ -17,7 +18,7 @@ class QNetworkReply;
 namespace Octopart {
 
 template<typename T>
-struct Response {
+struct OCTOPART_SHARED_EXPORT Response {
     int requestId;
     T result;
     Response() :
@@ -32,7 +33,7 @@ typedef struct Response<PartsQueryResult> PartsQueryResponse;
 typedef struct Response<Part> PartFullResponse;
 typedef struct Response<QString> ErrorResponse;
 
-class OctopartAPI : public QObject
+class OCTOPART_SHARED_EXPORT OctopartAPI : public QObject
 {
     Q_OBJECT
 public:
@@ -40,10 +41,13 @@ public:
     int partsSearch(const QString & text, int start=0, int limit=10);
     int partsMatch(const QString & mpn, int start=0, int limit=10);
     int partsGet(const QString & partUid);
+
     static PartsQueryResult parsePartsMatchResponse(const QJsonDocument &doc);
     static PartsQueryResult parsePartsSearchResponse(const QJsonDocument &doc);
-    static Part parsePartGetResponse(const QJsonDocument &doc);
-
+    static Part parsePartGetResponse(const QJsonDocument &doc);    
+public slots:
+    void abortRequest(const int requestId);
+    void abortAll();
 signals:    
     void requestFinished(const Octopart::PartsQueryResponse& response);
     void requestFinished(const Octopart::PartFullResponse& response);
@@ -65,6 +69,7 @@ private:
     QString _apiKey;
     QNetworkAccessManager * _manager;
     QAtomicInt _requestCounter;
+    QList<QNetworkReply*> _activeRequests;
 };
 
 }

@@ -21,6 +21,10 @@ ListNavigatorWidget::ListNavigatorWidget(const QString & title, QWidget *parent)
     titleBar->setLayout(titleBarLayout);
 
     _searchLineEdit = new QSearchLineEdit;
+    _searchLineEdit->setSearchIcon(QIcon(":/icons/find"));
+    _searchLineEdit->setClearIcon(QIcon(":/icons/edit-clear-location-rtl"));
+    _searchLineEdit->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+    _searchLineEdit->setObjectName("ListNavigatorWidget::QSearchLineEdit");
 
     _listView = new QListView;
     _listView->setFrameStyle(QFrame::NoFrame);
@@ -44,10 +48,10 @@ ListNavigatorWidget::ListNavigatorWidget(const QString & title, QWidget *parent)
     QVBoxLayout *mainLayout = new QVBoxLayout();
     mainLayout->setMargin(0);
     mainLayout->setSpacing(0);
-    mainLayout->addWidget(titleBar);
-    mainLayout->addWidget(_searchLineEdit);
-    mainLayout->addWidget(_listView);
-    mainLayout->addLayout(actionsLayout);
+    mainLayout->addWidget(titleBar, 0);
+    mainLayout->addWidget(_searchLineEdit, 0);
+    mainLayout->addWidget(_listView, 1);
+    mainLayout->addLayout(actionsLayout, 0);
     setLayout(mainLayout);
 
     connect(_searchLineEdit, SIGNAL(textClear()), this, SLOT(slotFilterChanged()));

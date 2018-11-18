@@ -62,6 +62,7 @@ private slots:
     void slotAddStockEntry();
     void slotRemoveStockEntry();
     void slotMoveStock();
+    void slotImport();
 private:
     void initCombos();
     void commitChanges();

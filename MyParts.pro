@@ -9,4 +9,5 @@ SUBDIRS += \
     octopart \
     src \
     tests \
-    octopart-test
+    octopart-test \
+    widgets

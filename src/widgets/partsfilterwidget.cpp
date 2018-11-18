@@ -1,6 +1,6 @@
 #include "partsfilterwidget.h"
 #include "widgets/flowlayout.h"
-#include "widgets/qsearchlineedit.h"
+#include <qsearchlineedit.h>
 #include "widgets/filteritemwidget.h"
 #include "models/proxymodelnoneentry.h"
 #include "models/partssqltablemodel.h"
@@ -59,6 +59,8 @@ PartsFilterWidget::PartsFilterWidget(ModelsRepository *modelsRepository, QWidget
 
     _textFilterItem = new QSearchLineEdit(this);
     _textFilterItem->setPlaceholderText("Search");
+    _textFilterItem->setSearchIcon(QIcon(":/icons/find"));
+    _textFilterItem->setClearIcon(QIcon(":/icons/edit-clear-location-rtl"));
 
     _moreButton = new QPushButton(tr("More"), this);
     _moreButton->setStyleSheet(QString::fromLatin1(

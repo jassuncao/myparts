@@ -1,12 +1,13 @@
 #ifndef SELLER_H
 #define SELLER_H
 
+#include "octopart_global.h"
 #include <QSharedDataPointer>
 #include <QString>
 
 namespace Octopart {
 
-    class Seller
+    class OCTOPART_SHARED_EXPORT Seller
     {
     public:
         Seller();

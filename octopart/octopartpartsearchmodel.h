@@ -1,6 +1,7 @@
 #ifndef OCTOPARTPARTSEARCHMODEL_H
 #define OCTOPARTPARTSEARCHMODEL_H
 
+#include "octopart_global.h"
 #include <QAbstractTableModel>
 #include <QVector>
 #include <QList>
@@ -9,7 +10,7 @@
 
 namespace Octopart {
 
-class OctopartPartSearchModel : public QAbstractTableModel
+class OCTOPART_SHARED_EXPORT OctopartPartSearchModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
@@ -35,7 +36,7 @@ public:
 signals:
     void busy();
     void ready();
-    void noMatchesFound();
+    void searchFinished(int hits);
     void error(const QString &errorMsg);
 public slots:
     void searchByText(const QString & text);
@@ -48,6 +49,7 @@ private:
     enum ModelState {
         Initializing,
         Ready,
+        Error,
     };
 
     Octopart::OctopartAPI * _api;

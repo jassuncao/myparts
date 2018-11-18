@@ -1,6 +1,7 @@
 #ifndef PARTSPEC_H
 #define PARTSPEC_H
 
+#include "octopart_global.h"
 #include <QString>
 #include <QVariant>
 #include <QSharedDataPointer>
@@ -9,7 +10,7 @@ namespace Octopart {
 
 class PartSpecData;
 
-class PartSpec
+class OCTOPART_SHARED_EXPORT PartSpec
 {
 public:
     PartSpec();

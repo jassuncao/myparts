@@ -11,6 +11,8 @@ TARGET = octopart
 TEMPLATE = lib
 CONFIG += staticlib
 
+DEFINES += OCTOPART_LIBRARY
+
 lessThan(QT_MAJOR_VERSION, 5){
 
  INCLUDEPATH += $$PWD/../qjson-backport
@@ -40,7 +42,8 @@ HEADERS += octopartapi.h \
     offer.h \
     seller.h \
     partsnippet.h \
-    partsqueryresult.h
+    partsqueryresult.h \
+    octopart_global.h
 unix {
     target.path = /usr/lib
     INSTALLS += target

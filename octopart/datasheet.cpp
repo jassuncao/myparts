@@ -37,14 +37,14 @@ void Datasheet::setSourceName(const QString &sourceName)
     data->sourceName = sourceName;
 }
 
-QString Datasheet::mimetype() const { return data->sourceName;}
+QString Datasheet::mimetype() const { return data->mimetype;}
 
 void Datasheet::setMimetype(const QString &mimetype)
 {
     data->mimetype = mimetype;
 }
 
-QString Datasheet::url() const { return data->sourceName;}
+QString Datasheet::url() const { return data->url;}
 
 void Datasheet::setUrl(const QString &url)
 {

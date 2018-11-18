@@ -6,7 +6,7 @@
 
 include(../defaults.pri)
 
-QT       += core gui sql
+QT       += core gui sql network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -19,8 +19,7 @@ SOURCES += main.cpp\
     dialogs/partcategorydialog.cpp \
     models/treeitem.cpp \
     widgets/booleanitemdelegate.cpp \
-    optionsdialog.cpp \
-    widgets/qsearchlineedit.cpp \
+    optionsdialog.cpp \    
     partmimedata.cpp \
     widgets/partstableview.cpp \
     widgets/qpartsfiltermodel.cpp \
@@ -115,15 +114,15 @@ SOURCES += main.cpp\
     dialogs/addstockentrydialog.cpp \
     models/partstocklogtablemodel.cpp \
     dialogs/movestockdialog.cpp \
-    partstockmimedata.cpp
+    partstockmimedata.cpp \
+    octopart/octopartimportdialog.cpp
 
 HEADERS  += mainwindow.h \
     partdialog.h \
     dialogs/partcategorydialog.h \
     models/treeitem.h \
     widgets/booleanitemdelegate.h \
-    optionsdialog.h \
-    widgets/qsearchlineedit.h \
+    optionsdialog.h \    
     partmimedata.h \
     widgets/partstableview.h \
     widgets/qpartsfiltermodel.h \
@@ -220,7 +219,8 @@ HEADERS  += mainwindow.h \
     dialogs/addstockentrydialog.h \
     models/partstocklogtablemodel.h \
     dialogs/movestockdialog.h \
-    partstockmimedata.h
+    partstockmimedata.h \
+    octopart/octopartimportdialog.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \
@@ -240,7 +240,8 @@ FORMS    += mainwindow.ui \
     editors/projecteditorform.ui \
     dialogs/partsassignmentdialog.ui \
     dialogs/addstockentrydialog.ui \
-    dialogs/movestockdialog.ui
+    dialogs/movestockdialog.ui \
+    octopart/octopartimportdialog.ui
 
 RESOURCES += \
     resources.qrc \
@@ -276,3 +277,23 @@ DISTFILES += \
     storage.xml \
     category.xml \
     ../res/packages.csv
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../widgets/release/ -lwidgets
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../widgets/debug/ -lwidgets
+else:unix:!macx: LIBS += -L$$OUT_PWD/../widgets/ -lwidgets
+
+INCLUDEPATH += $$PWD/../widgets
+DEPENDPATH += $$PWD/../widgets
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../octopart/release/ -loctopart
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../octopart/debug/ -loctopart
+else:unix:!macx: LIBS += -L$$OUT_PWD/../octopart/ -loctopart
+
+INCLUDEPATH += $$PWD/../octopart
+DEPENDPATH += $$PWD/../octopart
+
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../octopart/release/liboctopart.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../octopart/debug/liboctopart.a
+else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../octopart/release/octopart.lib
+else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../octopart/debug/octopart.lib
+else:unix:!macx: PRE_TARGETDEPS += $$OUT_PWD/../octopart/liboctopart.a

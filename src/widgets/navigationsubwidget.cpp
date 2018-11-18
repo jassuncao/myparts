@@ -61,7 +61,7 @@ NavigationSubWidget::NavigationSubWidget(QWidget *parent) : QWidget(parent)
    _navigationComboBox->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
    _navigationComboBox->setFocusPolicy(Qt::TabFocus);
    _navigationComboBox->setMinimumContentsLength(0);
-   _navigationComboBox->setObjectName("navigationComboBox");
+   _navigationComboBox->setObjectName("navigationComboBox");   
 
    _toolBar = new Manhattan::StyledBar(this);
    _toolBar->setObjectName("toolBar");
@@ -137,6 +137,8 @@ TreeNavigator::TreeNavigator(QWidget *parent) : QWidget(parent),
 {
     _filterLineEdit = new QSearchLineEdit(this);
     _filterLineEdit->setObjectName("QSearchLineEdit");
+    _filterLineEdit->setSearchIcon(QIcon(":/icons/find"));
+    _filterLineEdit->setClearIcon(QIcon(":/icons/edit-clear-location-rtl"));
 
     _treeProxyModel = new TreeProxyFilter(this);
 

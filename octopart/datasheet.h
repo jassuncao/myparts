@@ -1,12 +1,13 @@
 #ifndef DATASHEET_H
 #define DATASHEET_H
 
+#include "octopart_global.h"
 #include <QSharedDataPointer>
 #include <QString>
 
 namespace Octopart {
 
-class Datasheet
+class OCTOPART_SHARED_EXPORT Datasheet
 {
 public:
     Datasheet();

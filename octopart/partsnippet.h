@@ -1,12 +1,13 @@
 #ifndef PARTSNIPPET_H
 #define PARTSNIPPET_H
 
+#include "octopart_global.h"
 #include <QSharedDataPointer>
 #include <QString>
 
 namespace Octopart {
 
-    class PartSnippet
+    class OCTOPART_SHARED_EXPORT PartSnippet
     {
     public:
         PartSnippet();

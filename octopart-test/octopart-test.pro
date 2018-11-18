@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-include(../QProgressIndicator/qprogressindicator.pri)
+#include(../QProgressIndicator/qprogressindicator.pri)
 
 QT       += core gui network
 
@@ -18,12 +18,14 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     qtableviewwithprogress.cpp \
     octopartimportdialog.cpp \
-    qsearchlineedit2.cpp
+    qsearchlineedit2.cpp \
+    checkboxheaderview.cpp
 
 HEADERS  += mainwindow.h \
     qtableviewwithprogress.h \
     octopartimportdialog.h \
-    qsearchlineedit2.h
+    qsearchlineedit2.h \
+    checkboxheaderview.h
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../octopart/release/ -loctopart
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../octopart/debug/ -loctopart
@@ -54,3 +56,16 @@ FORMS += \
 
 RESOURCES += \
     resources.qrc
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../widgets/release/ -lwidgets
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../widgets/debug/ -lwidgets
+else:unix:!macx: LIBS += -L$$OUT_PWD/../widgets/ -lwidgets
+
+INCLUDEPATH += $$PWD/../widgets
+DEPENDPATH += $$PWD/../widgets
+
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../widgets/release/libwidgets.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../widgets/debug/libwidgets.a
+else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../widgets/release/widgets.lib
+else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../widgets/debug/widgets.lib
+else:unix:!macx: PRE_TARGETDEPS += $$OUT_PWD/../widgets/libwidgets.a

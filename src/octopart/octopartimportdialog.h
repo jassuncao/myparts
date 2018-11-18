@@ -25,7 +25,8 @@ class OctopartImportDialog : public QDialog
 public:
     explicit OctopartImportDialog(QWidget *parent = 0);
     ~OctopartImportDialog();
-
+public slots:
+    void search(const QString &searchTerm);
 private slots:
     void on_searchButton_clicked();
     void slotBusy();

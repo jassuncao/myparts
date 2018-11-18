@@ -69,7 +69,7 @@ QVariant OctopartPartSearchModel::data(const QModelIndex &index, int role) const
     if (index.row() >= _parts.size() || index.row() < 0)
         return QVariant();
 
-    if (role == Qt::DisplayRole) {
+    if (role == Qt::DisplayRole  || role == Qt::EditRole) {
         const PartSnippet & part = _parts.at(index.row());
         int column = index.column();
         switch (column) {
@@ -117,19 +117,16 @@ void OctopartPartSearchModel::slotRequestFinished(const PartsQueryResponse &resp
     if(response.requestId != _activeRequest){
         return;
     }
-    _activeRequest = -1;
+    _activeRequest = -1;    
     emit ready();
-
     const PartsQueryResult result = response.result;
     if(_state == Initializing){
         _parts.clear();
         _hits = result.count();
         _rows = qMin(_hits, 100);
-        _state = Ready;
-        if(_hits == 0){
-            emit noMatchesFound();
-        }
-    }
+        _state = Ready;        
+        emit searchFinished(_hits);
+    }        
 
     if(result.items().size() > 0){
         int first = _parts.size();
@@ -147,6 +144,7 @@ void OctopartPartSearchModel::slotRequestError(const Octopart::ErrorResponse& re
     if(response.requestId != _activeRequest){
         return;
     }
+    _state = Error;
     _activeRequest = -1;
     emit ready();
     emit error(response.result);

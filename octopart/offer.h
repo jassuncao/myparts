@@ -1,13 +1,14 @@
 #ifndef OFFER_H
 #define OFFER_H
 
+#include "octopart_global.h"
 #include <QSharedDataPointer>
 #include <QVariant>
 #include "seller.h"
 
 namespace Octopart {
 
-    class Offer
+    class OCTOPART_SHARED_EXPORT Offer
     {
     public:
         Offer();
