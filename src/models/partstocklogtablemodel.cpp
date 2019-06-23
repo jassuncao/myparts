@@ -9,7 +9,7 @@ PartStockLogTableModel::PartStockLogTableModel(const QStringList &fieldNames, co
 {
 }
 
-bool PartStockLogTableModel::appendRow(const int quantity, const QVariant & price, const QString & comment)
+bool PartStockLogTableModel::appendRow(const QVariant & quantity, const QVariant & price, const QString & comment)
 {
     QDateTime now = QDateTime::currentDateTimeUtc();
     TableItem * item = createBlankItem();
@@ -24,9 +24,10 @@ bool PartStockLogTableModel::appendRow(const int quantity, const QVariant & pric
 QVariant PartStockLogTableModel::data(const QModelIndex &index, int role) const
 {
     const QVariant & value = SimpleSqlTableModel::data(index, role);
-    if(index.column()==ColumnLastUpdate && value.isValid() && (role==Qt::EditRole || role==Qt::DisplayRole)){
+    const int col = index.column();
+    if(col == ColumnLastUpdate && value.isValid() && (role==Qt::EditRole || role==Qt::DisplayRole)){
         return QDateTime::fromTime_t(value.toUInt());
-    }
+    }   
     return value;
 }
 

@@ -31,6 +31,7 @@
 #include <QTimer>
 #include <QSqlRecord>
 #include <QShortcut>
+#include <QCompleter>
 
 
 static QStandardItem * newColorItem(const QString & name, const QColor & color, const QVariant & value, const int shortcutKey)
@@ -150,11 +151,44 @@ QuickAddResistorDialog::QuickAddResistorDialog(ModelsRepository * modelsProvider
     _saveButtonHelper->monitor(ui->partConditionComboBox);
     _saveButtonHelper->monitor(ui->quantitySpinBox);
     _saveButtonHelper->setButtonBox(ui->buttonBox, QDialogButtonBox::Save);
+    readSettings();
+
+    QSqlQueryModel *tolerancesModel = new QSqlQueryModel;
+    tolerancesModel->setQuery("SELECT DISTINCT value from part_parameter INNER JOIN parameter param WHERE param.key='resistance_tolerance' ORDER BY value ASC");
+    QCompleter *completer = new QCompleter(tolerancesModel, this);
+    completer->setCaseSensitivity(Qt::CaseInsensitive);
+    ui->toleranceLineEdit->setCompleter(completer);
 }
 
 QuickAddResistorDialog::~QuickAddResistorDialog()
 {
     delete ui;
+}
+
+void QuickAddResistorDialog::closeEvent(QCloseEvent *)
+{
+     writeSettings();
+}
+
+void QuickAddResistorDialog::writeSettings()
+{
+    int bands = ui->fiveBandRadioButton->isChecked() ? 5 : 4;
+    QSettings settings;
+    settings.beginGroup("QuickAddResistorDialog");
+    settings.setValue("size", this->size());
+    settings.setValue("bands", bands);
+    settings.endGroup();
+
+}
+
+void QuickAddResistorDialog::readSettings()
+{
+    QSettings settings;
+    settings.beginGroup("QuickAddResistorDialog");
+    resize(settings.value("size", QSize(400, 400)).toSize());
+    int bands = settings.value("bands", 4).toInt();
+    settings.endGroup();
+    ui->fiveBandRadioButton->setChecked(bands>4);
 }
 
 void QuickAddResistorDialog::slotFiveBandToggled(bool checked)

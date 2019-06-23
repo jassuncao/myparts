@@ -22,7 +22,12 @@ QString ParameterValueDelegate::displayText(const QVariant &value, const QLocale
     if(value.canConvert<ParameterValue>()){
         ParameterValue aux =  value.value<ParameterValue>();
         qDebug()<<"Display locale "<<locale.name();
-        return UnitParser::formatUnit(aux.value.toReal(), aux.symbol, locale);
+        if(!aux.value.isNull()){
+            return UnitParser::formatUnit(aux.value.toReal(), aux.symbol, locale);
+        }
+        else{
+            return QString();
+        }
     }    
     return QStyledItemDelegate::displayText(value, locale);
 }
@@ -37,8 +42,9 @@ QWidget * ParameterValueDelegate::createEditor(QWidget *parent, const QStyleOpti
         ParameterValue paramValue = v.value<ParameterValue>();
         QLineEdit *le = new QLineEdit(parent);                
         le->setFrame(le->style()->styleHint(QStyle::SH_ItemView_DrawDelegateFrame, 0, le));
-        le->setProperty("unitSymbol", paramValue.symbol);        
-        le->setValidator(new ParameterValueValidator(paramValue.symbol, parent));
+        le->setProperty("unitSymbol", paramValue.symbol);
+        const bool emptyAllowed = true;
+        le->setValidator(new ParameterValueValidator(paramValue.symbol, emptyAllowed, parent));
         return le;
     }
    return QStyledItemDelegate::createEditor(parent, option, index);
@@ -52,13 +58,19 @@ void ParameterValueDelegate::setModelData(QWidget *editor, QAbstractItemModel *m
     if(lineEdit){
         QVariant unitSymbol = lineEdit->property("unitSymbol");
         if(unitSymbol.isValid()){
-            bool ok = false;
-            double value = UnitParser::parseUnit(lineEdit->text(), unitSymbol.toString(), &ok);
-            if(ok){
-                model->setData(index,QVariant(value));
+            const QString& text = lineEdit->text();
+            if(text.isEmpty()){
+                model->setData(index,QVariant());
             }
-            else{               
-                //DO something, for example draw a red background
+            else{
+                bool ok = false;
+                double value = UnitParser::parseUnit(text, unitSymbol.toString(), &ok);
+                if(ok){
+                    model->setData(index,QVariant(value));
+                }
+                else{
+                    //DO something, for example draw a red background
+                }
             }
             return;
         }
@@ -73,7 +85,9 @@ void ParameterValueDelegate::setEditorData(QWidget *editor, const QModelIndex &i
         QLocale locale;
         ParameterValue paramValue = v.value<ParameterValue>();
         QLineEdit* lineEdit = qobject_cast<QLineEdit*>(editor);        
-        lineEdit->setText(UnitParser::formatUnit(paramValue.value.toReal(), paramValue.symbol, locale));
+        if(!paramValue.value.isNull()){
+            lineEdit->setText(UnitParser::formatUnit(paramValue.value.toReal(), paramValue.symbol, locale));
+        }
     }
     else{
         QStyledItemDelegate::setEditorData(editor, index);

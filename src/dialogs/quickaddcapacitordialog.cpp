@@ -93,11 +93,34 @@ QuickAddCapacitorDialog::QuickAddCapacitorDialog(ModelsRepository *modelsProvide
     _saveButtonHelper->monitor(ui->partConditionComboBox);
     _saveButtonHelper->monitor(ui->quantitySpinBox);
     _saveButtonHelper->setButtonBox(ui->buttonBox, QDialogButtonBox::Save);
+    readSettings();
 }
 
 QuickAddCapacitorDialog::~QuickAddCapacitorDialog()
 {
     delete ui;
+}
+
+void QuickAddCapacitorDialog::closeEvent(QCloseEvent *)
+{
+     writeSettings();
+}
+
+void QuickAddCapacitorDialog::writeSettings()
+{
+    QSettings settings;
+    settings.beginGroup("QuickAddCapacitorDialog");
+    settings.setValue("size", this->size());
+    settings.endGroup();
+
+}
+
+void QuickAddCapacitorDialog::readSettings()
+{
+    QSettings settings;
+    settings.beginGroup("QuickAddCapacitorDialog");
+    resize(settings.value("size", QSize(400, 400)).toSize());
+    settings.endGroup();
 }
 
 static void resetCombo(QComboBox * combo)

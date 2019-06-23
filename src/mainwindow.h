@@ -24,6 +24,8 @@ private slots:
     void on_actionResistor_triggered();
     void on_actionCapacitor_triggered();
 
+    void on_actionMerge_part_triggered();
+
 private:
     void readSettings();
     void writeSettings();

@@ -3,10 +3,12 @@
 #include "models/partssqltablemodel.h"
 #include "widgets/priceitemdelegate.h"
 #include "widgets/datetimedelegate.h"
+#include "widgets/quantitydelegate.h"
 #include "models/partstocklogtablemodel.h"
 #include "models/stocktableformatproxymodel.h"
 #include "models/partstocktablemodel2.h"
 #include "models/modelsrepository.h"
+#include "models/partunitcache.h"
 #include "dialogs/addstockdialog.h"
 #include "dialogs/addstockentrydialog.h"
 #include "dialogs/removestockdialog.h"
@@ -45,7 +47,7 @@ void PartDetailsDelegate::setEditorData(QWidget *editor, const QModelIndex &inde
             if(stockVar.isValid()){
                 QVariant partUnitVar = index.model()->index(index.row(), PartsSqlTableModel::ColumnPartUnit).data();
                 QString posfix = partUnitVar.isValid() ? partUnitVar.toString() : QString();
-                text = QString("%1 %2").arg(stockVar.toInt()).arg(posfix);
+                text = QString("%1 %2").arg(stockVar.toDouble()).arg(posfix);
             }            
         }
         else{
@@ -64,7 +66,8 @@ PartDetailsView::PartDetailsView(QWidget *parent) :
     _modelsRepository(0),
     _partsModel(0),
     _partStockLogModel(0),
-    _partStockModel(0)
+    _partStockModel(0),
+    _quantityDelegate(0)
 {
     ui->setupUi(this);
     //By default the Manhattan style adjusts the size of the first tab. This is causing a visual artifact
@@ -75,6 +78,8 @@ PartDetailsView::PartDetailsView(QWidget *parent) :
     _widgetMapper = new QDataWidgetMapper(this);
     _widgetMapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
     _widgetMapper->setItemDelegate(new PartDetailsDelegate(this));
+
+    _quantityDelegate = new QuantityDelegate(this);
 
     _partStockModel = PartStockTableModel2::createNew(this);
     ui->partStockOverviewTable->setModel(_partStockModel);
@@ -88,6 +93,7 @@ PartDetailsView::PartDetailsView(QWidget *parent) :
     ui->partStockOverviewTable->setDefaultDropAction(Qt::MoveAction);
     ui->partStockOverviewTable->setDragPixmap(QPixmap(":/icons/stock"));
     ui->partStockOverviewTable->setDragDropOverwriteMode(false);
+    ui->partStockOverviewTable->setItemDelegateForColumn(PartStockTableModel2::ColumnQuantity, _quantityDelegate);
 
 
     _partStockLogModel = PartStockLogTableModel::createNew(this);
@@ -97,7 +103,7 @@ PartDetailsView::PartDetailsView(QWidget *parent) :
 
     ui->partStockHistoryTable->setItemDelegateForColumn(PartStockLogTableModel::ColumnLastUpdate, new DateDelegate(this));
     ui->partStockHistoryTable->setItemDelegateForColumn(PartStockLogTableModel::ColumnPrice, new PriceItemDelegate(false, this));
-    //ui->partStockHistoryTable->setItemDelegateForColumn(PartStockTableModel::ColumnChange, new StockChangeDelegate(this));
+    ui->partStockHistoryTable->setItemDelegateForColumn(PartStockLogTableModel::ColumnChange, _quantityDelegate);
     ui->partStockHistoryTable->setModel(proxyModel);
     ui->partStockHistoryTable->resizeColumnsToContents();
 
@@ -153,10 +159,9 @@ void PartDetailsView::setPartsModel(PartsSqlTableModel * model)
 
 void PartDetailsView::onAddStock()
 {    
-    AddStockEntryDialog dlg(_modelsRepository, this);
+    AddStockEntryDialog dlg(_modelsRepository, this);    
+    dlg.setPartUnit(getPartUnit());
 
-    QVariant partUnit = _partsModel->index(_currentIndex.row(), PartsSqlTableModel::ColumnPartUnit).data();
-    dlg.setPartUnit(partUnit.toString());
     QModelIndex index = ui->partStockOverviewTable->currentIndex();
     if(index.isValid()){
         QVariant conditionId = _partStockModel->index(index.row(), PartStockTableModel2::ColumnCondition).data(Qt::EditRole);
@@ -168,7 +173,7 @@ void PartDetailsView::onAddStock()
     if(res == AddStockEntryDialog::Accepted){
         QVariant condition = dlg.selectedCondition();
         QVariant storage = dlg.selectedStorage();
-        int quantity = dlg.stockChange();
+        double quantity = dlg.stockChange();
         double partPrice = dlg.partPrice();
         QString comment = dlg.comment();
 
@@ -205,14 +210,12 @@ void PartDetailsView::onRemoveStock()
     if(!stockIndex.isValid()){
         return;
     }
-    QModelIndex partUnitIndex = _partsModel->index(_currentIndex.row(), PartsSqlTableModel::ColumnPartUnit);
-    QString partUnit = partUnitIndex.data(Qt::EditRole).toString();
 
     QModelIndex availableStockColIndex = _partStockModel->index(stockIndex.row(), PartStockTableModel2::ColumnQuantity);
     double availableStock = availableStockColIndex.data(Qt::EditRole).toDouble();
 
     RemoveStockDialog dlg(this);
-    dlg.setPartUnit(partUnit);
+    dlg.setPartUnit(getPartUnit());
     dlg.setAvailableStock(availableStock);
     if(dlg.exec()==QDialog::Accepted && dlg.getStockChange() > 0) {
         double stockChange = dlg.getStockChange() * -1;
@@ -250,21 +253,36 @@ void PartDetailsView::onEditPart()
 
 void PartDetailsView::setCurrentIndex(const QModelIndex &current)
 {
-    _currentIndex = current;
+    _currentIndex = current;    
     _widgetMapper->setCurrentModelIndex(current);
     this->setEnabled(current.isValid());
     updateStockView(current);
 }
 
 void PartDetailsView::updateStockView(const QModelIndex & current)
-{   
+{       
     QModelIndex primaryKeyIndex = _partsModel->index(current.row(), PartsSqlTableModel::ColumnId);
+
+    QString partUnitSuffix = getPartUnit();
+
     QVariant keyValue = primaryKeyIndex.data(Qt::EditRole);
     qDebug()<<"Changing part to "<<keyValue;
     _partStockLogModel->setCurrentPartId(keyValue);
     _partStockLogModel->select();
-    _partStockModel->setCurrentPartId(keyValue);
+
+
+    _quantityDelegate->setUnit(partUnitSuffix);
+    _partStockModel->setCurrentPartId(keyValue);    
     _partStockModel->select();
+}
+
+QString PartDetailsView::getPartUnit()
+{
+    if(_currentIndex.isValid()){
+        const QVariant unitId = _partsModel->index(_currentIndex.row(), PartsSqlTableModel::ColumnPartUnitId).data(Qt::EditRole);
+        return _modelsRepository->partUnitCache()->getAbbreviation(unitId);
+    }
+    return QString();
 }
 
 

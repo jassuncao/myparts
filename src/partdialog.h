@@ -39,6 +39,8 @@ public slots:
     int duplicatePart(const QModelIndex &index, bool allData);
     void reject();
     void accept();
+protected:
+    void closeEvent(QCloseEvent *);
 private slots:
     int exec();
     void slotPackageChanged(int index);
@@ -65,6 +67,8 @@ private slots:
     void slotImport();
 private:
     void initCombos();
+    void writeSettings();
+    void readSettings();
     void commitChanges();
     void discardChanges();
     void internalAddPart(const QModelIndex &index, bool copyAll);
@@ -72,6 +76,7 @@ private:
     QSqlRecord copySomeData(const QModelIndex &index);
     QSqlRecord copyAllData(const QModelIndex &index);
     QModelIndex insertNewPart(QSqlRecord initialData);
+
 
     QCheckBox * _nextActionCheckbox;
     Ui::PartDialog *ui;    

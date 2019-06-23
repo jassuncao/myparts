@@ -2,8 +2,8 @@
 #include "unitparser.h"
 #include <QLocale>
 
-ParameterValueValidator::ParameterValueValidator(const QString& unit, QObject *parent) :
-    QRegExpValidator(parent), _unit(unit)
+ParameterValueValidator::ParameterValueValidator(const QString& unit, bool emptyAllowed, QObject *parent) :
+    QRegExpValidator(parent), _unit(unit), _emptyAllowed(emptyAllowed)
 {    
     QLocale locale;
     /*This regex allows some flexibility when using fractions. if not, the user would be unable to change a value from
@@ -25,6 +25,9 @@ ParameterValueValidator::~ParameterValueValidator()
 
 QValidator::State ParameterValueValidator::validate(QString& input, int& pos) const
 {
+    if(input.isEmpty() && _emptyAllowed){
+        return QValidator::Acceptable;
+    }
     QValidator::State res = QRegExpValidator::validate(input, pos);
     if(res==QValidator::Invalid){
         input.replace(_unit.toLower(), _unit);

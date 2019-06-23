@@ -153,7 +153,7 @@ bool PartsSqlTableModel::updatePartAvgPrice(const QModelIndex & currentIndex, do
     }
     else {
         currentAvgPrice = partPrice;
-    }
+    }    
     return setData(colIndex, currentAvgPrice, Qt::EditRole);
 }
 

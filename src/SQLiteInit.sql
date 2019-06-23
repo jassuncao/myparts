@@ -210,5 +210,17 @@ CREATE TABLE IF NOT EXISTS project_part (
     FOREIGN KEY(assigned_part) REFERENCES part(id)
 );
 
+CREATE TABLE IF NOT EXISTS octopart_distributor (
+    octopart_uid TEXT PRIMARY KEY,
+    distributor INTEGER NOT NULL,
+    FOREIGN KEY(distributor) REFERENCES distributor(id) ON DELETE CASCADE,
+);
+
+CREATE TABLE IF NOT EXISTS octopart_manufacturer (
+    octopart_uid TEXT PRIMARY KEY,
+    (manufacturer) INTEGER NOT NULL,
+    FOREIGN KEY(manufacturer) REFERENCES manufacturer(id) ON DELETE CASCADE
+);
+
 
 PRAGMA foreign_keys = ON

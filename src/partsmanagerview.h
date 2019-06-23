@@ -28,6 +28,9 @@ class TreeItem;
 class PartsTableProxyModel;
 class ModelsRepository;
 class QSettings;
+class QMenu;
+class QAction;
+class QItemSelection;
 
 class PartsManagerView : public Manhattan::MiniSplitter
 {
@@ -60,8 +63,12 @@ protected slots:
     void slotShowDetailsPane();
     void slotHideDetailsPane();
     void slotExportTable();
+    void slotPartTableContextMenuRequested(const QPoint &pos);
+    void slotMergeParts();
+    void slotSelectionChanged(const QItemSelection &, const QItemSelection &);
 private:
     void initPartsTableView();
+    void initContextMenuActions();
     void duplicatePart(bool allData);
 
     NavigationSubWidget * _navWidget;
@@ -79,6 +86,8 @@ private:
     QToolButton * _hideDetailsPaneButton;
     QWidget * _detailsPane;
     ModelsRepository * _modelsRepository;
+    QMenu * _contextActionsMenu;
+    QAction * _actionMergeParts;
 };
 
 #endif // PARTSMANAGERVIEW_H

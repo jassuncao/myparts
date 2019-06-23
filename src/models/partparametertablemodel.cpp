@@ -54,44 +54,47 @@ public:
         return _value;
     }
 
-    /*
-    QVariant value() const {
-        switch(_param.datatype()){
-        case Parameter::TEXT:
-            return _value;
-        case Parameter::DECIMAL:
-        case Parameter::INTEGER:
-            return QVariant::fromValue(ParameterValue(_value, _param.unitSymbol()));
-        default:
-            return QVariant();
+    QVariant validateValue(QVariant value, bool *ok = 0){
+        bool valid;
+        QVariant res;
+        if(value.isNull()){
+           valid = true;
         }
-    }
-    */
-
-    bool setValue(QVariant value) {
-        bool ok;
-        qreal tmp;
-        switch(_param.datatype()){
-        case Parameter::TEXT:
-            _value = value.toString();
-            ok = true;
-            break;
-        case Parameter::DECIMAL:
-            tmp = value.toReal(&ok);
-            if(ok){
-                _value = tmp;
+        else{
+            switch(_param.datatype()){
+            case Parameter::TEXT:
+                valid = value.canConvert(QVariant::String);
+                if(valid){
+                     res = QVariant(value.toString());
+                }
+                break;
+            case Parameter::DECIMAL:
+                valid = value.canConvert(QVariant::Double);
+                if(valid){
+                    res = QVariant(value.toReal());
+                }
+                break;
+            case Parameter::INTEGER:
+                valid = value.canConvert(QVariant::Double);
+                if(valid){
+                    res = QVariant(qRound(value.toReal()));
+                }
+                break;
+            default:
+                valid = false;
             }
-            break;
-        case Parameter::INTEGER:
-            tmp = qRound(value.toReal(&ok));
-            if(ok){
-                _value = tmp;
-            }
-            break;
-        default:
-            ok = false;
         }
         if(ok){
+            *ok = valid;
+        }
+        return res;
+    }
+
+    bool setValue(QVariant value) {
+        bool ok;        
+        const QVariant res = validateValue(value, &ok);
+        if(ok){
+            _value = res;
             _dirty = true;
         }
         return ok;
@@ -101,44 +104,11 @@ public:
         return _minValue;
     }
 
-    /*
-    QVariant minValue() const {
-        switch(_param.datatype()){
-        case Parameter::DECIMAL:
-        case Parameter::INTEGER:
-            return QVariant::fromValue(ParameterValue(_minValue, _param.unitSymbol()));
-        case Parameter::TEXT:
-            return _minValue;
-        default:
-            return QVariant();
-        }
-    }
-    */
-
     bool setMinValue(QVariant value) {
         bool ok;
-        qreal tmp;
-        switch(_param.datatype()){
-        case Parameter::TEXT:
-            _minValue = value.toString();
-            ok = true;
-            break;
-        case Parameter::DECIMAL:
-            tmp = value.toReal(&ok);
-            if(ok){
-                _minValue = tmp;
-            }
-            break;
-        case Parameter::INTEGER:
-            tmp = qRound(value.toReal(&ok));
-            if(ok){
-                _minValue = tmp;
-            }
-            break;
-        default:
-            ok = false;
-        }
+        const QVariant res = validateValue(value, &ok);
         if(ok){
+            _minValue = res;
             _dirty = true;
         }
         return ok;
@@ -148,44 +118,11 @@ public:
         return _maxValue;
     }
 
-/*
-    QVariant maxValue() const {
-        switch(_param.datatype()){
-        case Parameter::DECIMAL:
-        case Parameter::INTEGER:
-            return QVariant::fromValue(ParameterValue(_maxValue, _param.unitSymbol()));
-        case Parameter::TEXT:
-            return _maxValue;
-        default:
-            return QVariant();
-        }
-    }
-    */
-
     bool setMaxValue(QVariant value) {
         bool ok;
-        qreal tmp;
-        switch(_param.datatype()){
-        case Parameter::TEXT:
-            _maxValue = value.toString();
-            ok = true;
-            break;
-        case Parameter::DECIMAL:
-            tmp = value.toReal(&ok);
-            if(ok){
-                _maxValue = tmp;
-            }
-            break;
-        case Parameter::INTEGER:
-            tmp = qRound(value.toReal(&ok));
-            if(ok){
-                _maxValue = tmp;
-            }
-            break;
-        default:
-            ok = false;
-        }
+        const QVariant res = validateValue(value, &ok);
         if(ok){
+            _maxValue = res;
             _dirty = true;
         }
         return ok;
@@ -343,13 +280,13 @@ QVariant asEditableValue(const QVariant& value, const Parameter& parameter) {
 QVariant asDisplayValue(const QVariant& value, const Parameter& parameter)  {
     switch(parameter.datatype()){
 
-    case Parameter::DECIMAL:
-        if(value.isValid() && value.canConvert(QVariant::Double)){
+    case Parameter::DECIMAL:        
+        if(!value.isNull() && value.canConvert(QVariant::Double)){
             return UnitFormatter::format(value.toDouble(), parameter.unitSymbol());
         }
         return QVariant();
     case Parameter::INTEGER:
-        if(value.isValid() && value.canConvert(QVariant::Double)){
+        if(!value.isNull() && value.canConvert(QVariant::Double)){
             return UnitFormatter::format(qRound(value.toDouble()), parameter.unitSymbol());
         }
         return QVariant();
@@ -501,9 +438,15 @@ bool PartParameterTableModel::deleteItem(QVariant id)
 
 bool PartParameterTableModel::saveItem(PartParameterItem* item)
 {        
-    if(item->id().isValid()){
+    if(item->id().isValid()){        
         //Edited item. Update
-        qDebug()<<"Updating item "<<item->id();
+        qDebug()<<"Updating item "<<item->id() << "with:"
+               << "partId=" << _partId
+               << "parameter=" << item->param().id()
+               << "value=" << item->value()
+               << "minValue=" << item->minValue()
+               << "maxValue=" << item->maxValue()
+                  ;
         _updateQuery.bindValue(0,_partId);
         _updateQuery.bindValue(1,item->param().id());
         _updateQuery.bindValue(2,item->value());

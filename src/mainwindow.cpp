@@ -9,7 +9,9 @@
 #include "dialogs/quickaddresistordialog.h"
 #include "dialogs/quickaddcapacitordialog.h"
 #include "models/modelsrepository.h"
-
+#include "dialogs/mergepartsdialog.h"
+#include "models/partssqltablemodel.h"
+#include "models/partunitcache.h"
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -77,23 +79,33 @@ void MainWindow::writeSettings()
 void MainWindow::slotEditPreferences()
 {
     OptionsDialog dlg(_modelsProvider, this);
-    dlg.exec();
+    if(dlg.exec() == QDialog::Accepted){
+        _modelsProvider->partUnitCache()->invalidate();
+    }
 }
 
 void MainWindow::on_actionResistor_triggered()
 {
-    QuickAddResistorDialog * dlg = new QuickAddResistorDialog(_modelsProvider, this);
-    dlg->setSelectedCategory(_partsManagerView->selectedCategory());
-    dlg->setSelectedStorage(_partsManagerView->selectedStorage());
-    dlg->exec();
-    dlg->deleteLater();
+    QuickAddResistorDialog dlg(_modelsProvider, this);
+    dlg.setSelectedCategory(_partsManagerView->selectedCategory());
+    dlg.setSelectedStorage(_partsManagerView->selectedStorage());
+    dlg.exec();
 }
 
 void MainWindow::on_actionCapacitor_triggered()
 {
-    QuickAddCapacitorDialog * dlg = new QuickAddCapacitorDialog(_modelsProvider, this);
-    dlg->setSelectedCategory(_partsManagerView->selectedCategory());
-    dlg->setSelectedStorage(_partsManagerView->selectedStorage());
-    dlg->exec();
-    dlg->deleteLater();
+    QuickAddCapacitorDialog dlg(_modelsProvider, this);
+    dlg.setSelectedCategory(_partsManagerView->selectedCategory());
+    dlg.setSelectedStorage(_partsManagerView->selectedStorage());
+    dlg.exec();
+}
+
+void MainWindow::on_actionMerge_part_triggered()
+{
+    MergePartsDialog dlg(this);    
+    dlg.setParts(QVariant(1), QVariant(7));
+    int res = dlg.exec();
+    if(res){
+        _modelsProvider->partsModel()->select();
+    }
 }

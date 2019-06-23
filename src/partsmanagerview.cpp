@@ -21,6 +21,7 @@
 #include "utils.h"
 #include "dialogs/tableexportdialog.h"
 #include "ext/csvexporter.h"
+#include "dialogs/mergepartsdialog.h"
 
 #include <QHBoxLayout>
 #include <QPushButton>
@@ -190,7 +191,9 @@ PartsManagerView::PartsManagerView(ModelsRepository * modelsProvider, QWidget *p
     _navWidget->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
 
     initPartsTableView();
+    initContextMenuActions();
     connect(_modelsRepository->partStorageModel(), SIGNAL(partsDropped(QVector<int>,TreeItem*)), this, SLOT(slotPartsDroppedInStorage(QVector<int>,TreeItem*)));
+
 }
 
 PartsManagerView::~PartsManagerView()
@@ -198,6 +201,7 @@ PartsManagerView::~PartsManagerView()
 }
 
 void PartsManagerView::initPartsTableView(){
+    _partsTableView->setSelectionBehavior(QAbstractItemView::SelectRows);
     //_partsTableView->setModel(_modelsProvider->partsModel());    
     _partsTableView->setModel(_partsTableProxyModel);
     //Disable the stock inline feature...
@@ -207,6 +211,26 @@ void PartsManagerView::initPartsTableView(){
             this, SLOT(slotPartTableCurrentRowChanged(QModelIndex,QModelIndex)));
     connect(_partsTableView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(slotEditPart()));
     connect(_partsTableView, SIGNAL(deletePressed()), this, SLOT(slotDeletePart()));    
+    connect(_partsTableView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(slotSelectionChanged(QItemSelection,QItemSelection)));
+    _partsTableView->setContextMenuPolicy(Qt::ActionsContextMenu);
+
+}
+
+void PartsManagerView::slotSelectionChanged(const QItemSelection &, const QItemSelection &)
+{
+
+    int selectedCount = _partsTableView->selectionModel()->selectedRows().size();
+    _actionMergeParts->setEnabled(selectedCount == 2);
+}
+
+void PartsManagerView::initContextMenuActions()
+{
+
+    QIcon mergePartsIcon(QString::fromLatin1(":/icons/join"));
+    _actionMergeParts = new QAction(mergePartsIcon, tr("Merge parts"), this);
+    connect(_actionMergeParts, SIGNAL(triggered(bool)), this, SLOT(slotMergeParts()));
+    _partsTableView->addAction(_actionMergeParts);
+    _actionMergeParts->setEnabled(false);
 }
 
 void PartsManagerView::writeSettings(QSettings& settings) const
@@ -340,8 +364,9 @@ QVariant PartsManagerView::selectedStorage() const
 }
 
 void PartsManagerView::slotPartTableCurrentRowChanged(const QModelIndex &current, const QModelIndex &)
-{
+{    
     _partDetailsView->setCurrentIndex(_partsTableProxyModel->mapToSource(current));
+
 }
 
 void PartsManagerView::slotAddPart()
@@ -412,6 +437,34 @@ void PartsManagerView::duplicatePart(bool allData)
         return;
     PartDialog dlg(_modelsRepository, this);
     dlg.duplicatePart(_partsTableProxyModel->mapToSource(index), allData);
+}
+
+void PartsManagerView::slotPartTableContextMenuRequested(const QPoint &pos)
+{
+    const QModelIndex & index = _partsTableView->indexAt(pos);
+    if(!index.isValid()){
+        return;
+    }
+    const QPoint & globalPos = _partsTableView->mapToGlobal(pos);
+    _partsTableView->selectionModel()->selectedRows();
+    _contextActionsMenu->exec(globalPos);
+}
+
+void PartsManagerView::slotMergeParts()
+{
+    QModelIndexList indexList = _partsTableView->selectionModel()->selectedRows(PartsSqlTableModel::ColumnId);
+    if(indexList.size()<2){
+        return;
+    }
+    QVariant partA = indexList.at(0).data(Qt::EditRole);
+    QVariant partB = indexList.at(1).data(Qt::EditRole);
+
+    MergePartsDialog dlg(this);
+    dlg.setParts(partA, partB);
+    int res = dlg.exec();
+    if(res){
+        _modelsRepository->partsModel()->select();
+    }
 }
 
 void PartsManagerView::slotExportTable()

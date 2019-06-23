@@ -149,11 +149,34 @@ PartDialog::PartDialog(ModelsRepository * modelsProvider, QWidget *parent) :
     connect(ui->moveStockButton, SIGNAL(clicked()), this, SLOT(slotMoveStock()));
 
     connect(ui->importButton, SIGNAL(clicked()), this, SLOT(slotImport()));
+    readSettings();
 }
 
 PartDialog::~PartDialog()
 {
     delete ui;
+}
+
+void PartDialog::closeEvent(QCloseEvent *)
+{
+     writeSettings();
+}
+
+void PartDialog::writeSettings()
+{
+    QSettings settings;
+    settings.beginGroup("PartDialog");
+    settings.setValue("size", this->size());
+    settings.endGroup();
+
+}
+
+void PartDialog::readSettings()
+{
+    QSettings settings;
+    settings.beginGroup("PartDialog");
+    resize(settings.value("size", QSize(800, 460)).toSize());
+    settings.endGroup();
 }
 
 void PartDialog::setCurrentCategory(const QVariant & category)
@@ -197,6 +220,11 @@ int PartDialog::editPart(const QModelIndex &index)
     _currentPartId = getColumnValue(_partsModel, index.row(), PartsSqlTableModel::ColumnId);
 
     _partStockModel2->setCurrentPartId(_currentPartId);
+
+    QVariant partUnitVar = getColumnValue(_partsModel, index.row(), PartsSqlTableModel::ColumnPartUnit);
+    _partStockModel2->setCurrentPartId(_currentPartId);
+
+
     _partStockModel2->select();
 
     _partStockLogModel->setCurrentPartId(_currentPartId);

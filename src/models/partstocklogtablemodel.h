@@ -14,8 +14,8 @@ public:
         ColumnComment
     };
 
-    inline void setCurrentPartId(const QVariant & partId) { setCurrentForeignKey(partId); }        
-    bool appendRow(const int quantity, const QVariant & price, const QString & comment);
+    inline void setCurrentPartId(const QVariant & partId) { setCurrentForeignKey(partId); }
+    bool appendRow(const QVariant &quantity, const QVariant & price, const QString & comment);
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     QVariant computeAveragePrice() const;
     static PartStockLogTableModel * createNew(QObject *parent);

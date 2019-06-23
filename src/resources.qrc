@@ -78,6 +78,7 @@
         <file alias="stock_entry_move">images/package_go.png</file>
         <file alias="stock">images/package.png</file>
         <file alias="stock_log">images/stock_log.png</file>
+        <file alias="join">images/join.png</file>
     </qresource>
     <qresource prefix="/largeIcons">
         <file alias="options_general">images/cog_32x32.png</file>

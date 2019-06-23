@@ -14,7 +14,18 @@ Based on a user action, the part name is looked up in octopart and the user can 
 
 * Add a merge part dialog
 
+
 * Save options dialog window settings (width and height)
+
+* Shopping list
+- Create shopping lists
+- Import items missing in stock or below minimum
+- Add a new button in the stock to add the part to a shopping list
+- Add an context action to parts list to add the selected parts to a shopping list
+- Shopping list fields: id, name, creation_date, fulfill_date, notes
+- Shopping item fields: list_id, part_name, quantity, part_id, distributor, distributor_part_number
+
+
 
 === Doing ===
 

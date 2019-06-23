@@ -57,8 +57,15 @@
     <addaction name="actionResistor"/>
     <addaction name="actionCapacitor"/>
    </widget>
+   <widget class="QMenu" name="menuMerge_Part">
+    <property name="title">
+     <string>Merge Part</string>
+    </property>
+    <addaction name="actionMerge_part"/>
+   </widget>
    <addaction name="menuEdit"/>
    <addaction name="menuQuick_Add"/>
+   <addaction name="menuMerge_Part"/>
   </widget>
   <action name="actionPreferences">
    <property name="text">
@@ -79,6 +86,11 @@
    </property>
    <property name="toolTip">
     <string>Adds a new capacitor</string>
+   </property>
+  </action>
+  <action name="actionMerge_part">
+   <property name="text">
+    <string>Merge part</string>
    </property>
   </action>
  </widget>

@@ -28,7 +28,7 @@ public:
     QVariant selectedStorage() const;
     void setSelectedStorage(const QVariant & storage);
 
-    int stockChange() const;
+    double stockChange() const;
     double partPrice() const;
     QString comment() const;
 

@@ -15,6 +15,7 @@
 #include "models/iconsrepository.h"
 #include "models/projecttablemodel.h"
 #include "models/partstocktablemodel2.h"
+#include "models/partunitcache.h"
 
 
 ModelsRepository::ModelsRepository(QObject *parent) : QObject(parent)
@@ -33,13 +34,16 @@ ModelsRepository::ModelsRepository(QObject *parent) : QObject(parent)
     _partManufacturerModel = PartManufacturerTableModel2::createNew(this);
 
     _distributorModel = new CompanyTableModel(this);
+    _distributorModel->setObjectName("Distributor model");
     _distributorModel->setTable("distributor");
     _distributorModel->setSort(_distributorModel->fieldIndex("name"), Qt::AscendingOrder);
 
     _manufacturerModel = new CompanyTableModel(this);
+    _manufacturerModel->setObjectName("Manufacturer model");
     _manufacturerModel->setTable("manufacturer");
 
     _packageModel = new PackageTableModel(this);
+    _packageModel->setObjectName("Package model");
     _packageModel->setTable("package");
     _packageModel->setSort(_packageModel->fieldIndex("name"), Qt::AscendingOrder);
 
@@ -54,6 +58,8 @@ ModelsRepository::ModelsRepository(QObject *parent) : QObject(parent)
 
     _stockModelHelper = PartStockTableModel2::createNew(this);
 
+    _partUnitCache = new PartUnitCache;
+
     connect(_categoriesModel, SIGNAL(partsDropped(QVector<int>,TreeItem*)), this, SLOT(slotPartsDroppedInCategory(QVector<int>,TreeItem*)));
     //connect(_storageModel, SIGNAL(partsDropped(QVector<int>,TreeItem*)), this, SLOT(slotPartsDroppedInStorage(QVector<int>,TreeItem*)));
     connect(_storageModel, SIGNAL(stockDropped(QList<PartStockItem>,QVariant)), this, SLOT(slotStockDroppedInStorage(QList<PartStockItem>,QVariant)));
@@ -63,6 +69,8 @@ ModelsRepository::~ModelsRepository()
 {    
     delete _partsQueryBuilder;
     delete _storageIconsRepository;
+    delete _categoryIconsRepository;
+    delete _partUnitCache;
 }
 
 CategoryTreeModel * ModelsRepository::partCategoryModel() const
@@ -108,6 +116,11 @@ ProjectTableModel * ModelsRepository::projectModel() const
 IconsRepository * ModelsRepository::categoryIconsRepository() const
 {
     return _categoryIconsRepository;
+}
+
+PartUnitCache *ModelsRepository::partUnitCache() const
+{
+    return _partUnitCache;
 }
 
 IconsRepository * ModelsRepository::storageIconsRepository() const

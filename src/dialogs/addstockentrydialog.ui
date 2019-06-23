@@ -26,25 +26,6 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
-      <widget class="QSpinBox" name="quantitySpinBox">
-       <property name="buttonSymbols">
-        <enum>QAbstractSpinBox::UpDownArrows</enum>
-       </property>
-       <property name="suffix">
-        <string notr="true">pieces</string>
-       </property>
-       <property name="prefix">
-        <string notr="true"/>
-       </property>
-       <property name="minimum">
-        <number>1</number>
-       </property>
-       <property name="maximum">
-        <number>999999</number>
-       </property>
-      </widget>
-     </item>
      <item row="1" column="0">
       <widget class="QLabel" name="label_2">
        <property name="text">
@@ -53,7 +34,11 @@
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QDoubleSpinBox" name="priceSpinBox"/>
+      <widget class="QDoubleSpinBox" name="priceSpinBox">
+       <property name="accelerated">
+        <bool>true</bool>
+       </property>
+      </widget>
      </item>
      <item row="2" column="1">
       <widget class="QCheckBox" name="priceKindCheckBox">
@@ -92,6 +77,19 @@
       <widget class="QLabel" name="label_3">
        <property name="text">
         <string>Comment:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QDoubleSpinBox" name="quantitySpinBox">
+       <property name="buttonSymbols">
+        <enum>QAbstractSpinBox::UpDownArrows</enum>
+       </property>
+       <property name="accelerated">
+        <bool>true</bool>
+       </property>
+       <property name="maximum">
+        <double>9999999.000000000000000</double>
        </property>
       </widget>
      </item>
@@ -134,6 +132,14 @@
    <header>widgets/relationalcombobox.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>quantitySpinBox</tabstop>
+  <tabstop>priceSpinBox</tabstop>
+  <tabstop>priceKindCheckBox</tabstop>
+  <tabstop>storageComboBox</tabstop>
+  <tabstop>conditionComboBox</tabstop>
+  <tabstop>commentTextEdit</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

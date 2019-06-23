@@ -23,6 +23,7 @@ class QStandardItemModel;
 class IconsRepository;
 class QAbstractItemModel;
 class PartStockTableModel2;
+class PartUnitCache;
 
 class ModelsRepository : public QObject
 {
@@ -41,6 +42,7 @@ public:
     ProjectTableModel * projectModel() const;
     IconsRepository * storageIconsRepository() const;
     IconsRepository * categoryIconsRepository() const;
+    PartUnitCache * partUnitCache() const;
     void partsDroppedInStorage(QVector<int> parts, TreeItem* item);
 signals:
 
@@ -63,6 +65,7 @@ private:
     IconsRepository * _categoryIconsRepository;
     IconsRepository * _storageIconsRepository;
     PartStockTableModel2 * _stockModelHelper;
+    PartUnitCache * _partUnitCache;
 };
 
 #endif // MODELSPROVIDER_H

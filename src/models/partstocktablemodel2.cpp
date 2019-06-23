@@ -44,9 +44,10 @@ Qt::ItemFlags PartStockTableModel2::flags(const QModelIndex& index) const
 QVariant PartStockTableModel2::data(const QModelIndex &index, int role) const
 {
     const QVariant & value = SimpleSqlTableModel::data(index, role);
-    if(index.column()==ColumnLastUpdate && value.isValid() && (role==Qt::EditRole || role==Qt::DisplayRole)){
+    const int col = index.column();
+    if(col == ColumnLastUpdate && value.isValid() && (role==Qt::EditRole || role==Qt::DisplayRole)){
         return QDateTime::fromTime_t(value.toUInt());
-    }
+    }   
     return value;
 }
 

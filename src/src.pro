@@ -115,7 +115,13 @@ SOURCES += main.cpp\
     models/partstocklogtablemodel.cpp \
     dialogs/movestockdialog.cpp \
     partstockmimedata.cpp \
-    octopart/octopartimportdialog.cpp
+    octopart/octopartimportdialog.cpp \
+    octopart/octopartimporter.cpp \
+    octopart/entityselectiondialog.cpp \
+    dialogs/mergepartsdialog.cpp \
+    models/mergehelper.cpp \
+    models/partunitcache.cpp \
+    widgets/quantitydelegate.cpp
 
 HEADERS  += mainwindow.h \
     partdialog.h \
@@ -220,7 +226,13 @@ HEADERS  += mainwindow.h \
     models/partstocklogtablemodel.h \
     dialogs/movestockdialog.h \
     partstockmimedata.h \
-    octopart/octopartimportdialog.h
+    octopart/octopartimportdialog.h \
+    octopart/octopartimporter.h \
+    octopart/entityselectiondialog.h \
+    dialogs/mergepartsdialog.h \
+    models/mergehelper.h \
+    models/partunitcache.h \
+    widgets/quantitydelegate.h
 
 FORMS    += mainwindow.ui \
     partdialog.ui \
@@ -241,7 +253,8 @@ FORMS    += mainwindow.ui \
     dialogs/partsassignmentdialog.ui \
     dialogs/addstockentrydialog.ui \
     dialogs/movestockdialog.ui \
-    octopart/octopartimportdialog.ui
+    octopart/octopartimportdialog.ui \
+    octopart/entityselectiondialog.ui
 
 RESOURCES += \
     resources.qrc \

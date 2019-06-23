@@ -24,6 +24,8 @@ public:
     void setSelectedCategory(const QVariant & category);
     void setSelectedStorage(const QVariant & storage);
     ~QuickAddResistorDialog();
+protected:
+    void closeEvent(QCloseEvent *);
 protected slots:
     void slotBandChanged(int);
     void slotToleranceBandChanged(int);
@@ -38,6 +40,8 @@ private:
     QVariant selectedStorage() const;
     QVariant selectedCondition() const;
     QVariant selectedPackage() const;
+    void writeSettings();
+    void readSettings();
 
     Ui::QuickAddResistorDialog *ui;
     PartsSqlTableModel * _partsModel;

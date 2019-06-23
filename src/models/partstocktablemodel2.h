@@ -15,7 +15,7 @@ public:
         ColumnLastUpdate
     };
 
-    inline void setCurrentPartId(const QVariant & partId) { setCurrentForeignKey(partId); }
+    inline void setCurrentPartId(const QVariant & partId) { setCurrentForeignKey(partId); }    
     Qt::ItemFlags flags(const QModelIndex &index) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     Qt::DropActions supportedDropActions() const;

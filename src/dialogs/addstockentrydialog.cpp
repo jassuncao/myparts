@@ -94,7 +94,7 @@ void AddStockEntryDialog::setPartUnit(const QString & partUnit)
     ui->quantitySpinBox->setSuffix(suffix);
 }
 
-int AddStockEntryDialog::stockChange() const
+double AddStockEntryDialog::stockChange() const
 {
     return ui->quantitySpinBox->value();
 }

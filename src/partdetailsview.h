@@ -13,6 +13,7 @@ class PartStockTableModel2;
 class PartsSqlTableModel;
 class QDataWidgetMapper;
 class ModelsRepository;
+class QuantityDelegate;
 
 class PartDetailsView : public QWidget
 {
@@ -31,14 +32,17 @@ private slots:
     void onEditPart();
 private:
     void setPartsModel(PartsSqlTableModel *model);
+    void updateStockView(const QModelIndex & current);
+    QString getPartUnit();
     Ui::PartDetailsView *ui;
     QDataWidgetMapper * _widgetMapper;
     ModelsRepository * _modelsRepository;
     PartsSqlTableModel * _partsModel;
     PartStockLogTableModel * _partStockLogModel;
     PartStockTableModel2 * _partStockModel;
-    QModelIndex _currentIndex;
-    void updateStockView(const QModelIndex & current);    
+    QuantityDelegate * _quantityDelegate;
+    QModelIndex _currentIndex;    
+
 };
 
 #endif // PARTDETAILSVIEW_H

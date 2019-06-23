@@ -16,8 +16,8 @@ QVariant StockTableFormatProxyModel::data(const QModelIndex &proxyIndex, int rol
     if(!proxyIndex.isValid()) return QVariant();
     if(role==Qt::ForegroundRole){
         if(proxyIndex.column() == PartStockLogTableModel::ColumnChange){
-            QVariant var = sourceModel()->data(proxyIndex, Qt::DisplayRole);
-            int change = var.toInt();
+            QVariant var = sourceModel()->data(proxyIndex, Qt::EditRole);
+            double change = var.toDouble();
             if(change<0)
                 return QColor(Qt::red);
             else if(change>0)
