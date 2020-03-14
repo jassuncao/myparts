@@ -64,8 +64,3 @@ else:unix:!macx: LIBS += -L$$OUT_PWD/../widgets/ -lwidgets
 INCLUDEPATH += $$PWD/../widgets
 DEPENDPATH += $$PWD/../widgets
 
-win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../widgets/release/libwidgets.a
-else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../widgets/debug/libwidgets.a
-else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../widgets/release/widgets.lib
-else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../widgets/debug/widgets.lib
-else:unix:!macx: PRE_TARGETDEPS += $$OUT_PWD/../widgets/libwidgets.a

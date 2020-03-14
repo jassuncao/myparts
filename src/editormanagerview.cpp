@@ -4,7 +4,6 @@
 #include "editors/projecteditorwidget.h"
 #include "widgets/itemstreeview.h"
 #include "widgets/listnavigatorwidget.h"
-#include "widgets/qsearchlineedit.h"
 #include "styledbar.h"
 #include "minisplitter.h"
 #include <QHBoxLayout>

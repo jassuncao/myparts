@@ -145,10 +145,6 @@ void ModelsRepository::slotPartsDroppedInCategory(QVector<int> parts, TreeItem* 
 
 void ModelsRepository::partsDroppedInStorage(QVector<int> parts, TreeItem* item)
 {    
-
-    //XXX: Show a dialog prompting the user to choose between moving all the stock to the target location or just some
-    //_partsModel->updatePartsStorage(parts, item->id());
-    //_partsModel->select();
     bool res = false;
     QVariant storageId = item->id();
     foreach (int partId, parts) {

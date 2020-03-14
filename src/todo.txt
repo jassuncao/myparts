@@ -12,8 +12,6 @@ Based on a user action, the part name is looked up in octopart and the user can 
 
 * Import project parts from a CSV file. Nice to have: Kicad.
 
-* Add a merge part dialog
-
 
 * Save options dialog window settings (width and height)
 
@@ -29,14 +27,12 @@ Based on a user action, the part name is looked up in octopart and the user can 
 
 === Doing ===
 
-* Restructering part_parameters. Adds two new columns for min and max values. Taking advantage of sqlite datatypes to unify numeric and text values
-
-* Reenable drag & drop of parts into storage nodes
-- When dragging a part check if the part has stock in multiple storage. If so, ask if the user want's to move all of them into the same storage
-- (DONE) When dragging a stock entry from the detail view
-
 
 === Done ===
+* Dragging a stock entry from the detail view to a storage node
+* Dragging parts into storage node with confirmation
+* Restructering part_parameters. Adds two new columns for min and max values. Taking advantage of sqlite datatypes to unify numeric and text values
+* Add a merge part dialog
 * Change the following part associations: storage and condition.
 - Allow a part to have multiple storage locations
 - Remove the part condition association. Move the condition to association with storage location.
