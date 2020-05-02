@@ -72,7 +72,7 @@ double SmdResistorCalculator::parse(const QString & text, bool *ok) const
             int digits = _cLocale.toInt(digitsStr, &valid);
             if(valid && multiplierChar.isDigit()){
                 int multiplier = to_char(multiplierChar) - '0';
-                value = digits * pow10(multiplier);
+                value = digits * exp10(multiplier);
                 valid = true;
             }
         }

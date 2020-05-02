@@ -1,8 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>octopart_query_response.json</file>
-        <file>api_key.txt</file>
-        <file>octopart_part_response.json</file>
-        <file>octopart_search_response.json</file>
-    </qresource>
-</RCC>

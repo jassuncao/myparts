@@ -13,7 +13,6 @@
 #include "models/databasehelper.h"
 #include "models/iconsrepository.h"
 #include "models/modelsrepository.h"
-#include "octopart/entityselectiondialog.h"
 
 bool initDatabase(QSqlDatabase& db){
     //db.setDatabaseName(":memory:");
@@ -85,15 +84,7 @@ int main(int argc, char *argv[])
     Manhattan::Utils::StyleHelper::setBaseColor(QColor(0x66,0x66,0x66));
     QApplication::setStyle(style);
 
-/*
-    EntitySelectionDialog dlg("Distributor not present", "The distributor '' is not registered yet. \n"
-                                                         "You can choose to create a new entry or use an existing one");
-    ModelsRepository modelsRepo;
-    modelsRepo.initModels();
-    modelsRepo.distributorModel()->select();
-    dlg.setModel(modelsRepo.distributorModel());
-    dlg.show();        
-*/
+
     MainWindow w;
     w.show();
 

@@ -384,7 +384,7 @@ void QuickAddCapacitorDialog::slotAttemptAutoComplete()
         bool multiplicandOk;
         int multiplicand = multiplicandStr.toInt(&multiplicandOk);        
         if(multiplicandOk && multiplierChar.isDigit()){
-            double capacitance = multiplicand * pow10(-12);
+            double capacitance = multiplicand * exp10(-12);
             int multiplierIdx = to_char(multiplierChar) - '0';
             if(multiplierIdx >= 0 && multiplierIdx <= 9){
                 capacitance = capacitance * MULTIPLIERS[multiplierIdx];
