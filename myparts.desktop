@@ -1,0 +1,7 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Type=Application
+Name=MyParts
+Exec=MyParts
+Icon=myparts
+Categories=Office;
