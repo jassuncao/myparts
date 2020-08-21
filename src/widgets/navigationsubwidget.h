@@ -35,7 +35,7 @@
 #include <QList>
 #include <QModelIndex>
 #include "models/modelsrepository.h"
-#include "models/iconsrepository.h"
+#include "core/iconsrepository.h"
 
 QT_BEGIN_NAMESPACE
 class QMenu;

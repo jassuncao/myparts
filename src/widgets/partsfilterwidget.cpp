@@ -2,12 +2,12 @@
 #include "widgets/flowlayout.h"
 #include <qsearchlineedit.h>
 #include "widgets/filteritemwidget.h"
-#include "models/proxymodelnoneentry.h"
-#include "models/partssqltablemodel.h"
-#include "models/partsquerybuilder.h"
+#include "util/proxymodelnoneentry.h"
+#include "part/model/partssqltablemodel.h"
+#include "part/model/partsquerybuilder.h"
 #include "models/modelsrepository.h"
-#include "models/partconditionmodel.h"
-#include "models/basicentitytablemodel.h"
+#include "part/model/partconditionmodel.h"
+#include "core/sql/basicentitytablemodel.h"
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>

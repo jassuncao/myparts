@@ -7,7 +7,7 @@
 #include <QMessageBox>
 #include <QDebug>
 #include <QLabel>
-#include "models/basicentitytablemodel.h"
+#include "core/sql/basicentitytablemodel.h"
 
 CompanyEditorWidget::CompanyEditorWidget(QWidget *parent) :
     AbstractEditor(parent)

@@ -1,5 +1,5 @@
 #include "stocktableformatproxymodel.h"
-#include "partstocklogtablemodel.h"
+#include "stock/model/partstocklogtablemodel.h"
 
 
 StockTableFormatProxyModel::StockTableFormatProxyModel(QObject *parent) :

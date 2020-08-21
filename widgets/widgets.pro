@@ -8,6 +8,8 @@ TARGET = widgets
 TEMPLATE = lib
 CONFIG += lib
 
+QT += widgets
+
 DEFINES += WIDGETS_LIBRARY
 
 SOURCES += qprogressindicator.cpp \

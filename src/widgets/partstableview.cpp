@@ -5,7 +5,7 @@
 #include <QTableView>
 #include <QKeyEvent>
 #include "partstableview.h"
-#include "models/partssqltablemodel.h"
+#include "part/model/partssqltablemodel.h"
 #include "datetimedelegate.h"
 #include "currencydelegate.h"
 #include "priceitemdelegate.h"

@@ -1,6 +1,7 @@
 #include "extendedtableview.h"
 #include <QKeyEvent>
 #include <QHeaderView>
+#include <QDrag>
 
 ExtendedTableView::ExtendedTableView(QWidget *parent) :
     QTableView(parent)

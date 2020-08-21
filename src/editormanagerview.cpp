@@ -1,7 +1,7 @@
 #include "editormanagerview.h"
 #include "editors/companyeditorwidget.h"
 #include "editors/packageeditorwidget.h"
-#include "editors/projecteditorwidget.h"
+#include "project/projecteditorwidget.h"
 #include "widgets/itemstreeview.h"
 #include "widgets/listnavigatorwidget.h"
 #include "styledbar.h"

@@ -16,8 +16,8 @@
 #include <QWidgetAction>
 #include <QDebug>
 #include "widgets/treeviewcombobox.h"
-#include "models/treeitemmodel.h"
-#include "models/partsquerybuilder.h"
+#include "core/treemodel/treeitemmodel.h"
+#include "part/model/partsquerybuilder.h"
 
 #if defined(Q_WS_X11)
 #include <private/qkde_p.h>

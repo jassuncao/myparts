@@ -6,8 +6,8 @@
 #include <QHash>
 #include <QIcon>
 
-#include "models/projecttablemodel.h"
-#include "partstockmimedata.h"
+#include "project/model/projecttablemodel.h"
+#include "stock/partstockmimedata.h"
 
 class CategoryTreeModel;
 class StorageTreeModel;
@@ -15,8 +15,8 @@ class PartsSqlTableModel;
 class PartsQueryBuilder;
 class PartConditionModel;
 class TreeItem;
-class PartDistributorTableModel2;
-class PartManufacturerTableModel2;
+class PartDistributorTableModel;
+class PartManufacturerTableModel;
 class CompanyTableModel;
 class PackageTableModel;
 class QStandardItemModel;
@@ -56,8 +56,8 @@ private:
     PartsSqlTableModel * _partsModel;
     PartsQueryBuilder * _partsQueryBuilder;
     PartConditionModel * _partConditionModel;
-    PartDistributorTableModel2 * _partDistributorModel;
-    PartManufacturerTableModel2 * _partManufacturerModel;
+    PartDistributorTableModel * _partDistributorModel;
+    PartManufacturerTableModel * _partManufacturerModel;
     CompanyTableModel * _distributorModel;
     CompanyTableModel * _manufacturerModel;
     PackageTableModel * _packageModel;    

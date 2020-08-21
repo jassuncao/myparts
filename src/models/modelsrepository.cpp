@@ -2,20 +2,23 @@
 #include <QStandardItemModel>
 #include <QMessageBox>
 #include "modelsrepository.h"
-#include "models/partssqltablemodel.h"
-#include "models/storagetreemodel.h"
-#include "models/customtablemodel.h"
-#include "models/partstocklogtablemodel.h"
-#include "models/categorytreemodel.h"
-#include "models/customtablemodel.h"
-#include "models/partsquerybuilder.h"
-#include "models/partconditionmodel.h"
-#include "models/treeitem.h"
-#include "models/basicentitytablemodel.h"
-#include "models/iconsrepository.h"
-#include "models/projecttablemodel.h"
-#include "models/partstocktablemodel2.h"
+
+#include "core/sql/customtablemodel.h"
+#include "core/sql/customtablemodel.h"
+#include "core/treemodel/treeitem.h"
+#include "core/sql/basicentitytablemodel.h"
+#include "core/iconsrepository.h"
+#include "project/model/projecttablemodel.h"
+#include "stock/model/partstocktablemodel2.h"
+#include "stock/model/partstocklogtablemodel.h"
 #include "models/partunitcache.h"
+#include "part/model/partssqltablemodel.h"
+#include "part/model/storagetreemodel.h"
+#include "part/model/partdistributortablemodel.h"
+#include "part/model/partmanufacturertablemodel.h"
+#include "part/model/partsquerybuilder.h"
+#include "part/model/partconditionmodel.h"
+#include "part/model/categorytreemodel.h"
 
 
 ModelsRepository::ModelsRepository(QObject *parent) : QObject(parent)
@@ -30,8 +33,8 @@ ModelsRepository::ModelsRepository(QObject *parent) : QObject(parent)
     _storageModel = new StorageTreeModel(this);
     _partConditionModel = PartConditionModel::createNew(this);
     _partConditionModel->setObjectName("Part condition model");
-    _partDistributorModel = PartDistributorTableModel2::createNew(this);
-    _partManufacturerModel = PartManufacturerTableModel2::createNew(this);
+    _partDistributorModel = PartDistributorTableModel::createNew(this);
+    _partManufacturerModel = PartManufacturerTableModel::createNew(this);
 
     _distributorModel = new CompanyTableModel(this);
     _distributorModel->setObjectName("Distributor model");

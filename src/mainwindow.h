@@ -23,7 +23,6 @@ private slots:
     void slotEditPreferences();
     void on_actionResistor_triggered();
     void on_actionCapacitor_triggered();
-
     void on_actionMerge_part_triggered();
 
 private:

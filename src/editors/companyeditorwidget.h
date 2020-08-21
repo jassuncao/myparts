@@ -4,7 +4,7 @@
 #include <QWidget>
 #include <QModelIndex>
 #include <QString>
-#include "abstracteditor.h"
+#include "core/ui/abstracteditor.h"
 
 class QLineEdit;
 class QPlainTextEdit;

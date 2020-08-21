@@ -3,15 +3,17 @@
 #include "optionsdialog.h"
 #include <QSettings>
 #include <QtGui>
-#include "models/storagetreemodel.h"
-#include "partsmanagerview.h"
+#include "part/model/storagetreemodel.h"
+#include "part/ui/partsmanagerview.h"
 #include "editormanagerview.h"
-#include "dialogs/quickaddresistordialog.h"
-#include "dialogs/quickaddcapacitordialog.h"
+#include "part/generator/quickaddresistordialog.h"
+#include "part/generator/quickaddcapacitordialog.h"
 #include "models/modelsrepository.h"
-#include "dialogs/mergepartsdialog.h"
-#include "models/partssqltablemodel.h"
+#include "part/merge/mergepartsdialog.h"
+#include "part/model/partssqltablemodel.h"
 #include "models/partunitcache.h"
+
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -85,7 +87,7 @@ void MainWindow::slotEditPreferences()
 }
 
 void MainWindow::on_actionResistor_triggered()
-{
+{    
     QuickAddResistorDialog dlg(_modelsProvider, this);
     dlg.setSelectedCategory(_partsManagerView->selectedCategory());
     dlg.setSelectedStorage(_partsManagerView->selectedStorage());

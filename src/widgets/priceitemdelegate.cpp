@@ -4,8 +4,8 @@
 #include <QComboBox>
 #include <QSpinBox>
 #include <QBoxLayout>
-#include "currencyhelper.h"
-#include "price.h"
+#include "core/currencyhelper.h"
+#include "core/price.h"
 
 class PriceEditor : public QWidget {
 public:
@@ -72,7 +72,7 @@ PriceItemDelegate::PriceItemDelegate(bool useCustomEditor, QObject *parent) :
     QSettings settings;
     _defaultCurrency = settings.value(CURRENCY_CODE_KEY).toString();    
     if(_defaultCurrency.isEmpty()){
-        _defaultCurrency = CurrencyHelper::currencies(CurrencyHelper::MostCommon).first();
+        _defaultCurrency = CurrencyHelper::instance().currencies(CurrencyHelper::MostCommon).first();
     }
 }
 
@@ -86,7 +86,7 @@ QWidget * PriceItemDelegate::createEditor(QWidget *parent, const QStyleOptionVie
     if(_useCustomEditor){
         if (!index.isValid())
             return 0;
-        const QStringList isoCodes = CurrencyHelper::currencies(CurrencyHelper::MostCommon);
+        const QStringList isoCodes = CurrencyHelper::instance().currencies(CurrencyHelper::MostCommon);
         return new PriceEditor(isoCodes, _defaultCurrency, parent);
     }
     else{
@@ -138,7 +138,7 @@ QString PriceItemDelegate::displayText( const QVariant & value, const QLocale & 
     else {
         return QString();
     }
-    const QString symbol = CurrencyHelper::currencySymbol(currency);
+    const QString symbol = CurrencyHelper::instance().currencySymbol(currency);
     return locale.toCurrencyString(price, symbol);
 }
 

@@ -31,8 +31,7 @@ void PartUnitCache::refresh()
     while(query.next()){
         int id = query.value(0).toInt();
         QString name = query.value(1).toString();
-        QString abbreviation = query.value(2).toString();
-        bool defaultUnit = query.value(3).toBool();        
+        QString abbreviation = query.value(2).toString();          
         PartUnitData * data = new PartUnitData(id, name, abbreviation);
         _entries.append(data);
         _entriesHash[id] = data;

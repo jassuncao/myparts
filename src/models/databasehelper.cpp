@@ -4,7 +4,7 @@
 #include <QDebug>
 #include <QFile>
 #include <QStringBuilder>
-#include "ext/qxtcsvmodel.h"
+#include "core/csv/qxtcsvmodel.h"
 
 DatabaseHelper::DatabaseHelper(QSqlDatabase db) :
     _db(db)

@@ -11,7 +11,7 @@
 #include <QStyle>
 #include <QDebug>
 #include "models/databasehelper.h"
-#include "models/iconsrepository.h"
+#include "core/iconsrepository.h"
 #include "models/modelsrepository.h"
 
 bool initDatabase(QSqlDatabase& db){

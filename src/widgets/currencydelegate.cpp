@@ -5,8 +5,8 @@
 #include <QComboBox>
 #include <QSpinBox>
 #include <QBoxLayout>
-#include "price.h"
-#include "currencyhelper.h"
+#include "core/price.h"
+#include "core/currencyhelper.h"
 
 CurrencyDelegate::CurrencyDelegate(QObject *parent) :
     QStyledItemDelegate(parent), _horizontalAlignment(Qt::AlignRight)
@@ -14,7 +14,7 @@ CurrencyDelegate::CurrencyDelegate(QObject *parent) :
     QSettings settings;
     _defaultCurrency = settings.value(CURRENCY_CODE_KEY).toString();    
     if(_defaultCurrency.isEmpty()){
-        _defaultCurrency = CurrencyHelper::currencies(CurrencyHelper::MostCommon).first();
+        _defaultCurrency = CurrencyHelper::instance().currencies(CurrencyHelper::MostCommon).first();
     }    
 }
 
@@ -26,7 +26,7 @@ QWidget * CurrencyDelegate::createEditor(QWidget *parent, const QStyleOptionView
 {
     if (!index.isValid()) return 0;
 
-    QStringList isoCodes = CurrencyHelper::currencies(CurrencyHelper::MostCommon);
+    QStringList isoCodes = CurrencyHelper::instance().currencies(CurrencyHelper::MostCommon);
     QComboBox* combo = new QComboBox(parent);
     combo->addItems(isoCodes);
     combo->setEditable(true);

@@ -1,15 +1,15 @@
 #include "optionsdialog.h"
 #include "ui_optionsdialog.h"
 #include "widgets/booleanitemdelegate.h"
-#include "models/customtablemodel.h"
-#include "models/partconditionmodel.h"
+#include "core/sql/customtablemodel.h"
+#include "part/model/partconditionmodel.h"
 #include "models/modelsrepository.h"
-#include "models/parametermodel.h"
-#include "models/parameterunitmodel.h"
+#include "parameter/parametermodel.h"
+#include "parameter/parameterunitmodel.h"
 #include "widgets/validatingitemdelegate.h"
 #include "widgets/comboitemdelegate.h"
 #include "widgets/currencydelegate.h"
-#include "currencyhelper.h"
+#include "core/currencyhelper.h"
 #include "constants.h"
 #include <QDebug>
 #include <QSettings>
@@ -114,7 +114,7 @@ void OptionsDialog::setupCurrenciesModel()
     }
     ui->currencyComboBox->addItems(_uniqueCurrencies.keys());
     */
-    ui->currencyComboBox->addItems(CurrencyHelper::currencies(CurrencyHelper::All));
+    ui->currencyComboBox->addItems(CurrencyHelper::instance().currencies(CurrencyHelper::All));
     QLocale defaultLocale;
     ui->currencyFormatComboBox->addItem(defaultLocale.currencySymbol(QLocale::CurrencyIsoCode), QLocale::CurrencyIsoCode);
     ui->currencyFormatComboBox->addItem(defaultLocale.currencySymbol(QLocale::CurrencySymbol), QLocale::CurrencySymbol);
@@ -409,7 +409,7 @@ void OptionsDialog::slotParameterRowChanged(const QModelIndex &current, const QM
 
 void OptionsDialog::slotCurrencyChanged(const QString &currency)
 {
-    QString symbol = CurrencyHelper::currencySymbol(currency);
+    QString symbol = CurrencyHelper::instance().currencySymbol(currency);
     ui->currencyFormatComboBox->setItemText(0, currency);
     ui->currencyFormatComboBox->setItemText(1, symbol);
     slotDataChanged();

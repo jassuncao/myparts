@@ -48,10 +48,10 @@
 #include "styledbar.h"
 #include "navigationtreeview.h"
 #include "qsearchlineedit.h"
-#include "models/partsquerybuilder.h"
-#include "models/treeitemmodel.h"
-#include "models/treeproxyfilter.h"
-#include "dialogs/treeitemeditdialog.h"
+#include "part/model//partsquerybuilder.h"
+#include "core/treemodel/treeitemmodel.h"
+#include "core/treemodel/treeproxyfilter.h"
+#include "core/treemodel/treeitemeditdialog.h"
 #include "dialogs/multistoragedialog.h"
 
 NavigationSubWidget::NavigationSubWidget(QWidget *parent) : QWidget(parent)

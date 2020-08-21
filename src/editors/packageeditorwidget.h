@@ -1,7 +1,7 @@
 #ifndef PACKAGEEDITORWIDGET_H
 #define PACKAGEEDITORWIDGET_H
 
-#include "abstracteditor.h"
+#include "core/ui/abstracteditor.h"
 #include <QWidget>
 #include <QModelIndex>
 #include <QStyledItemDelegate>
@@ -16,7 +16,7 @@ class QAbstractItemModel;
 class QModelIndex;
 class QDataWidgetMapper;
 class QToolButton;
-class AttachmentTableModel3;
+class AttachmentTableModel;
 class ImageViewer;
 
 class PackageEditorWidget : public AbstractEditor
@@ -56,7 +56,7 @@ private:
     QPushButton * _removeImageButton;
     QPushButton * _removeAttachmentButton;
     QAbstractItemModel * _model;
-    AttachmentTableModel3 * _attachmentModel;
+    AttachmentTableModel * _attachmentModel;
     QDataWidgetMapper * _mapper;
     QModelIndex _currentIndex;
     QAction * _actionViewImage;

@@ -1,5 +1,6 @@
 TEMPLATE = subdirs
 SUBDIRS += \
-    qt-manhattan-style \   
+    qt-manhattan-style \
+    src \
     widgets \
-    src
+    tests

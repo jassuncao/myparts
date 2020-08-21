@@ -1,5 +1,5 @@
 #include "comboitemdelegate.h"
-#include "models/modelwithforeignkey.h"
+#include "core/sql/modelwithforeignkey.h"
 #include <QComboBox>
 #include <QDebug>
 #include <QLineEdit>

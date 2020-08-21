@@ -1,10 +1,10 @@
 #include "packageeditorwidget.h"
-#include "dialogs/attachmentselectiondialog.h"
-#include "models/customtablemodel.h"
-#include "models/basicentitytablemodel.h"
+#include "attachment/attachmentselectiondialog.h"
+#include "core/sql/customtablemodel.h"
+#include "core/sql/basicentitytablemodel.h"
 #include "utils.h"
 #include "dialogs/imageviewer.h"
-#include "widgets/attachmentstableview.h"
+#include "attachment/attachmentstableview.h"
 #include <QDebug>
 #include <QToolButton>
 #include <QLineEdit>
@@ -23,6 +23,7 @@
 #include <QStandardItemModel>
 #include <QSqlQuery>
 #include <QDesktopServices>
+#include "attachment/attachmenttablemodel.h"
 
 
 PackageEditorWidget::PackageEditorWidget(QWidget *parent) :
@@ -65,7 +66,7 @@ PackageEditorWidget::PackageEditorWidget(QWidget *parent) :
     //Image groupbox END
 
     //Attachments groupbox START
-    _attachmentModel = AttachmentTableModel3::createNewPackageAttachmentModel(this);
+    _attachmentModel = AttachmentTableModel::createNewPackageAttachmentModel(this);
 
     _attachmentsTable = new AttachmentsTableView;
     _attachmentsTable->setSelectionMode(QTableView::SingleSelection);
@@ -268,7 +269,7 @@ void PackageEditorWidget::slotAddAttachment()
         QUrl resourceUrl = dlg.value();
         int row = _attachmentModel->rowCount();
         _attachmentModel->insertRow(row);
-        const QModelIndex & index = _attachmentModel->index(row, AttachmentTableModel3::ColumnURL);
+        const QModelIndex & index = _attachmentModel->index(row, AttachmentTableModel::ColumnURL);
         _attachmentModel->setData(index, resourceUrl.toString());
     }
 }
@@ -296,7 +297,7 @@ void PackageEditorWidget::slotAttachmentDoubleClicked(const QModelIndex &index)
         return;
     }
     if(index.column()==0){
-        const QModelIndex & urlColIndex = _attachmentModel->index(index.row(), AttachmentTableModel3::ColumnURL);
+        const QModelIndex & urlColIndex = _attachmentModel->index(index.row(), AttachmentTableModel::ColumnURL);
         QString url = urlColIndex.data(Qt::EditRole).toString();
         QDesktopServices::openUrl(QUrl::fromUserInput(url));
     }

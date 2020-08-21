@@ -8,11 +8,11 @@
 #include "widgets/partsfilterwidget.h"
 #include "widgets/partstableview.h"
 #include "models/modelsrepository.h"
-#include "models/partssqltablemodel.h"
-#include "models/partsquerybuilder.h"
+#include "part/model/partssqltablemodel.h"
+#include "part/model/partsquerybuilder.h"
 #include "widgets/filteritemwidget.h"
 #include "widgets/treeviewcombobox.h"
-#include "models/categorytreemodel.h"
+#include "part/model/categorytreemodel.h"
 
 PartPickerDialog::PartPickerDialog(ModelsRepository *modelsRepo, QWidget *parent) :
     QDialog(parent),

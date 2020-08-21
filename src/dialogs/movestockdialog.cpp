@@ -1,7 +1,7 @@
 #include "movestockdialog.h"
 #include "ui_movestockdialog.h"
-#include "models/storagetreemodel.h"
-#include "models/partconditionmodel.h"
+#include "part/model/storagetreemodel.h"
+#include "part/model/partconditionmodel.h"
 #include "models/modelsrepository.h"
 
 MoveStockDialog::MoveStockDialog(ModelsRepository *modelsRepository, QWidget *parent) :

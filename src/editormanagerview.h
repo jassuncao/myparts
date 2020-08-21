@@ -1,7 +1,7 @@
 #ifndef COMPANYMANAGERVIEW_H
 #define COMPANYMANAGERVIEW_H
 
-#include "models/basicentitytablemodel.h"
+#include "core/sql/basicentitytablemodel.h"
 #include "minisplitter.h"
 #include <QModelIndex>
 #include <QWidget>

@@ -15,237 +15,236 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    partdialog.cpp \
-    dialogs/partcategorydialog.cpp \
-    models/treeitem.cpp \
+    attachment/attachmenttablemodel.cpp \
+    part/model/partdistributortablemodel.cpp \
+    part/model/partmanufacturertablemodel.cpp \
+    part/ui/partdialog.cpp \
+    core/treemodel/treeitem.cpp \
     widgets/booleanitemdelegate.cpp \
     optionsdialog.cpp \    
-    partmimedata.cpp \
+    part/partmimedata.cpp \
     widgets/partstableview.cpp \
     widgets/qpartsfiltermodel.cpp \
     widgets/datetimedelegate.cpp \
-    dialogs/addstockdialog.cpp \
+    stock/addstockdialog.cpp \
     dialogs/removestockdialog.cpp \
     widgets/stockactioncolumndelegate.cpp \
     widgets/qtreebox.cpp \
     widgets/partstoragewidget.cpp \
     widgets/currencydelegate.cpp \
-    models/treeitemmodel.cpp \
-    models/storagetreemodel.cpp \
+    core/treemodel/treeitemmodel.cpp \
+    part/model/storagetreemodel.cpp \
     widgets/treeviewcombobox.cpp \
-    models/treemodelmimedata.cpp \
-    partdetailsview.cpp \
+    core/treemodel/treemodelmimedata.cpp \
+    part/ui/partdetailsview.cpp \
     widgets/qtabwidget2.cpp \
-    models/unittablemodel.cpp \
-    widgets/parametervaluevalidator.cpp \
-    widgets/unitparser.cpp \
-    widgets/unitformatter.cpp \
-    widgets/parametervaluedelegate.cpp \
+    unit/unittablemodel.cpp \
+    parameter/parametervaluevalidator.cpp \
+    unit/unitparser.cpp \
+    unit/unitformatter.cpp \
+    parameter/parametervaluedelegate.cpp \
     widgets/relationalcombobox.cpp \
     utils.cpp \
-    dialogs/attachmentselectiondialog.cpp \
-    valuewithunit.cpp \
-    parametervalue.cpp \
-    models/customtablemodel.cpp \
+    attachment/attachmentselectiondialog.cpp \
+    core/valuewithunit.cpp \
+    parameter/parametervalue.cpp \
+    core/sql/customtablemodel.cpp \
     widgets/validatingitemdelegate.cpp \
     widgets/navigator.cpp \
     widgets/navigationsubwidget.cpp \
-    partsmanagerview.cpp \
+    part/ui/partsmanagerview.cpp \
     widgets/navigationtreeview.cpp \
     widgets/itemstreeview.cpp \
     widgets/listnavigatorwidget.cpp \
     editors/companyeditorwidget.cpp \
-    editors/abstracteditor.cpp \
+    core/ui/abstracteditor.cpp \
     editormanagerview.cpp \
     widgets/flowlayout.cpp \
     widgets/qdualpushbutton.cpp \
     widgets/filteritemwidget.cpp \
     widgets/partsfilterwidget.cpp \
     widgets/qactionpushbutton.cpp \
-    models/partssqltablemodel.cpp \
+    part/model/partssqltablemodel.cpp \
     widgets/gridwidget.cpp \
-    models/partsquerybuilder.cpp \
+    part/model/partsquerybuilder.cpp \
     editors/packageeditorwidget.cpp \
     widgets/extendedtableview.cpp \
-    models/treeitemmodelpersistence.cpp \
-    dialogs/treeitemeditdialog.cpp \
-    models/categorytreemodel.cpp \
+    core/treemodel/treeitemmodelpersistence.cpp \
+    core/treemodel/treeitemeditdialog.cpp \
+    part/model/categorytreemodel.cpp \
     models/stocktableformatproxymodel.cpp \
     widgets/elidinglabel.cpp \
-    models/partstableproxymodel.cpp \
+    part/model/partstableproxymodel.cpp \
     widgets/stockinlinedelegate.cpp \
-    dialogs/quickaddresistordialog.cpp \
+    part/generator/quickaddresistordialog.cpp \
     widgets/colorbandcombobox.cpp \
-    models/partconditionmodel.cpp \
-    models/partparametertablemodel.cpp \
-    models/parameter.cpp \
+    part/model/partconditionmodel.cpp \
+    part/model/partparametertablemodel.cpp \
+    parameter/parameter.cpp \
     widgets/comboitemdelegate.cpp \
-    models/parametermodel.cpp \
+    parameter/parametermodel.cpp \
     models/databasehelper.cpp \
     widgets/kmessagewidget.cpp \
-    models/parameterunitmodel.cpp \
+    parameter/parameterunitmodel.cpp \
     models/modelsrepository.cpp \
-    models/proxymodelnoneentry.cpp \
-    models/basicentitytablemodel.cpp \
+    util/proxymodelnoneentry.cpp \
+    core/sql/basicentitytablemodel.cpp \
     dialogs/multistoragedialog.cpp \
-    models/iconsrepository.cpp \
-    dialogs/quickaddcapacitordialog.cpp \
-    ext/qxtcsvmodel.cpp \
-    models/treeproxyfilter.cpp \
+    core/iconsrepository.cpp \
+    part/generator/quickaddcapacitordialog.cpp \
+    core/csv/qxtcsvmodel.cpp \
+    core/treemodel/treeproxyfilter.cpp \
     dialogs/imageviewer.cpp \
     dialogs/tableexportdialog.cpp \
-    ext/csvexporter.cpp \
-    models/projecttablemodel.cpp \
-    editors/projecteditorwidget.cpp \
-    widgets/attachmentstableview.cpp \
+    core/csv/csvexporter.cpp \
+    project/model/projecttablemodel.cpp \
+    project/projecteditorwidget.cpp \
+    attachment/attachmentstableview.cpp \
     widgets/partpicker.cpp \
-    models/cachedsqltablemodel.cpp \
-    models/projectparttablemodel.cpp \
-    models/alignmentproxymodel.cpp \
-    dialogs/partsassignmentdialog.cpp \
-    smdresistorcalculator.cpp \
+    core/sql/cachedsqltablemodel.cpp \
+    project/model/projectparttablemodel.cpp \
+    util/alignmentproxymodel.cpp \
+    part/generator/smdresistorcalculator.cpp \
     widgets/savebuttonhelper.cpp \
     widgets/hintlineedit.cpp \
-    price.cpp \
-    models/partdistributorproxymodel.cpp \
+    core/price.cpp \    
     widgets/priceitemdelegate.cpp \
-    currencyhelper.cpp \
-    models/partstocktablemodel2.cpp \
-    dialogs/addstockentrydialog.cpp \
-    models/partstocklogtablemodel.cpp \
+    core/currencyhelper.cpp \
+    stock/model/partstocktablemodel2.cpp \
+    stock/addstockentrydialog.cpp \
+    stock/model/partstocklogtablemodel.cpp \
     dialogs/movestockdialog.cpp \
-    partstockmimedata.cpp \
-    dialogs/mergepartsdialog.cpp \
-    models/mergehelper.cpp \
+    stock/partstockmimedata.cpp \
+    part/merge/mergepartsdialog.cpp \
+    part/merge/mergehelper.cpp \
     models/partunitcache.cpp \
     widgets/quantitydelegate.cpp
 
 HEADERS  += mainwindow.h \
-    partdialog.h \
-    dialogs/partcategorydialog.h \
-    models/treeitem.h \
+    attachment/attachmenttablemodel.h \
+    part/model/partdistributortablemodel.h \
+    part/model/partmanufacturertablemodel.h \
+    part/ui/partdialog.h \
+    core/treemodel/treeitem.h \
     widgets/booleanitemdelegate.h \
     optionsdialog.h \    
-    partmimedata.h \
+    part/partmimedata.h \
     widgets/partstableview.h \
     widgets/qpartsfiltermodel.h \
     widgets/datetimedelegate.h \
-    dialogs/addstockdialog.h \
+    stock/addstockdialog.h \
     dialogs/removestockdialog.h \
     widgets/stockactioncolumndelegate.h \
     widgets/qtreebox.h \
     widgets/partstoragewidget.h \
     widgets/currencydelegate.h \
-    models/treeitemmodel.h \
-    models/storagetreemodel.h \
+    core/treemodel/treeitemmodel.h \
+    part/model/storagetreemodel.h \
     widgets/treeviewcombobox.h \
-    models/treemodelmimedata.h \
-    partdetailsview.h \
+    core/treemodel/treemodelmimedata.h \
+    part/ui/partdetailsview.h \
     widgets/qtabwidget2.h \
-    models/unittablemodel.h \
-    widgets/parametervaluevalidator.h \
-    widgets/unitparser.h \
-    widgets/parametervaluedelegate.h \
+    unit/unittablemodel.h \
+    parameter/parametervaluevalidator.h \
+    unit/unitparser.h \
+    parameter/parametervaluedelegate.h \
     widgets/relationalcombobox.h \
     utils.h \
-    dialogs/attachmentselectiondialog.h \
-    valuewithunit.h \
-    parametervalue.h \
-    models/customtablemodel.h \
+    attachment/attachmentselectiondialog.h \
+    core/valuewithunit.h \
+    core/parametervalue.h \
+    core/sql/customtablemodel.h \
     widgets/validatingitemdelegate.h \
     constants.h \
     widgets/navigator.h \
     widgets/navigationsubwidget.h \
-    partsmanagerview.h \
+    part/ui/partsmanagerview.h \
     widgets/navigationtreeview.h \
     widgets/itemstreeview.h \
     widgets/listnavigatorwidget.h \
     editors/companyeditorwidget.h \
-    editors/abstracteditor.h \
+    core/ui/abstracteditor.h \
     editormanagerview.h \
     widgets/flowlayout.h \
     widgets/qdualpushbutton.h \
     widgets/filteritemwidget.h \
     widgets/partsfilterwidget.h \
     widgets/qactionpushbutton.h \
-    models/partssqltablemodel.h \
+    part/model/partssqltablemodel.h \
     widgets/gridwidget.h \
-    models/partsquerybuilder.h \
+    part/model/partsquerybuilder.h \
     editors/packageeditorwidget.h \
     widgets/extendedtableview.h \
-    models/treeitemmodelpersistence.h \
-    dialogs/treeitemeditdialog.h \
-    models/categorytreemodel.h \
+    core/treemodel/treeitemmodelpersistence.h \
+    core/treemodel/treeitemeditdialog.h \
+    part/model/categorytreemodel.h \
     models/stocktableformatproxymodel.h \
     widgets/elidinglabel.h \
-    models/partstableproxymodel.h \
+    part/model/partstableproxymodel.h \
     widgets/stockinlinedelegate.h \
-    dialogs/quickaddresistordialog.h \
+    part/generator/quickaddresistordialog.h \
     widgets/colorbandcombobox.h \
-    models/partconditionmodel.h \
-    models/partparametertablemodel.h \
-    models/parameter.h \
+    part/model/partconditionmodel.h \
+    part/model/partparametertablemodel.h \
+    parameter/parameter.h \
     widgets/comboitemdelegate.h \
-    models/modelwithforeignkey.h \
-    models/parametermodel.h \
+    core/sql/modelwithforeignkey.h \
+    parameter/parametermodel.h \
     stacktrace.h \
     models/databasehelper.h \
     widgets/kmessagewidget.h \
-    models/parameterunitmodel.h \
+    parameter/parameterunitmodel.h \
     models/modelsrepository.h \
-    models/proxymodelnoneentry.h \
-    models/basicentitytablemodel.h \
+    util/proxymodelnoneentry.h \
+    core/sql/basicentitytablemodel.h \
     dialogs/multistoragedialog.h \
-    models/iconsrepository.h \
-    dialogs/quickaddcapacitordialog.h \
-    ext/qxtcsvmodel.h \
-    models/treeproxyfilter.h \
+    core/iconsrepository.h \
+    part/generator/quickaddcapacitordialog.h \
+    core/csv/qxtcsvmodel.h \
+    core/treemodel/treeproxyfilter.h \
     dialogs/imageviewer.h \
     dialogs/tableexportdialog.h \
-    ext/csvexporter.h \
-    models/projecttablemodel.h \
-    editors/projecteditorwidget.h \
-    widgets/attachmentstableview.h \
+    core/csv/csvexporter.h \
+    project/model/projecttablemodel.h \
+    project/projecteditorwidget.h \
+    attachment/attachmentstableview.h \
     widgets/partpicker.h \
-    models/cachedsqltablemodel.h \
-    models/projectparttablemodel.h \
-    models/alignmentproxymodel.h \
-    dialogs/partsassignmentdialog.h \
-    smdresistorcalculator.h \
+    core/sql/cachedsqltablemodel.h \
+    project/model/projectparttablemodel.h \
+    util/alignmentproxymodel.h \
+    part/generator/smdresistorcalculator.h \
     widgets/savebuttonhelper.h \
     widgets/hintlineedit.h \
-    price.h \
-    models/partdistributorproxymodel.h \
+    core/price.h \    
     widgets/priceitemdelegate.h \
-    currencyhelper.h \
-    models/partstocktablemodel2.h \
-    dialogs/addstockentrydialog.h \
-    models/partstocklogtablemodel.h \
+    core/currencyhelper.h \
+    stock/model/partstocktablemodel2.h \
+    stock/addstockentrydialog.h \
+    stock/model/partstocklogtablemodel.h \
     dialogs/movestockdialog.h \
-    partstockmimedata.h \
-    dialogs/mergepartsdialog.h \
-    models/mergehelper.h \
+    stock/partstockmimedata.h \
+    part/merge/mergepartsdialog.h \
+    part/merge/mergehelper.h \
     models/partunitcache.h \
     widgets/quantitydelegate.h
 
 FORMS    += mainwindow.ui \
-    partdialog.ui \
-    partunitsdialog.ui \
-    dialogs/addstockdialog.ui \
+    part/ui/partdialog.ui \
+    part/ui/partunitsdialog.ui \
+    stock/addstockdialog.ui \
     dialogs/removestockdialog.ui \
     dialog.ui \
-    partdetailsview.ui \
+    part/ui/partdetailsview.ui \
     testform1.ui \
-    dialogs/attachmentselectiondialog.ui \
+    attachment/attachmentselectiondialog.ui \
     testform2.ui \
     optionsdialog.ui \
-    dialogs/quickaddresistordialog.ui \
+    part/generator/quickaddresistordialog.ui \
     dialogs/multistoragedialog.ui \
-    dialogs/quickaddcapacitordialog.ui \
+    part/generator/quickaddcapacitordialog.ui \
     dialogs/tableexportdialog.ui \
-    editors/projecteditorform.ui \
-    dialogs/partsassignmentdialog.ui \
-    dialogs/addstockentrydialog.ui \
+    project/projecteditorform.ui \
+    stock/addstockentrydialog.ui \
     dialogs/movestockdialog.ui \
     octopart/octopartimportdialog.ui \
     octopart/entityselectiondialog.ui
